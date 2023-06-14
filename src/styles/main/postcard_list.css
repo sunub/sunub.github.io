@@ -1,0 +1,32 @@
+.post_card_list {
+  display: flex;
+  flex-direction: column;
+
+  gap: clamp(1.5rem, 3vw, 2rem);
+  max-inline-size: 60ch;
+  min-block-size: 100vh;
+  font-family: var(--nanum-squareNeo);
+}
+
+.post_card {
+  /* display: grid;
+  grid-template-columns: [icon] 10fr 60fr;
+  grid-template-rows: 10cqw 1fr; */
+
+  background: var(--surface-2);
+  border: none 0px transparent;
+  border-radius: var(--size-5);
+  min-block-size: calc((10 * var(--size-6)) + 20px);
+
+  &:hover {
+    box-shadow: var(--shadow-5);
+  }
+
+  &:active {
+    border-radius: 50px;
+  }
+
+  & > header {
+    align-self: flex-end;
+  }
+}

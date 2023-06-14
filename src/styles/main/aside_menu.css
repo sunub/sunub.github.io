@@ -1,0 +1,52 @@
+.main_aside {
+  display: inline-flex;
+  flex-direction: column;
+  align-self: self-start;
+  gap: var(--size-2);
+  border: none;
+  margin-top: 4.5rem;
+  position: sticky;
+  font-family: var(--nanum-squareNeo);
+
+  container: aside_container / inline-size;
+
+  & > span {
+    justify-self: center;
+  }
+}
+
+.main_aside > label {
+  display: flex;
+
+  align-items: center;
+
+  block-size: 54px;
+  padding: 4px 4px 4px 20px;
+
+  border: none 0px transparent;
+  border-radius: 25px;
+  gap: var(--size-4);
+
+  position: relative;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.main_aside > label > input[type="radio"] {
+  width: 0;
+  height: 0;
+  display: hidden;
+  opacity: 0;
+}
+
+.main_aside > label:is(:hover, :target, :focus-visible, :has(:checked)) {
+  background: oklch(70.87% 0.147 33.05 / 0.8);
+  font-family: var(--nanum-squareNeo-heavy);
+}
+
+label {
+  & > span {
+    font-size: var(--size-6);
+    font-family: var(--nanum-squareNeo);
+  }
+}

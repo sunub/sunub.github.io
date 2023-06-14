@@ -1,0 +1,70 @@
+@import "./postcard_list.css";
+@import "./aside_menu.css";
+
+#main {
+  display: grid;
+  grid-template-columns: [aside]var(--size-content-1) [feed]minmax(
+      0,
+      var(--size-content-3)
+    );
+  margin-block-start: var(--size-5);
+  justify-content: center;
+
+  background: var(--surface-1);
+  background-size: 100%;
+  background-repeat: no-repeat;
+
+  margin-top: 64px;
+  column-gap: var(--size-6);
+  container: main_container / inline-size;
+
+  @container main_container ( width <= 768px) {
+    .main_aside {
+      display: none;
+      opacity: 0;
+    }
+  }
+}
+
+/* --shadow-color : 220 3% 15%;
+--shadow-strength : 1%
+--shadow-5: 0 -1px 2px 0 hsl(var(--shadow-color) /
+        calc(var(--shadow-strength) + 2%)),
+  0 2px 1px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+  0 5px 5px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
+  0 10px 10px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 4%)),
+  0 20px 20px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%)),
+  0 40px 40px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 7%)); */
+
+/* .card_item {
+  display: grid;
+  grid-template-columns: 50px minmax(1ch, 1fr);
+  gap: var(--size-2) var(--size-6);
+  max-inline-size: max-content;
+
+  background: oklch(95.58% 0.02 282.96 / 0.45);
+  padding-block: var(--size-6) var(--size-5);
+  margin: var(--size-4);
+  font-family: var(--nanum-squareNeo);
+  border: none 0px transparent;
+  border-radius: 30px;
+
+  & > h1 {
+    font-family: var(--nanum-squareNeo-heavy);
+    font-size: 3rem;
+  }
+}
+
+.card_item :hover {
+  background: oklch(73.39% 0.107 271.13 / 0.6);
+}
+
+.card_item :active {
+  border-radius: 60px;
+} */
+
+@media (max-width: 768px) {
+  #main {
+    grid-template-columns: var(--size-content-3);
+  }
+}
