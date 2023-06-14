@@ -1,5 +1,5 @@
 import { get } from "http"
-import { baseURL } from "../../lib/getBaseUrl"
+import { baseURL } from "@/lib/getBaseUrl"
 
 export default async function PostCardList({ id }: { id: number }) {
     return (<>

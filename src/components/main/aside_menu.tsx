@@ -3,8 +3,6 @@
 import Image from "next/image"
 import { Home, Algorithm } from "@/icon"
 import React, { FormEvent, useEffect, useState, createContext } from "react"
-import { baseURL } from "../../lib/getBaseUrl"
-import PostCardList from "./postcard_list"
 
 export default function Asidemenu() {
     const [url, setUrl] = useState("all")
