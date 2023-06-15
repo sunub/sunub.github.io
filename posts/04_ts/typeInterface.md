@@ -3,8 +3,7 @@ title : Type Interface - 타입 선언문(1)
 date : 2023-06-12
 tag :	
 	- typescript
-description : 
-	타입스크립트의 타입추론을 적극적으로 이용하자...
+description : 타입 선언문 Interface에 대해서 이해하고 또 다른 타입 선언문인 type 과의 차이를 이해하고 적용해보자.
 category : typescript
 slug : /03_ts/typeInterface
 template : post

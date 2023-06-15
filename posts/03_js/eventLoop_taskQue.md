@@ -3,8 +3,7 @@ title : EventLoop & TaskQueue - 자바스크립트의 작동 방식(1)
 date : 2023-06-12
 tag :	
 	- javascript
-description : 
-	이 두가지를 다루는 이유는 자바스크립트의 작동 방식에 대해서 다루기 위해서이다. TaskQue의 경우 자바스크립트는 싱글 스레드 방식의 동작을 보여준다. 이러한 작업들은 TaskQue에 스택의 형식으로 쌓이게 되면서 실행이 된다...
+description : 이 두가지를 다루는 이유는 자바스크립트의 작동 방식에 대해서 다루기 위해서이다. TaskQue의 경우 자바스크립트는 싱글 스레드 방식의 동작을 보여준다. 이러한 작업들은 TaskQue에 스택의 형식으로 쌓이게 되면서 실행이 된다...
 category : javascript
 slug : /03_js/eventLoop_taskQue
 template : post

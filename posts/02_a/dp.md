@@ -4,9 +4,7 @@ date: 2023-06-12
 tags:
   - algorithm
 published: true
-description:
-  dynamic programming은 일련의 문제를 해결함에 있어서 그 문제를 해결하는 과정 중 발생되는 중복되는 하위 문제를 좀더 효율적으로 해결 하기 위한 방법이다.
-  dynamic programming의 목표는 중복되는 문제를 공식화 하여 최적의 하위 구조로 변환하여 최적의 솔루션을 찾아내는 것이 목표로 한다....
+description: Dynamic Programming 이란 무엇이고 어떠한 원리로 작동되며 간단한 예시등을 통해 어떻게 구현해야 하는지 어떠한 방식으로 접근해야 하는지에 대해 다룬다.
 category: algorithm
 slug: /02_a/dp/
 template: post
