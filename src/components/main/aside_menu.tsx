@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { Home, Algorithm } from "@/icon"
 import React, { FormEvent, useEffect, useState, createContext } from "react"
 
 export default function Asidemenu() {
@@ -15,7 +14,12 @@ export default function Asidemenu() {
             setUrl(changedUrl)
         }} className="main_aside">
             <label htmlFor="all">
-                <Home />
+                <Image
+                    src={"/icon_home.png"}
+                    width={24}
+                    height={24}
+                    alt="Icon Home"
+                />
                 <p>All</p>
                 <input defaultChecked type="radio" id="all" name="topics" value="all" />
             </label>
@@ -30,7 +34,12 @@ export default function Asidemenu() {
                 <input type="radio" id="web" name="topics" value="web" />
             </label>
             <label htmlFor="algorithm">
-                <Algorithm />
+                <Image
+                    src={"/icon_algorithm.png"}
+                    width={24}
+                    height={24}
+                    alt="Icon algorithm"
+                />
                 <p>algorithm</p>
                 <input type="radio" id="algorithm" name="topics" value="algorithm" />
             </label>

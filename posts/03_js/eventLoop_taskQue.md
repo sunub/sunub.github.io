@@ -1,5 +1,5 @@
 ---
-title : EventLoop & TaskQueue - 자바스크립트의 작동 방식(1)
+title : 자바스크립트의 작동 방식(1)
 date : 2023-06-12
 tag :	
 	- javascript

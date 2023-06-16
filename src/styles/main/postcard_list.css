@@ -6,27 +6,57 @@
   max-inline-size: 60ch;
   min-block-size: 100vh;
   font-family: var(--nanum-squareNeo);
+
+  & > span {
+    font-family: var(--nanum-squareNeo-bold);
+  }
 }
 
 .post_card {
-  /* display: grid;
-  grid-template-columns: [icon] 10fr 60fr;
-  grid-template-rows: 10cqw 1fr; */
+  display: grid;
+  grid-template:
+    "icon header"
+    "empty content" / 50px minmax(1ch, 1fr);
+  position: relative;
 
   background: var(--surface-2);
   border: none 0px transparent;
   border-radius: var(--size-5);
-  min-block-size: calc((10 * var(--size-6)) + 20px);
+  padding: 2rem 2rem 3rem 2rem;
+  gap: clamp(1rem, 1.25rem, 1.5rem);
+  & > img {
+    grid-area: icon;
+
+    position: sticky;
+    top: 24px;
+    align-self: center;
+    justify-self: center;
+  }
+
+  & > header {
+    grid-area: header;
+
+    display: flex;
+    justify-content: space-between;
+    margin-left: 1rem;
+
+    & > time {
+      justify-self: flex-start;
+    }
+  }
+
+  & > section {
+    grid-area: content;
+
+    display: grid;
+    margin-left: 1rem;
+  }
 
   &:hover {
     box-shadow: var(--shadow-5);
   }
 
   &:active {
-    border-radius: 50px;
-  }
-
-  & > header {
-    align-self: flex-end;
+    border-radius: 30px;
   }
 }

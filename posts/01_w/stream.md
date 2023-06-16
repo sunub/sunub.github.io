@@ -1,5 +1,5 @@
 ---
-title: Stream(1) - 스트림이란
+title: 스트림이란?
 date: 2023-06-12
 tags:
   - web

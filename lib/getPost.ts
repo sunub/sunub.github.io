@@ -60,7 +60,6 @@ function divideDescriptionAndContent(text: string): [Description, string] {
     const lines = extractedText.split("\n");
     for (const line of lines) {
       const [key, value] = line.split(":").map((text) => text.trim());
-      console.log(value);
       description[key] = value;
     }
   }

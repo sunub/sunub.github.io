@@ -92,8 +92,8 @@ span {
 }
 
 h1 {
-  font-family: var(--nanum-squareNeo-bold);
-  font-size: 47px;
+  font-family: var(--nanum-squareNeo-heavy);
+  font-size: 36px;
 }
 
 .material-icons {

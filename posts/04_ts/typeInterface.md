@@ -1,5 +1,5 @@
 ---
-title : Type Interface - 타입 선언문(1)
+title : 타입스크립트의 선언문들
 date : 2023-06-12
 tag :	
 	- typescript

@@ -3,7 +3,7 @@
 import SearchBtn from "./web/search"
 import Cluster from "./web/cluster"
 import BookNavBar from "./mobile/booknavbar"
-import { useEffect } from "react"
+import { lazy, useEffect } from "react"
 
 export default function WebHeader() {
     useEffect(() => {

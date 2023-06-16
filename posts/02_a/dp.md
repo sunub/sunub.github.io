@@ -1,5 +1,5 @@
 ---
-title: Dynamic Programming (1) - dp란?
+title: DP에 관하여...
 date: 2023-06-12
 tags:
   - algorithm

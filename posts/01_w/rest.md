@@ -1,5 +1,5 @@
 ---
-title: REST API(1) - REST API란
+title: REST API란?
 date: 2023-06-15
 tags:
   - web

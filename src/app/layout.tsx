@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="kor" className={`${nanumSquareNeo.variable}`} >
+    <html lang="kor" className={`${nanumSquareNeo.variable} ${nanumSquareNeoBold.variable} ${nanumSquareNeoHeavy.variable}`} >
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet" as="style" />
