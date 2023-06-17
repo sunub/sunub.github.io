@@ -1,24 +1,17 @@
 "use client"
 
+import BookNavBar from "./mobile/booknavbar"
+import { lazy } from "react"
 import SearchBtn from "./web/search"
 import Cluster from "./web/cluster"
-import BookNavBar from "./mobile/booknavbar"
-import { lazy, useEffect } from "react"
 
-export default function WebHeader() {
-    useEffect(() => {
-        if (!customElements.get("web-header") && !customElements.get("web-navigation-drawer")) {
-            import("./customElement")
-        }
-    }, [])
+const WebHeader = lazy(() => import("./webHeader"))
+
+export default function Header() {
 
     return (
         <>
-            <web-header>
-                <Cluster />
-                <SearchBtn />
-            </web-header>
-            <BookNavBar />
+            <WebHeader />
         </>
     )
 }

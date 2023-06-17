@@ -96,6 +96,13 @@ h1 {
   font-size: 36px;
 }
 
+img,
+iframe {
+  max-inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}
+
 .material-icons {
   font-family: "Material Icons";
   font-weight: normal;

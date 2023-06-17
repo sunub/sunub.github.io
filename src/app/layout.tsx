@@ -2,7 +2,7 @@ import "@/app/globals.css"
 import React from "react"
 import { nanumSquareNeo, nanumSquareNeoBold, nanumSquareNeoHeavy } from "@/styles/fonts"
 
-import WebHeader from "../components/header/index"
+import Header from "../components/header/index"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" as="icon" />
       </head>
       <body>
-        <WebHeader />
+        <Header />
         {children}
       </body>
     </html>
