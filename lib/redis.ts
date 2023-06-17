@@ -9,7 +9,6 @@ async function connect() {
 }
 
 class Car extends Entity {}
-
 let schema = new Schema(
   Car,
   {
@@ -22,13 +21,12 @@ let schema = new Schema(
     dataStructure: "JSON",
   }
 );
-
-export async function createCar(data) {
+export async function createCar(data: string) {
   await connect();
 
-  const repository = new Repository(schema, client);
+  const repository = client.fetchRepository(schema);
 
-  const car = repository.createEntity(data);
+  const car = repository.createEntity(JSON.parse(data));
 
   const id = await repository.save(car);
   return id;

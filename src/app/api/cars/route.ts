@@ -5,7 +5,7 @@ export const dynamic = "force-static";
 
 export async function POST(request: Request) {
   const res = await request.json();
-  const id = await createCar(res);
+  const id = await createCar(JSON.stringify(res));
 
-  return NextResponse.json({ id });
+  return NextResponse.json(id);
 }
