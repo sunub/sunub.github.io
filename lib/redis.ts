@@ -1,4 +1,4 @@
-import { Client, Entity, Schema, Repository } from "redis-om";
+import { Client, Entity, Schema } from "redis-om";
 
 const client = new Client();
 
@@ -8,26 +8,30 @@ async function connect() {
   }
 }
 
-class Car extends Entity {}
-let schema = new Schema(
-  Car,
+class BlogPost extends Entity {}
+let blogPostSchema = new Schema(
+  BlogPost,
   {
-    make: { type: "string" },
-    model: { type: "string" },
-    image: { type: "string" },
+    title: { type: "string" },
+    date: { type: "string" },
+    tags: { type: "string" },
     description: { type: "string" },
+    slug: { type: "string" },
+    content: { type: "string" },
   },
   {
     dataStructure: "JSON",
   }
 );
-export async function createCar(data: string) {
+
+export async function createBlogPost(data: Description[]) {
   await connect();
 
-  const repository = client.fetchRepository(schema);
-
-  const car = repository.createEntity(JSON.parse(data));
-
-  const id = await repository.save(car);
-  return id;
+  const blogpostRepo = client.fetchRepository(blogPostSchema);
+  await blogpostRepo.createIndex();
+  console.log(32);
+  // for (const post of data) {
+  //   const blogpost = blogpostRepo.createEntity(post);
+  //   const id = await blogpostRepo.save(blogpost);
+  // }
 }

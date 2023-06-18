@@ -1,13 +1,9 @@
 ---
 title: REST API란?
 date: 2023-06-15
-tags:
-  - web
-published: true
+tags: web
 description: REST는 애플리케이션의 아키텍쳐이다. REST는 개발자에게 비교적 높은 수준의 유연성과 자유를 제공한다. 아키텍쳐는 다양한 영역의 의사결정이 모여 만들어진 원칙이다. 아키텍처는 어떠한 작업을 시작할 때 표준으로 잡고 시작을 하나 이는 제한이 아니며 이는 애플리케이션을 제작함에 있어서 기반을 다져주는 역할로써 존재한다......
-category: web
 slug: /01_w/rest/
-template: post
 ---
 
 ## REpresentational State Transfer

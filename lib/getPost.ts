@@ -2,10 +2,10 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { baseURL } from "@/lib/getBaseUrl";
+import { createBlogPost } from "./redis";
 import fs from "fs";
-import path from "path";
 import { getFiles } from "./getFiles";
+import { baseURL } from "./getBaseUrl";
 
 const fileHeader: FileHeader = {
   "01_w": "w",
@@ -14,8 +14,7 @@ const fileHeader: FileHeader = {
   "04_ts": "t",
 };
 
-const postContent = new Map();
-const postDescription = new Map();
+const blogPost = new Map();
 
 export default async function getPost(): Promise<Description[]> {
   const postFileData = getFiles();
@@ -36,14 +35,12 @@ export default async function getPost(): Promise<Description[]> {
         .then((html) => String(html));
 
       htmls.push(html);
-      descriptions.push(description);
-      postContent.has(tag)
-        ? postContent.set(tag, [...postContent.get(tag), html])
-        : postContent.set(tag, [html]);
+      description["content"] = html;
 
-      postDescription.has(tag)
-        ? postDescription.set(tag, [...postDescription.get(tag), description])
-        : postDescription.set(tag, [description]);
+      descriptions.push(description);
+      blogPost.has(tag)
+        ? blogPost.set(tag, [...blogPost.get(tag), description])
+        : blogPost.set(tag, [description]);
     }
   }
 

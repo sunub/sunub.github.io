@@ -21,9 +21,10 @@ interface Description {
   [key: string]: string;
   title?: string;
   date?: string;
-  tag?: string;
+  tags?: string;
   description?: string;
   category?: string;
   slug?: string;
   template?: string;
+  content?: string;
 }

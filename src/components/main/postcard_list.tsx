@@ -3,6 +3,7 @@ import Image from "next/image"
 
 export default async function PostCardList({ id }: { id: number }) {
     const descriptions: Description[] = await getPost()
+
     return (<>
         <ul className="post_card_list">
             <span>최근 작성한 게시물</span>
@@ -12,7 +13,7 @@ export default async function PostCardList({ id }: { id: number }) {
                         <li key={`${description.category}${Math.random() * 10}`}>
                             <article className="post_card">
                                 <Image
-                                    src={`/icon_${description.category}.png`}
+                                    src={`/icon_${description.tags}.png`}
                                     width={24}
                                     height={24}
                                     alt={`Image ${description.category}`}
