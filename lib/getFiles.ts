@@ -11,12 +11,7 @@ const fileHeader: FileHeader = {
 export function getFiles(): Files {
   let filePath = "posts/";
   const folders: Folders = fs.readdirSync(filePath, "utf-8");
-  let postFileData: Files = {
-    w: [],
-    a: [],
-    j: [],
-    t: [],
-  };
+  let postFileData: Files = {};
   for (const folder of folders) {
     const tag: Tag = fileHeader[folder];
     postFileData[tag] = readPostFiles(filePath + folder, []);
@@ -30,12 +25,9 @@ function readPostFiles(folderPath: string, paths: string[]): string[] {
   for (const file of folders) {
     const filePath = path.join(folderPath, file);
     const extension = path.extname(filePath).toLowerCase();
-    switch (extension) {
-      case ".md":
-        paths.push(filePath);
-        break;
-      case ".png":
-        break;
+    if (extension === ".md") {
+      const file = fs.readFileSync(filePath, "utf-8");
+      paths.push(file);
     }
   }
   return paths;

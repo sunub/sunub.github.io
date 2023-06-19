@@ -1,9 +1,10 @@
 import "@/app/globals.css"
 import React from "react"
 import { nanumSquareNeo, nanumSquareNeoBold, nanumSquareNeoHeavy } from "@/styles/fonts"
-
 import Header from "../components/header/index"
 import { Metadata } from "next"
+import { baseURL } from "@/lib/getBaseUrl"
+import getPost from "@/lib/getPost"
 
 export const metadata: Metadata = {
   title: {
@@ -14,8 +15,26 @@ export const metadata: Metadata = {
   description: "This site is sunub's personal blog ",
 }
 
+async function getPostData() {
+  const blogpost = await getPost()
+
+  const req = await fetch(`${baseURL}/api/redis`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    next: {
+      revalidate: 60
+    }
+    // body : JSON.stringify(blogpost)
+  })
+
+  return blogpost
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const a = getPostData()
+
   return (
     <html lang="kor" className={`${nanumSquareNeo.variable} ${nanumSquareNeoBold.variable} ${nanumSquareNeoHeavy.variable}`} >
       <head>

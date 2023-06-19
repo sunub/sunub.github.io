@@ -1,9 +1,13 @@
 import Asidemenu from "./aside_menu"
 import PostcardList from "./postcard_list"
 
-export default function Main() {
+export default async function Main() {
+
     return (<>
         <Asidemenu />
-        <PostcardList id={1} />
+        <ul className="post_card_list">
+            <span>최근 작성한 게시물</span>
+            <PostcardList data={[]} />
+        </ul>
     </>)
 }

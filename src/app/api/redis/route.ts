@@ -1,15 +1,35 @@
 import { NextResponse } from "next/server";
-import { createBlogPost } from "@/lib/redis";
+import { blogpostRepo } from "@/lib/redis/blogpost";
 
-export const dynamic = "force-static";
+export const runtime = "nodejs";
 
 export async function GET(req: Request) {
+  const blogpost = await blogpostRepo.search().return.all();
+  console.log(blogpost);
   return NextResponse.json("HI");
 }
+
+// export async function PUT(req: Request) {
+//   const blogData: Description[] = await req.json();
+//   const db = await blogpostRepo.search().return.all();
+
+//   if (blogData.length !== db.length) {
+//     while (blogData.length) {
+//       let post = blogData.shift()!;
+//       let dbData: any = db.length ? db.shift()! : "";
+
+//       if (post["title"] !== dbData["title"]) {
+//         await blogpostRepo.createAndSave(post);
+//       }
+//     }
+//   }
+
+//   return NextResponse.json("Loaded");
+// }
 export async function POST(req: Request) {
-  const data = await req.json();
+  const body = await req.json();
 
-  const id = await createBlogPost(data);
+  blogpostRepo.createAndSave();
 
-  return NextResponse.json("HI");
+  return NextResponse.json("blogpost");
 }

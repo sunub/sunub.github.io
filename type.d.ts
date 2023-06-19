@@ -11,10 +11,10 @@ type Folders = ["01_w", "02_a", "03_js", "04_ts"] | string[];
 type Tag = "w" | "a" | "j" | "t";
 
 type Files = {
-  w: string[];
-  a: string[];
-  j: string[];
-  t: string[];
+  w?: string[];
+  a?: string[];
+  j?: string[];
+  t?: string[];
 };
 
 interface Description {

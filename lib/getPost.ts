@@ -2,30 +2,17 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { createBlogPost } from "./redis";
-import fs from "fs";
 import { getFiles } from "./getFiles";
 import { baseURL } from "./getBaseUrl";
 
-const fileHeader: FileHeader = {
-  "01_w": "w",
-  "02_a": "a",
-  "03_js": "j",
-  "04_ts": "t",
-};
-
-const blogPost = new Map();
-
 export default async function getPost(): Promise<Description[]> {
-  const postFileData = getFiles();
-
-  const htmls = [];
+  const postFileData: Files = getFiles();
   const descriptions: Description[] = [];
+
   for (const [tag, files] of Object.entries(postFileData)) {
     for (const file of files) {
-      const md = fs.readFileSync(file, "utf-8");
       const [description, content]: [Description, string] =
-        divideDescriptionAndContent(md);
+        divideDescriptionAndContent(file);
 
       const html = await unified()
         .use(remarkParse)
@@ -34,13 +21,8 @@ export default async function getPost(): Promise<Description[]> {
         .process(content)
         .then((html) => String(html));
 
-      htmls.push(html);
       description["content"] = html;
-
       descriptions.push(description);
-      blogPost.has(tag)
-        ? blogPost.set(tag, [...blogPost.get(tag), description])
-        : blogPost.set(tag, [description]);
     }
   }
 
