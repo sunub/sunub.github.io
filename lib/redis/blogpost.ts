@@ -1,4 +1,3 @@
-import client from "./client";
 import { Entity, Schema } from "redis-om";
 
 class Blogpost extends Entity {}
@@ -17,7 +16,3 @@ const blogpostSchema = new Schema(
     dataStructure: "JSON",
   }
 );
-export const blogpostRepo = client.fetchRepository(blogpostSchema);
-(async () => {
-  await blogpostRepo.createIndex();
-})();

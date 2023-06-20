@@ -6,6 +6,7 @@
   max-inline-size: 60ch;
   min-block-size: 100vh;
   font-family: var(--nanum-squareNeo);
+  margin-bottom: 5rem;
 
   & > span {
     font-family: var(--nanum-squareNeo-bold);

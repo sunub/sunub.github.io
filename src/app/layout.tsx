@@ -23,10 +23,7 @@ async function getPostData() {
     headers: {
       "Content-Type": "application/json"
     },
-    next: {
-      revalidate: 60
-    }
-    // body : JSON.stringify(blogpost)
+    cache: "no-cache"
   })
 
   return blogpost

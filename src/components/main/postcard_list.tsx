@@ -1,12 +1,12 @@
+import { baseURL } from "@/lib/getBaseUrl"
 import Image from "next/image"
 
 export default async function PostCardList({ data }: { data: Description[] }) {
-
     return (<>
         {
             data.map(description => {
                 return (<>
-                    <li key={`${description["title"]}`}>
+                    <li key={`${description["tag"]}${Math.random() * 100}`}>
                         <article className="post_card">
                             <Image
                                 src={`/icon_${description.tags}.png`}
