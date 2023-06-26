@@ -1,48 +1,48 @@
 {
-  "extends": "ts-node/node16/tsconfig.json",
-  "ts-node": {
-    "compilerOptions": {
-      "module": "ESNext"
-    },
-    "transpileOnly": true,
-    "files": true,
-    "esm": true
-  },
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "baseUrl": ".",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/icon": ["./src/components/icon"],
-      "@/lib/*": ["./lib/*"]
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "lib/redis/blogpost.ts",
-    "lib/redis/client.ts",
-    "lib/redis/index.js"
-  ],
-  "exclude": ["node_modules"]
+	"extends": "ts-node/node16/tsconfig.json",
+	"ts-node": {
+		"compilerOptions": {
+			"module": "ESNext"
+		},
+		"transpileOnly": true,
+		"files": true,
+		"esm": true
+	},
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"baseUrl": ".",
+		"allowJs": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noEmit": true,
+		"esModuleInterop": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "preserve",
+		"incremental": true,
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"paths": {
+			"@/*": ["./src/*"],
+			"@/icon": ["./src/components/icon"],
+			"@/utils/*": ["./src/utils/*"]
+		}
+	},
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"lib/redis/blogpost.ts",
+		"lib/redis/client.ts",
+		"lib/redis/index.js"
+	],
+	"exclude": ["node_modules"]
 }

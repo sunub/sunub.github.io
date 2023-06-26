@@ -88,61 +88,6 @@ export default (() => {
       }
     }
   );
-
-  customElements.define(
-    "web-header",
-    class extends HTMLElement {
-      openDrawerBtn: any;
-
-      constructor() {
-        super();
-      }
-
-      connectedCallback() {
-        this.className = "site-header";
-        this.role = "banner";
-        this.openDrawerBtn = this.querySelector("[data-open-drawer-button]")!;
-        this.openDrawerBtn && this.openDrawerBtn.addEventListener("click");
-      }
-
-      disconnectedCallback() {
-        this.openDrawerBtn && this.openDrawerBtn.removeEventListener("click");
-      }
-
-      onStateChanged(isSearchExpanded: boolean, currentUrl: string) {
-        this.classList.toggle(
-          "web-header--has-expanded-search",
-          isSearchExpanded
-        );
-        currentUrl = currentUrl
-          .replace(/"/g, '\\"')
-          .match(/^\/\w+\//)
-          ?.at(0)!;
-        const activeQuery = this.querySelector("[active]"),
-          urlQuery = this.querySelector(`[href="${currentUrl}"]`);
-        if (activeQuery && activeQuery !== urlQuery) {
-          activeQuery?.removeAttribute("aria-current");
-        }
-        if (urlQuery) {
-          urlQuery.setAttribute("active", "");
-          urlQuery.setAttribute("aria-current", "page");
-        }
-      }
-
-      manageFocus() {
-        this.openDrawerBtn && this.openDrawerBtn.focus();
-      }
-
-      closeBtnEvent(event: MouseEvent) {
-        const currTarget = event.currentTarget;
-        if (currTarget === this.openDrawerBtn) {
-          const drawer = this.querySelector("web-navigation-drawer");
-          drawer?.setAttribute("open", "");
-        }
-      }
-    }
-  );
-
   customElements.define(
     "web-book-nav",
     class extends HTMLElement {

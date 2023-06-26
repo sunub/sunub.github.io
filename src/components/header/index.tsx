@@ -4,14 +4,14 @@ import BookNavBar from "./mobile/booknavbar"
 import { lazy } from "react"
 import SearchBtn from "./web/search"
 import Cluster from "./web/cluster"
-
-const WebHeader = lazy(() => import("./webHeader"))
+import WebHeader from "./webHeader"
 
 export default function Header() {
 
     return (
         <>
             <WebHeader />
+            <BookNavBar />
         </>
     )
 }

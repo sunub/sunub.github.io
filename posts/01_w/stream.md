@@ -3,7 +3,8 @@ title: 스트림이란?
 date: 2023-06-12
 tags: web
 description: 스트림은 자바에서도 사용되지만 이 경우에는 Web API로써 Stream 이 무엇인지에 대해서 다룬다. stream은 기본적으로 데이터의 입출력이 원활하게 이루어질 수 있게끔 네트워크를 통해 전송된 데이터 스트림에 접근하여 데이터를 다루는 API에 해당한다.....
-slug: /01_w/stream/
+category: web
+slug: whatis-stream
 ---
 
 스트림은 자바에서도 사용되지만 이 경우에는 Web API로써 Stream 이 무엇인지에 대해서 다룬다.

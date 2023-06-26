@@ -1,17 +1,24 @@
 "use client"
 
+import { baseURL } from "@/utils/getBaseUrl"
 import Image from "next/image"
-import React, { FormEvent, useEffect, useState, createContext } from "react"
+import { PostCardContext } from "../postcardContext"
+import React, { FormEvent, useContext } from "react"
+
 
 export default function Asidemenu() {
-    const [url, setUrl] = useState("all")
-    const [urlIndex, setUrlIndex] = useState(0)
+    const { setCategory } = useContext(PostCardContext)
+
+    async function sendCategory(event: FormEvent) {
+        const curr = event.target as HTMLInputElement
+        const changedCategory = curr.value
+
+        setCategory(changedCategory)
+    }
 
     return (<>
-        <form onChange={(event) => {
-            const curr = event.target as HTMLInputElement
-            const changedUrl = curr.value
-            setUrl(changedUrl)
+        <form onChange={async (event) => {
+            await sendCategory(event)
         }} className="main_aside">
             <label htmlFor="all">
                 <Image

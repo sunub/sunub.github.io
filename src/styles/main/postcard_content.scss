@@ -1,0 +1,50 @@
+.post {
+  display: inline-flex;
+
+  position: relative;
+  width: 100dvw;
+  flex-direction: column;
+
+  padding-top: 20dvh;
+
+  font-family: var(--nanum-squareNeo);
+
+  background-color: var(--surface-1);
+
+  &__article {
+    line-height: 2;
+    word-spacing: 0.2ch;
+    text-align: start;
+  }
+}
+
+.post__article {
+  line-height: 2;
+  word-spacing: 0.2ch;
+  text-align: start;
+
+  &__header {
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 8dvh;
+  }
+
+  &__header--date {
+    font-size: var(--size-4);
+    color: oklch(21.08% 0.055 34.69 / 50%);
+    line-height: 1.5;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1.5rem;
+
+    position: relative;
+    left: calc(50dvw - 24rem);
+
+    max-width: 48rem;
+    padding: 0 2rem 0 2rem;
+    margin: 0;
+  }
+}

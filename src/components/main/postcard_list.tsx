@@ -1,11 +1,18 @@
-import { baseURL } from "@/lib/getBaseUrl"
-import Image from "next/image"
+"use client"
 
-export default async function PostCardList({ data }: { data: Description[] }) {
+import { baseURL } from "@/utils/getBaseUrl"
+import Image from "next/image"
+import Link from "next/link"
+import { useContext } from "react"
+import { PostCardContext } from "../postcardContext"
+export default function PostCardList({ data }: { data: Map<string, Description[]> }) {
+    const { category } = useContext(PostCardContext)
+    const postData = new Map(data)
+    const posts = postData.get(category)!
     return (<>
         {
-            data.map(description => {
-                return (<>
+            posts.map(description => {
+                return (
                     <li key={`${description["tag"]}${Math.random() * 100}`}>
                         <article className="post_card">
                             <Image
@@ -15,7 +22,11 @@ export default async function PostCardList({ data }: { data: Description[] }) {
                                 alt={`Image ${description.category}`}
                             />
                             <header>
-                                <h1>{description.title}</h1>
+                                <span className="postcard__title">
+                                    <Link href={`/${description.category}/${description.slug}`}>
+                                        {description.title}
+                                    </Link>
+                                </span>
                                 <time>{description.date}</time>
                             </header>
                             <section>
@@ -23,7 +34,7 @@ export default async function PostCardList({ data }: { data: Description[] }) {
                             </section>
                         </article>
                     </li>
-                </>)
+                )
             })
         }
     </>)

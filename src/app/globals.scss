@@ -1,5 +1,5 @@
 @import "../styles/header/header.css";
-@import "../styles/colorPalett.css";
+@import "../styles/variable.css";
 @import "../styles/main/main.css";
 @import "../styles/loading.css";
 
@@ -93,7 +93,7 @@ span {
 
 h1 {
   font-family: var(--nanum-squareNeo-heavy);
-  font-size: 36px;
+  font-size: 4rem;
 }
 
 img,
@@ -125,4 +125,46 @@ iframe {
 button {
   border: none;
   background: transparent;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--color-core-text);
+
+  &:visited {
+    color: var(--color-core-text);
+  }
+}
+
+blockquote,
+dd,
+dl,
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+pre {
+  margin: 0;
+}
+
+table {
+  table-layout: auto;
+  text-align: center;
+}
+
+table,
+th,
+td {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid;
 }

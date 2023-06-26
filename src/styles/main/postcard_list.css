@@ -61,3 +61,12 @@
     border-radius: 30px;
   }
 }
+
+.postcard_main_content {
+  display: grid;
+}
+
+.postcard__title {
+  font-family: var(--nanum-squareNeo-heavy);
+  font-size: var(--font-size-6);
+}
