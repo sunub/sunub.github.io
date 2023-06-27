@@ -6,24 +6,26 @@ export default async function Page({ params }: { params: { category: string, slu
     const posts = findPostByCategoryAndSlug(category, slug, blogpost)
 
     return (posts.map(post => {
-        return (<>
-            <article className="post__article">
-                <header>
-                    <div className="post__article__header">
-                        <h1>{post.title}</h1>
-                        <dl className="post__article__header--date">
-                            <dd>{post.date}</dd>
-                        </dl>
-                    </div>
-                </header>
-                <main
-                    className="post__article__main"
-                    dangerouslySetInnerHTML={{ __html: `${post.content}` }}
-                />
-                <footer>
+        return (
+            <div className="post">
+                <article className="post__article">
+                    <header>
+                        <div className="post__article__header">
+                            <h1>{post.title}</h1>
+                            <dl className="post__article__header--date">
+                                <dd>{post.date}</dd>
+                            </dl>
+                        </div>
+                    </header>
+                    <main
+                        className="post__article__main"
+                        dangerouslySetInnerHTML={{ __html: `${post.content}` }}
+                    />
+                    <footer>
 
-                </footer>
-            </article>
-        </>)
+                    </footer>
+                </article>
+            </div>
+        )
     }))
 }

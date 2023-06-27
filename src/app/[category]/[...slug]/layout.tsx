@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react'
 
-export default function ContentLayout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
     return (
         <div className="post">
             {children}
