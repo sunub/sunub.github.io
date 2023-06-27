@@ -27,7 +27,7 @@ export default function Asidemenu() {
                     height={24}
                     alt="Icon Home"
                 />
-                <p>All</p>
+                <span>All</span>
                 <input defaultChecked type="radio" id="all" name="topics" value="all" />
             </label>
             <label htmlFor="web">
@@ -37,7 +37,7 @@ export default function Asidemenu() {
                     height={24}
                     alt="Icon Web"
                 />
-                <p>web</p>
+                <span>web</span>
                 <input type="radio" id="web" name="topics" value="web" />
             </label>
             <label htmlFor="algorithm">
@@ -47,7 +47,7 @@ export default function Asidemenu() {
                     height={24}
                     alt="Icon algorithm"
                 />
-                <p>algorithm</p>
+                <span>algorithm</span>
                 <input type="radio" id="algorithm" name="topics" value="algorithm" />
             </label>
             <label htmlFor="javascript">
@@ -57,7 +57,7 @@ export default function Asidemenu() {
                     height={24}
                     alt="Icon Javascript"
                 />
-                <p>javascript</p>
+                <span>javascript</span>
                 <input type="radio" id="javascript" name="topics" value="javascript" />
             </label>
             <label htmlFor="typescript">
@@ -67,7 +67,7 @@ export default function Asidemenu() {
                     height={24}
                     alt="Icon Typescript"
                 />
-                <p>tysescript</p>
+                <span>tysescript</span>
                 <input type="radio" id="typescript" name="topics" value="typescript" />
             </label>
         </form>

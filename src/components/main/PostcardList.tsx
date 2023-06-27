@@ -14,22 +14,23 @@ export default function PostCardList({ data }: { data: Map<string, Description[]
             posts.map(description => {
                 return (
                     <li key={`${description["tag"]}${Math.random() * 100}`}>
-                        <article className="post_card">
+                        <article className="postcard__list">
                             <Image
                                 src={`/icon_${description.tags}.png`}
                                 width={24}
                                 height={24}
                                 alt={`Image ${description.category}`}
+                                className="postcard__icon-image"
                             />
                             <header>
                                 <span className="postcard__title">
-                                    <Link href={`/${description.category}/${description.slug}`}>
+                                    <Link href={`${baseURL}/${description.category}/${description.slug}`}>
                                         {description.title}
                                     </Link>
                                 </span>
                                 <time>{description.date}</time>
                             </header>
-                            <section>
+                            <section className="postcard__content" >
                                 <p>{description.description}</p>
                             </section>
                         </article>

@@ -1,0 +1,66 @@
+.postcard {
+	display: flex;
+	flex-direction: column;
+
+	gap: clamp(1.5rem, 1.75rem, 2rem);
+	max-inline-size: 60ch;
+	min-block-size: 100vh;
+	text-wrap: balance;
+
+	&__list {
+		display: grid;
+		grid-template:
+			"icon header"
+			"empty content" / 50px minmax(1ch, 1fr);
+		position: relative;
+
+		background-color: var(--surface-2);
+		border: none 0px transparent;
+		border-radius: var(--size-5);
+		padding: 2rem 2rem 3rem 2rem;
+		gap: clamp(1rem, 1.25rem, 1.5rem);
+
+		&:hover {
+			box-shadow: var(--box-shadow-1);
+
+			span {
+				color: oklch(70.8% 0.165 32.85);
+				text-decoration: underline;
+				text-decoration-thickness: 6px;
+				text-underline-offset: 10px;
+			}
+		}
+
+		&:active {
+			border-radius: 30px;
+		}
+	}
+
+	&__icon-image {
+		grid-area: icon;
+
+		position: sticky;
+		top: 24px;
+		align-self: center;
+		justify-self: center;
+	}
+
+	&__title {
+		grid-area: header;
+
+		display: flex;
+		justify-content: space-between;
+		margin-left: var(--size4);
+		font-size: var(--font-size-6);
+
+		& > time {
+			justify-self: flex-start;
+		}
+	}
+
+	&__content {
+		grid-area: content;
+
+		display: inline-flex;
+	}
+}

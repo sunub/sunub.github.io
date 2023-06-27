@@ -1,30 +1,25 @@
-@import "./postcard_list.css";
+@import "./PostcardList.scss";
 @import "./aside_menu.css";
-@import "./postcard_content.scss";
+@import "./PostcardContent.scss";
 
 #main {
-  display: grid;
-  grid-template-columns: [aside]var(--size-content-1) [feed]minmax(
-      0,
-      var(--size-content-3)
-    );
-  margin-block-start: var(--size-5);
-  justify-content: center;
+	display: grid;
+	grid-template-columns:
+		[aside] 15ch
+		[main] clamp(45ch, 50ch, 55ch);
+	justify-content: center;
 
-  background: var(--surface-1);
-  background-size: 100%;
-  background-repeat: no-repeat;
-
-  margin-top: 64px;
-  column-gap: var(--size-6);
-  container: main_container / inline-size;
-
-  @container main_container ( width <= 768px) {
-    .main_aside {
-      display: none;
-      opacity: 0;
-    }
-  }
+	background-size: 100%;
+	padding: 80px 0 100px 0;
+	column-gap: 3rem;
+	container: main_container / inline-size;
+	background: var(--surface-1);
+	@container main_container ( width <= 768px) {
+		.main_aside {
+			display: none;
+			opacity: 0;
+		}
+	}
 }
 
 /* --shadow-color : 220 3% 15%;
@@ -65,7 +60,7 @@
 } */
 
 @media (max-width: 768px) {
-  #main {
-    grid-template-columns: var(--size-content-3);
-  }
+	#main {
+		grid-template-columns: var(--size-content-3);
+	}
 }
