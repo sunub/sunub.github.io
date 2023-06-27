@@ -5,13 +5,13 @@ import { getPost } from "@/utils/Post"
 import PostCard from "@/components/postcardContext"
 
 export default async function Page() {
-  const post: Map<string, Description[]> = await getPost()
+  const post = await getPost()
   return (<div id="main">
     <PostCard>
       <Asidemenu />
       <ul className="postcard">
         <span>최근 작성한 게시물</span>
-        <PostCardList data={post} />
+        <PostCardList data={post[1]} />
       </ul>
     </PostCard>
   </div>)
