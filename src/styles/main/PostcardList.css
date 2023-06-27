@@ -7,7 +7,7 @@
 	min-block-size: 100vh;
 	text-wrap: balance;
 
-	&__list {
+	.postcard__list {
 		display: grid;
 		grid-template:
 			"icon header"
@@ -36,7 +36,7 @@
 		}
 	}
 
-	&__icon-image {
+	.postcard__icon-image {
 		grid-area: icon;
 
 		position: sticky;
@@ -45,7 +45,7 @@
 		justify-self: center;
 	}
 
-	&__title {
+	.postcard__title {
 		grid-area: header;
 
 		display: flex;
@@ -58,7 +58,7 @@
 		}
 	}
 
-	&__content {
+	.postcard__content {
 		grid-area: content;
 
 		display: inline-flex;

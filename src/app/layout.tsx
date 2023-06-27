@@ -1,6 +1,5 @@
-import "@/app/globals.scss"
+import "@/app/globals.css"
 import React from "react"
-import localFont from "@next/font/local"
 import Header from "../components/header/index"
 import { Metadata } from "next"
 
@@ -12,22 +11,6 @@ export const metadata: Metadata = {
   keywords: ["sunub", "sun_ub"],
   description: "This site is sunub's personal blog ",
 }
-
-// const nanumSquareNeo = localFont({
-//   src: "/fonts/NanumSquareNeo-Variable.ttf",
-//   variable: "--nanum-squareNeo",
-// });
-
-// const nanumSquareNeoBold = localFont({
-//   src: "/fonts/NanumSquareNeo-cBd.ttf",
-//   variable: "--nanum-squareNeo-bold",
-// });
-
-// const nanumSquareNeoHeavy = localFont({
-//   src: "/fonts/NanumSquareNeo-eHv.ttf",
-//   variable: "--nanum-squareNeo-heavy",
-// });
-
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 

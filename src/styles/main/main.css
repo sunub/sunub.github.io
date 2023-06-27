@@ -1,6 +1,6 @@
-@import "./PostcardList.scss";
+@import "./PostcardList.css";
 @import "./aside_menu.css";
-@import "./PostcardContent.scss";
+@import "./PostcardContent.css";
 
 #main {
 	display: grid;

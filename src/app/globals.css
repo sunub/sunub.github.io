@@ -5,17 +5,17 @@
 
 @font-face {
 	font-family: "Nanum SquareNeo";
-	src: url("/public/fonts/NanumSquareNeo-Variable.ttf");
+	src: url("/fonts/NanumSquareNeo-Variable.ttf");
 }
 
 @font-face {
 	font-family: "Nanum SquareNeo Heavy";
-	src: url("/public/fonts/NanumSquareNeo-eHv.ttf");
+	src: url("/fonts/NanumSquareNeo-eHv.ttf");
 }
 
 @font-face {
 	font-family: "Nanum SquareNeo Bold";
-	src: url("/public/fonts/NanumSquareNeo-cBd.ttf");
+	src: url("/fonts/NanumSquareNeo-cBd.ttf");
 }
 
 *,

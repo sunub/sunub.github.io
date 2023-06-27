@@ -10,12 +10,6 @@
 	font-family: "Nanum SquareNeo", serif;
 
 	background-color: var(--pink-2);
-
-	&__article {
-		line-height: 2;
-		word-spacing: 0.2ch;
-		text-align: start;
-	}
 }
 
 .post__article {
@@ -27,7 +21,7 @@
 	box-shadow: var(--box-shadow-2);
 
 	border-radius: 20dvw;
-	&__header {
+	.post__article__header {
 		line-height: 1.5;
 		text-align: center;
 		margin-bottom: 8dvh;
@@ -37,13 +31,13 @@
 		}
 	}
 
-	&__header--date {
+	.post__article__header--date {
 		font-size: var(--size-4);
 		color: oklch(21.08% 0.055 34.69 / 50%);
 		line-height: 1.5;
 	}
 
-	&__main {
+	.post__article__main {
 		display: flex;
 		flex-direction: column;
 		row-gap: 1.5rem;
