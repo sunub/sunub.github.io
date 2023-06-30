@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { SearchIcon } from "@/icon"
+import { SearchIcon } from "@/components/icon"
 
 export default function SearchBtn() {
     const inputRef = useRef<HTMLInputElement>(null)

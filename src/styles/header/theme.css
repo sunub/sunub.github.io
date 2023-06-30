@@ -1,0 +1,53 @@
+.theme-toggle {
+	--icon-fll: red;
+	--icon-fill-hover: blue;
+	--toggle-size: var(--size-8);
+	background: none;
+	border: none;
+	padding: 0;
+
+	inline-size: var(--toggle-size);
+	block-size: var(--toggle-size);
+	aspect-ratio: 1;
+	border-radius: 50%;
+
+	cursor: pointer;
+	touch-action: manipulation;
+	-webkit-tap-highlight-color: transparent;
+	outline-offset: 5px;
+
+	& > svg {
+		inline-size: 100%;
+		block-size: 100%;
+		stroke-linecap: round;
+	}
+
+	@media (hover: none) {
+		--toggle-size: 48px;
+	}
+}
+
+@layer components.fresh {
+	.sun-and-moon > :is(.moon, .sun, .sun-beams) {
+		transform-origin: center center;
+	}
+
+	.sun-and-moon > :is(.moon, .sun) {
+		fill: var(--icon-fll);
+	}
+
+	.theme-toggle:is(:hover, :focus-visible)
+		> :is(.sun-and-moon > :is(.moon, .sun)) {
+		fill: var(--icon-fill-hover);
+	}
+
+	.sun-and-moon > .sun-beams {
+		stroke: var(--icon-fll);
+		stroke-width: 2px;
+	}
+
+	.theme-toggle:is(:hover, :focus-visible)
+		> :is(.sun-and-moon > .sun-beams > path) {
+		stroke: var(--icon-fill-hover);
+	}
+}

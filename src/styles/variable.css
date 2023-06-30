@@ -29,7 +29,11 @@
   --pink-3: rgba(243, 162, 145, 17%);
   --pink-4 : oklch(70.8% 0.165 32.85);
 
-  --font-size-0 : 0.75rem
+  --gray-1 : #66737D;
+  --gray-2 : #6E7E89;
+  --gray-3 : #0092F7;
+
+  --font-size-0 : 0.75rem;
   --font-size-1 : 1rem;
   --font-size-2 : 1.1rem;
   --font-size-3 : 1.25rem;
@@ -37,10 +41,14 @@
   --font-size-5 : 2rem;
   --font-size-6 : 2.5rem;
 
-  --font-color : oklch(21.08% 0.055 34.69);
+  --font-color-1 : oklch(21.08% 0.055 34.69);
+  --font-color-2 : oklch(21.08% 0.055 34.69);
 
   --surface-1 : oklch(97.14% 0.011 31.07);
   --surface-2 : oklch(100% 0 0 / .8);
+
+  --highlights-1 : var(--pink-4)
+  --highlights-2 : var(--gray-3)
 
   --shadow-color: 26.79% 0.003 264.51;
   --shadow-strength: 1%;

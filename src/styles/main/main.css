@@ -10,7 +10,7 @@
 	justify-content: center;
 
 	background-size: 100%;
-	padding: 80px 0 100px 0;
+	padding: 8px 0 100px 0;
 	column-gap: 3rem;
 	container: main_container / inline-size;
 	background: var(--surface-1);

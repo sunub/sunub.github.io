@@ -5,7 +5,7 @@ import Link from "next/link"
 export default function Cluster() {
     return (<>
         <div className="cluster gutter-base">
-            <button
+            {/* <button
                 className="icon-button tooltip md:hidden-yes"
                 aria-label="menu-open-hamburgerBtn"
                 onClick={() => {
@@ -20,15 +20,9 @@ export default function Cluster() {
                 }}
             >
                 <HamburgerBtn />
-            </button>
+            </button> */}
             <Link href={"/"} className="site-header__brand brand">
-                <Image
-                    src={"/web_title.png"}
-                    width={125}
-                    height={24}
-                    alt="Web banner image"
-                    priority={true}
-                />
+                @sun_ub
             </Link>
         </div>
         <div className="icon_container">
