@@ -24,7 +24,7 @@
 	box-sizing: border-box;
 	padding: 0;
 	margin: 0;
-	line-height: calc(1em + 0.5rem);
+	line-height: calc(1em + 0.8rem);
 }
 
 html {
@@ -38,11 +38,11 @@ body {
 	display: flex;
 	flex-direction: column;
 	overflow-x: hidden;
-	color: var(--font-color);
 	line-height: 1.7;
 	min-height: 100vh;
 	font-family: "Nanum SquareNeo";
 
+	background-color: var(--surface-1);
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -105,6 +105,10 @@ h2,
 h3,
 h4 {
 	font-family: "Nanum SquareNeo Heavy";
+}
+
+h1 {
+	font-size: 2.5rem;
 }
 
 img,

@@ -4,6 +4,7 @@ import Header from "../components/Header/index"
 import { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InitTheme from "@/components/InitTheme"
+import BirdIcon from "@/components/icon/BirdIcon"
 
 export const metadata: Metadata = {
   title: {
@@ -31,7 +32,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <Provider>
           <Header />
-          {children}
+          <div id="main">
+            {children}
+          </div>
         </Provider>
       </body>
     </html>

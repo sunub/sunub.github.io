@@ -22,12 +22,12 @@ export default function PostCardList({ data }: { data: Map<string, Description[]
                                 alt={`Image ${description.category}`}
                                 className="postcard__icon-image"
                             />
-                            <header>
-                                <span className="postcard__title">
+                            <header className="postcard__title">
+                                <h1>
                                     <Link href={`${baseURL}/${description.category}/${description.slug}`}>
                                         {description.title}
                                     </Link>
-                                </span>
+                                </h1>
                                 <time>{description.date}</time>
                             </header>
                             <section className="postcard__content" >

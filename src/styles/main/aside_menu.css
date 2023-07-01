@@ -40,8 +40,7 @@
 }
 
 .main_aside > label:is(:hover, :target, :focus-visible, :has(:checked)) {
-	background: oklch(70.87% 0.147 33.05 / 0.8);
-	font-family: var(--nanum-squareNeo-heavy);
+	background: var(--highlight-color);
 }
 
 label {

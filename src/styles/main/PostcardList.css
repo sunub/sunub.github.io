@@ -23,8 +23,8 @@
 		&:hover {
 			box-shadow: var(--box-shadow-1);
 
-			span {
-				color: oklch(70.8% 0.165 32.85);
+			h1 {
+				color: var(--highlight-color);
 				text-decoration: underline;
 				text-decoration-thickness: 6px;
 				text-underline-offset: 10px;
@@ -49,9 +49,9 @@
 		grid-area: header;
 
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 		margin-left: var(--size4);
-		font-size: var(--font-size-6);
 
 		& > time {
 			justify-self: flex-start;

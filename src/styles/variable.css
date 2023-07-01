@@ -1,11 +1,5 @@
 :root {
-  --main-image-sky-base-color: #bcddf6;
-  --main-image-sky-lower-color: #d6cccb;
-  --main-image-sky-middle-color: #edbeb8;
-  --main-image-sky-lower-color: #a39d9d;
-
   --surface-header: var(--pink-2);
-  --surface-1: #ffffff;
 
   --on-primary : var(--surface-1)
   --primary-container : var(--pink-2)
@@ -23,16 +17,6 @@
   --size-contnet-2: 45ch;
   --size-content-3: 60ch;
 
-  --pink-0 : #FDEEEB;
-  --pink-1: rgba(243, 162, 145, 100%);
-  --pink-2: oklch(78.78% 0.1 32.39);
-  --pink-3: rgba(243, 162, 145, 17%);
-  --pink-4 : oklch(70.8% 0.165 32.85);
-
-  --gray-1 : #66737D;
-  --gray-2 : #6E7E89;
-  --gray-3 : #0092F7;
-
   --font-size-0 : 0.75rem;
   --font-size-1 : 1rem;
   --font-size-2 : 1.1rem;
@@ -40,36 +24,4 @@
   --font-size-4 : 1.5rem
   --font-size-5 : 2rem;
   --font-size-6 : 2.5rem;
-
-  --font-color-1 : oklch(21.08% 0.055 34.69);
-  --font-color-2 : oklch(21.08% 0.055 34.69);
-
-  --surface-1 : oklch(97.14% 0.011 31.07);
-  --surface-2 : oklch(100% 0 0 / .8);
-
-  --highlights-1 : var(--pink-4)
-  --highlights-2 : var(--gray-3)
-
-  --shadow-color: 26.79% 0.003 264.51;
-  --shadow-strength: 1%;
-  --box-shadow-1: 0 -1px 2px 0 oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 2%)),
-    0 2px 1px -2px oklch(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
-    0 5px 5px -2px oklch(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
-    0 10px 10px -2px oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 4%)),
-    0 20px 20px -2px oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 5%)),
-    0 40px 40px -2px oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 7%));
-  --box-shadow-2: 0 -1px 2px 0 oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 1%)),
-    0 -15px 10px 0px oklch(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
-    0 15px 5px -2px oklch(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
-    0 10px 10px -2px oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 9%)),
-    0 20px 20px -2px oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 5%)),
-    0 40px 40px -2px oklch(var(--shadow-color) /
-          calc(var(--shadow-strength) + 7%));
 }

@@ -3,14 +3,12 @@
 @import "./PostcardContent.css";
 
 #main {
-	display: grid;
-	grid-template-columns:
-		[aside] 15ch
-		[main] clamp(45ch, 50ch, 55ch);
+	display: flex;
+	flex-direction: column;
 	justify-content: center;
 
 	background-size: 100%;
-	padding: 8px 0 100px 0;
+	padding: 0 0 100px 0;
 	column-gap: 3rem;
 	container: main_container / inline-size;
 	background: var(--surface-1);
@@ -22,42 +20,25 @@
 	}
 }
 
-/* --shadow-color : 220 3% 15%;
---shadow-strength : 1%
---shadow-5: 0 -1px 2px 0 hsl(var(--shadow-color) /
-        calc(var(--shadow-strength) + 2%)),
-  0 2px 1px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
-  0 5px 5px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 3%)),
-  0 10px 10px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 4%)),
-  0 20px 20px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 5%)),
-  0 40px 40px -2px hsl(var(--shadow-color) / calc(var(--shadow-strength) + 7%)); */
+.main__content {
+	display: grid;
+	grid-template-columns:
+		[aside] 15ch
+		[main] clamp(45ch, 50ch, 55ch);
+	justify-content: center;
 
-/* .card_item {
-  display: grid;
-  grid-template-columns: 50px minmax(1ch, 1fr);
-  gap: var(--size-2) var(--size-6);
-  max-inline-size: max-content;
-
-  background: oklch(95.58% 0.02 282.96 / 0.45);
-  padding-block: var(--size-6) var(--size-5);
-  margin: var(--size-4);
-  font-family: var(--nanum-squareNeo);
-  border: none 0px transparent;
-  border-radius: 30px;
-
-  & > h1 {
-    font-family: var(--nanum-squareNeo-heavy);
-    font-size: 3rem;
-  }
+	padding: 0 0 100px 0;
+	column-gap: 3rem;
 }
 
-.card_item :hover {
-  background: oklch(73.39% 0.107 271.13 / 0.6);
-}
+.main__icon {
+	display: flex;
+	justify-content: center;
 
-.card_item :active {
-  border-radius: 60px;
-} */
+	margin-top: 8px;
+	position: relative;
+	left: 300px;
+}
 
 @media (max-width: 768px) {
 	#main {

@@ -1,18 +1,29 @@
 .site-search-wrapper {
 	display: inline-flex;
-	align-items: center;
-	justify-content: flex-end;
 
 	position: relative;
 }
 
 .site-header__search-open-btn {
-	display: inline-block;
+	background: none;
+	border: none;
 	padding: 0;
-	cursor: pointer;
+
+	inline-size: var(--toggle-size);
+	block-size: var(--toggle-size);
 
 	opacity: 1;
 	visibility: visible;
+
+	aspect-ratio: 1;
+
+	touch-action: manipulation;
+	cursor: pointer;
+
+	& > svg {
+		inline-size: 80%;
+		block-size: 80%;
+	}
 }
 
 .site-header__search-open-btn[hidden] {

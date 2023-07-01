@@ -4,9 +4,9 @@ import HeaderRight from "./HeaderRight"
 
 export default function Header() {
     return (
-        <div className="site-header">
+        <header className="site-header">
             <HeaderLeft />
             <HeaderRight />
-        </div>
+        </header>
     )
 }
