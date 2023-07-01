@@ -5,6 +5,9 @@
 }
 
 .site-header__search-open-btn {
+	display: inline-flex;
+	align-items: center;
+
 	background: none;
 	border: none;
 	padding: 0;
@@ -21,8 +24,8 @@
 	cursor: pointer;
 
 	& > svg {
-		inline-size: 80%;
-		block-size: 80%;
+		inline-size: 90%;
+		block-size: 90%;
 	}
 }
 

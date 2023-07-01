@@ -1,12 +1,27 @@
-import BirdIcon from "@/components/icon/BirdIcon"
-import { Large, Small } from "@/components/icon/Cloud"
+"use client"
+
+import { DayBirdIcon, NightBirdIcon } from "@/components/icon/BirdIcon"
+import { LargeDayCloud, LargeNightCloud, SmallNightCloud, SmallDayCloud } from "@/components/icon/Cloud"
+import { useContext } from "react"
+import { ThemeContext } from "../Provider"
 
 export default function MainBirdIcon() {
+    const theme = useContext(ThemeContext)
+
     return (<>
         <div className="main__icon" >
-            <Large className="main__icon__brid-icon" />
-            <BirdIcon className="main__icon__large-cloud" />
-            <Small className="main__icon__small-cloud" />
+            {theme.colorMode === "light"
+                ? <>
+                    <LargeDayCloud />
+                    <DayBirdIcon />
+                    <SmallDayCloud />
+                </>
+                : <>
+                    <LargeNightCloud />
+                    <NightBirdIcon />
+                    <SmallNightCloud />
+                </>
+            }
         </div>
     </>)
 }

@@ -12,6 +12,8 @@
 	column-gap: 3rem;
 	container: main_container / inline-size;
 	background: var(--surface-1);
+	transition: background 350ms ease 0s;
+
 	@container main_container ( width <= 768px) {
 		.main_aside {
 			display: none;

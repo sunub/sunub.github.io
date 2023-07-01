@@ -35,15 +35,15 @@ html {
 
 body {
 	font-size: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
-	display: flex;
-	flex-direction: column;
 	overflow-x: hidden;
-	line-height: 1.7;
 	min-height: 100vh;
 	font-family: "Nanum SquareNeo";
 
-	background-color: var(--surface-1);
 	-webkit-font-smoothing: antialiased;
+
+	color: var(--font-color);
+	background: var(--surface-2);
+	transition: color 350ms ease 0s, background 350ms ease 0s;
 }
 
 li {

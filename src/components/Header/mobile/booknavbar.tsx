@@ -1,6 +1,6 @@
 import Image from "next/image"
 import NavTop from "./navtop"
-import BirdIcon from "@/components/icon/BirdIcon"
+import { DayBirdIcon } from "@/components/icon/BirdIcon"
 
 export default function BookNavBar() {
     return (
@@ -10,7 +10,7 @@ export default function BookNavBar() {
                     <button className="icon-button material-icons tooltip color-core-text md:hidden-yes" data-drawer-close-button={""} />
                     <div className="mobile-header__brand">
                         <a className="site-header__brand brand">
-                            <BirdIcon className="booknav__brid-icon" />
+                            <DayBirdIcon />
                         </a>
                     </div>
                 </div>
