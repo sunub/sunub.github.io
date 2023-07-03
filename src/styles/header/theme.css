@@ -1,6 +1,4 @@
 .theme-toggle {
-	--icon-fll: oklch(21.08% 0.055 34.69 / 0.8);
-	--icon-fill-hover: oklch(21.08% 0.055 34.69);
 	--toggle-size: var(--size-6);
 	background: none;
 	border: none;
@@ -15,10 +13,6 @@
 	touch-action: manipulation;
 	-webkit-tap-highlight-color: transparent;
 	outline-offset: 5px;
-
-	&:hover {
-		fill: var(--icon-fill-hover);
-	}
 
 	& > svg {
 		inline-size: 100%;
@@ -38,6 +32,7 @@
 		--pink-2: oklch(78.78% 0.1 32.39);
 		--pink-3: rgba(243, 162, 145, 17%);
 		--pink-4: oklch(70.8% 0.165 32.85 / 0.7);
+		--pink-5: oklch(70.8% 0.165 32.85);
 
 		--gray-1: oklch(54.82% 0.022 241.02);
 		--gray-2: oklch(34% 0.019 229.64 / 0.7);
@@ -69,31 +64,6 @@
 						calc(var(--shadow-strength) + 5%)),
 			0 40px 40px -2px oklch(var(--shadow-color) /
 						calc(var(--shadow-strength) + 7%));
-	}
-}
-
-@layer components.fresh {
-	.sun-and-moon > :is(.moon, .sun, .sun-beams) {
-		transform-origin: center center;
-	}
-
-	.sun-and-moon > :is(.moon, .sun) {
-		fill: var(--icon-fll);
-	}
-
-	.theme-toggle:is(:hover, :focus-visible)
-		> :is(.sun-and-moon > :is(.moon, .sun)) {
-		fill: var(--icon-fill-hover);
-	}
-
-	.sun-and-moon > .sun-beams {
-		stroke: var(--icon-fll);
-		stroke-width: 2px;
-	}
-
-	.theme-toggle:is(:hover, :focus-visible)
-		> :is(.sun-and-moon > .sun-beams > path) {
-		stroke: var(--icon-fill-hover);
 	}
 }
 

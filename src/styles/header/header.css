@@ -4,6 +4,9 @@
 @import "./cluster.css";
 @import "./booknavbar.css";
 @import "./theme.css";
+@import "./toggleBtn.css";
+
+@layer base.props, base.theme, base.toggle;
 
 .site-header {
 	display: flex;

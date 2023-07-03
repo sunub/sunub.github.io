@@ -1,0 +1,55 @@
+@layer base.theme {
+	.sun-and-moon {
+		--icon-fill: oklch(21.08% 0.055 34.69 / 0.7);
+		--icon-hover-fill: oklch(21.08% 0.055 34.69);
+
+		& > :is(.moon, .sun, .sun-beams) {
+			transform-origin: center center;
+		}
+
+		& > :is(.moon, .sun) {
+			fill: var(--icon-fill);
+		}
+
+		& > .sun-beams {
+			stroke: var(--icon-fill);
+		}
+	}
+
+	.theme-toggle:is(:hover, :focus-visible) .sun {
+		fill: var(--icon-hover-fill);
+	}
+
+	.theme-toggle:is(:hover, :focus-visible) .sun-beams {
+		stroke: var(--icon-hover-fill);
+	}
+
+	[data-color-mode="dark"] {
+		.sun-and-moon {
+			& > .sun {
+				transform: scale(1.75);
+			}
+
+			& > .sun-beams {
+				opacity: 0;
+			}
+
+			& > .moon > circle {
+				transform: translate(-7px, -16px);
+			}
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.sun-and-moon > .sun {
+			transition: transform 0.5s ease-in;
+		}
+		.sun-and-moon > .sun-beams {
+			transition: transform 0.5s ease-in;
+		}
+
+		.sun-and-moon > .moon > circle {
+			transition: transform 0.5s ease-in-out;
+		}
+	}
+}

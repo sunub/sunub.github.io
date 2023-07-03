@@ -4,7 +4,6 @@ import Header from "../components/Header/index"
 import { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InitTheme from "@/components/InitTheme"
-import BirdIcon from "@/components/icon/BirdIcon"
 
 export const metadata: Metadata = {
   title: {

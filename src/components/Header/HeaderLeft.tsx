@@ -1,6 +1,3 @@
-import Image from "next/image"
-import BirdIcon from "../icon/BirdIcon"
-import { Large, Small } from "../icon/Cloud"
 import Link from "next/link"
 
 export default function HeaderLeft() {

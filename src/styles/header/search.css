@@ -26,6 +26,11 @@
 	& > svg {
 		inline-size: 90%;
 		block-size: 90%;
+
+		border: none;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		outline-offset: 5px;
 	}
 }
 
