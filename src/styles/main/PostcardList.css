@@ -5,14 +5,17 @@
 	gap: clamp(1.5rem, 1.75rem, 2rem);
 	max-inline-size: 60ch;
 	min-block-size: 100vh;
-	text-wrap: balance;
+
+	.postcard__container {
+		position: sticky;
+		transform-origin: center top;
+	}
 
 	.postcard__list {
 		display: grid;
 		grid-template:
 			"icon header"
 			"empty content" / 50px minmax(1ch, 1fr);
-		position: relative;
 
 		background: var(--surface-2);
 		transition: background 350ms ease 0s;
@@ -41,8 +44,6 @@
 	.postcard__icon-image {
 		grid-area: icon;
 
-		position: sticky;
-		top: 24px;
 		align-self: center;
 		justify-self: center;
 	}

@@ -5,7 +5,7 @@ import { useState } from "react"
 
 export const PostCardContext = createContext<any>(null)
 
-export default function PostCard({ children }: { children: React.ReactNode }) {
+export default function PostCardCtx({ children }: { children: React.ReactNode }) {
     const [category, setCategory] = useState("all")
     return (
         <PostCardContext.Provider value={{ category, setCategory }}>

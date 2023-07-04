@@ -8,8 +8,6 @@
 	position: sticky;
 	font-family: var(--nanum-squareNeo);
 
-	container: aside_container / inline-size;
-
 	& > span {
 		justify-self: center;
 	}

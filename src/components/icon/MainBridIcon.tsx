@@ -3,7 +3,7 @@
 import { DayBirdIcon, NightBirdIcon } from "@/components/icon/BirdIcon"
 import { LargeDayCloud, LargeNightCloud, SmallNightCloud, SmallDayCloud } from "@/components/icon/Cloud"
 import { useContext } from "react"
-import { ThemeContext } from "../Provider"
+import { ThemeContext } from "../Theme/Provider"
 
 export default function MainBirdIcon() {
     const theme = useContext(ThemeContext)

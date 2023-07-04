@@ -1,8 +1,7 @@
 "use client"
 
-import { baseURL } from "@/utils/getBaseUrl"
 import Image from "next/image"
-import { PostCardContext } from "../postcardContext"
+import { PostCardContext } from "../PostCardContext"
 import React, { FormEvent, useContext } from "react"
 
 

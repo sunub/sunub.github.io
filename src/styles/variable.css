@@ -24,4 +24,7 @@
   --font-size-4 : 1.5rem
   --font-size-5 : 2rem;
   --font-size-6 : 2.5rem;
+
+  --nav-height: 77px;
+	--size-inline-1: var(--size-6);
 }

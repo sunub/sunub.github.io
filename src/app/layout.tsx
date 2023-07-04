@@ -2,8 +2,8 @@ import "@/app/globals.css"
 import React from "react"
 import Header from "../components/Header/index"
 import { Metadata } from "next"
-import Provider from "@/components/Provider"
-import InitTheme from "@/components/InitTheme"
+import Provider from "@/components/Theme/Provider"
+import InitTheme from "@/components/Theme/InitTheme"
 
 export const metadata: Metadata = {
   title: {
@@ -19,6 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="kor" suppressHydrationWarning={true} >
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="/fonts/NanumSquareNeo-Variable.ttf" rel="stylesheet" as="font" type="text/css" />
         <link href="/fonts/NanumSquareNeo-eHv.ttf" rel="stylesheet" as="font" type="text/css" />
         <link href="/fonts/NanumSquareNeo-cBd.ttf" rel="stylesheet" as="font" type="text/css" />
