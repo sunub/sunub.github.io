@@ -19,16 +19,6 @@
 	cursor: pointer;
 }
 
-.cluster {
-	display: flex;
-	gap: clamp(1.375rem, 1.2rem + 0.89vw, 2rem);
-	align-items: center;
-
-	position: relative;
-	margin-top: 1.5rem;
-	margin-bottom: 1.5rem;
-}
-
 /* @media (min-width: 50em) {
   .md\:hidden-yes {
     display: none;

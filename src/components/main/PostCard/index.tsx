@@ -9,7 +9,6 @@ export default async function PostCard() {
 
     return (
         <>
-            <MainBirdIcon />
             <div className="main__content">
                 <PostCardCtx>
                     <Asidemenu />
