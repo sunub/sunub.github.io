@@ -1,0 +1,7 @@
+.logo {
+	display: flex;
+	flex-direction: row;
+
+	width: 140px;
+	cursor: pointer;
+}

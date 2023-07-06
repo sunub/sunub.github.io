@@ -33,7 +33,8 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@/icon": ["./src/components/icon"],
-			"@/utils/*": ["./src/utils/*"]
+			"@/utils/*": ["./src/utils/*"],
+			"@/lib/*": ["./src/lib/*"]
 		}
 	},
 	"include": [
@@ -43,7 +44,9 @@
 		".next/types/**/*.ts",
 		"lib/redis/blogpost.ts",
 		"lib/redis/client.ts",
-		"lib/redis/index.js"
+		"lib/redis/index.js",
+		"src/components/Header/Logo.ssx",
+		"src/components/Spacer.js"
 	],
 	"exclude": ["node_modules"]
 }

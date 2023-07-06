@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-function getHeight({ axis, size }) {
+function getHeight({ axis, size, color }) {
 	return axis === "horizontal" ? 1 : size;
 }
 
-function getWidth({ axis, size }) {
+function getWidth({ axis, size, color }) {
 	return axis === "vertical" ? 1 : size;
 }
 
@@ -16,4 +16,12 @@ const Spacer = styled.span`
 	min-height: ${getHeight}px;
 `;
 
-export default Spacer;
+const SpacerBar = styled.div`
+	display: block;
+	width: ${getWidth}px;
+	max-width: ${getWidth}px;
+	height: ${getHeight}px;
+	max-height: ${getHeight}px;
+`;
+
+export { SpacerBar, Spacer };

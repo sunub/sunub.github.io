@@ -1,12 +1,13 @@
 import BookNavBar from "./mobile/booknavbar"
 import HeaderLeft from "./HeaderLeft"
 import HeaderRight from "./HeaderRight"
+import HeaderContainer from "./Header"
 
 export default function Header() {
     return (
-        <header className="site-header">
-            <HeaderLeft />
+        <HeaderContainer>
+            {/* <HeaderLeft /> */}
             <HeaderRight />
-        </header>
+        </HeaderContainer>
     )
 }
