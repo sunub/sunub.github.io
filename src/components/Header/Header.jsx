@@ -2,18 +2,20 @@
 
 import styled from "styled-components";
 import { SpacerBar } from "../Spacer";
+import HeaderLeft from "./HeaderLeft/index";
+import HeaderRight from "./HeaderRight/index";
 
-const SiteHeader = styled.div`
+const TopContainer = styled.div`
 	position: sticky;
 	z-index: 5;
 	top: 0px;
+	width: 100dvw;
+	max-width: 1100px;
 `;
 
 const Container = styled.div`
 	position: relative;
 	z-index: 2;
-	width: 100%;
-	max-width: 1100px;
 	margin-left: auto;
 	margin-right: auto;
 	padding-left: 32px;
@@ -23,8 +25,8 @@ const Container = styled.div`
 const Content = styled.header`
 	height: 3.75rem;
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
+	justify-content: start;
 	padding: 0px;
 `;
 
@@ -32,13 +34,22 @@ const HeaderContainer = ({ children }) => {
 	return (
 		<>
 			<SpacerBar size={48} />
-			<SiteHeader>
+			<TopContainer>
 				<Container>
 					<Content>{children}</Content>
 				</Container>
-			</SiteHeader>
+			</TopContainer>
 		</>
 	);
 };
 
-export default HeaderContainer;
+const SiteHeader = () => {
+	return (
+		<HeaderContainer>
+			<HeaderLeft />
+			<HeaderRight />
+		</HeaderContainer>
+	);
+};
+
+export default SiteHeader;

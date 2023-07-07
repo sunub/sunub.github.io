@@ -4,26 +4,24 @@ import Link from "next/link";
 import styled from "styled-components";
 import { Spacer } from "@/components/Spacer";
 
-const LogoLink = styled.div`
+const LogoLink = styled(Link)`
 	display: flex;
 	flex-direction: row;
 
-	width: 140px;
-	height: 100px;
-	background-color: red;
 	cursor: pointer;
+	font-size: 24px;
+	margin-right: 32px;
+	letter-spacing: -1px;
 `;
 
-const Tag = ({ children }) => {
+const Logo = () => {
 	return (
-		<Link href={"/"}>
+		<LogoLink href={"/"}>
 			<p>@</p>
-			<Spacer size={16} />
+			<Spacer size={8} />
 			<p>sun_ub</p>
-		</Link>
+		</LogoLink>
 	);
 };
 
-export default function Logo() {
-	return <LogoLink></LogoLink>;
-}
+export default Logo;

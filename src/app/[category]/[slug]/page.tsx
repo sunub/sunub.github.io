@@ -1,5 +1,5 @@
 import { getPost, findPostByCategoryAndSlug } from "@/utils/Post"
-import PostCardContent from "@/components/main/PostCard/Content/index";
+import PostCardContent from "@/components/Main/PostCard/Content/index";
 
 export async function generateStaticParams() {
     const allPost = await getPost();

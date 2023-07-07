@@ -5,6 +5,19 @@ import Image from "next/image"
 import Link from "next/link"
 import { useContext } from "react"
 import { PostCardContext } from "../PostCardContext"
+import styled from "styled-components"
+
+// const PostCard = styled.div`
+// 	grid-area: main;
+// 	display: flex;
+// 	flex-direction: column;
+
+// 	gap: clamp(1.5rem, 1.75rem, 2rem);
+// 	max-inline-size: 60ch;
+// 	min-block-size: 100vh;
+// 	width: 100%;
+// `
+
 export default function PostCardList({ data }: { data: Map<string, Description[]> }) {
     const { category } = useContext(PostCardContext)
     const postData = new Map(data)

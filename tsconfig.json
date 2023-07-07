@@ -46,7 +46,10 @@
 		"lib/redis/client.ts",
 		"lib/redis/index.js",
 		"src/components/Header/Logo.ssx",
-		"src/components/Spacer.js"
+		"src/components/Spacer.js",
+		"src/components/Main/index.js",
+		"src/components/Header/index.jsx",
+		"src/components/Header/HeaderLeft.jsx"
 	],
 	"exclude": ["node_modules"]
 }

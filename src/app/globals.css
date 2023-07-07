@@ -35,7 +35,7 @@ html {
 
 html,
 body {
-	height: 100dvh;
+	height: 100%;
 	width: 100%;
 }
 
@@ -44,23 +44,23 @@ body {
 }
 
 body {
-	font-size: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
-	min-height: 100vh;
+	/* font-size: clamp(1rem, 0.96rem + 0.18vw, 1.125rem);
+	min-height: 100vh; */
 	font-family: "Nanum SquareNeo";
 
-	color: var(--font-color);
+	/* color: var(--font-color);
 	background: var(--surface-1);
 	transition: color 350ms ease 0s, background 350ms ease 0s;
+	overflow-y: scroll; */
 
 	display: grid;
-	inline-size: 100dvw;
 	grid-template-rows: auto 1fr;
-	min-block-size: 100%;
-	container-name: root-container;
-	container-type: inline-size;
+	justify-content: center;
+	/* container-name: root-container;
+	container-type: inline-size; */
 }
 
-@container root-container (max-width: 768px) {
+/* @container root-container (max-width: 768px) {
 	.main__content {
 		grid-template-rows: [aside] 6ch [main] 1fr;
 		grid-template-columns: 1fr;
@@ -72,7 +72,7 @@ body {
 		overflow-x: scroll;
 		margin: 0;
 	}
-}
+} */
 
 li {
 	list-style: none;

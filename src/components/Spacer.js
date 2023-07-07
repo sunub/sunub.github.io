@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
-function getHeight({ axis, size, color }) {
+function getHeight({ axis, size }) {
 	return axis === "horizontal" ? 1 : size;
 }
 
-function getWidth({ axis, size, color }) {
+function getWidth({ axis, size }) {
 	return axis === "vertical" ? 1 : size;
 }
 

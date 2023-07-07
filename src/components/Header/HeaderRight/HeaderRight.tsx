@@ -1,4 +1,4 @@
-import SearchBtn from "./web/SearchBtn"
+import SearchBtn from "./SearchBtn"
 import ThemeToggler from "./ThemeToggler"
 
 export default function HeaderRight() {

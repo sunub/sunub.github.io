@@ -9,6 +9,9 @@ const nextConfig = {
 		DEV_PORT: "http://localhost:3000",
 		DEPLOY_PORT: "https://sunub.github.io",
 	},
+	compiler: {
+		styledComponents: true,
+	},
 };
 
 export default nextConfig;

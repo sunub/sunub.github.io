@@ -1,15 +1,11 @@
-@import "./PostcardList.css";
-@import "./aside_menu.css";
-@import "./PostcardContent.css";
-
 .main__content {
 	display: grid;
 	grid-template-columns:
-		[aside] 20ch
-		[main] minmax(0, 60ch);
+		[aside] 13dvw
+		[main] clamp(45dvw, 50dvw, 55dvw);
 	justify-content: center;
 	align-items: flex-start;
-	gap: 4rem;
+	gap: 64px 96px;
 	width: 100dvw;
 	max-width: 1100px;
 
@@ -20,8 +16,7 @@
 
 	background: var(--surface-1);
 	transition: background 350ms ease 0s;
-}
 
-.main__icon {
-	display: flex;
+	margin-block-start: 4rem;
+	margin-inline: auto;
 }

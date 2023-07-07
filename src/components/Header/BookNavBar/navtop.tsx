@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import DropdownMenu from "../web/dropdownMenu"
+import DropdownMenu from "../DropDownMenu/dropdownMenu"
 
 type NavInfo = {
     dataLabel: string,

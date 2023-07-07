@@ -1,17 +1,18 @@
 import PostCardList from "./CardList/PostcardList"
 import { getPost } from "@/utils/Post"
-import Asidemenu from "./AsideMenu/aside_menu"
+import AsideMenu from "./AsideMenu/index"
 import PostCardCtx from "./PostCardContext"
 import MainBirdIcon from "@/components/icon/MainBridIcon"
+import styles from "./PostCard.module.css"
 
 export default async function PostCard() {
     const post = await getPost()
 
     return (
         <>
-            <div className="main__content">
+            <div className={styles.main__content}>
                 <PostCardCtx>
-                    <Asidemenu />
+                    <AsideMenu categories={post[0]} />
                     <ul className="postcard">
                         <PostCardList data={post[1]} />
                     </ul>

@@ -5,6 +5,12 @@ import rehypeStringify from "rehype-stringify";
 import { marked } from "marked";
 import fs from "fs";
 import path from "path";
+import {
+	Typescript,
+	Javascript,
+	Web,
+	Algorithm,
+} from "@/components/icon/Category";
 
 const fileHeader: FileHeader = {
 	"01_w": "w",
@@ -15,11 +21,12 @@ const fileHeader: FileHeader = {
 let postData = new Map();
 
 export async function getPost(): Promise<
-	[Description[], Map<string, Description[]>]
+	[Map<string, any>, Map<string, Description[]>]
 > {
 	const blogpost: Map<string, Description[]> = new Map();
 	const postFileData: Files = getFiles();
 	const descriptions: Description[] = [];
+	const categories = new Map<string, any>();
 
 	for (const [tag, files] of Object.entries(postFileData)) {
 		for (const file of files) {
@@ -43,13 +50,32 @@ export async function getPost(): Promise<
 
 			description["content"] = html;
 			descriptions.push(description);
+
+			let icon: any;
+			switch (description.category) {
+				case "web":
+					icon = Web;
+					break;
+				case "algorithm":
+					icon = Algorithm;
+					break;
+				case "typescript":
+					icon = Typescript;
+					break;
+				case "javascript":
+					icon = Javascript;
+					break;
+			}
+			!categories.has(description.category!)
+				? categories.set(description.category!, icon)
+				: null;
 		}
 
 		blogpost.set("all", descriptions);
 	}
 
 	postData = new Map(blogpost);
-	return [descriptions, blogpost];
+	return [categories, blogpost];
 }
 
 export function getFiles(): Files {
