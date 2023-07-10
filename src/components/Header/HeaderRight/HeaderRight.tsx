@@ -1,5 +1,5 @@
-import SearchBtn from "./SearchBtn"
-import ThemeToggler from "./ThemeToggler"
+import SearchBtn from "./SearchBtn";
+import ThemeToggler from "../../Theme/ThemeToggler";
 
 export default function HeaderRight() {
     return (
@@ -7,5 +7,5 @@ export default function HeaderRight() {
             <ThemeToggler />
             {/* <SearchBtn /> */}
         </div>
-    )
+    );
 }

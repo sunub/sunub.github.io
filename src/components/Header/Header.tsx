@@ -4,13 +4,13 @@ import styled from "styled-components";
 import { SpacerBar } from "../Spacer";
 import HeaderLeft from "./HeaderLeft/index";
 import HeaderRight from "./HeaderRight/index";
+import React from "react";
 
 const TopContainer = styled.div`
+	background: var(--surface-1);
 	position: sticky;
 	z-index: 5;
 	top: 0px;
-	width: 100dvw;
-	max-width: 1100px;
 `;
 
 const Container = styled.div`
@@ -20,6 +20,8 @@ const Container = styled.div`
 	margin-right: auto;
 	padding-left: 32px;
 	padding-right: 32px;
+	width: 100%;
+	max-width: 1100px;
 `;
 
 const Content = styled.header`
@@ -30,10 +32,10 @@ const Content = styled.header`
 	padding: 0px;
 `;
 
-const HeaderContainer = ({ children }) => {
+const HeaderContainer = ({ children }: { children: React.ReactNode; }) => {
 	return (
 		<>
-			<SpacerBar size={48} />
+			<SpacerBar size={24} />
 			<TopContainer>
 				<Container>
 					<Content>{children}</Content>

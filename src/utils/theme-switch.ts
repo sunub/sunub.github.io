@@ -1,23 +1,19 @@
-const storageKey = "theme-preference";
+const storageKey = 'theme-preference';
 
-const getColorPreference = (): string => {
+function getColorPreference(): any {
 	if (localStorage.getItem(storageKey)) {
-		return localStorage.getItem(storageKey)!;
+		return localStorage.getItem(storageKey);
 	} else {
-		return window.matchMedia("(prefers-color-scheme: light)").matches
-			? "dark"
-			: "light";
+		return window.matchMedia('(prefers-color-scheme: light)').matches ? 'dark' : 'light';
 	}
-};
+}
 
 const theme = { value: getColorPreference() };
 
 const reflectPreference = () => {
-	document.firstElementChild?.setAttribute("data-theme", theme.value);
+	document.firstElementChild?.setAttribute('data-theme', theme.value);
 
-	document
-		.querySelector("#theme-toggle")
-		?.setAttribute("data-theme", theme.value);
+	document.querySelector('#theme-toggle')?.setAttribute('data-theme', theme.value);
 };
 
 const setPreference = () => {
@@ -26,7 +22,7 @@ const setPreference = () => {
 };
 
 const onClick = () => {
-	theme.value = theme.value === "light" ? "dark" : "light";
+	theme.value = theme.value === 'light' ? 'dark' : 'light';
 	setPreference();
 };
 
@@ -36,16 +32,12 @@ export default (() => {
 	window.onload = () => {
 		reflectPreference();
 
-		const toggle = document.querySelector(
-			"#theme-toggle"
-		) as HTMLButtonElement;
-		toggle.addEventListener("click", onClick);
+		const toggle = document.querySelector('#theme-toggle') as HTMLButtonElement;
+		toggle.addEventListener('click', onClick);
 	};
 
-	window
-		.matchMedia("(prefers-color-scheme: dark)")
-		.addEventListener("change", ({ matches: isDark }) => {
-			theme.value = isDark ? "dark" : "light";
-			setPreference();
-		});
+	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches: isDark }) => {
+		theme.value = isDark ? 'dark' : 'light';
+		setPreference();
+	});
 })();

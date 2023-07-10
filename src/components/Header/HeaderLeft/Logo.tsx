@@ -9,7 +9,7 @@ const LogoLink = styled(Link)`
 	flex-direction: row;
 
 	cursor: pointer;
-	font-size: 24px;
+	font-size: 20px;
 	margin-right: 32px;
 	letter-spacing: -1px;
 `;

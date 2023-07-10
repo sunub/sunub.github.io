@@ -1,5 +1,5 @@
-import PostCard from "@/components/Main/PostCard/index"
+import Main from "@/components/Main/index";
 
-export default async function Page() {
-  return <PostCard />
+export default function Page() {
+  return <Main />;
 }

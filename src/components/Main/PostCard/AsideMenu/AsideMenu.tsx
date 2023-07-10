@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import Image from "next/image"
-import { PostCardContext } from "../PostCardContext"
-import React, { FormEvent, useContext, useEffect, useState } from "react"
-import styled, { createGlobalStyle } from "styled-components"
-import { Home, Typescript, Javascript, Web, Algorithm } from "@/components/icon/Category"
-
+import Image from 'next/image';
+import { PostCardContext } from '../PostCardContext';
+import React, { FormEvent, useContext, useState } from 'react';
+import styled from 'styled-components';
+import { ThemeContext } from '@/components/Theme/ThemeProvider';
+import { Home } from '@/components/icon/Category';
 
 const Form = styled.form`
     grid-area: aside;
@@ -14,12 +14,9 @@ const Form = styled.form`
     gap: var(--size-2);
     margin-top: 4.5rem;
     position: sticky;
-    width: 100%;
+    width: fit-content;
+`;
 
-    & > label:is(:hover, :target, :focus-visible, :has(:checked)){
-        background: var(--highlight-color);
-    }
-`
 const Label = styled.label`
     display: inline-flex;
     align-items: center;
@@ -34,28 +31,40 @@ const Label = styled.label`
     touch-action: manipulation;
     cursor: pointer;
 
+    color: var(--color-text);
+    transition:
+        color 350ms ease 0s,
+        background 350ms ease 0s;
+
     & > span {
         font-size: var(--size-5);
-        font-family: "Nanum SquareNeo Bold";
+        font-family: 'Nanum SquareNeo Bold';
     }
-`
+    &:hover,
+    :target,
+    :focus-visible,
+    :has(:checked) {
+        background: var(--color-highlightColor);
+    }
+`;
 
 const Input = styled.input`
     width: 0;
     height: 0;
     display: hidden;
     opacity: 0;
-`
+`;
 
 export default function Menu({ categories }: { categories: Map<string, any> }) {
-    const [labels, setLabels] = useState(new Map(categories))
-    const { setCategory } = useContext(PostCardContext)
+    const [labels, setLabels] = useState(new Map(categories));
+    const { setCategory } = useContext(PostCardContext);
+    const { colorMode } = useContext(ThemeContext);
 
     function sendCategory(event: FormEvent) {
-        const curr = event.target as HTMLInputElement
-        const changedCategory = curr.value
+        const curr = event.target as HTMLInputElement;
+        const changedCategory = curr.value;
 
-        setCategory(changedCategory)
+        setCategory(changedCategory);
     }
 
     return (
@@ -63,19 +72,17 @@ export default function Menu({ categories }: { categories: Map<string, any> }) {
             <Label>
                 <Home />
                 <span>all</span>
-                <Input defaultChecked type="radio" name="topics" value={"all"} />
+                <Input defaultChecked type="radio" name="topics" value={'all'} />
             </Label>
-            {
-                [...labels.keys()].map(label => {
-                    return (
-                        <Label key={label} >
-                            {labels.get(label)}
-                            <span>{label}</span>
-                            <Input type="radio" name="topics" value={label} />
-                        </Label>
-                    )
-                })
-            }
+            {[...labels.keys()].map(label => {
+                return (
+                    <Label key={label}>
+                        {labels.get(label)}
+                        <span>{label}</span>
+                        <Input type="radio" name="topics" value={label} />
+                    </Label>
+                );
+            })}
         </Form>
-    )
+    );
 }

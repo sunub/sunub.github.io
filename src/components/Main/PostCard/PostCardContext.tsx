@@ -1,15 +1,10 @@
-"use client"
+'use client';
 
-import React, { createContext } from "react"
-import { useState } from "react"
+import React, { createContext, useState } from 'react';
 
-export const PostCardContext = createContext<any>(null)
+export const PostCardContext = createContext<any>(null);
 
-export default function PostCardCtx({ children }: { children: React.ReactNode }) {
-    const [category, setCategory] = useState<string>("all")
-    return (
-        <PostCardContext.Provider value={{ category, setCategory }}>
-            {children}
-        </PostCardContext.Provider>
-    )
+export default function PostCardCtx({ children }: { children: React.ReactNode; }) {
+    const [category, setCategory] = useState<string>('all');
+    return <PostCardContext.Provider value={{ category, setCategory }}>{children}</PostCardContext.Provider>;
 }

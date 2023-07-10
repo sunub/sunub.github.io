@@ -1,2 +1,2 @@
-export * from "./PostcardList";
-export { default } from "./PostcardList";
+export * from './PostcardList';
+export { default } from './PostcardList';

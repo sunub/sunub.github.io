@@ -1,40 +1,44 @@
-"use client"
+'use client';
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react';
 
 type StorageInfo = {
-    [key: string]: string[];
+    [key: string]: string[],
 };
 
 export default function NavigationDrawer() {
-    const [storageData, setStorageData] = useState<StorageInfo>({})
+    const [storageData, setStorageData] = useState<StorageInfo>({});
 
-    const navInfo = [{
-        dataLabel: "Tab : Develop",
-        url: "/develop",
-        title: "Develop",
-        key: "Develop Page"
-    },
-    {
-        dataLabel: "Tab : Devops",
-        url: "/devops",
-        title: "DevOps",
-        key: "Devops Page"
-    },
-    {
-        dataLabel: "Tab : Devkit",
-        url: "/devkit",
-        title: "DevKit",
-        key: "Devkit Page"
-    }]
-
-    useEffect(() => {
-    }, [])
+    const navInfo = [
+        {
+            dataLabel: 'Tab : Develop',
+            url: '/develop',
+            title: 'Develop',
+            key: 'Develop Page',
+        },
+        {
+            dataLabel: 'Tab : Devops',
+            url: '/devops',
+            title: 'DevOps',
+            key: 'Devops Page',
+        },
+        {
+            dataLabel: 'Tab : Devkit',
+            url: '/devkit',
+            title: 'DevKit',
+            key: 'Devkit Page',
+        },
+    ];
 
     return (
         <>
             <web-navigation-drawer type="standard">
-                <nav aria-label="main navigator" className="site-header__nav" data-drawer-container={""} aria-expanded={false}>
+                <nav
+                    aria-label="main navigator"
+                    className="site-header__nav"
+                    data-drawer-container={''}
+                    aria-expanded={false}
+                >
                     {/* {
                         navInfo.map((info) => {
                             return (
@@ -76,5 +80,5 @@ export default function NavigationDrawer() {
                 </nav>
             </web-navigation-drawer>
         </>
-    )
+    );
 }

@@ -1,6 +1,1 @@
-import Head from "next/head";
-
-
-const Meta = () => {
-    
-}
+import Head from 'next/head';

@@ -1,2 +1,2 @@
-export * from "./AsideMenu";
-export { default } from "./AsideMenu";
+export * from './AsideMenu';
+export { default } from './AsideMenu';
