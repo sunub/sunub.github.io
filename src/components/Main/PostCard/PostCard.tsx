@@ -1,3 +1,4 @@
+import React from "react";
 import PostCardList from "./CardList/PostcardList";
 import { getPost } from "@/utils/Post";
 import AsideMenu from "./AsideMenu/index";
@@ -5,6 +6,7 @@ import PostCardCtx from "./PostCardContext";
 
 export default async function PostCard() {
     const post = await getPost();
+    console.log(post)
 
     return (<>
         <PostCardCtx>

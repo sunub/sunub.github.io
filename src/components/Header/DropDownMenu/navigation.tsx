@@ -1,35 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-type StorageInfo = {
-    [key: string]: string[],
-};
-
 export default function NavigationDrawer() {
-    const [storageData, setStorageData] = useState<StorageInfo>({});
-
-    const navInfo = [
-        {
-            dataLabel: 'Tab : Develop',
-            url: '/develop',
-            title: 'Develop',
-            key: 'Develop Page',
-        },
-        {
-            dataLabel: 'Tab : Devops',
-            url: '/devops',
-            title: 'DevOps',
-            key: 'Devops Page',
-        },
-        {
-            dataLabel: 'Tab : Devkit',
-            url: '/devkit',
-            title: 'DevKit',
-            key: 'Devkit Page',
-        },
-    ];
-
     return (
         <>
             <web-navigation-drawer type="standard">

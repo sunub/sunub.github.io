@@ -1,4 +1,3 @@
-import SearchBtn from "./SearchBtn";
 import ThemeToggler from "../../Theme/ThemeToggler";
 
 export default function HeaderRight() {

@@ -25,7 +25,6 @@ export default (() => {
 				if (this._open === isOpen) {
 					return;
 				}
-				const e = this._open;
 				this._open = isOpen;
 				this.animating = !0;
 				this._open && document.addEventListener("keyup", this.onKeyUp);

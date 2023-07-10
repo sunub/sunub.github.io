@@ -1,5 +1,11 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
+import MainBirdIcon from '@/components/icon/MainBridIcon';
 
 export default function Layout({ children }: { children: ReactNode }) {
-    return <div className="post">{children}</div>;
+    return (
+        <div>
+            <MainBirdIcon />
+            {children}
+        </div>
+    )
 }

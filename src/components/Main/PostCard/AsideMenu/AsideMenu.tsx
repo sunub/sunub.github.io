@@ -1,10 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { PostCardContext } from '../PostCardContext';
-import React, { FormEvent, useContext, useState } from 'react';
+import React, { FormEvent, useContext } from 'react';
 import styled from 'styled-components';
-import { ThemeContext } from '@/components/Theme/ThemeProvider';
 import { Home } from '@/components/icon/Category';
 
 const Form = styled.form`
@@ -56,9 +54,8 @@ const Input = styled.input`
 `;
 
 export default function Menu({ categories }: { categories: Map<string, any> }) {
-    const [labels, setLabels] = useState(new Map(categories));
+    const labels = new Map(categories);
     const { setCategory } = useContext(PostCardContext);
-    const { colorMode } = useContext(ThemeContext);
 
     function sendCategory(event: FormEvent) {
         const curr = event.target as HTMLInputElement;
@@ -66,6 +63,7 @@ export default function Menu({ categories }: { categories: Map<string, any> }) {
 
         setCategory(changedCategory);
     }
+    console.log(categories)
 
     return (
         <Form onChange={e => sendCategory(e)}>

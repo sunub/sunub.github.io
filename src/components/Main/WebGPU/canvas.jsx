@@ -1,96 +1,96 @@
-"use client";
+// "use client";
 
-import { fail } from "assert";
-import { useEffect, useRef, useState } from "react";
+// import { fail } from "assert";
+// import { useEffect, useRef, useState } from "react";
 
-export default function Canvas() {
-  const canvasRef = useRef();
+// export default function Canvas() {
+//   const canvasRef = useRef();
 
-  useEffect(() => {
-    async function main() {
-      const adapter = await navigator.gpu?.requestAdapter();
-      const device = await adapter?.requestDevice();
-      if (!device) {
-        return fail("need a browser that supprots WebGPU");
-      }
+//   useEffect(() => {
+//     async function main() {
+//       const adapter = await navigator.gpu?.requestAdapter();
+//       const device = await adapter?.requestDevice();
+//       if (!device) {
+//         return fail("need a browser that supprots WebGPU");
+//       }
 
-      const canvas = canvasRef.current;
-      const context = canvas.getContext("webgpu");
-      const presentationFormat = navigator.gpu?.getPreferredCanvasFormat();
-      context?.configure({
-        device,
-        format: presentationFormat,
-      });
+//       const canvas = canvasRef.current;
+//       const context = canvas.getContext("webgpu");
+//       const presentationFormat = navigator.gpu?.getPreferredCanvasFormat();
+//       context?.configure({
+//         device,
+//         format: presentationFormat,
+//       });
 
-      const module = device.createShaderModule({
-        label: "our hardcoded red triangle shaders",
-        code: `
-                @vertex fn vs(
-                    @builtin(vertex_index) vertexIndex : u32
-                ) -> @builtin(position) vec4f {
-                    var pos = array<vec2f, 3>(
-                        vec2f( 0.0, 0.5),
-                        vec2f( -0.5, -0.5),
-                        vec2f( 0.5, -0.5)
-                    );
+//       const module = device.createShaderModule({
+//         label: "our hardcoded red triangle shaders",
+//         code: `
+//                 @vertex fn vs(
+//                     @builtin(vertex_index) vertexIndex : u32
+//                 ) -> @builtin(position) vec4f {
+//                     var pos = array<vec2f, 3>(
+//                         vec2f( 0.0, 0.5),
+//                         vec2f( -0.5, -0.5),
+//                         vec2f( 0.5, -0.5)
+//                     );
 
-                    return vec4f(pos[vertexIndex], 0.0, 1.0);
-                }
+//                     return vec4f(pos[vertexIndex], 0.0, 1.0);
+//                 }
 
-                @fragment fn fs() -> @location(0) vec4f {
-                    return vec4f(1.0, 0.0, 0.0, 1.0);
-                }
-                `,
-      });
+//                 @fragment fn fs() -> @location(0) vec4f {
+//                     return vec4f(1.0, 0.0, 0.0, 1.0);
+//                 }
+//                 `,
+//       });
 
-      const pipeline = device.createRenderPipeline({
-        label: "our hardcoded red triangle pipeline",
-        layout: "auto",
-        vertex: {
-          module,
-          entryPoint: "vs",
-        },
-        fragment: {
-          module,
-          entryPoint: "fs",
-          targets: [{ format: presentationFormat }],
-        },
-      });
+//       const pipeline = device.createRenderPipeline({
+//         label: "our hardcoded red triangle pipeline",
+//         layout: "auto",
+//         vertex: {
+//           module,
+//           entryPoint: "vs",
+//         },
+//         fragment: {
+//           module,
+//           entryPoint: "fs",
+//           targets: [{ format: presentationFormat }],
+//         },
+//       });
 
-      const renderPassDescriptor = {
-        label: "our basic canvas renderPass",
-        colorAttachments: [
-          {
-            clearValue: [0.3, 0.3, 0.3, 1],
-            loadOp: "clear",
-            storeOp: "store",
-          },
-        ],
-      };
+//       const renderPassDescriptor = {
+//         label: "our basic canvas renderPass",
+//         colorAttachments: [
+//           {
+//             clearValue: [0.3, 0.3, 0.3, 1],
+//             loadOp: "clear",
+//             storeOp: "store",
+//           },
+//         ],
+//       };
 
-      function render() {
-        renderPassDescriptor.colorAttachments[0].view = context
-          .getCurrentTexture()
-          .createView();
-        const encoder = device.createCommandEncoder({ label: "our encoder" });
+//       function render() {
+//         renderPassDescriptor.colorAttachments[0].view = context
+//           .getCurrentTexture()
+//           .createView();
+//         const encoder = device.createCommandEncoder({ label: "our encoder" });
 
-        const pass = encoder.beginRenderPass(renderPassDescriptor);
-        pass.setPipeline(pipeline);
-        pass.draw(3); // call our vertex shader 3 times
-        pass.end();
+//         const pass = encoder.beginRenderPass(renderPassDescriptor);
+//         pass.setPipeline(pipeline);
+//         pass.draw(3); // call our vertex shader 3 times
+//         pass.end();
 
-        const commandBuffer = encoder.finish();
-        device.queue.submit([commandBuffer]);
-      }
+//         const commandBuffer = encoder.finish();
+//         device.queue.submit([commandBuffer]);
+//       }
 
-      render();
-    }
+//       render();
+//     }
 
-    main();
-  }, []);
+//     main();
+//   }, []);
 
-  return <canvas id="root" ref={canvasRef}></canvas>;
-}
+//   return <canvas id="root" ref={canvasRef}></canvas>;
+// }
 
 // async function initWebGPU() {
 //     const GRID_SIZE = 32;

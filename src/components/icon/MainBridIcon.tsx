@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import styled from 'styled-components';
 import { DayBirdIcon, NightBirdIcon } from '@/components/icon/BirdIcon';
 import { LargeDayCloud, LargeNightCloud, SmallNightCloud, SmallDayCloud } from '@/components/icon/Cloud';

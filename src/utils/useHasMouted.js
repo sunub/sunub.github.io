@@ -1,9 +1,9 @@
-function useHasMounted() {
-    const [hasMounted, setHasMounted] = React.useState(false);
+// function useHasMounted() {
+//     const [hasMounted, setHasMounted] = React.useState(false);
 
-    React.useEffect(() => {
-        setHasMounted(true);
-    }, []);
+//     React.useEffect(() => {
+//         setHasMounted(true);
+//     }, []);
 
-    return hasMounted;
-}
+//     return hasMounted;
+// }

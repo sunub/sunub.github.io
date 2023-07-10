@@ -6,7 +6,6 @@ export const ThemeContext = createContext<any>({});
 
 export default function Provider({ children }: { children: React.ReactNode }) {
     const [colorMode, rawSetColorMode] = useState<string | null>(null);
-    const [deivePreferMode, setDevicePreferMode] = useState<boolean>(false);
 
     useEffect(() => {
         const root = document.documentElement;
