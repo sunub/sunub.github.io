@@ -1,5 +1,5 @@
 import React from "react";
-import { COLORS } from "@/constants/constants";
+import { COLORS } from "src/constants/constants";
 
 function setColorsByTheme() {
 	const COLORS = "🌈";
@@ -38,7 +38,8 @@ function setColorsByTheme() {
 
 	root.setAttribute("data-color-mode", colorMode);
 	Object.entries(COLORS).forEach(([name, colorByTheme]) => {
-		const cssVarName = `--color-${name}`;
+		const cssVar = `--color-`;
+		const cssVarName = cssVar + name;
 		root.style.setProperty(cssVarName, colorByTheme[colorMode]);
 	});
 }
@@ -51,5 +52,7 @@ export default function InitTheme() {
 
 	const calledFunction = `(${boundFn})()`;
 
-	return <script dangerouslySetInnerHTML={{ __html: calledFunction }} />;
+	return (
+		<script dangerouslySetInnerHTML={{ __html: calledFunction }}></script>
+	);
 }
