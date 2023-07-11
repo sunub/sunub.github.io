@@ -6,7 +6,6 @@ import PostCardCtx from "./PostCardContext";
 
 export default async function PostCard() {
     const post = await getPost();
-    console.log(post)
 
     return (<>
         <PostCardCtx>

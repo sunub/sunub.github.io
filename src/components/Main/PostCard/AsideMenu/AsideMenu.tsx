@@ -63,7 +63,6 @@ export default function Menu({ categories }: { categories: Map<string, any> }) {
 
         setCategory(changedCategory);
     }
-    console.log(categories)
 
     return (
         <Form onChange={e => sendCategory(e)}>
