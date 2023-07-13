@@ -1,4 +1,4 @@
-type FileHeader = {
+type FolderName = {
 	[key: string]: Tag;
 	"01_w": "w";
 	"02_a": "a";
@@ -29,6 +29,7 @@ type DescriptionKeys =
 
 interface Description {
 	[key: string]: string;
+	useId: string;
 	title: string;
 	date: string;
 	tags: string;

@@ -59,6 +59,20 @@ function setColorsByTheme() {
 		const cssVarName = cssVar + name;
 		root.style.setProperty(cssVarName, colorByTheme[colorMode]);
 	});
+
+	window
+		.matchMedia("(prefers-color-scheme: dark)")
+		.addEventListener("change", ({ matches: isDark }) => {
+			const currColorMode = isDark === true ? "dark" : "light";
+			Object.entries(COLORS).forEach(([name, colorByTheme]) => {
+				const cssVar = "--color-";
+				const cssVarName = cssVar + name;
+				document.firstElementChild.style.setProperty(
+					cssVarName,
+					colorByTheme[currColorMode]
+				);
+			});
+		});
 }
 
 export default function InitTheme() {

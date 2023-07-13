@@ -7,7 +7,8 @@
 		"dev": "next dev --turbo",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"dev:server": "nodemon --watch server --exec 'npx' 'ts-node' server/index.ts"
 	},
 	"dependencies": {
 		"@mdx-js/loader": "^2.3.0",
@@ -23,6 +24,7 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"express": "^4.18.2",
 		"marked": "^5.1.0",
+		"mongodb": "^5.7.0",
 		"next": "^13.4.8",
 		"postcss-preset-env": "^9.0.0",
 		"react": "18.2.0",
