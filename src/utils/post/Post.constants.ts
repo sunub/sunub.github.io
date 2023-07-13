@@ -1,9 +1,9 @@
-export const FolderName: FolderName = {
-	"01_w": "w",
-	"02_a": "a",
-	"03_js": "j",
-	"04_ts": "t",
-};
+// export const FolderName: FolderName = {
+// 	"01_w": "w",
+// 	"02_a": "a",
+// 	"03_js": "j",
+// 	"04_ts": "t",
+// };
 
 const PostCollection = (collection: Description) => {
 	return {

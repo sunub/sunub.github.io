@@ -1,12 +1,12 @@
 type FolderName = {
 	[key: string]: Tag;
-	"01_w": "w";
-	"02_a": "a";
-	"03_js": "j";
-	"04_ts": "t";
+	web: "w";
+	algorithm: "a";
+	javascript: "j";
+	typescript: "t";
 };
 
-type Folders = ["01_w", "02_a", "03_js", "04_ts"] | string[];
+type Folders = ["web", "algorithm", "javascript", "typescript"] | string[];
 
 type Tag = "w" | "a" | "j" | "t";
 
