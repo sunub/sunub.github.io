@@ -80,7 +80,7 @@ const Description = styled.section`
     display: inline-flex;
 `;
 
-function CardContent({ category, slug, tags, title, date, description }: DescriptionKeys) {
+function CardContent({ category, slug, tags, title, date, summary }: Description) {
     return (
         <Content href={`${baseURL}/${category}/${slug}`}>
             <Icon src={`/icon_${tags}.png`} width={24} height={24} alt={`Image ${category}`} />
@@ -89,34 +89,36 @@ function CardContent({ category, slug, tags, title, date, description }: Descrip
                 <time>{date}</time>
             </Header>
             <Description>
-                <p>{description}</p>
+                <p>{summary}</p>
             </Description>
         </Content>
     );
 }
 
-export default function PostCardList({ data }: { data: Map<string, Description[]> }) {
+export default function PostCardList({ posts }: { posts: Files }) {
     const { category } = useContext(PostCardContext);
-    const postData = new Map(data);
-    const posts = postData.get(category) ?? [];
+    console.log(posts);
     return (
         <Container>
-            {posts.map(description => {
-                return (
-                    <List key={`${description['tag']}${Math.random() * 100}`}>
-                        <article>
-                            <CardContent
-                                category={description.category}
-                                date={description.date}
-                                description={description.description}
-                                slug={description.slug}
-                                title={description.title}
-                                tags={description.tags}
-                            />
-                        </article>
-                    </List>
-                );
-            })}
+
         </Container>
+        // <Container>
+        //     {posts.map(description => {
+        //         return (
+        //             <List key={`${description['tag']}${Math.random() * 100}`}>
+        //                 <article>
+        //                     <CardContent
+        //                         category={description.category}
+        //                         date={description.date}
+        //                         description={description.description}
+        //                         slug={description.slug}
+        //                         title={description.title}
+        //                         tags={description.tags}
+        //                     />
+        //                 </article>
+        //             </List>
+        //         );
+        //     })}
+        // </Container>
     );
 }

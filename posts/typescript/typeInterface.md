@@ -2,7 +2,7 @@
 title: 타입스크립트의 선언문들
 date: 2023-06-12
 tags: typescript
-description: 타입 선언문 Interface에 대해서 이해하고 또 다른 타입 선언문인 type 과의 차이를 이해하고 적용해보자.
+summary: 타입 선언문 Interface에 대해서 이해하고 또 다른 타입 선언문인 type 과의 차이를 이해하고 적용해보자.
 slug: whatis-declaration
 category: typescript
 ---
@@ -23,20 +23,20 @@ const axis2 = "y";
 
 ```typescript
 interface Product {
-  id: string;
-  name: string;
-  price: string;
+	id: string;
+	name: string;
+	price: string;
 }
 
 function logProduct(product: Product) {
-  const id: string = product.id;
-  const name: string = product.name;
-  const price: number = product.price;
+	const id: string = product.id;
+	const name: string = product.name;
+	const price: number = product.price;
 }
 // 이렇게 사용할 경우 타입을 이미 선언 했음에도 제대로 사용하지 못하고 따로 따로 선언하고 있는 불편한 경우를 볼 수 있다.
 
 function logProduct(product: Product) {
-  const { id, name, price } = product;
+	const { id, name, price } = product;
 }
 // 이 경우에는 번잡하게 사용하지 않더라도 편하게 타입 선언이 가능한 것을 볼 수 있다.
 ```
@@ -45,12 +45,12 @@ function logProduct(product: Product) {
 
 ```typescript
 interface Vector2D {
-  x: nubmer;
-  y: number;
+	x: nubmer;
+	y: number;
 }
 
 function add(a: Vector2D, b: Vector2D) {
-  return { x: a.x + a.y, y: b.x + b.y };
+	return { x: a.x + a.y, y: b.x + b.y };
 }
 ```
 

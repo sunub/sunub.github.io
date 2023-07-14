@@ -35,16 +35,14 @@
 			"@/icon": ["./src/components/icon"],
 			"@/utils/*": ["./src/utils/*"],
 			"@/lib/*": ["./src/lib/*"]
-		}
+		},
+		"sourceMap": true
 	},
 	"include": [
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"lib/redis/blogpost.ts",
-		"lib/redis/client.ts",
-		"lib/redis/index.js",
 		"src/components/Header/Logo.ssx",
 		"src/components/Spacer.ts",
 		"src/components/Main/index.js",
@@ -52,7 +50,8 @@
 		"src/components/Header/HeaderLeft.jsx",
 		"src/components/Theme/InitTheme.js",
 		"server/mongodbInit.ts",
-		"server/atlas_uri.ts"
+		"server/atlas_uri.ts",
+		"src/**/*.js"
 	],
 	"exclude": ["node_modules"]
 }

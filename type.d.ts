@@ -1,41 +1,25 @@
-type FolderName = {
-	[key: string]: Tag;
-	web: "w";
-	algorithm: "a";
-	javascript: "j";
-	typescript: "t";
+type Category = "web" | "algorithm" | "javascript" | "typescript";
+
+type Files = {
+	[k in Tag]: FileData[];
+};
+
+type FileData = {
+	icon: React.ReactNode;
+	description: Description;
+	content: string;
 };
 
 type Folders = ["web", "algorithm", "javascript", "typescript"] | string[];
 
-type Tag = "w" | "a" | "j" | "t";
-
-type Files = {
-	w?: string[];
-	a?: string[];
-	j?: string[];
-	t?: string[];
-};
-
-type DescriptionKeys =
-	| title
-	| date
-	| tags
-	| description
-	| category
-	| slug
-	| template
-	| content;
+type Tag = "web" | "algorithm" | "javascript" | "typescript";
 
 interface Description {
 	[key: string]: string;
-	useId: string;
 	title: string;
 	date: string;
 	tags: string;
-	description: string;
+	summary: string;
 	category: string;
 	slug: string;
-	template: string;
-	content: string;
 }

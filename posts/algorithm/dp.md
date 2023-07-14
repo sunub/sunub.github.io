@@ -2,7 +2,7 @@
 title: DP에 관하여...
 date: 2023-06-12
 tags: algorithm
-description: Dynamic Programming 이란 무엇이고 어떠한 원리로 작동되며 간단한 예시등을 통해 어떻게 구현해야 하는지 어떠한 방식으로 접근해야 하는지에 대해 다룬다.
+summary: Dynamic Programming 이란 무엇이고 어떠한 원리로 작동되며 간단한 예시등을 통해 어떻게 구현해야 하는지 어떠한 방식으로 접근해야 하는지에 대해 다룬다.
 category: algorithm
 slug: whatis-dp
 ---
