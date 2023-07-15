@@ -95,30 +95,31 @@ function CardContent({ category, slug, tags, title, date, summary }: Description
     );
 }
 
-export default function PostCardList({ posts }: { posts: Files }) {
+export default function PostCardList({ categorizedPost }: { categorizedPost: Map<string, Description[]> }) {
     const { category } = useContext(PostCardContext);
-    console.log(posts);
+    categorizedPost = new Map(categorizedPost);
+    const posts = categorizedPost.get(category) ?? [];
+
     return (
         <Container>
-
+            {
+                posts.map(desc => {
+                    return (
+                        <List key={`${desc.tags}${Math.random() * 100}`}>
+                            <article>
+                                <CardContent
+                                    category={desc.category}
+                                    date={desc.date}
+                                    summary={desc.summary}
+                                    slug={desc.slug}
+                                    title={desc.title}
+                                    tags={desc.tags}
+                                />
+                            </article>
+                        </List>
+                    )
+                })
+            }
         </Container>
-        // <Container>
-        //     {posts.map(description => {
-        //         return (
-        //             <List key={`${description['tag']}${Math.random() * 100}`}>
-        //                 <article>
-        //                     <CardContent
-        //                         category={description.category}
-        //                         date={description.date}
-        //                         description={description.description}
-        //                         slug={description.slug}
-        //                         title={description.title}
-        //                         tags={description.tags}
-        //                     />
-        //                 </article>
-        //             </List>
-        //         );
-        //     })}
-        // </Container>
     );
 }

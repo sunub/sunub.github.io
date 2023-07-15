@@ -4,6 +4,7 @@ import { PostCardContext } from '../PostCardContext';
 import React, { FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { Home } from '@/components/icon/Category';
+import { getCategoryIcon } from './AsudeMenu.helper';
 
 const Form = styled.form`
     grid-area: aside;
@@ -53,9 +54,9 @@ const Input = styled.input`
     opacity: 0;
 `;
 
-export default function Menu({ categories }: { categories: Map<string, any> }) {
-    const labels = new Map(categories);
+export default function Menu({ categories }: { categories: string[] }) {
     const { setCategory } = useContext(PostCardContext);
+    const icon = getCategoryIcon(categories);
 
     function sendCategory(event: FormEvent) {
         const curr = event.target as HTMLInputElement;
@@ -71,15 +72,17 @@ export default function Menu({ categories }: { categories: Map<string, any> }) {
                 <span>all</span>
                 <Input defaultChecked type="radio" name="topics" value={'all'} />
             </Label>
-            {[...labels.keys()].map(label => {
-                return (
-                    <Label key={label}>
-                        {labels.get(label)}
-                        <span>{label}</span>
-                        <Input type="radio" name="topics" value={label} />
-                    </Label>
-                );
-            })}
+            {
+                categories.map((category: any) => {
+                    return (
+                        <Label key={category}>
+                            {icon.get(category)}
+                            <span>{category}</span>
+                            <Input type='radio' name='topics' value={category} />
+                        </Label>
+                    )
+                })
+            }
         </Form>
     );
 }

@@ -56,23 +56,23 @@ const Main = styled.main`
     padding-right: 32px;
 `;
 
-export default function PostCardContent({ posts }: { posts: Description[] }) {
-    console.log(posts)
-    return posts.map(post => {
-        return (
-            <Container key={post.title}>
-                <Article>
-                    <SpacerBar axis="vertical" size={144} />
-                    <Header>
-                        <h1>{post.title}</h1>
-                        <Date className="post__article__header--date">
-                            <dd>{post.date}</dd>
-                        </Date>
-                    </Header>
-                    <SpacerBar axis="vertical" size={120} />
-                    <Main className="post__article__main" dangerouslySetInnerHTML={{ __html: `${post.content}` }} />
-                </Article>
-            </Container>
-        );
-    });
+export default function PostCardContent({ posts }: { posts: PostData }) {
+    const desc = posts.description
+    const post = posts.content;
+
+    return (
+        <Container key={desc.title}>
+            <Article>
+                <SpacerBar axis="vertical" size={144} />
+                <Header>
+                    <h1>{desc.title}</h1>
+                    <Date className="post__article__header--date">
+                        <dd>{desc.date}</dd>
+                    </Date>
+                </Header>
+                <SpacerBar axis="vertical" size={120} />
+                <Main className="post__article__main" dangerouslySetInnerHTML={{ __html: `${post}` }} />
+            </Article>
+        </Container>
+    );
 }

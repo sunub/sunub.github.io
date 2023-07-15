@@ -1,16 +1,19 @@
 import React from 'react';
-import { getPost, findPostByCategoryAndSlug } from '@/utils/Post';
+import Post from '@/utils/post/Post';
+import { findPostByCategoryAndSlug } from '@/components/Main/PostCard/Content/PostCardContent.helper';
 import PostCardContent from '@/components/Main/PostCard/Content/index';
 
+const post = new Post();
 export async function generateStaticParams() {
-    const [, description] = await getPost();
     const params: any[] = [];
 
-    for (const descript of description.values()) {
-        for (const tag of descript) {
-            params.push({ category: tag.category, slug: tag.slug })
-        }
-    }
+    const cateogrizedPost = post.categorizedPost;
+    cateogrizedPost.get("all")?.map(desc => {
+        params.push({
+            category: desc.category,
+            slug: desc.slug,
+        })
+    })
 
     return params.map(param => ({
         category: param.category,
@@ -18,10 +21,9 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function Page({ params }: { params: { category: string, slug: string } }) {
-    const blogpost = await getPost();
+export default async function Page({ params }: { params: { category: Tag, slug: string } }) {
     const { category, slug } = params;
-    const posts = findPostByCategoryAndSlug(category, slug, blogpost[1]);
+    const posts = findPostByCategoryAndSlug(category, slug, post.allPost);
 
     return (
         <PostCardContent posts={posts} />

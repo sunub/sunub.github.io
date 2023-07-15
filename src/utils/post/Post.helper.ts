@@ -1,11 +1,25 @@
 import fs from "fs";
 import { marked } from "marked";
-import {
-	Typescript,
-	Javascript,
-	Web,
-	Algorithm,
-} from "@/components/icon/Category";
+
+export function categorizePostByCategory(
+	files: Files
+): Map<string, Description[]> {
+	const all = [];
+	const descriptions: Map<string, Description[]> = new Map();
+	const categorizedPost = Object.entries(files);
+
+	for (const [category, post] of categorizedPost) {
+		const description = [];
+		for (const data of post) {
+			all.push(data.description);
+			description.push(data.description);
+		}
+		descriptions.set(category, description);
+	}
+	descriptions.set("all", all);
+
+	return descriptions;
+}
 
 export function getLocalFiles(): Files {
 	const root = "posts/";
@@ -14,13 +28,13 @@ export function getLocalFiles(): Files {
 
 	for (const name of folders) {
 		const path = root + name;
-		files[name] = readFiles(path, {});
+		files[name] = readFiles(path, []);
 	}
 
 	return files;
 }
 
-function readFiles(path: string, structure: FileData | any): FileData {
+function readFiles(path: string, structure: PostData[] | any): Files {
 	const currPaths = fs.readdirSync(path, "utf-8");
 
 	for (const currPath of currPaths) {
@@ -28,18 +42,25 @@ function readFiles(path: string, structure: FileData | any): FileData {
 		const stat = fs.statSync(nextPath);
 
 		if (stat.isFile() && nextPath.match(/\.(md)$/i)?.length) {
-			const key = currPath.replace(/\.(md)$/i, "");
-			structure[key] = divideDescriptionAndContent(
-				fs.readFileSync(nextPath, "utf-8")
+			structure.push(
+				divideDescriptionAndContent(fs.readFileSync(nextPath, "utf-8"))
 			);
 		} else if (stat.isDirectory()) {
 			readFiles(nextPath, structure);
 		}
 	}
+
+	structure.sort((file1: PostData, file2: PostData) => {
+		return (
+			new Date(file2.description.date).getTime() -
+			new Date(file1.description.date).getTime()
+		);
+	});
+
 	return structure;
 }
 
-function divideDescriptionAndContent(text: string): FileData {
+function divideDescriptionAndContent(text: string): PostData {
 	const pattern = /---\n([\s\S]*?)\n---/;
 	const match = text.match(pattern);
 
@@ -56,7 +77,6 @@ function divideDescriptionAndContent(text: string): FileData {
 	const content = text.split("---").slice(2).join("").trim();
 
 	return {
-		icon: getCategoryIcon(description.category),
 		description: description,
 		content: convertContentToHtml(content),
 	};
@@ -73,25 +93,4 @@ function convertContentToHtml(content: string) {
 
 	result = marked(content);
 	return result;
-}
-
-function getCategoryIcon(category: string) {
-	let icon;
-
-	switch (category) {
-		case "web":
-			icon = Web;
-			break;
-		case "algorithm":
-			icon = Algorithm;
-			break;
-		case "typescript":
-			icon = Typescript;
-			break;
-		case "javascript":
-			icon = Javascript;
-			break;
-	}
-
-	return icon;
 }

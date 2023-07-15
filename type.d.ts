@@ -4,8 +4,7 @@ type Files = {
 	[k in Tag]: FileData[];
 };
 
-type FileData = {
-	icon: React.ReactNode;
+type PostData = {
 	description: Description;
 	content: string;
 };
