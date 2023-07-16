@@ -1,0 +1,68 @@
+#wing {
+	& > path {
+		transform-origin: 60% 50%;
+		animation: upAndDown ease-in 1000ms infinite;
+	}
+}
+
+#eye {
+	& > path {
+		transform-origin: center 30%;
+		transform: scaleY(0.9);
+	}
+}
+
+#body {
+	& > path {
+		transform-origin: center center;
+	}
+}
+
+#flyingBird {
+	transform: translateY(-5px);
+	animation: move 1000ms infinite;
+}
+
+@keyframes move {
+	0% {
+		transform: translateY(3px);
+	}
+
+	40% {
+		transform: translateY(-7px);
+	}
+
+	50% {
+		transform: translateY(-6px);
+	}
+
+	90% {
+		transform: translateY(5px);
+	}
+
+	100% {
+		transform: translateY(3px);
+	}
+}
+
+@keyframes upAndDown {
+	0% {
+		transform: rotate(6deg);
+	}
+
+	50% {
+		transform: rotate(-10deg);
+	}
+
+	55% {
+		transform: rotate(-12deg);
+	}
+
+	95% {
+		transform: rotate(8deg);
+	}
+
+	100% {
+		transform: rotate(6deg);
+	}
+}
