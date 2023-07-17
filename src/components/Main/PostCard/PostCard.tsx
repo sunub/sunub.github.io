@@ -3,6 +3,7 @@ import PostCardList from "./CardList/PostcardList";
 import Post from "@/utils/post/index";
 import AsideMenu from "./AsideMenu/index";
 import PostCardCtx from "./PostCardContext";
+import styles from "./PostCard.module.css";
 
 export default async function PostCard() {
     const post = new Post();

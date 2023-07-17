@@ -1,3 +1,29 @@
+@keyframes grow-progress {
+	from {
+		transform: scaleY(0);
+	}
+	to {
+		transform: scaleY(1);
+	}
+}
+
+#progress {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 1em;
+	height: 100%;
+	background: red;
+
+	transform-origin: 50% 0;
+	animation: grow-progress auto linear;
+	animation-timeline: scroll();
+}
+
+#progress[scroll-direction="down"] {
+	background: blue;
+}
+
 #wing {
 	& > path {
 		transform-origin: 60% 50%;
@@ -13,12 +39,7 @@
 }
 
 #body {
-	& > path {
-		transform-origin: center center;
-	}
-}
-
-#flyingBird {
+	transform-origin: center center;
 	transform: translateY(-5px);
 	animation: move 1000ms infinite;
 }

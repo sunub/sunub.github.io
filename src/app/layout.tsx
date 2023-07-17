@@ -3,8 +3,11 @@ import React from 'react';
 import Header from '../components/Header/index';
 import { Metadata } from 'next';
 import Provider from '@/components/Theme/ThemeProvider';
-import InitTheme from '@/components/Theme/InitTheme';
+import InitTheme from "@/components/Toaster/InitTheme"
+import InitScroll from "@/components/Toaster/InitScroll"
+
 import StyledComponentsRegistry from '@/lib/registry';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: {
@@ -34,8 +37,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" as="icon" />
         <InitTheme />
+        {/* <InitScroll /> */}
       </head>
       <body>
+        <div id='progress' ></div>
         <StyledComponentsRegistry>
           <Provider>
             <Header />
@@ -43,6 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {children}
           </Provider>
         </StyledComponentsRegistry>
+        <Footer />
       </body>
     </html>
   );

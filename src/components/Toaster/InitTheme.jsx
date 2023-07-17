@@ -1,5 +1,4 @@
 import React from "react";
-import { COLORS } from "src/constants/constants";
 
 function setColorsByTheme() {
 	const COLORS = {

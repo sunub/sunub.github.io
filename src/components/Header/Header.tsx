@@ -32,11 +32,12 @@ const Content = styled.header`
 	padding: 0px;
 `;
 
+
 const HeaderContainer = ({ children }: { children: React.ReactNode; }) => {
 	return (
 		<>
 			<SpacerBar size={24} />
-			<TopContainer>
+			<TopContainer id="header-container" >
 				<Container>
 					<Content>{children}</Content>
 				</Container>
@@ -47,7 +48,7 @@ const HeaderContainer = ({ children }: { children: React.ReactNode; }) => {
 
 const SiteHeader = () => {
 	return (
-		<HeaderContainer>
+		<HeaderContainer >
 			<HeaderLeft />
 			<HeaderRight />
 		</HeaderContainer>

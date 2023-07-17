@@ -72,6 +72,7 @@ export default function PostCardContent({ posts }: { posts: PostData }) {
                 </Header>
                 <SpacerBar axis="vertical" size={120} />
                 <Main className="post__article__main" dangerouslySetInnerHTML={{ __html: `${post}` }} />
+                <SpacerBar axis='vertical' size={144} />
             </Article>
         </Container>
     );
