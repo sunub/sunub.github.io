@@ -3,7 +3,6 @@
 import styled from 'styled-components';
 import { Spacer } from '@/components/Spacer';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 const Container = styled.div`
     display: flex;

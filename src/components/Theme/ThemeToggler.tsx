@@ -12,6 +12,7 @@ type Theme = {
 
 const ToggleBtn = styled.button`
     --toggle-size: var(--size-6);
+
     background: none;
     border: none;
     padding: 0;

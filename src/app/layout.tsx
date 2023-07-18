@@ -4,7 +4,6 @@ import Header from '../components/Header/index';
 import { Metadata } from 'next';
 import Provider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
-import InitScroll from "@/components/Toaster/InitScroll"
 
 import StyledComponentsRegistry from '@/lib/registry';
 import Footer from '@/components/Footer';

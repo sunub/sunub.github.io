@@ -16,12 +16,6 @@ const connectToDatabase = async () => {
 const main = async () => {
 	try {
 		await connectToDatabase();
-
-		await findListing(client, {
-			minimumNumberOfBathrooms: 4,
-			minimumNumberOfBedrooms: 2,
-			maximumNumberOfResults: 5,
-		});
 	} catch (err) {
 		console.error(`Error connecting to the database: ${err}`);
 	} finally {

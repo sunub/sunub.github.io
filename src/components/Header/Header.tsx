@@ -1,7 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import { SpacerBar } from "../Spacer";
 import HeaderLeft from "./HeaderLeft/index";
 import HeaderRight from "./HeaderRight/index";
 import React from "react";
@@ -36,7 +35,6 @@ const Content = styled.header`
 const HeaderContainer = ({ children }: { children: React.ReactNode; }) => {
 	return (
 		<>
-			<SpacerBar size={24} />
 			<TopContainer id="header-container" >
 				<Container>
 					<Content>{children}</Content>
