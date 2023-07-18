@@ -7,17 +7,7 @@ import Link from 'next/link';
 import { useContext } from 'react';
 import { PostCardContext } from '../PostCardContext';
 import styled from 'styled-components';
-
-const Container = styled.div`
-    grid-area: main;
-    display: flex;
-    flex-direction: column;
-
-    gap: clamp(1.5rem, 1.75rem, 2rem);
-    max-inline-size: 60ch;
-    min-block-size: 100vh;
-    width: 100%;
-`;
+import styles from "./PostCard.module.css";
 
 const List = styled.li`
     position: sticky;
@@ -100,8 +90,8 @@ export default function PostCardList({ categorizedPost }: { categorizedPost: Map
     categorizedPost = new Map(categorizedPost);
     const posts = categorizedPost.get(category) ?? [];
 
-    return (
-        <Container>
+    return (<>
+        <div className={styles.PostCardListContainer}>
             {
                 posts.map(desc => {
                     return (
@@ -120,6 +110,6 @@ export default function PostCardList({ categorizedPost }: { categorizedPost: Map
                     )
                 })
             }
-        </Container>
-    );
+        </div>
+    </>);
 }

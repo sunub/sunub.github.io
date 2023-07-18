@@ -39,7 +39,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* <InitScroll /> */}
       </head>
       <body>
-        <div id='progress' ></div>
         <StyledComponentsRegistry>
           <Provider>
             <Header />

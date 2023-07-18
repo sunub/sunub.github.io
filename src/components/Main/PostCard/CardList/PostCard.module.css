@@ -1,0 +1,17 @@
+.PostCardListContainer {
+	grid-area: main;
+	display: flex;
+	flex-direction: column;
+
+	gap: clamp(1.5rem, 1.75rem, 2rem);
+	max-inline-size: 60ch;
+	min-block-size: 100vh;
+	width: 100%;
+
+	@container root-container ( max-width: 768px ) {
+		& {
+			max-width: 768px;
+			justify-self: center;
+		}
+	}
+}

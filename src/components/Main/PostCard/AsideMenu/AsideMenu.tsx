@@ -5,16 +5,7 @@ import React, { FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { Home } from '@/components/icon/Category';
 import { getCategoryIcon } from './AsudeMenu.helper';
-
-const Form = styled.form`
-    grid-area: aside;
-    display: inline-flex;
-    flex-direction: column;
-    gap: var(--size-2);
-    margin-top: 4.5rem;
-    position: sticky;
-    width: fit-content;
-`;
+import styles from "./AsideMenu.module.css";
 
 const Label = styled.label`
     display: inline-flex;
@@ -66,7 +57,7 @@ export default function Menu({ categories }: { categories: string[] }) {
     }
 
     return (
-        <Form onChange={e => sendCategory(e)}>
+        <form className={styles.asideMenuContainer} onChange={e => sendCategory(e)}>
             <Label>
                 <Home />
                 <span>all</span>
@@ -83,6 +74,6 @@ export default function Menu({ categories }: { categories: string[] }) {
                     )
                 })
             }
-        </Form>
+        </form>
     );
 }
