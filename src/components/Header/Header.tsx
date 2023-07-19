@@ -3,9 +3,9 @@
 import styled from "styled-components";
 import HeaderLeft from "./HeaderLeft/index";
 import HeaderRight from "./HeaderRight/index";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const TopContainer = styled.div`
+const HeaderContainer = styled.div`
 	background: var(--surface-1);
 	position: sticky;
 	z-index: 5;
@@ -32,23 +32,25 @@ const Content = styled.header`
 `;
 
 
-const HeaderContainer = ({ children }: { children: React.ReactNode; }) => {
-	return (
-		<>
-			<TopContainer id="header-container" >
-				<Container>
-					<Content>{children}</Content>
-				</Container>
-			</TopContainer>
-		</>
-	);
-};
-
 const SiteHeader = () => {
+	const headerRef = useRef<HTMLDivElement>(null)
+	const [scrollDirection, setScrollDirection] = useState('up');
+
+	useEffect(() => {
+		window.addEventListener('scroll', (e) => {
+			const currElement = e.target as HTMLElement;
+			const st = window.scrollY || document.documentElement.scrollTop;
+		})
+	}, [])
+
 	return (
-		<HeaderContainer >
-			<HeaderLeft />
-			<HeaderRight />
+		<HeaderContainer ref={headerRef}>
+			<Container>
+				<Content>
+					<HeaderLeft />
+					<HeaderRight />
+				</Content>
+			</Container>
 		</HeaderContainer>
 	);
 };

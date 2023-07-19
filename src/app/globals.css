@@ -52,7 +52,6 @@ body {
 		background 350ms ease 0s;
 
 	overflow-y: scroll;
-	container: root-container / size;
 }
 
 li {
@@ -135,7 +134,7 @@ button {
 	background: transparent;
 }
 
-@media (orientation: landscape) {
+/* @media (orientation: landscape) {
 	::-webkit-scrollbar {
 		width: var(--scrollbar-width, 12px);
 		height: var(--scrollbar-height, 12px);
@@ -151,4 +150,4 @@ button {
 		border-radius: 3px;
 		background-color: oklch(53.88% 0.029 30.71) transparent;
 	}
-}
+} */

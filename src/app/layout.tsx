@@ -4,7 +4,6 @@ import Header from '../components/Header/index';
 import { Metadata } from 'next';
 import Provider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
-
 import StyledComponentsRegistry from '@/lib/registry';
 import Footer from '@/components/Footer';
 
@@ -36,7 +35,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" as="icon" />
         <InitTheme />
-        {/* <InitScroll /> */}
       </head>
       <body>
         <StyledComponentsRegistry>

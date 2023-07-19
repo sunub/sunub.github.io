@@ -6,7 +6,7 @@
 		transform: scaleY(1);
 	}
 }
-
+/* 
 #progress {
 	position: fixed;
 	left: 0;
@@ -22,7 +22,7 @@
 
 #progress[scroll-direction="down"] {
 	background: blue;
-}
+} */
 
 #wing {
 	& > path {

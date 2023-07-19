@@ -7,7 +7,7 @@
 	position: sticky;
 	width: fit-content;
 
-	@container root-container ( max-width: 768px ) {
+	/* @container root-container ( max-width: 768px ) {
 		& {
 			flex-direction: row;
 			margin-top: 0;
@@ -20,5 +20,5 @@
 			overflow-x: scroll;
 			max-width: 768px;
 		}
-	}
+	} */
 }

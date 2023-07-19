@@ -14,7 +14,6 @@ export default function HeaderRight() {
     return (
         <Container>
             <ThemeToggler />
-            {/* <SearchBtn /> */}
         </Container>
     );
 }

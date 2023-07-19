@@ -8,10 +8,10 @@
 	min-block-size: 100vh;
 	width: 100%;
 
-	@container root-container ( max-width: 768px ) {
+	/* @container root-container ( max-width: 768px ) {
 		& {
 			max-width: 768px;
 			justify-self: center;
 		}
-	}
+	} */
 }
