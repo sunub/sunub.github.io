@@ -8,10 +8,15 @@
 	min-block-size: 100vh;
 	width: 100%;
 
-	/* @container root-container ( max-width: 768px ) {
+	@media (max-width: 768px) {
 		& {
-			max-width: 768px;
+			max-width: 70dvw;
 			justify-self: center;
+
+			margin-left: auto;
+			margin-right: auto;
+
+			margin-top: 64px;
 		}
-	} */
+	}
 }

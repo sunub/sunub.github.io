@@ -33,18 +33,8 @@ const Content = styled.header`
 
 
 const SiteHeader = () => {
-	const headerRef = useRef<HTMLDivElement>(null)
-	const [scrollDirection, setScrollDirection] = useState('up');
-
-	useEffect(() => {
-		window.addEventListener('scroll', (e) => {
-			const currElement = e.target as HTMLElement;
-			const st = window.scrollY || document.documentElement.scrollTop;
-		})
-	}, [])
-
 	return (
-		<HeaderContainer ref={headerRef}>
+		<HeaderContainer id="site-header" >
 			<Container>
 				<Content>
 					<HeaderLeft />

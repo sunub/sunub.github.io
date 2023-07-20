@@ -2,6 +2,7 @@
 
 import styled from "styled-components";
 import ThemeToggler from "../../Theme/ThemeToggler";
+import HamburgerBtn from "./HamburgerBtn";
 
 const Container = styled.div`
     display: flex;
@@ -14,6 +15,7 @@ export default function HeaderRight() {
     return (
         <Container>
             <ThemeToggler />
+            <HamburgerBtn />
         </Container>
     );
 }

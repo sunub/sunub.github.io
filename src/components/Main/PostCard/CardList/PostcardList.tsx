@@ -7,7 +7,8 @@ import Link from 'next/link';
 import { useContext } from 'react';
 import { PostCardContext } from '../PostCardContext';
 import styled from 'styled-components';
-import styles from "./PostCard.module.css";
+import styles from "./PostCardList.module.css";
+import { Spacer } from '@/components/Spacer';
 
 const List = styled.li`
     position: sticky;

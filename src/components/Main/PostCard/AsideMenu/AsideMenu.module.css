@@ -1,24 +1,18 @@
 .asideMenuContainer {
 	grid-area: aside;
+
 	display: flex;
 	flex-direction: column;
 	gap: var(--size-2);
 	margin-top: 4.5rem;
+
 	position: sticky;
 	width: fit-content;
+	cursor: pointer;
 
-	/* @container root-container ( max-width: 768px ) {
-		& {
-			flex-direction: row;
-			margin-top: 0;
-
-			margin-left: auto;
-			margin-right: auto;
-			padding-left: 32px;
-			padding-right: 32px;
-
-			overflow-x: scroll;
-			max-width: 768px;
-		}
-	} */
+	@media (max-width: 768px) {
+		display: none;
+		opacity: 0;
+		cursor: none;
+	}
 }

@@ -18,17 +18,11 @@
 	transition: background 350ms ease 0s;
 
 	position: relative;
-	container: container / inline-size;
 
-	/* @container root-container ( max-width: 768px ) {
+	@media (max-width: 768px) {
 		& {
-			grid-template-rows:
-				[aside] 8ch
-				[main] 0.8fr;
-			grid-template-columns: 1fr;
+			grid-template-columns: [main] 1fr;
 			column-gap: 0;
-			overflow-x: hidden;
-			overflow-y: hidden;
 		}
-	} */
+	}
 }

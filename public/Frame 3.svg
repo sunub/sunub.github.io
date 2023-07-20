@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame 3">
+<g id="open">
+<path id="top" d="M6.12 9.5L25.88 9.5" stroke="black" stroke-width="3" stroke-linecap="round"/>
+<path id="bottom" d="M6.12 23H25.88" stroke="black" stroke-width="3" stroke-linecap="round"/>
+<path id="center" d="M3 16H29" stroke="black" stroke-width="3" stroke-linecap="round"/>
+</g>
+<g id="close">
+<rect id="Rectangle 91" x="2.5" y="2.5" width="27" height="27" rx="13.5" stroke="#2D0D06" stroke-width="3"/>
+<path id="cross2" d="M9 16H23.6601" stroke="#2D0D06" stroke-width="3" stroke-linecap="round"/>
+<path id="cross1" d="M9 16H23.6601" stroke="#2D0D06" stroke-width="3" stroke-linecap="round"/>
+</g>
+</g>
+</svg>
