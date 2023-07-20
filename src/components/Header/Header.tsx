@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import HeaderLeft from "./HeaderLeft/index";
 import HeaderRight from "./HeaderRight/index";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 const HeaderContainer = styled.div`
 	background: var(--surface-1);
