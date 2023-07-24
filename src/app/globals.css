@@ -69,6 +69,11 @@ input {
 	margin: 0em;
 }
 
+button {
+	cursor: pointer;
+	touch-action: auto;
+}
+
 input,
 button,
 textarea,

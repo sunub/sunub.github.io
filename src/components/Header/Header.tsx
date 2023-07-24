@@ -33,7 +33,7 @@ const Content = styled.header`
 
 
 const SiteHeader = () => {
-	return (
+	return (<>
 		<HeaderContainer id="site-header" >
 			<Container>
 				<Content>
@@ -42,7 +42,7 @@ const SiteHeader = () => {
 				</Content>
 			</Container>
 		</HeaderContainer>
-	);
+	</>);
 };
 
 export default SiteHeader;
