@@ -6,8 +6,8 @@ import styles from "./MenuContent.module.css";
 export default function MenuContent() {
     const post = new Post();
     return (
-        <div>
-            <ul className={styles[`menu-content__container`]}>
+        <div className={styles[`menu-content__container`]}>
+            <ul>
                 {
                     post.categories.map(category => {
                         return (
