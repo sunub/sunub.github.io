@@ -2,7 +2,7 @@
 
 import styled from "styled-components";
 import ButtonHandler from "@/utils/btnHandler";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { HeaderContext } from "../Header.context";
 
 const Open = styled.g`

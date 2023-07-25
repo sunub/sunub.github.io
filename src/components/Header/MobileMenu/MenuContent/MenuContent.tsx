@@ -1,5 +1,4 @@
 import Post from "@/utils/post/Post";
-import AsideMenu from "@/components/Main/PostCard/AsideMenu/index";
 import Link from "next/link";
 import styles from "./MenuContent.module.css";
 

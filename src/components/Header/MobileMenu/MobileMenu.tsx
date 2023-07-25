@@ -1,6 +1,5 @@
 import HamburgerBtn from "../HeaderRight/HamburgerBtn"
 import NavigationMenu from "./Navigation/index"
-import MenuContent from "./MenuContent/index"
 import styles from "./MobileMenu.module.css"
 import React from "react"
 
