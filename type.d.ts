@@ -22,3 +22,8 @@ interface Description {
 	category: string;
 	slug: string;
 }
+
+type CTX = {
+	isOpen: boolean;
+	setOpen: (value: boolean) => void;
+};

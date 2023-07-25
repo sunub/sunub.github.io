@@ -4,6 +4,13 @@ export default function ButtonHandler(e: Event) {
 	return {
 		hidden: function (isOpen: boolean) {
 			const property = "aria-hidden";
+			const value = isOpen === true ? "Open menu" : "Close menu";
+
+			document.querySelectorAll("button").forEach((node) => {
+				if (node.className.includes("HamburgerBtn")) {
+					node.setAttribute("aria-label", value);
+				}
+			});
 
 			curr.setAttribute(property, String(isOpen));
 		},
@@ -15,6 +22,13 @@ export default function ButtonHandler(e: Event) {
 			if (isOpen) {
 				value = "Open menu";
 			}
+
+			document.querySelectorAll("button").forEach((node) => {
+				if (node.className.includes("Navigation")) {
+					node.setAttribute("aria-hidden", String(isOpen));
+				}
+			});
+
 			curr.setAttribute(property, value);
 		},
 	};

@@ -2,22 +2,27 @@
 
 import styled from "styled-components";
 import ButtonHandler from "@/utils/btnHandler";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { HeaderContext } from "../Header.context";
 
 const Open = styled.g`
     transform-origin: center;
+    transform: scale(1);
     transition: all opacity 500ms ease;
 
     & > #center {
-        transition: all 500ms ease-in;
+        transition: all 500ms ease;
         transform-origin: center;
         transform: scaleX(1);
     }
     & > #bottom {
-        transition: all 500ms ease-in;
+        transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        stroke-width: 3px;
+
     }
     & > #top {
-        transition: all 500ms ease-in;
+        transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        stroke-width: 3px;
     }
     `
 
@@ -27,22 +32,71 @@ const Close = styled.g`
     `
 const Cross1 = styled.path`
     transform-origin: center center;
-    transform: translate(0);
-    transition: all 500ms ease;
+
+    @keyframes cross1-open {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(45deg);
+        }
+    }
+
+    @keyframes cross1-close {
+        0% {
+            transform: rotate(45deg);
+            opacity: 1;
+        }
+        
+        100% {
+            transform: rotate(0deg);
+            opacity: 0;
+        }
+    }
 
 `
 const Cross2 = styled.path`
     transform-origin: center center;
-    transform: translate(0);
-    transition: all 500ms ease;
+
+    @keyframes cross2-open {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(-45deg);
+        }
+    }
+
+    @keyframes cross2-close {
+        0% {
+            transform: rotate(-45deg);
+            opacity: 1;
+        }
+        
+        100% {
+            transform: rotate(0deg);
+            opacity: 0;
+        }
+    }
     `
 
 const Circle = styled.rect`
-    transition: all 500ms ease;
-    stroke-width: 0px;
+    stroke-width: 3px;
     transform-origin: center;
-    fill: var(--color-text);
-    transform: scale(.2);
+
+    @keyframes circle-pop {
+        0% {
+            stroke: none;
+            transform: scale(0);
+        }
+        
+        100% {
+            stroke: var(--color-text);
+            transform: scale(1);
+        }
+    }
 `
 
 const Btn = styled.button`
@@ -54,23 +108,37 @@ const Btn = styled.button`
 
     padding: 0;
     cursor: pointer;
+    position: relative;
+    z-index: 15;
 
     &[aria-label='Open menu'] ${Open} {
-        opacity: 1;
         #center {
             transform: scaleX(1);
         }
     }
-    /* &[aria-label='Open menu'] ${Close} {
+    &[aria-label='Open menu'] ${Close} {
         & > ${Circle} {
-            opacity: 0;
+            stroke: none;
         }
-    } */
+    
+        & > ${Cross1} {
+            animation: cross1-close 200ms;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-out;
+            transform: rotate(0deg);
+        }
+        & > ${Cross2} {
+            animation: cross2-close 200ms;
+            animation-iteration-count: 1;
+            animation-timing-function: ease-out;
+            transform: rotate(0deg);
+        }
+    }
     
     &[aria-label='Close menu'] ${Open} {
-
+        transform: scale(.1);
         #center {
-            transform: scaleX(.8);
+            transform: scaleX(.5);
         }
 
         #top {
@@ -81,23 +149,27 @@ const Btn = styled.button`
         transform: translateY(-6.75px);
         }
     }
-    /* &[aria-label='Close menu'] ${Close} {
-        opacity: 1;
-
+    &[aria-label='Close menu'] ${Close} {
         & > ${Circle} {
-            stroke-width: 3px;
-            transform: scale(1);
-            fill: none;
+            animation: circle-pop 600ms;
+            animation-iteration-count: 1;
+            animation-timing-function: ease;
         }
 
         & > ${Cross1} {
+            animation: cross1-open 500ms;
+            animation-iteration-count: 1;
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform: rotate(45deg);
         }
-    
+        
         & > ${Cross2} {
+            animation: cross2-open 500ms;
+            animation-iteration-count: 1;
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform: rotate(-45deg);
         }
-    } */
+    }
 
     @media ( max-width: 768px ) {
         & {
@@ -108,11 +180,11 @@ const Btn = styled.button`
 `
 
 const Svg = styled.svg`
+    justify-content: center;
     width: 40px;
     height: 40px;
 
     display: flex;
-    justify-content: center;
     align-items: center;
 
     & > g {
@@ -140,16 +212,18 @@ function Hamburger() {
 
 }
 
+
 export default function HamburgerBtn() {
-    const [isOpen, setOpen] = useState(false);
+    const context = useContext(HeaderContext)
 
     return (
         <Btn
             aria-label="Open menu"
             onClick={(e: any) => {
+                const isOpen = context.isOpen;
                 const handler = ButtonHandler(e);
                 handler.open(isOpen);
-                setOpen(!isOpen);
+                context.setOpen(!isOpen);
             }}
         >
             <Hamburger />
