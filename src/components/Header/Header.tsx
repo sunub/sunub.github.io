@@ -4,6 +4,7 @@ import HeaderProvider from "./Header.context";
 import MobileMenu from "./MobileMenu/index";
 import styles from './Header.module.css';
 import MenuContent from "./MobileMenu/MenuContent/MenuContent";
+import ThemeToggler from "../Theme/ThemeToggler";
 import React from "react";
 
 const SiteHeader = () => {
@@ -13,7 +14,9 @@ const SiteHeader = () => {
 				<HeaderLeft />
 				<HeaderRight />
 				<MobileMenu>
-					<MenuContent />
+					<MenuContent>
+						<ThemeToggler />
+					</MenuContent>
 				</MobileMenu>
 			</div>
 		</HeaderProvider>

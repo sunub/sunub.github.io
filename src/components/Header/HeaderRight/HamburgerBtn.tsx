@@ -99,7 +99,9 @@ const Circle = styled.rect`
     }
 `
 
-const Btn = styled.button`
+const Btn = styled.button.attrs({
+    className: 'hamburger-btn'
+})`
     display: none;
     opacity: 1;
 

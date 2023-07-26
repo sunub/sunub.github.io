@@ -1,25 +1,33 @@
 import Post from "@/utils/post/Post";
 import Link from "next/link";
 import styles from "./MenuContent.module.css";
+import React from "react";
 
-export default function MenuContent() {
+export default function MenuContent({ children }: { children: React.ReactNode }) {
+    const staggeredDelay = 100;
     const post = new Post();
+
     return (
-        <div className={styles[`menu-content__container`]}>
-            <ul>
+        <nav className={styles[`menu-content`]} aria-hidden="true" >
+            <div className={styles[`menu-content__container`]}>
                 {
-                    post.categories.map(category => {
+                    post.categories.map((category, columnIndex) => {
                         return (
-                            <li key={category}>
-                                <Link href={`/${category}`} >
-                                    {category}
-                                </Link>
-                            </li>
+                            <Link
+                                href={`/${category}`}
+                                key={category}
+                                className={styles['menu-content__content']}
+                                style={{
+                                    animationDelay: columnIndex * staggeredDelay + 'ms'
+                                }}
+                            >
+                                <span>{category}</span>
+                            </Link>
                         )
                     })
                 }
-
-            </ul>
-        </div>
+            </div>
+            {children}
+        </nav>
     )
 }
