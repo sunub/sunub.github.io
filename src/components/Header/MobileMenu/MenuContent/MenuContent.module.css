@@ -18,10 +18,18 @@
 	.menu-content__content {
 		transform: translateX(-100%);
 
-		animation: fadeOut 100ms;
-		animation-timing-function: cubic-bezier(0.39, 0, 0.32, 1);
+		animation: fadeOut 300ms;
+		animation-delay: 300ms;
+		animation-timing-function: ease-out;
 		animation-iteration-count: 1;
-		animation-fill-mode: backwards;
+		animation-fill-mode: forwards;
+	}
+
+	.menu-content__footer {
+		animation: fadeOut 300ms;
+		animation-timing-function: ease-out;
+		animation-iteration-count: 1;
+		animation-fill-mode: forwards;
 	}
 }
 
@@ -32,6 +40,13 @@
 	.menu-content__content {
 		transform: translateX(0%);
 
+		animation: fadeIn 500ms;
+		animation-timing-function: cubic-bezier(0.39, 0, 0.32, 1);
+		animation-iteration-count: 1;
+		animation-fill-mode: backwards;
+	}
+
+	.menu-content__footer {
 		animation: fadeIn 500ms;
 		animation-timing-function: cubic-bezier(0.39, 0, 0.32, 1);
 		animation-iteration-count: 1;
@@ -56,6 +71,14 @@
 	& > span {
 		text-transform: capitalize;
 	}
+}
+
+.menu-content__footer {
+	display: flex;
+	justify-content: flex-start;
+
+	padding-block-start: 2rem;
+	padding-inline-start: 2rem;
 }
 
 @keyframes fadeIn {

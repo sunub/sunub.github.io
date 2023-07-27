@@ -27,7 +27,7 @@ export default function HeaderRight() {
     return (
         <Container>
             <Content>
-                <ThemeToggler />
+                <ThemeToggler maskId="header-mask-id" />
             </Content>
         </Container>
     );

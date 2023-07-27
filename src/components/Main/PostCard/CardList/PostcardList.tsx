@@ -14,6 +14,36 @@ const List = styled.li`
     transform-origin: center top;
 `;
 
+
+const Icon = styled(Image)`
+    grid-area: icon;
+
+    align-self: center;
+    justify-self: center;
+
+    visibility: visible;
+    opacity: 1;
+`;
+
+const Header = styled.header`
+    grid-area: header;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: var(--size4);
+
+    & > time {
+        justify-self: flex-start;
+        font-size: calc(1.375rem);
+    }
+`;
+
+const Description = styled.section`
+    grid-area: content;
+    display: inline-flex;
+`;
+
 const Content = styled(Link)`
     display: grid;
     grid-template:
@@ -43,31 +73,33 @@ const Content = styled(Link)`
     &:active {
         border-radius: 30px;
     }
-`;
 
-const Icon = styled(Image)`
-    grid-area: icon;
+    @media ( max-width: 320px ) {
+        grid-template-columns: 1fr;
+        grid-template-rows: [header] .2fr [content] .8fr;
+        padding: 16px;
 
-    align-self: center;
-    justify-self: center;
-`;
+        ${Icon} {
+            visibility: hidden;
+            opacity: 0;
+        }
 
-const Header = styled.header`
-    grid-area: header;
+        ${Header} {
+            flex-direction: column;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-left: var(--size4);
+            h1 {
+                font-size: 1.25rem;
+            }
 
-    & > time {
-        justify-self: flex-start;
+            time {
+                font-size: 4px;
+            }
+        }
+
+        ${Description} {
+            font-size: 8px;
+        }
     }
-`;
-
-const Description = styled.section`
-    grid-area: content;
-    display: inline-flex;
 `;
 
 function CardContent({ category, slug, tags, title, date, summary }: Description) {
@@ -75,7 +107,7 @@ function CardContent({ category, slug, tags, title, date, summary }: Description
         <Content href={`${baseURL}/${category}/${slug}`}>
             <Icon src={`/icon_${tags}.png`} width={24} height={24} alt={`Image ${category}`} />
             <Header>
-                <h1>{title}</h1>
+                <h3>{title}</h3>
                 <time>{date}</time>
             </Header>
             <Description>

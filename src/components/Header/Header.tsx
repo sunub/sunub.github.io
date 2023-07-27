@@ -15,7 +15,7 @@ const SiteHeader = () => {
 				<HeaderRight />
 				<MobileMenu>
 					<MenuContent>
-						<ThemeToggler />
+						<ThemeToggler maskId="nav-menu-mask-id" />
 					</MenuContent>
 				</MobileMenu>
 			</div>

@@ -27,7 +27,14 @@ export default function MenuContent({ children }: { children: React.ReactNode })
                     })
                 }
             </div>
-            {children}
+            <div
+                className={styles[`menu-content__footer`]}
+                style={{
+                    animationDelay: "500ms"
+                }}
+            >
+                {children}
+            </div>
         </nav>
     )
 }

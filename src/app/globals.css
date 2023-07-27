@@ -1,4 +1,3 @@
-@import "../styles/toggleBtnAnimation.css";
 @import "../styles/variable.css";
 @import "../styles/animation.css";
 @import "../styles/content.css";
@@ -137,6 +136,10 @@ iframe {
 button {
 	border: none;
 	background: transparent;
+}
+
+:is(p, h1, h2, h3, h4, h5, h6) {
+	overflow-wrap: break-word;
 }
 
 @media (orientation: landscape) {

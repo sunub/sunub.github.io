@@ -22,7 +22,7 @@ const Navigation = styled.button.attrs({
     width: 100%;
     height: 100%;
 
-    background: var(--color-primary);
+    background: color-mix(in oklch, var(--color-primary) 80%, transparent);
     backdrop-filter: blur(8px);
     
     &[aria-hidden=true] {

@@ -2,7 +2,6 @@
 
 import { useContext } from 'react';
 import styled from 'styled-components';
-import ThemeIcon from '../icon/ColorThemeIcon';
 import { ThemeContext } from '@/components/Theme/ThemeProvider';
 
 type Theme = {
@@ -12,6 +11,7 @@ type Theme = {
 
 const ToggleBtn = styled.button`
     --toggle-size: var(--size-6);
+    position: relative;
 
     background: none;
     border: none;
@@ -38,54 +38,96 @@ const ToggleBtn = styled.button`
     }
 `;
 
-// const SunAndMoon = styled.svg`
-//     --icon-fill: oklch(45.88% 0.029 30.71);
-// 	--icon-hover-fill: oklch(21.08% 0.055 34.69);
-// `
+const SunAndMoon = styled.svg<{ $colorTheme: string }>`
+    transform-origin: center center;
+    --icon-fill: ${props =>
+        props.$colorTheme === 'light'
+            ? "oklch(45.88% 0.029 30.71)"
+            : "oklch(100% 0 31.08 / 0.7)"};
+	--icon-hover-fill: ${props =>
+        props.$colorTheme === 'light'
+            ? "oklch(21.08% 0.055 34.69)"
+            : "oklch(100% 0 31.08)"};
+`
 
-// const Sun = styled.circle`
-//     fill: var(--icon-fill);
-// `
+const Sun = styled.circle<{ $colorTheme: string }>`
+    transform-origin: center center;
+    fill: var(--icon-fill);
 
-// const SunAndBeams = styled.g`
-//     stroke: var(--icon-fill);
-// `
+    transform: ${props =>
+        props.$colorTheme === "dark"
+            ? 'scale(1.75)'
+            : 'scale(1)'};
 
-// const Moon = styled.mask`
-//     transform-origin: center center;
-// `
+    &:hover, :focus-visible {
+        fill: var(--icon-hover-fill);
+    }
+`
 
-// function ThemeIcon() {
-//     return (
-//         <SunAndMoon
-//             width="24"
-//             height="24"
-//             viewBox="0 0 24 24"
-//             fill="none"
-//             xmlns="http://www.w3.org/2000/svg"
-//             className="sun-and-moon"
-//         >
-//             <Sun cx="12" cy="12" r="5" fill="#2D0D06" id="sun" className="sun" mask="url(#moon-mask)" />
-//             <SunAndBeams className="sun-beams">
-//                 <path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M5.63604 5.63604L6.01039 6.01039" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M3 12L3.52941 12" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M5.63604 18.364L6.01039 17.9896" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M12 20.4706V21" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M17.9896 17.9896L18.364 18.364" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M20.4706 12L21 12" strokeWidth="3" strokeLinecap="round" />
-//                 <path d="M17.9896 6.01039L18.364 5.63604" strokeWidth="3" strokeLinecap="round" />
-//             </SunAndBeams>
-//             <Moon className="moon" id="moon-mask">
-//                 <rect x="0" y="0" width="100%" height="100%" fill="white" />
-//                 <circle cx="24" cy="24" r="6" fill="black" />
-//             </Moon>
-//         </SunAndMoon>
-//     );
-// }
+const SunAndBeams = styled.g<{ $colorTheme: string }>`
+    transform-origin: center center;
+    stroke: var(--icon-fill);
+
+    opacity: ${props =>
+        props.$colorTheme === "dark"
+            ? "0"
+            : "1"};
+    transform: ${props =>
+        props.$colorTheme === "dark"
+            ? "rotate(-70deg)"
+            : "rotate(70deg)"};
+    transform: ${props =>
+        props.$colorTheme === "dark"
+            ? "scale(0)"
+            : "scale(1)"};
+
+    &:hover, :focus-visible {
+        fill: var(--icon-hover-fill);
+    }
+`
+
+const Moon = styled.mask<{ $colorTheme: string }>`
+    transform-origin: center center;
+
+    & > circle {
+        transform: ${props =>
+        props.$colorTheme === "dark"
+            ? "translate(-7px, -16px)"
+            : "translate(0px, 0px)"};
+    }
+`
+
+function ThemeIcon({ colorTheme, maskId }: { colorTheme: string, maskId: string }) {
+    return (
+        <SunAndMoon
+            $colorTheme={colorTheme}
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <Sun $colorTheme={colorTheme} cx="12" cy="12" r="5" fill="#2D0D06" mask={`url(#${maskId})`} />
+            <SunAndBeams $colorTheme={colorTheme} >
+                <path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
+                <path d="M5.63604 5.63604L6.01039 6.01039" strokeWidth="3" strokeLinecap="round" />
+                <path d="M3 12L3.52941 12" strokeWidth="3" strokeLinecap="round" />
+                <path d="M5.63604 18.364L6.01039 17.9896" strokeWidth="3" strokeLinecap="round" />
+                <path d="M12 20.4706V21" strokeWidth="3" strokeLinecap="round" />
+                <path d="M17.9896 17.9896L18.364 18.364" strokeWidth="3" strokeLinecap="round" />
+                <path d="M20.4706 12L21 12" strokeWidth="3" strokeLinecap="round" />
+                <path d="M17.9896 6.01039L18.364 5.63604" strokeWidth="3" strokeLinecap="round" />
+            </SunAndBeams>
+            <Moon $colorTheme={colorTheme} id={maskId}>
+                <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                <circle cx="24" cy="24" r="6" fill="black" />
+            </Moon>
+        </SunAndMoon>
+    );
+}
 
 
-export default function ThemeToggler() {
+export default function ThemeToggler({ maskId }: { maskId: string }) {
     const theme: Theme = useContext(ThemeContext);
 
     return (
@@ -99,7 +141,7 @@ export default function ThemeToggler() {
                 }
             }}
         >
-            <ThemeIcon />
+            <ThemeIcon colorTheme={theme.colorMode ?? 'light'} maskId={maskId} />
         </ToggleBtn>
     );
 }
