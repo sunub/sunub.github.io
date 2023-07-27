@@ -194,6 +194,13 @@ const Svg = styled.svg`
             stroke: var(--color-text);
         }
     }
+    
+    @media ( max-width: 320px ) {
+        & {
+            width: 32px;
+            height: 32px;
+        }
+    }
 `
 
 

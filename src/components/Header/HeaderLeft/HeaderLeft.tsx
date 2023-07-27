@@ -8,6 +8,9 @@ const Container = styled.div`
     display: flex;
     flex: 1 1 0%;
     align-items: baseline;
+    
+    position: relative;
+    z-index: 15;
 `;
 
 const LogoLink = styled(Link)`

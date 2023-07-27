@@ -12,6 +12,9 @@ import styles from "./PostCardList.module.css";
 const List = styled.li`
     position: sticky;
     transform-origin: center top;
+
+    overflow-wrap: break-word;
+    white-space: normal;
 `;
 
 
@@ -49,6 +52,8 @@ const Content = styled(Link)`
     grid-template:
         'icon header'
         'empty content' / 50px minmax(1ch, 1fr);
+    position: relative;
+
 
     background: var(--color-primary);
     transition: background 350ms ease 0s;
@@ -59,6 +64,8 @@ const Content = styled(Link)`
     padding: 2rem 2rem 3rem 2rem;
     gap: clamp(1rem, 1.25rem, 1.5rem);
 
+    cursor: pointer;
+    touch-action: manipulation;
     &:hover {
         box-shadow: var(--box-shadow-1);
 
@@ -75,11 +82,14 @@ const Content = styled(Link)`
     }
 
     @media ( max-width: 320px ) {
+        grid-template: none;
         grid-template-columns: 1fr;
         grid-template-rows: [header] .2fr [content] .8fr;
         padding: 16px;
+        column-gap: 0;
 
         ${Icon} {
+            display: none;
             visibility: hidden;
             opacity: 0;
         }
@@ -104,7 +114,7 @@ const Content = styled(Link)`
 
 function CardContent({ category, slug, tags, title, date, summary }: Description) {
     return (
-        <Content href={`${baseURL}/${category}/${slug}`}>
+        <Content href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
             <Icon src={`/icon_${tags}.png`} width={24} height={24} alt={`Image ${category}`} />
             <Header>
                 <h3>{title}</h3>

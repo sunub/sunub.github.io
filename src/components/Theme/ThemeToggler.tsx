@@ -40,6 +40,7 @@ const ToggleBtn = styled.button`
 
 const SunAndMoon = styled.svg<{ $colorTheme: string }>`
     transform-origin: center center;
+    transition: fill 0.3s ease-in-out;
     --icon-fill: ${props =>
         props.$colorTheme === 'light'
             ? "oklch(45.88% 0.029 30.71)"
@@ -53,6 +54,7 @@ const SunAndMoon = styled.svg<{ $colorTheme: string }>`
 const Sun = styled.circle<{ $colorTheme: string }>`
     transform-origin: center center;
     fill: var(--icon-fill);
+    transition: transform 0.5s ease-in-out;
 
     transform: ${props =>
         props.$colorTheme === "dark"
@@ -67,6 +69,8 @@ const Sun = styled.circle<{ $colorTheme: string }>`
 const SunAndBeams = styled.g<{ $colorTheme: string }>`
     transform-origin: center center;
     stroke: var(--icon-fill);
+    transition: transform 0.5s ease-in, opacity 0.3s ease-in,
+				scale 0.4s ease-in;
 
     opacity: ${props =>
         props.$colorTheme === "dark"
@@ -90,6 +94,7 @@ const Moon = styled.mask<{ $colorTheme: string }>`
     transform-origin: center center;
 
     & > circle {
+        transition: transform 0.4s ease-in-out;
         transform: ${props =>
         props.$colorTheme === "dark"
             ? "translate(-7px, -16px)"

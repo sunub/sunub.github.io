@@ -91,6 +91,11 @@ select {
 	max-width: 40rem;
 }
 
+a {
+	cursor: pointer;
+	touch-action: manipulation;
+}
+
 input:not([type]),
 input[type="text"],
 input[type="email"],

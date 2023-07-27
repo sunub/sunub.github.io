@@ -29,15 +29,17 @@ const Article = styled.article`
 `;
 
 const Header = styled.header`
-    & > h1 {
-        color: var(--color-highlightColor);
-        font-size: 4rem;
-        text-align: center;
-    }
+    text-align: center;
 `;
 
+const Title = styled.h1`
+    font-size: calc(2.76rem);
+    text-align: center;
+    color: color-mix(in oklch, var(--color-highlightColor) 90%, transparent);
+`
 const Date = styled.dl`
     text-align: center;
+    color: color-mix(in oklch, var(--color-text) 50%, transparent);
     font-size: var(--size-4);
 `;
 
@@ -65,7 +67,7 @@ export default function PostCardContent({ posts }: { posts: PostData }) {
             <Article>
                 <SpacerBar axis="vertical" size={144} />
                 <Header>
-                    <h1>{desc.title}</h1>
+                    <Title>{desc.title}</Title>
                     <Date className="post__article__header--date">
                         <dd>{desc.date}</dd>
                     </Date>
