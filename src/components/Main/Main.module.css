@@ -1,4 +1,7 @@
 .main__content {
+	position: relative;
+	z-index: 2;
+
 	display: grid;
 	grid-template-columns:
 		[aside] 15ch
@@ -17,21 +20,21 @@
 	background: var(--surface-1);
 	transition: background 350ms ease 0s;
 
-	position: relative;
-	z-index: 15;
+	/* @media (max-width: 768px) {
+		& {
+			grid-template-columns: [aside] .2fr [main] .5fr;
+			justify-content: space-evenly;
+			justify-items: end;
+			column-gap: 0;
+			padding-left: 16px;
+			padding-right: 16px;
+		}
+	} */
 
 	@media (max-width: 768px) {
 		& {
 			grid-template-columns: [main] 1fr;
 			column-gap: 0;
-		}
-	}
-
-	@media (max-width: 320px) {
-		& {
-			grid-template-columns: [main] 1fr;
-			column-gap: 0;
-
 			padding-left: 16px;
 			padding-right: 16px;
 		}

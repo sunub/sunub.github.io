@@ -2,7 +2,7 @@
 title: 자바스크립트의 작동 방식(1)
 date: 2023-06-12
 tags: javascript
-summary: 이 두가지를 다루는 이유는 자바스크립트의 작동 방식에 대해서 다루기 위해서이다. TaskQue의 경우 자바스크립트는 싱글 스레드 방식의 동작을 보여준다. 이러한 작업들은 TaskQue에 스택의 형식으로 쌓이게 되면서 실행이 된다...
+summary: 자바스크립트는 어떻게 동작하는 녀석일까?
 slug: howto-activate-javascript
 category: javascript
 ---

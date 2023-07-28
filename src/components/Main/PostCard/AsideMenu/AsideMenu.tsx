@@ -1,7 +1,7 @@
 'use client';
 
 import { PostCardContext } from '../PostCardContext';
-import React, { FormEvent, useContext } from 'react';
+import React, { FormEvent, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { Home } from '@/components/icon/Category';
 import { getCategoryIcon } from './AsudeMenu.helper';
@@ -16,6 +16,7 @@ const Label = styled.label`
 
     border: none 0px transparent;
     border-radius: 60px;
+    /* background: color-mix(in oklch, var(--color-highlightColor) 25%, var(--color-primary)); */
 
     gap: var(--size-4);
     touch-action: manipulation;
@@ -25,6 +26,14 @@ const Label = styled.label`
     transition:
         color 350ms ease 0s,
         background 350ms ease 0s;
+
+    @media (max-width: 768px) {
+        & > span {
+            display: none;
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
 
     & > span {
         font-size: var(--size-5);
@@ -48,6 +57,10 @@ const Input = styled.input`
 export default function Menu({ categories }: { categories: string[] }) {
     const { setCategory } = useContext(PostCardContext);
     const icon = getCategoryIcon(categories);
+
+    useEffect(() => {
+        document.body.addEventListener("click", (e) => console.log(e.target))
+    }, [])
 
     function sendCategory(event: FormEvent) {
         const curr = event.target as HTMLInputElement;

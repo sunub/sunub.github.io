@@ -4,16 +4,16 @@ import styled from "styled-components";
 import ThemeToggler from "../../Theme/ThemeToggler";
 
 const Container = styled.div`
-    z-index: 0;
-
     display: block;
+    
+    visibility: visible;
     opacity: 1;
     @media (max-width: 768px) {
         & {
-            display: none;
+            visibility: hidden;
             opacity: 0;
+        }
     }
-}
 `
 
 const Content = styled.div`

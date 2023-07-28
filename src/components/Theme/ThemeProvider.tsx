@@ -4,7 +4,7 @@ import { COLORS, COLOR_MODE_KEY } from '@/constants/constants';
 
 export const ThemeContext = createContext<any>({});
 
-export default function Provider({ children }: { children: React.ReactNode }) {
+export default function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [colorMode, rawSetColorMode] = useState<string | null>(null);
 
     useEffect(() => {

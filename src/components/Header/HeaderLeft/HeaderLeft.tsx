@@ -8,9 +8,6 @@ const Container = styled.div`
     display: flex;
     flex: 1 1 0%;
     align-items: baseline;
-    
-    position: relative;
-    z-index: 15;
 `;
 
 const LogoLink = styled(Link)`
@@ -20,7 +17,6 @@ const LogoLink = styled(Link)`
 	font-size: 20px;
 	margin-right: 32px;
 	letter-spacing: -1px;
-	transform: translateX(0);
 `;
 
 

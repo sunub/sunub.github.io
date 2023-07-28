@@ -2,11 +2,15 @@ import '@/app/globals.css';
 import React from 'react';
 import Header from '../components/Header/index';
 import { Metadata } from 'next';
-import Provider from '@/components/Theme/ThemeProvider';
+import ThemeProvider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
 import StyledComponentsRegistry from '@/lib/registry';
 import Footer from '@/components/Footer';
+import MobileNav from "@/components/Header/MobileNav/index";
+import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
 import InitScroll from '@/components/Toaster/InitScroll';
+import HeaderProvider from '@/components/Header/Header.context';
+import ThemeToggler from '@/components/Theme/ThemeToggler';
 
 export const metadata: Metadata = {
   title: {
@@ -40,10 +44,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <StyledComponentsRegistry>
-          <Provider>
-            <Header />
-            {children}
-          </Provider>
+          <ThemeProvider>
+            <HeaderProvider>
+              <MobileNav>
+                <MobileContent>
+                  <ThemeToggler maskId='mobile-theme-btn' />
+                </MobileContent>
+              </MobileNav>
+            </HeaderProvider>
+            <div id='__next'>
+              <Header />
+              {children}
+            </div>
+          </ThemeProvider>
         </StyledComponentsRegistry>
         <Footer />
       </body>

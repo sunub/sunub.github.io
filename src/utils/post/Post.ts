@@ -1,19 +1,19 @@
-import { getLocalFiles, categorizePostByCategory } from "./Post.helper";
+import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper";
 
 class Post {
-	_localFiles: Files;
+	_localTagFiles: Files;
 	_categorizedPost: Map<string, Description[]>;
 	constructor() {
-		this._localFiles = getLocalFiles();
-		this._categorizedPost = categorizePostByCategory(this._localFiles);
+		this._localTagFiles = getLocalTagFiles();
+		this._categorizedPost = categorizePostByCategory(this._localTagFiles);
 	}
 
-	get allPost() {
-		return this._localFiles;
+	get allTagPost() {
+		return this._localTagFiles;
 	}
 
 	get categories() {
-		return Object.keys(this._localFiles);
+		return Object.keys(this._localTagFiles);
 	}
 
 	get categorizedPost() {
@@ -21,7 +21,7 @@ class Post {
 	}
 
 	getCategorizedPost(key: Tag) {
-		return this._localFiles[key];
+		return this._localTagFiles[key];
 	}
 }
 

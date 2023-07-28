@@ -16,19 +16,26 @@ export function categorizePostByCategory(
 		}
 		descriptions.set(category, description);
 	}
+	all.sort((file1, file2) => {
+		return (
+			new Date(file2.date).getTime() -
+			new Date(file1.date).getTime()
+		)
+	})
 	descriptions.set("all", all);
 
 	return descriptions;
 }
 
-export function getLocalFiles(): Files {
+export function getLocalTagFiles(): Files {
 	const root = "posts/";
 	const folders = fs.readdirSync(root, "utf-8");
 	const files: Files | any = {};
 
 	for (const name of folders) {
 		const path = root + name;
-		files[name] = readFiles(path, []);
+		const fileData = readFiles(path, []);
+		files[name] = fileData
 	}
 
 	return files;

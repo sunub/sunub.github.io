@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: { params: { category: Tag, slug: string } }) {
     const { category, slug } = params;
-    const posts = findPostByCategoryAndSlug(category, slug, post.allPost);
+    const posts = findPostByCategoryAndSlug(category, slug, post.allTagPost);
 
     return (
         <PostCardContent posts={posts} />

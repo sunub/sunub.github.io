@@ -1,7 +1,6 @@
 .MobileMenu {
 	position: relative;
 	top: 0px;
-	z-index: 11;
 
 	display: none;
 	opacity: 0;

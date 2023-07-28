@@ -102,16 +102,19 @@ const Circle = styled.rect`
 const Btn = styled.button.attrs({
     className: 'hamburger-btn'
 })`
-    display: none;
-    opacity: 1;
+    position: fixed;
+    z-index: 10001;
+    right: 32px;
 
     width: 40px;
     height: 40px;
 
     padding: 0;
     cursor: pointer;
-    position: relative;
-    z-index: 15;
+
+    @media (min-width: 769px) {
+        display: none;
+    }
 
     &[aria-label='Open menu'] ${Open} {
         #center {
@@ -175,7 +178,7 @@ const Btn = styled.button.attrs({
 
     @media ( max-width: 768px ) {
         & {
-            display: block;
+            visibility: visible;
             opacity: 1;
         }
     }
@@ -233,6 +236,9 @@ export default function HamburgerBtn() {
                 const handler = ButtonHandler(e);
                 handler.open(isOpen);
                 context.setOpen(!isOpen);
+            }}
+            style={{
+                top: "12px"
             }}
         >
             <Hamburger />
