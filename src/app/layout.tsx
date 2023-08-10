@@ -58,7 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );
