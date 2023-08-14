@@ -5,7 +5,6 @@ import { Metadata } from 'next';
 import ThemeProvider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
 import StyledComponentsRegistry from '@/lib/registry';
-import Footer from '@/components/Footer';
 import MobileNav from "@/components/Header/MobileNav/index";
 import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
 import InitScroll from '@/components/Toaster/InitScroll';
@@ -58,7 +57,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>
-        {/* <Footer /> */}
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import Post from '@/utils/post/Post';
-import { findPostByCategoryAndSlug } from '@/components/Main/PostCard/Content/PostCardContent.helper';
-import PostCardContent from '@/components/Main/PostCard/Content/index';
+import { findPostByCategoryAndSlug } from '@/components/Blog/Main/PostCard/Content/PostCardContent.helper';
+import PostCardContent from '@/components/Blog/Main/PostCard/Content/PostCardContent';
 
 const post = new Post();
 export async function generateStaticParams() {

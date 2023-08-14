@@ -1,4 +1,13 @@
-# 무한 스크롤링으로!
+---
+title: 무한 스크롤링으로!
+date: 2023-08-10
+tags: javascript
+summary: sns에서 자주 보이던 무한스크롤링은 무엇일까?
+slug: howto-activate-infinite-scrolling
+category: javascript
+---
+
+## 무한 스크롤링으로'!'
 
 무한스크롤링은 여러 twitter(현 X), Instgram등등 여러 sns에서 사용되는 방법이다. 무한스크롤링은 페이지의 모든 내용을 페이지가 로딩될때 렌더하는 것이 아닌 Viewport를 기반으로 추가 콘텐츠를 렌더링 하는 방법이다. 
 

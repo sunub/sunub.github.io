@@ -13,9 +13,9 @@
 	"dependencies": {
 		"@mdx-js/loader": "^2.3.0",
 		"@mdx-js/react": "^2.3.0",
-		"@next/mdx": "^13.4.8",
+		"@next/mdx": "^13.4.13",
 		"@types/marked": "^5.0.0",
-		"@types/mdx": "^2.0.5",
+		"@types/mdx": "^2.0.6",
 		"@types/react": "18.2.12",
 		"@types/react-dom": "18.2.5",
 		"@vercel/analytics": "^1.0.1",

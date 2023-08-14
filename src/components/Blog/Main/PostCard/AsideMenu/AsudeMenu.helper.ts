@@ -3,7 +3,7 @@ import {
 	Javascript,
 	Web,
 	Algorithm,
-} from "@/components/icon/Category";
+} from "@/components/Blog/icon/Category";
 
 export function getCategoryIcon(
 	categories: string[]

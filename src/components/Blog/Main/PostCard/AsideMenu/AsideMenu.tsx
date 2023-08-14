@@ -3,7 +3,7 @@
 import { PostCardContext } from '../PostCardContext';
 import React, { FormEvent, useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import { Home } from '@/components/icon/Category';
+import { Home } from '@/components/Blog/icon/Category';
 import { getCategoryIcon } from './AsudeMenu.helper';
 import styles from "./AsideMenu.module.css";
 

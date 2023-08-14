@@ -2,7 +2,7 @@
 
 import styled from "styled-components"
 import React from "react"
-import { Spacer } from "../Spacer";
+import { Spacer } from "@/constants/Spacer"
 
 const IconCotainer = styled.div`
     display: flex;

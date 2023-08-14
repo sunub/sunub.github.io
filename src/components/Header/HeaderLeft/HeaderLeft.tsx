@@ -1,7 +1,7 @@
 'use client';
 
 import styled from 'styled-components';
-import { Spacer } from '@/components/Spacer';
+import { Spacer } from '@/constants/Spacer';
 import Link from 'next/link';
 
 const Container = styled.div`

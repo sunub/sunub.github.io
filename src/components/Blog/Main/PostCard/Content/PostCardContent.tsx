@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { SpacerBar } from '@/components/Spacer';
+import { SpacerBar } from '@/constants/Spacer';
 import styled from 'styled-components';
 
 const Container = styled.div`

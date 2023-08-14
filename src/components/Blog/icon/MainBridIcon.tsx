@@ -2,11 +2,11 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { DayBirdIcon, NightBirdIcon } from '@/components/icon/BirdIcon';
-import { LargeDayCloud, LargeNightCloud, SmallNightCloud, SmallDayCloud } from '@/components/icon/Cloud';
+import { DayBirdIcon, NightBirdIcon } from './BirdIcon';
+import { LargeDayCloud, LargeNightCloud, SmallDayCloud, SmallNightCloud } from './Cloud';
 import { useContext } from 'react';
-import { ThemeContext } from '../Theme/ThemeProvider';
-import { Spacer } from '../Spacer';
+import { ThemeContext } from '@/components/Theme/ThemeProvider';
+import { Spacer } from '@/constants/Spacer';
 
 const IconCotainer = styled.div`
     display: flex;

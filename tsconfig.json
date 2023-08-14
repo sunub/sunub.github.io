@@ -34,7 +34,8 @@
 			"@/*": ["./src/*"],
 			"@/icon": ["./src/components/icon"],
 			"@/utils/*": ["./src/utils/*"],
-			"@/lib/*": ["./src/lib/*"]
+			"@/lib/*": ["./src/lib/*"],
+			"@/components/*": ["./src/components/*"]
 		},
 		"sourceMap": true
 	},
@@ -44,14 +45,15 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"src/components/Header/Logo.ssx",
-		"src/components/Spacer.ts",
+		"src/constants/Spacer.ts",
 		"src/components/Main/index.js",
 		"src/components/Header/index.tsx",
 		"src/components/Header/HeaderLeft.jsx",
 		"src/components/Theme/InitTheme.js",
 		"server/mongodbInit.ts",
 		"server/atlas_uri.ts",
-		"src/**/*.js"
+		"src/**/*.js",
+		"src/app/mdx/page.jsx"
 	],
 	"exclude": ["node_modules"]
 }
