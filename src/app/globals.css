@@ -42,6 +42,16 @@ body {
 	isolation: isolate;
 }
 
+#interactive-root {
+	display: grid;
+
+	align-items: center;
+	justify-content: center;
+	place-items: center;
+
+	margin: 0;
+}
+
 body {
 	font-family: "Nanum SquareNeo";
 	color: var(--color-text);

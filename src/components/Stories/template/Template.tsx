@@ -1,24 +1,37 @@
+"use client"
+
 import styles from "./Template.module.css";
 import Articles from "../Articles/index";
-import { baseURL } from "@/utils/getBaseUrl";
 import { Photos } from "unsplash-js/dist/methods/search/types/response";
 import React from "react";
-import { ApiResponse } from "unsplash-js/dist/helpers/response";
+import { createApi } from "unsplash-js";
 
-async function getPhoto() {
-    const res = await fetch(`${baseURL}/api/unsplash`, {
-        method: "GET",
-    })
 
-    return res.json();
-}
+const unsplash = createApi({
+    accessKey: "T3_66syLWZsKMMOwHmHkoFj9lGYvI-Fpqe1DNkhubmE",
+});
 
 export default async function Template() {
-    const data: ApiResponse<Photos> = await getPhoto();
+    const [data, setPostData] = React.useState<Photos>();
+
+    React.useEffect(() => {
+        (async () => {
+            await unsplash.search.getPhotos({
+                query: "cat",
+                orientation: "portrait",
+                page: 1,
+                perPage: 10,
+            }).then(res => {
+                setPostData(res.response)
+            })
+        })()
+    }, [])
 
     return (
         <div className={styles.stories__container}>
-            <Articles data={data.response} />
+            {
+                data ? <Articles data={data} /> : null
+            }
         </div>
     )
 }
