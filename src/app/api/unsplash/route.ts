@@ -1,10 +1,6 @@
 import { createApi } from "unsplash-js";
 import * as nodeFetch from "node-fetch";
 
-interface GETResponseType {
-	photo?: any;
-}
-
 const unsplash = createApi({
 	accessKey: "T3_66syLWZsKMMOwHmHkoFj9lGYvI-Fpqe1DNkhubmE",
 	fetch: nodeFetch.default as unknown as typeof fetch,

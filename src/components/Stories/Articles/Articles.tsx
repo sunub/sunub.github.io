@@ -3,7 +3,6 @@
 import React from "react"
 import styled from "styled-components"
 import { Photos } from "unsplash-js/dist/methods/search/types/response"
-import { Basic } from "unsplash-js/dist/methods/users/types"
 
 /**
  * Articles type declartions
