@@ -1,0 +1,23 @@
+.stories__container {
+	display: grid;
+
+	grid: 1fr / auto-flow 100%;
+
+	grid-gap: 1ch;
+	gap: 1ch;
+	overflow-x: auto;
+
+	scroll-snap-type: x mandatory;
+	overscroll-behavior: contain;
+	touch-action: pan-x;
+
+	width: 100dvw;
+	height: 100dvh;
+	max-width: 320px;
+	max-height: 620px;
+}
+/* grid-template-areas: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    grid-auto-rows: auto;
+} */

@@ -1,26 +1,24 @@
-export default function Template() {
-    const contentLength = [2, 3, 2]
+import styles from "./Template.module.css";
+import Articles from "../Articles/index";
+import { baseURL } from "@/utils/getBaseUrl";
+import { Photos } from "unsplash-js/dist/methods/search/types/response";
+import React from "react";
+import { ApiResponse } from "unsplash-js/dist/helpers/response";
+
+async function getPhoto() {
+    const res = await fetch(`${baseURL}/api/unsplash`, {
+        method: "GET",
+    })
+
+    return res.json();
+}
+
+export default async function Template() {
+    const data: ApiResponse<Photos> = await getPhoto();
 
     return (
-        <div className="stories">
-            {
-                contentLength.map((contentCount) => {
-                    const content = Array.from({ length: contentCount }, () => 0)
-                    return (
-                        <section className="user" key={Math.random() * Number.MAX_SAFE_INTEGER}>
-                            {
-                                content.map((v) => {
-                                    return (
-                                        <article key={Math.random() * Number.MAX_SAFE_INTEGER}>
-                                            {v}
-                                        </article>
-                                    )
-                                })
-                            }
-                        </section>
-                    )
-                })
-            }
+        <div className={styles.stories__container}>
+            <Articles data={data.response} />
         </div>
     )
 }
