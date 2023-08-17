@@ -2,13 +2,14 @@
 
 import styled from "styled-components"
 import { navigationStories } from "./DirectionBtn.helper"
+import React from "react"
 
 /**
  * Type declaration
  */
 
 interface DirectionBtnProps {
-    uses: string
+    direction: string
 }
 
 /**
@@ -24,17 +25,14 @@ const Button = styled.button`
  * React Components
  */
 
-export default function DirectionBtn({ uses }: DirectionBtnProps) {
-    const content = uses === "prev" ? "navigate_before" : "navigate_next";
+export default function DirectionBtn({ direction }: DirectionBtnProps) {
+    const content = direction === "prev" ? "navigate_before" : "navigate_next";
 
     return (
         <Button
-            id={`stories__${uses}-btn`}
+            id={`stories__${direction}-btn`}
             className="material-icons"
-            onClick={() => {
-                const stories = document.querySelector(".stories__container") as HTMLElement
-                navigationStories({ stories: stories, direction: uses })
-            }}
+            onClick={() => navigationStories(direction)}
         >
             {content}
         </Button>

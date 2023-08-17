@@ -12,17 +12,20 @@ interface ArticlesProps {
 }
 
 /**
- * Articles styled components
- */
+ * Articles styled components */
 const Section = styled.section`
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     display: grid;
     grid: [story] 1fr / [story] 1fr;
+
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
 `
 
 const Article = styled.article<{ $bg: string }>`
     grid-area: story;
+
+    width: 320px;
+    height: 520px;
 
     background-image: url(${props => props.$bg});
     background-size: cover;
@@ -31,16 +34,23 @@ const Article = styled.article<{ $bg: string }>`
 `
 
 /**
- * Components
- */
+ * Story image components 
+ * */
 export default function Articles({ data }: ArticlesProps) {
+    React.useEffect(() => {
+        const stories = document.querySelector(".stories__container section") as HTMLElement;
+        stories.classList.add("current_story")
+    }, [])
+
     return (<>
         {
-            data?.results.map(photo => (
-                <Section key={photo.id}>
-                    <Article $bg={photo.urls.regular} />
-                </Section>
-            ))
+            data?.results.map(photo => {
+                return (
+                    <Section key={photo.id}>
+                        <Article $bg={photo.urls.regular} />
+                    </Section>
+                )
+            })
         }
     </>)
 }

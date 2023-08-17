@@ -6,7 +6,7 @@ import { Photos } from "unsplash-js/dist/methods/search/types/response";
 import React from "react";
 import { createApi } from "unsplash-js";
 import styled from "styled-components";
-import DirectionBtn from "./DirectionBtn";
+import DirectionBtn from "../DirectinoBtn/index"
 
 /**
  * Styled components
@@ -16,27 +16,43 @@ const Container = styled.div`
     display: flex;
     flex-direction: row;
 
-    gap: 2rem;
+    justify-content: center;
     align-items: center;
 `
 
 const Stories = styled.div`
-	display: grid;
+    display: grid;
+    position: relative;
 
-	grid: 1fr / auto-flow 100%;
+    grid: 1fr / auto-flow 100%;
 
-	grid-gap: 1ch;
-	gap: 1ch;
-	overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
 
-	scroll-snap-type: x mandatory;
-	overscroll-behavior: contain;
-	touch-action: pan-x;
+    max-width: 320px;
+    max-height: 620px;
+    
+    scroll-timeline: --gallery__scrollcontainer inline;
+`
 
-	width: 100dvw;
-	height: 100dvh;
-	max-width: 320px;
-	max-height: 620px;
+const StoriesContainer = styled.div`
+    @keyframes grow-progress {
+        to { transform: scaleX(1); }
+    }
+`
+
+const ProgressBar = styled.div<{ $size: number }>`
+    background-color: red;
+    position: sticky;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1em;
+    transform: scaleX(${props => (1 / props.$size)});
+    transform-origin: 0 50%;
+
+    animation: auto grow-progress linear forwards;
+    animation-timeline: --gallery__scrollcontainer;
 `
 
 /**
@@ -63,15 +79,20 @@ export default async function Template() {
         })()
     }, [])
 
+
     return (
         <Container>
-            <DirectionBtn uses="prev" />
-            <Stories className="stories__container">
-                {
-                    data ? <Articles data={data} /> : null
-                }
-            </Stories>
-            <DirectionBtn uses="next" />
+            {data ?
+                (<>
+                    <DirectionBtn direction="prev" />
+                    <StoriesContainer>
+                        <ProgressBar $size={data.results.length} />
+                        <Stories className="stories__container" >
+                            <Articles data={data} />
+                        </Stories>
+                    </StoriesContainer>
+                    <DirectionBtn direction="next" />
+                </>) : null}
         </Container>
     )
 }

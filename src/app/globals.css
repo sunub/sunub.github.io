@@ -35,22 +35,20 @@ html {
 html,
 body {
 	height: 100%;
-	width: 100%;
 }
 
 #__next {
 	isolation: isolate;
 }
 
-#interactive-root {
+/* #interactive-root {
 	display: grid;
+	position: relative;
 
 	align-items: center;
 	justify-content: center;
 	place-items: center;
-
-	margin: 0;
-}
+} */
 
 body {
 	font-family: "Nanum SquareNeo";
@@ -157,20 +155,18 @@ button {
 	overflow-wrap: break-word;
 }
 
-@media (orientation: landscape) {
-	::-webkit-scrollbar {
-		width: var(--scrollbar-width, 12px);
-		height: var(--scrollbar-height, 12px);
-		background-color: oklch(92.54% 0.01 32.52);
-	}
-	::-webkit-scrollbar-thumb {
-		border-radius: 5px;
-		border: 2px solid oklch(92.54% 0.01 32.52);
-		background-color: oklch(53.88% 0.029 30.71);
-	}
+::-webkit-scrollbar {
+	width: var(--scrollbar-width, 12px);
+	height: var(--scrollbar-height, 12px);
+	background-color: oklch(92.54% 0.01 32.52);
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	border: 2px solid oklch(92.54% 0.01 32.52);
+	background-color: oklch(53.88% 0.029 30.71);
+}
 
-	::-webkit-scrollbar-track {
-		border-radius: 3px;
-		background-color: oklch(53.88% 0.029 30.71) transparent;
-	}
+::-webkit-scrollbar-track {
+	border-radius: 3px;
+	background-color: oklch(53.88% 0.029 30.71) transparent;
 }
