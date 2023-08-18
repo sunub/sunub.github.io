@@ -87,3 +87,14 @@
 		transform: rotate(6deg);
 	}
 }
+
+@keyframes grow-progress {
+	to {
+		transform: scaleX(1);
+	}
+}
+@keyframes grow-light {
+	to {
+		opacity: 1;
+	}
+}

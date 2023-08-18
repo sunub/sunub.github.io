@@ -29,16 +29,10 @@ export const navigationStories = (direction: string) => {
 			return;
 		}
 		nextStory.scrollIntoView({ behavior: "smooth" });
-		nextStory.classList.add("current_story");
-
-		return currentStory.classList.remove("current_story");
 	} else if (direction === "prev" && prevStory !== progressbar) {
 		if (!prevStory || nextStory === progressbar) {
 			return;
 		}
 		prevStory.scrollIntoView({ behavior: "smooth" });
-		prevStory.classList.add("current_story");
-
-		return currentStory.classList.remove("current_story");
 	}
 };

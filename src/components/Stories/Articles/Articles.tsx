@@ -1,8 +1,10 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
+import { observingOfTheView } from "./Articles.helper"
 import { Photos } from "unsplash-js/dist/methods/search/types/response"
+import { FocusingContext } from "../Context/FocusProvider"
 
 /**
  * Articles type declartions
@@ -31,22 +33,36 @@ const Article = styled.article<{ $bg: string }>`
     background-size: cover;
     user-select: none;
     touch-action: manipulation;
+
 `
 
 /**
  * Story image components 
  * */
 export default function Articles({ data }: ArticlesProps) {
+    const [index, setIndex] = useState(0);
+    const { focusState, setFocusState } = React.useContext(FocusingContext);
+
     React.useEffect(() => {
-        const stories = document.querySelector(".stories__container section") as HTMLElement;
-        stories.classList.add("current_story")
+        observingOfTheView(setIndex);
     }, [])
+
+    React.useEffect(() => {
+        if (focusState.includes(true)) {
+            const prevIndex = focusState.findIndex((v: any) => v === true);
+
+            const newFocusState = [...focusState];
+            newFocusState[prevIndex] = false;
+            newFocusState[index] = true
+            setFocusState(newFocusState);
+        }
+    }, [index])
 
     return (<>
         {
-            data?.results.map(photo => {
+            data?.results.map((photo, i) => {
                 return (
-                    <Section key={photo.id}>
+                    <Section className="story" key={photo.id} aria-label={`${i}`}>
                         <Article $bg={photo.urls.regular} />
                     </Section>
                 )

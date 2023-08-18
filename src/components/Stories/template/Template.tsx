@@ -1,12 +1,14 @@
 "use client"
 
-import styles from "./Template.module.css";
 import Articles from "../Articles/index";
 import { Photos } from "unsplash-js/dist/methods/search/types/response";
 import React from "react";
 import { createApi } from "unsplash-js";
 import styled from "styled-components";
 import DirectionBtn from "../DirectinoBtn/index"
+import ProgressBar from "../ProgressBar/index"
+import FocusProvider from "../Context/FocusProvider";
+import { DayBirdIcon } from "@/components/Blog/icon/BirdIcon";
 
 /**
  * Styled components
@@ -14,45 +16,40 @@ import DirectionBtn from "../DirectinoBtn/index"
 
 const Container = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 
     justify-content: center;
     align-items: center;
 `
+const StoriesRoot = styled.div`
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+
+    justify-content: center;
+    align-items: center;
+`
+const StoriesContainer = styled.div`
+    position: relative;
+    box-shadow: var(--shadow-elevation-high);
+    `
 
 const Stories = styled.div`
     display: grid;
-    position: relative;
 
     grid: 1fr / auto-flow 100%;
 
+    overflow-x: scroll;
+    scroll-timeline: --time-line inline;
     scroll-snap-type: x mandatory;
-    overflow-x: auto;
 
     max-width: 320px;
     max-height: 620px;
-    
-    scroll-timeline: --gallery__scrollcontainer inline;
-`
 
-const StoriesContainer = styled.div`
-    @keyframes grow-progress {
-        to { transform: scaleX(1); }
+    ::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
     }
-`
-
-const ProgressBar = styled.div<{ $size: number }>`
-    background-color: red;
-    position: sticky;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 1em;
-    transform: scaleX(${props => (1 / props.$size)});
-    transform-origin: 0 50%;
-
-    animation: auto grow-progress linear forwards;
-    animation-timeline: --gallery__scrollcontainer;
 `
 
 /**
@@ -79,19 +76,23 @@ export default async function Template() {
         })()
     }, [])
 
-
     return (
         <Container>
+            <DayBirdIcon />
             {data ?
                 (<>
-                    <DirectionBtn direction="prev" />
-                    <StoriesContainer>
-                        <ProgressBar $size={data.results.length} />
-                        <Stories className="stories__container" >
-                            <Articles data={data} />
-                        </Stories>
-                    </StoriesContainer>
-                    <DirectionBtn direction="next" />
+                    <StoriesRoot>
+                        <DirectionBtn direction="prev" />
+                        <StoriesContainer>
+                            <Stories className="stories__container" >
+                                <FocusProvider barSize={data.results.length}>
+                                    <ProgressBar barSize={data.results.length} />
+                                    <Articles data={data} />
+                                </FocusProvider>
+                            </Stories>
+                        </StoriesContainer>
+                        <DirectionBtn direction="next" />
+                    </StoriesRoot>
                 </>) : null}
         </Container>
     )

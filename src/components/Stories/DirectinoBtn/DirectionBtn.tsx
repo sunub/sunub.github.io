@@ -17,8 +17,14 @@ interface DirectionBtnProps {
  */
 
 const Button = styled.button`
-    width: fit-content;
-    height: fit-content;
+    background-color: color-mix(in oklch, var(--pink-3), var(--color-primary));
+    box-shadow: var(--shadow-elevation-high);
+    color: oklch(70.8% 0.165 32.85 / 0.4);
+    font-weight: 700;
+
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
 `
 
 /**
@@ -32,7 +38,9 @@ export default function DirectionBtn({ direction }: DirectionBtnProps) {
         <Button
             id={`stories__${direction}-btn`}
             className="material-icons"
-            onClick={() => navigationStories(direction)}
+            onClick={() => {
+                navigationStories(direction)
+            }}
         >
             {content}
         </Button>
