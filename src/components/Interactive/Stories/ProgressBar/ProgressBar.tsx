@@ -18,11 +18,9 @@ interface ProgressBar extends React.HTMLAttributes<HTMLDivElement> {
  */
 const Container = styled.div<{ $size: number }>`
     background-color: color-mix(in oklch, oklch(78.78% 0.1 32.39 / 12%));
-    position: absolute;
+    position: relative;
     display: flex;
     justify-content: space-evenly;
-    left: 0;
-    bottom: -60px;
     width: 100%;
     height: fit-content;
     padding: .7rem;

@@ -1,0 +1,32 @@
+import React from "react";
+import styles from "./InteractivePage.module.css";
+import StoriesTemplate from "./Stories/template/index";
+import LoadingTemplate from "./Loading/index";
+import { DayBirdIcon } from "../Blog/icon/BirdIcon";
+import { createApi } from "unsplash-js";
+
+const unsplash = createApi({
+    accessKey: "T3_66syLWZsKMMOwHmHkoFj9lGYvI-Fpqe1DNkhubmE",
+});
+
+async function getUnsplashImages() {
+    const imageData = await unsplash.search.getPhotos({
+        query: "cat",
+        orientation: "portrait",
+        page: 1,
+        perPage: 10,
+    })
+
+    return imageData.response
+}
+
+export default async function InteractivePage() {
+    const images = await getUnsplashImages();
+
+    return (
+        <div id={styles[`interactive-page__root-layout`]}>
+            {/* <StoriesTemplate images={images} /> */}
+            <LoadingTemplate />
+        </div>
+    )
+}

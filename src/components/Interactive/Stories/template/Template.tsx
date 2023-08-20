@@ -3,7 +3,6 @@
 import Articles from "../Articles/index";
 import { Photos } from "unsplash-js/dist/methods/search/types/response";
 import React from "react";
-import { createApi } from "unsplash-js";
 import styled from "styled-components";
 import DirectionBtn from "../DirectinoBtn/index"
 import ProgressBar from "../ProgressBar/index"
@@ -15,6 +14,8 @@ import { DayBirdIcon } from "@/components/Blog/icon/BirdIcon";
  */
 
 const Container = styled.div`
+    grid-area: stories;
+
     display: flex;
     flex-direction: column;
 
@@ -30,8 +31,11 @@ const StoriesRoot = styled.div`
     align-items: center;
 `
 const StoriesContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
     position: relative;
-    box-shadow: var(--shadow-elevation-high);
     `
 
 const Stories = styled.div`
@@ -45,6 +49,7 @@ const Stories = styled.div`
 
     max-width: 320px;
     max-height: 620px;
+    box-shadow: var(--shadow-elevation-high);
 
     ::-webkit-scrollbar {
         width: 0px;
@@ -56,41 +61,23 @@ const Stories = styled.div`
  * React Components
  */
 
-const unsplash = createApi({
-    accessKey: "T3_66syLWZsKMMOwHmHkoFj9lGYvI-Fpqe1DNkhubmE",
-});
-
-export default async function Template() {
-    const [data, setPostData] = React.useState<Photos>();
-
-    React.useEffect(() => {
-        (async () => {
-            await unsplash.search.getPhotos({
-                query: "cat",
-                orientation: "portrait",
-                page: 1,
-                perPage: 10,
-            }).then(res => {
-                setPostData(res.response)
-            })
-        })()
-    }, [])
+export default async function Template({ images }: { images: Photos | any }) {
 
     return (
         <Container>
             <DayBirdIcon />
-            {data ?
+            {images ?
                 (<>
                     <StoriesRoot>
                         <DirectionBtn direction="prev" />
-                        <StoriesContainer>
-                            <Stories className="stories__container" >
-                                <FocusProvider barSize={data.results.length}>
-                                    <ProgressBar barSize={data.results.length} />
-                                    <Articles data={data} />
-                                </FocusProvider>
-                            </Stories>
-                        </StoriesContainer>
+                        <FocusProvider barSize={images.results.length}>
+                            <StoriesContainer>
+                                <Stories className="stories__container" >
+                                    <Articles data={images} />
+                                </Stories>
+                                <ProgressBar barSize={images.results.length} />
+                            </StoriesContainer>
+                        </FocusProvider>
                         <DirectionBtn direction="next" />
                     </StoriesRoot>
                 </>) : null}

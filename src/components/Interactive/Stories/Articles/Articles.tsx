@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { observingOfTheView } from "./Articles.helper"
 import { Photos } from "unsplash-js/dist/methods/search/types/response"
 import { FocusingContext } from "../Context/FocusProvider"
+import ProgressBar from "../ProgressBar/index";
 
 /**
  * Articles type declartions

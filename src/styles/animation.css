@@ -25,10 +25,8 @@
 } */
 
 #wing {
-	& > path {
-		transform-origin: 60% 50%;
-		animation: upAndDown ease-in 1000ms infinite;
-	}
+	transform-origin: center center;
+	transform: rotate(-17deg);
 }
 
 #eye {
@@ -38,11 +36,11 @@
 	}
 }
 
-#body {
+/* #body {
 	transform-origin: center center;
 	transform: translateY(-5px);
 	animation: move 1000ms infinite;
-}
+} */
 
 @keyframes move {
 	0% {
@@ -68,23 +66,15 @@
 
 @keyframes upAndDown {
 	0% {
-		transform: rotate(6deg);
+		transform: rotate(-17deg);
 	}
 
 	50% {
-		transform: rotate(-10deg);
-	}
-
-	55% {
-		transform: rotate(-12deg);
-	}
-
-	95% {
-		transform: rotate(8deg);
+		transform: rotate(16deg);
 	}
 
 	100% {
-		transform: rotate(6deg);
+		transform: rotate(-17deg);
 	}
 }
 

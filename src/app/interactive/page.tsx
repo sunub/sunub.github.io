@@ -1,10 +1,6 @@
 import React from "react";
-import StoriesTemplate from "@/components/Stories/template/index"
+import InteractivePage from "@/components/Interactive/index"
 
 export default function Page() {
-    return (
-        <div id="interactive-root">
-            <StoriesTemplate />
-        </div>
-    )
+    return (<InteractivePage />)
 }
