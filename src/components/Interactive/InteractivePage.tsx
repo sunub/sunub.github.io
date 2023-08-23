@@ -25,7 +25,7 @@ export default async function InteractivePage() {
     return (
         <div id={styles[`interactive-page__root-layout`]}>
             <StoriesTemplate images={images} />
-            {/* <LoadingTemplate /> */}
+            <LoadingTemplate />
         </div>
     )
 }

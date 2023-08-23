@@ -2,43 +2,20 @@
 
 import styled from "styled-components"
 import React from "react"
-import { Spacer } from "@/constants/Spacer"
 import { useSpring, animated } from "@react-spring/web";
 
-const IconCotainer = styled.div`
+const Container = styled.div`
+    grid-area: bird;
+
     display: flex;
-    width: 100%;
-    max-width: 1100px;
-
-    position: relative;
-    left: -227px;
-
     justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 32px;
-    padding-right: 32px;
-`;
-
-const Wing = styled.path`
-    transform: rotate(17deg);
-    transform-origin: center center;
-`
-const EyeAndBeak = styled.g`
-`
-
-const EyeAndBeakContainer = styled.svg`
-`
-const BodyContainer = styled.g`
-    
 `
 
 export default function FlyingBird() {
     return (
-        <IconCotainer>
-            <Spacer axis="horizontal" size={500} />
+        <Container>
             <Bird />
-        </IconCotainer>
+        </Container>
     )
 }
 
@@ -53,7 +30,6 @@ function Bird() {
             mass: 1,
             tension: 200
         },
-        loop: true,
     }))
 
     const bird = useSpring(({
@@ -65,7 +41,6 @@ function Bird() {
         config: {
             mass: 1,
         },
-        loop: true
     }))
 
     return (
@@ -86,12 +61,12 @@ function Bird() {
                     ...props
                 }}
             />
-            <EyeAndBeak>
+            <g>
                 <path d="M98.8207 21.7785C98.8207 29.5145 95.4 35.7857 91.1804 35.7857C86.9607 35.7857 83.54 29.5145 83.54 21.7785C83.54 14.0425 86.9607 7.77118 91.1804 7.77118C95.4 7.77118 98.8207 14.0425 98.8207 21.7785Z" fill="white" />
                 <path d="M96.2737 21.7783C96.2737 28.1078 93.9933 33.2388 91.1802 33.2388C88.3671 33.2388 86.0866 28.1078 86.0866 21.7783C86.0866 15.4489 88.3671 10.3178 91.1802 10.3178C93.9933 10.3178 96.2737 15.4489 96.2737 21.7783Z" fill="black" />
                 <path d="M129.196 19.4279V28.1705H101.025V19.4279C101.025 10.1025 111.711 7.77118 114.625 7.77118H118.51C125.504 7.77118 129.196 15.5423 129.196 19.4279Z" fill="#D9D9D9" />
                 <path d="M116.567 34.9703C122.784 34.9703 124.339 29.7895 124.339 27.1991H101.025C101.025 33.416 104.911 34.9703 106.854 34.9703H116.567Z" fill="#6E7E89" />
-            </EyeAndBeak>
+            </g>
         </animated.svg>
     )
 }

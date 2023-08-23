@@ -1,9 +1,11 @@
 import React from "react"
+import Animation from "./Animation/index"
+import Button from "./Button/index"
+
 
 export default function Loading() {
-    return (
-        <div>
-            <h1>HI!</h1>
-        </div>
-    )
+    return (<>
+        <Animation />
+        <Button />
+    </>)
 }

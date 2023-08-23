@@ -1,9 +1,7 @@
 #interactive-page__root-layout {
-	display: grid;
-
-	grid:
-		[stories] 1fr
-		[loading] 1fr / auto;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
 
 	justify-content: center;
 
