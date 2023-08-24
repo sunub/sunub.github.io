@@ -3,6 +3,9 @@
 import React from "react"
 import styled from "styled-components"
 
+/**
+ * Button styled-component
+ */
 const RootContainer = styled.div`
     display: flex;
     
@@ -13,105 +16,160 @@ const RootContainer = styled.div`
     --btn-text-color: oklch(60.33% 0.24253053789753418 20.760123262951282);
     `
 
-const BtnText = styled.span<{ $position: string }>`
+const Front = styled.span`
     display: block;
-    background-color: var(--btn-text-color);
-    padding: 12px 42px;
-    border-radius: 15px;
     font-size: 1.5rem;
-    color: white;
-    transform: translateY(${(props) => props.$position});
-    white-space: break-spaces;
+    color: var(--color-background);
+    padding: 13px 42px;
+    border-radius: 20px;
+    background-color: var(--btn-text-color);
     
+    user-select: none;
     will-change: transform;
+    transform: translateY(-6px);
     transition: transform 600ms cubic-bezier(.3, .7, .4, 1);
-
-    :hover {
-        transition: filter 250ms cubic-bezier(.3, .7, .4, 1);
-        filter: brightness(110%);
-    }
     `
 
 const Shadow = styled.span`
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: block;
     width: 100%;
     height: 100%;
-    border-radius: 15px;
-    background-color: oklch(0% 0 0 / 25%);
-    transform: translateY(6px);
-`
-const Edge = styled.span`
     position: absolute;
-    top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;
-    background: linear-gradient(
-    to left,
-    hsl(340deg 100% 16%) 0%,
-    hsl(340deg 100% 32%) 8%,
-    hsl(340deg 100% 32%) 92%,
-    hsl(340deg 100% 16%) 100%
-  );
-`
-
-const Btn = styled.button`
-    background-color: transparent;
-    position: relative;
-    
-    border-radius: 15px;
+    top: 0;
     border: none;
+    border-radius: 15px;
+    background-color: oklch(0% 0 14.09 / 45%);
+    transition: transform 600ms cubic-bezier(.3, .7, .4, 1);
+    
+    filter: blur(2px);
+    transform: translateY(6px);
+    `
+const Edge = styled.span`
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    background-image: linear-gradient(
+        to left,
+        oklch(19.82% 0.133 14.09) 0%,
+        oklch(45.56% 0.182 14.09) 9%,
+        oklch(45.56% 0.182 14.09) 91%,
+        oklch(19.82% 0.133 14.09) 100%
+        );
+        `
+
+const Btn = styled.button.attrs((props: any) =>
+({
+    "aria-pressed": props.$isClick ?? false
+})) <{ $position: string, $isClick: boolean }>`
+    background-color: transparent;
     padding: 0;
-    cursor: pointer;
+    border-radius: 20px;
+    border: none;
     outline-offset: 4px;
-
+    position: relative;
     -webkit-tap-highlight-color: transparent;
-    user-select: none;
-
-    &:focus:not(:focus-visible) {
+    
+    :focus:not(:focus-visible) {
         outline: none;
     }
-
-    &:hover ${BtnText}{
+    
+    :hover ${Front} {
         filter: brightness(110%);
         transform: translateY(-8px);
-        transition: transform 250ms cubic-bezier(.3, .7, .4, 1);
+        transition: transform 200ms cubic-bezier(.3, .7, .4, 1);
+    }
+    
+    &[aria-pressed="true"] ${Front} {
+        transform: translateY(${(props) => props.$position});
+        animation: backwards;
+        transition: transform 34mx;
     }
 
-
-    &:focus ${Shadow}{
-        transform: translateY(3px);
-        transition: transform 34ms;
+    &[aria-pressed="true"] ${Shadow} {
+        transform: translateY(2px);
+        transition: transform 34mx;
+    }
+    
+    :hover:not(:focus) ${Shadow} {
+        transform: translateY(4px);
+        transition: transform 200ms cubic-bezier(.3, .7, .4, 1);
     }
 `
 
-
-// oklch(59.83% 0.24 20.83)
-
-// oklch(63.76% 0.254 12.64)
-
-export default function Button() {
+/**
+ * Button Components
+ */
+const Button = React.forwardRef<HTMLButtonElement>((props, ref) => {
     const [isClick, setClick] = React.useState(false);
+    const [position, setPosition] = React.useState("-8px");
 
+    React.useEffect(() => {
+        const newPosition = isClick ? "-2px" : "-8px"
+
+        setPosition(newPosition);
+    }, [isClick])
     return (
         <RootContainer>
             <Btn
+                aria-pressed={false}
+                onClick={() => setClick(!isClick)}
+                $position={position}
+                $isClick={isClick}
+                ref={ref}
+                {...props}
             >
                 <Shadow />
                 <Edge />
-                <BtnText
-                    onClick={() => {
-                        console.log(isClick)
-                        setClick(!isClick)
-                    }}
-                    $position={isClick ? "-2px" : "-6px"}
-                >
+                <Front >
                     play!
-                </BtnText>
+                </Front>
             </Btn>
         </RootContainer>
     )
-}
+});
+
+Button.displayName = "Button"
+
+export default Button
+// const Button = React.forwardRef(function ({ props, btnRef }) {
+//     const [isClick, setClick] = React.useState(false);
+//     const [position, setPosition] = React.useState("-8px");
+
+//     React.useEffect(() => {
+//         const newPosition = isClick ? "-2px" : "-8px"
+
+//         setPosition(newPosition);
+//     }, [isClick])
+
+//     return (
+//         <RootContainer>
+//             <Btn
+//                 aria-pressed={false}
+//                 onClick={() => setClick(!isClick)}
+//                 $position={position}
+//                 $isClick={isClick}
+//                 ref={btnRef}
+//                 {...props}
+//             >
+//                 <Shadow />
+//                 <Edge />
+//                 <Front >
+//                     play!
+//                 </Front>
+//             </Btn>
+//         </RootContainer>
+//     )
+// })
+
+// Button.displayName = "Button";
+
+// export default Button

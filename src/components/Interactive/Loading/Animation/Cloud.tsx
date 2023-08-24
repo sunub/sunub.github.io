@@ -12,7 +12,7 @@ const Container = styled.div`
     transform-origin: center center;
 `
 
-export default function Cloud() {
+export default function Cloud({ btnRef }: { btnRef: React.RefObject<HTMLButtonElement> }) {
     const cloud = useSpring(({
         from: {
             x: 100,

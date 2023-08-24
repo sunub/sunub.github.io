@@ -4,6 +4,7 @@ date: 2023-06-12
 tags: algorithm
 summary: 너무나도 어려운 DP를 알아보자
 slug: whatis-dp
+category: algorithm
 ---
 
 ## Dynamic Programming 이란?
