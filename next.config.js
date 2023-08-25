@@ -12,18 +12,20 @@ const nextConfig = {
 	compiler: {
 		styledComponents: true,
 	},
-	webpack: (config, options) => {
-		config.module.rules.push({
-			test: /\.mdx?$/,
-			use: [
-				options.defaultLoaders.babel,
-				{
-					loader: "@mdx-js/loader",
-					options: {},
-				},
-			],
-		});
-		return config;
+	experimental: {
+		turbo: {
+			rules: {
+				".md": [
+					{
+						loader: "@mdx-js/loader",
+						options: {
+							format: "md",
+						},
+					},
+				],
+				".mdx": ["@mdx-js/loader"],
+			},
+		},
 	},
 };
 

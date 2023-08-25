@@ -3,6 +3,7 @@
 import React from "react"
 import styled from "styled-components";
 import { useSpring, animated } from "@react-spring/web";
+import { AnimationContext } from "../Loading.context";
 
 const Container = styled.div`
     grid-area: bird;
@@ -11,32 +12,59 @@ const Container = styled.div`
     justify-content: center;
     transform-origin: center center;
 `
+interface CloudProps {
+    id: string;
+    startPosition: {
+        startX: number,
+        endX: number,
+        y: number
+    };
+    duration: number
+}
 
-export default function Cloud({ btnRef }: { btnRef: React.RefObject<HTMLButtonElement> }) {
-    const cloud = useSpring(({
+export default function CloudAnime({ id, startPosition, duration }: CloudProps) {
+    const ctx = React.useContext(AnimationContext);
+    const [props, api] = useSpring(() => ({
         from: {
-            x: 100,
-            opacity: 1
+            x: startPosition.startX,
+            y: startPosition.y,
         },
-        to: [
-            {
-                x: -300,
-                opacity: 0,
-            }
-        ],
         config: {
             mass: 5,
             tension: 100,
-            duration: 5000,
         },
-    }))
+        loop: true
+    }));
+
+    React.useEffect(() => {
+        const isBtnPressed = ctx?.state;
+        if (isBtnPressed) {
+            api.start({
+                to: [
+                    {
+                        x: startPosition.endX,
+                    },
+                    {
+                        x: startPosition.startX,
+                    },
+                    {
+                        x: startPosition.endX,
+                    }
+                ],
+                config: {
+                    duration: duration,
+                },
+                loop: true
+            })
+        } else {
+            api.stop()
+        }
+    }, [ctx?.state])
 
     return (
-        <Container>
+        <Container id={id}>
             <animated.svg
-                style={{
-                    ...cloud
-                }}
+                style={props}
                 width="429" height="47" viewBox="0 0 429 47" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g filter="url(#filter0_d_126_195)">
                     <path d="M255.316 42C254.037 42 253 40.9632 253 39.6842C253 38.754 253.754 38 254.684 38H256V37C256 35.3431 257.343 34 259 34H259.6C260.51 32.2192 262.363 31 264.5 31C267.538 31 270 33.4624 270 36.5C270 37.02 269.928 37.5232 269.793 38H270.316C271.246 38 272 38.754 272 39.6842C272 40.9632 270.963 42 269.684 42H255.316Z" fill="#FFFDFC" />

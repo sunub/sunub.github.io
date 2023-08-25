@@ -2,6 +2,7 @@
 
 import React from "react"
 import styled from "styled-components"
+import { AnimationContext } from "../Loading.context"
 
 /**
  * Button styled-component
@@ -108,14 +109,16 @@ const Btn = styled.button.attrs((props: any) =>
 /**
  * Button Components
  */
-const Button = React.forwardRef<HTMLButtonElement>((props, ref) => {
+
+export default function Button() {
     const [isClick, setClick] = React.useState(false);
     const [position, setPosition] = React.useState("-8px");
+    const ctx = React.useContext(AnimationContext);
 
     React.useEffect(() => {
         const newPosition = isClick ? "-2px" : "-8px"
-
         setPosition(newPosition);
+        ctx?.setter(isClick);
     }, [isClick])
     return (
         <RootContainer>
@@ -124,8 +127,6 @@ const Button = React.forwardRef<HTMLButtonElement>((props, ref) => {
                 onClick={() => setClick(!isClick)}
                 $position={position}
                 $isClick={isClick}
-                ref={ref}
-                {...props}
             >
                 <Shadow />
                 <Edge />
@@ -135,41 +136,4 @@ const Button = React.forwardRef<HTMLButtonElement>((props, ref) => {
             </Btn>
         </RootContainer>
     )
-});
-
-Button.displayName = "Button"
-
-export default Button
-// const Button = React.forwardRef(function ({ props, btnRef }) {
-//     const [isClick, setClick] = React.useState(false);
-//     const [position, setPosition] = React.useState("-8px");
-
-//     React.useEffect(() => {
-//         const newPosition = isClick ? "-2px" : "-8px"
-
-//         setPosition(newPosition);
-//     }, [isClick])
-
-//     return (
-//         <RootContainer>
-//             <Btn
-//                 aria-pressed={false}
-//                 onClick={() => setClick(!isClick)}
-//                 $position={position}
-//                 $isClick={isClick}
-//                 ref={btnRef}
-//                 {...props}
-//             >
-//                 <Shadow />
-//                 <Edge />
-//                 <Front >
-//                     play!
-//                 </Front>
-//             </Btn>
-//         </RootContainer>
-//     )
-// })
-
-// Button.displayName = "Button";
-
-// export default Button
+}

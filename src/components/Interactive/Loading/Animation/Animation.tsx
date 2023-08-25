@@ -1,8 +1,8 @@
 "use client"
 
 import styled from "styled-components";
-import Cloud from "./Cloud";
-import FlyingBird from "./FlyingBird";
+import CloudAnime from "./CloudAnime";
+import FlyingBirdAnime from "./FlyingBirdAnime";
 import React from "react";
 
 const LoadingContainer = styled.div`
@@ -12,15 +12,27 @@ const LoadingContainer = styled.div`
     grid: [bird] 1fr / [bird] 1fr;
 `
 
-export default function Animation({ btnRef }: { btnRef: React.RefObject<HTMLButtonElement> }) {
-    const [isPressed, setPressed] = React.useState(false);
-
-
+export default function Animation() {
 
     return (
         <LoadingContainer>
-            <Cloud btnRef={btnRef} />
-            <FlyingBird btnRef={btnRef} />
+            <CloudAnime
+                id="behind-scene__cloud"
+                startPosition={{
+                    startX: 100,
+                    endX: -300,
+                    y: 50,
+                }}
+                duration={1000} />
+            <FlyingBirdAnime />
+            <CloudAnime
+                id="front-scene__cloud"
+                startPosition={{
+                    startX: 200,
+                    endX: -100,
+                    y: -10
+                }}
+                duration={1100} />
         </LoadingContainer>
     )
 }

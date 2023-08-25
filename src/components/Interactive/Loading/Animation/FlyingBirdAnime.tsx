@@ -3,6 +3,7 @@
 import styled from "styled-components"
 import React from "react"
 import { useSpring, animated } from "@react-spring/web";
+import { AnimationContext } from "../Loading.context";
 
 const Container = styled.div`
     grid-area: bird;
@@ -11,37 +12,54 @@ const Container = styled.div`
     justify-content: center;
 `
 
-export default function FlyingBird({ btnRef }: { btnRef: React.RefObject<HTMLButtonElement> }) {
-    const [isPressed, setPressed] = React.useState(false);
+export default function FlyingBirdAnime() {
+    const ctx = React.useContext(AnimationContext)
 
-    const props = useSpring(({
+    const [wingProps, wingApi] = useSpring(() => ({
         from: { rotate: "-17deg" },
-        to: [
-            { rotate: "20deg" },
-            { rotate: "-17deg" },
-        ],
         config: {
             mass: 1,
             tension: 200
         },
     }))
-
-    const bird = useSpring(({
+    const [bodyProps, bodyApi] = useSpring(() => ({
         from: { y: 10 },
-        to: [
-            { y: -10 },
-            { y: 10 },
-        ],
         config: {
             mass: 1,
         },
+        loop: true
     }))
+
+    React.useEffect(() => {
+        const isPressed = ctx?.state;
+
+        if (isPressed) {
+            wingApi.start({
+                to: [
+                    { rotate: "20deg" },
+                    { rotate: "-17deg" },
+                ],
+                loop: true
+            });
+            bodyApi.start({
+                to: [
+                    { y: -10 },
+                    { y: 10 },
+                ],
+                loop: true
+            })
+        } else {
+            wingApi.stop();
+            bodyApi.stop();
+        }
+
+    }, [ctx?.state])
 
     return (
         <Container>
             <animated.svg
                 style={{
-                    ...bird
+                    ...bodyProps
                 }}
                 width="130" height="80" viewBox="0 0 130 67" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <animated.g>
@@ -53,7 +71,7 @@ export default function FlyingBird({ btnRef }: { btnRef: React.RefObject<HTMLBut
                     fill={"#6E7E89"}
                     style={{
                         transformOrigin: "center",
-                        ...props
+                        ...wingProps
                     }}
                 />
                 <g>
