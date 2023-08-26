@@ -9,6 +9,7 @@ import { AnimationContext } from "../Loading.context"
  */
 const RootContainer = styled.div`
     display: flex;
+    position: relative;
     
     justify-content: center;
     margin-bottom: 64px;
@@ -106,6 +107,72 @@ const Btn = styled.button.attrs((props: any) =>
     }
 `
 
+const ButtonBorder = styled.div`
+    display: grid;
+    grid: [wave] 1fr / [wave] 1fr;
+    justify-items: center;
+    align-items: center;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: -1;
+`
+
+const Wave = styled.div<{ $size: number }>`
+    grid-area: wave;
+    --border-color1: linear-gradient(
+        90deg,
+        hsl(340deg 100% 32%) 0%,
+        hsl(344deg 96% 41%) 24%,
+        hsl(349deg 93% 51%) 35%,
+        hsl(353deg 89% 60%) 45%,
+        hsl(357deg 86% 69%) 55%,
+        hsl(2deg 82% 78%) 65%,
+        hsl(6deg 78% 87%) 76%,
+        hsl(10deg 75% 97%) 100%
+        );
+    --border-color2: linear-gradient(
+        -90deg,
+        hsl(340deg 100% 32%) 0%,
+        hsl(344deg 96% 41%) 24%,
+        hsl(349deg 93% 51%) 35%,
+        hsl(353deg 89% 60%) 45%,
+        hsl(357deg 86% 69%) 55%,
+        hsl(2deg 82% 78%) 65%,
+        hsl(6deg 78% 87%) 76%,
+        hsl(10deg 75% 97%) 100%
+        );
+
+    width: calc(100% + ${(props) => props.$size}px);
+    height: calc(100% + ${(props) => props.$size}px);
+    transform: translateY(-3px);
+    border-radius: 20px;
+    border: 3px solid transparent;
+
+    background: var(--border-color1), var(--border-color2) padding-box, var(--border-color1) border-box;
+    background-origin: content-box;
+
+    animation: wave 1.725s ease 0s infinite;
+    @keyframes wave {
+        0% {
+            transform: scale(0);
+            opacity: 1;
+        }
+        60% {
+            transform: scale(1.15);
+            opacity: .4;
+        }
+        100% {
+            transform: scale(0);
+            opacity: 0;
+        }
+    }
+`
+
 /**
  * Button Components
  */
@@ -131,8 +198,12 @@ export default function Button() {
                 <Shadow />
                 <Edge />
                 <Front >
-                    play!
+                    {isClick ? "pause!" : "play!"}
                 </Front>
+                <ButtonBorder>
+                    <Wave $size={8} />
+                    <Wave $size={20} />
+                </ButtonBorder>
             </Btn>
         </RootContainer>
     )

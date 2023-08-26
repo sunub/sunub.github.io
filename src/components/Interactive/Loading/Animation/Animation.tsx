@@ -21,18 +21,18 @@ export default function Animation() {
                 startPosition={{
                     startX: 100,
                     endX: -300,
-                    y: 50,
+                    y: "50px",
                 }}
-                duration={1000} />
+                duration={2100} />
             <FlyingBirdAnime />
             <CloudAnime
                 id="front-scene__cloud"
                 startPosition={{
                     startX: 200,
                     endX: -100,
-                    y: -10
+                    y: "-20px",
                 }}
-                duration={1100} />
+                duration={2100} />
         </LoadingContainer>
     )
 }

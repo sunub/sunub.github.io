@@ -12,12 +12,13 @@ const Container = styled.div`
     justify-content: center;
     transform-origin: center center;
 `
+
 interface CloudProps {
     id: string;
     startPosition: {
         startX: number,
         endX: number,
-        y: number
+        y: string
     };
     duration: number
 }
@@ -28,6 +29,7 @@ export default function CloudAnime({ id, startPosition, duration }: CloudProps) 
         from: {
             x: startPosition.startX,
             y: startPosition.y,
+            opacity: 1,
         },
         config: {
             mass: 5,
@@ -42,14 +44,24 @@ export default function CloudAnime({ id, startPosition, duration }: CloudProps) 
             api.start({
                 to: [
                     {
-                        x: startPosition.endX,
+                        x: startPosition.endX + Math.floor(Math.random() * 50),
+                        opacity: 0,
+                    },
+
+                    {
+                        x: startPosition.startX - Math.floor(Math.random() * 20),
+                        opacity: 0,
+                        config: {
+                            duration: 3
+                        }
                     },
                     {
                         x: startPosition.startX,
+                        opacity: 1,
+                        config: {
+                            duration: 20
+                        }
                     },
-                    {
-                        x: startPosition.endX,
-                    }
                 ],
                 config: {
                     duration: duration,
