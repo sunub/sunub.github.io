@@ -11,6 +11,7 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     transform-origin: center center;
+    overflow: hidden;
 `
 
 interface CloudProps {
@@ -39,17 +40,21 @@ export default function CloudAnime({ id, startPosition, duration }: CloudProps) 
     }));
 
     React.useEffect(() => {
+        const cloud = document.getElementById(`${id}`) as HTMLElement;
+        const clientWidth = cloud.clientWidth;
+        const clientHeight = cloud.clientHeight;
+
         const isBtnPressed = ctx?.state;
         if (isBtnPressed) {
             api.start({
                 to: [
                     {
-                        x: startPosition.endX + Math.floor(Math.random() * 50),
+                        x: -startPosition.endX - clientWidth,
                         opacity: 0,
                     },
 
                     {
-                        x: startPosition.startX - Math.floor(Math.random() * 20),
+                        x: startPosition.startX - Math.floor(Math.random() * clientWidth),
                         opacity: 0,
                         config: {
                             duration: 3

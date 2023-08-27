@@ -120,55 +120,54 @@ const ButtonBorder = styled.div`
     height: 100%;
 
     z-index: -1;
+    transform: translateY(-.5px);
 `
 
-const Wave = styled.div<{ $size: number }>`
+const Wave = styled.div<{ $size: number, $deg: string, $isClick: boolean }>`
     grid-area: wave;
-    --border-color1: linear-gradient(
-        90deg,
-        hsl(340deg 100% 32%) 0%,
-        hsl(344deg 96% 41%) 24%,
-        hsl(349deg 93% 51%) 35%,
-        hsl(353deg 89% 60%) 45%,
-        hsl(357deg 86% 69%) 55%,
-        hsl(2deg 82% 78%) 65%,
-        hsl(6deg 78% 87%) 76%,
-        hsl(10deg 75% 97%) 100%
-        );
-    --border-color2: linear-gradient(
-        -90deg,
-        hsl(340deg 100% 32%) 0%,
-        hsl(344deg 96% 41%) 24%,
-        hsl(349deg 93% 51%) 35%,
-        hsl(353deg 89% 60%) 45%,
-        hsl(357deg 86% 69%) 55%,
-        hsl(2deg 82% 78%) 65%,
-        hsl(6deg 78% 87%) 76%,
-        hsl(10deg 75% 97%) 100%
-        );
+    --border-color: linear-gradient(
+        ${((props) => props.$deg)},
+      hsl(10deg 90% 66%) 0%,
+      hsl(8deg 89% 65%) 22%,
+      hsl(7deg 89% 64%) 33%,
+      hsl(5deg 89% 63%) 42%,
+      hsl(2deg 88% 62%) 50%,
+      hsl(360deg 88% 61%) 58%,
+      hsl(356deg 88% 58%) 67%,
+      hsl(352deg 88% 54%) 78%,
+      hsl(345deg 100% 47%) 100%
+    );
 
     width: calc(100% + ${(props) => props.$size}px);
     height: calc(100% + ${(props) => props.$size}px);
-    transform: translateY(-3px);
-    border-radius: 20px;
-    border: 3px solid transparent;
+    border-radius: 30px;
+    border: 5px dotted transparent;
 
-    background: var(--border-color1), var(--border-color2) padding-box, var(--border-color1) border-box;
-    background-origin: content-box;
-
-    animation: wave 1.725s ease 0s infinite;
+    background-image: var(--border-color);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    
+    opacity: ${(props) => props.$isClick ? 1 : 0};
+    
+    animation: ${(props) => props.$isClick
+        ? "wave 1.7s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite"
+        : ""};
     @keyframes wave {
         0% {
-            transform: scale(0);
-            opacity: 1;
+            transform: scale(0.9);
+            opacity: .6;
         }
-        60% {
-            transform: scale(1.15);
-            opacity: .4;
+        30% {
+            transform: scale(1.03);
+            opacity: .5;
         }
-        100% {
-            transform: scale(0);
-            opacity: 0;
+        60%{
+            transform: scale(0.85);
+            opacity: .1;
+        }
+        100%{
+            transform: scale(0.9);
+            opacity: .6;
         }
     }
 `
@@ -187,6 +186,7 @@ export default function Button() {
         setPosition(newPosition);
         ctx?.setter(isClick);
     }, [isClick])
+
     return (
         <RootContainer>
             <Btn
@@ -201,8 +201,11 @@ export default function Button() {
                     {isClick ? "pause!" : "play!"}
                 </Front>
                 <ButtonBorder>
-                    <Wave $size={8} />
-                    <Wave $size={20} />
+                    <Wave
+                        id="outer-wave"
+                        $size={20}
+                        $deg={"90deg"}
+                        $isClick={isClick} />
                 </ButtonBorder>
             </Btn>
         </RootContainer>
