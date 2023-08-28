@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const MinusSquareO: React.FC = props => (
+const Minus = (props: React.HTMLAttributes<HTMLOrSVGElement>) => (
     <svg {...props} viewBox="64 -65 897 897">
         <g>
             <path
@@ -11,7 +11,7 @@ const MinusSquareO: React.FC = props => (
     </svg>
 )
 
-const PlusSquareO: React.FC = props => (
+const Plus = (props: React.HTMLAttributes<HTMLOrSVGElement>) => (
     <svg {...props} viewBox="64 -65 897 897">
         <g>
             <path
@@ -22,7 +22,7 @@ const PlusSquareO: React.FC = props => (
     </svg>
 )
 
-const CloseSquareO: React.FC = props => (
+const Close = (props: React.HTMLAttributes<HTMLOrSVGElement>) => (
     <svg {...props} viewBox="64 -65 897 897">
         <g>
             <path
@@ -33,4 +33,4 @@ const CloseSquareO: React.FC = props => (
     </svg>
 )
 
-export { PlusSquareO, MinusSquareO, CloseSquareO }
+export { Plus, Minus, Close }

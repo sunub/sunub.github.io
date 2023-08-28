@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./InteractivePage.module.css";
 import StoriesTemplate from "./Stories/template/index";
 import LoadingTemplate from "./Loading/index";
+import Tree from "./Tree/index"
 import { createApi } from "unsplash-js";
 
 const unsplash = createApi({
@@ -24,6 +25,9 @@ export default async function InteractivePage() {
 
     return (
         <div id={styles[`interactive-page__root-layout`]}>
+            <Tree name={"main"}>
+                <div>HI</div>
+            </Tree>
             <StoriesTemplate images={images} />
             <LoadingTemplate />
         </div>
