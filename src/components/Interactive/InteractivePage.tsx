@@ -26,10 +26,13 @@ export default async function InteractivePage() {
     return (
         <div id={styles[`interactive-page__root-layout`]}>
             <Tree name={"main"}>
-                <div>HI</div>
+                <Tree name={"Stories"}>
+                    <StoriesTemplate images={images} />
+                </Tree>
+                <Tree name={"Flying Brid"}>
+                    <LoadingTemplate />
+                </Tree>
             </Tree>
-            <StoriesTemplate images={images} />
-            <LoadingTemplate />
         </div>
     )
 }

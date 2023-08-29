@@ -10,6 +10,7 @@ const LoadingContainer = styled.div`
 
     display: grid;
     grid: [bird] 1fr / [bird] 1fr;
+    gap: 2rem;
 `
 
 export default function Animation() {
