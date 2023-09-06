@@ -1,5 +1,10 @@
+import PostCard from "@/components/Blog/Main/PostCard/PostCard";
 import Main from "@/components/Blog/Main/index"
 
 export default function Page() {
-  return <Main />;
+  return (
+    <Main>
+      <PostCard />
+    </Main>
+  );
 }

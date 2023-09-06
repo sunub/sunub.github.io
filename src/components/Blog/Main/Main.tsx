@@ -1,14 +1,16 @@
-import PostCard from './PostCard/index';
-import styles from './Main.module.css';
-import MainBirdIcon from '../icon/MainBridIcon';
+"use client"
 
-export default function Main() {
-    return (
-        <>
-            <MainBirdIcon />
-            <div className={styles.main__content}>
-                <PostCard />
-            </div>
-        </>
-    );
+import styles from './Main.module.css';
+import HeroImage from './HeroImage';
+import React from 'react';
+import { Spacer } from '@/constants/Spacer';
+
+export default function Main({ children }: { children: React.ReactNode }) {
+    return (<>
+        <HeroImage />
+        <Spacer axis='vertical' size={64} />
+        <div className={styles.main__content}>
+            {children}
+        </div>
+    </>);
 }

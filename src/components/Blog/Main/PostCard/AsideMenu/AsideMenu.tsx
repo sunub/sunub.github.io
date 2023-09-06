@@ -1,7 +1,7 @@
 'use client';
 
 import { PostCardContext } from '../PostCardContext';
-import React, { FormEvent, useContext, useEffect } from 'react';
+import React, { FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { Home } from '@/components/Blog/icon/Category';
 import { getCategoryIcon } from './AsudeMenu.helper';
@@ -57,10 +57,6 @@ const Input = styled.input`
 export default function Menu({ categories }: { categories: string[] }) {
     const { setCategory } = useContext(PostCardContext);
     const icon = getCategoryIcon(categories);
-
-    useEffect(() => {
-        document.body.addEventListener("click", (e) => console.log(e.target))
-    }, [])
 
     function sendCategory(event: FormEvent) {
         const curr = event.target as HTMLInputElement;

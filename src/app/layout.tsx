@@ -37,6 +37,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           rel="stylesheet"
           href="//fonts.googleapis.com/css2?family=Material+Icons&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block"
         />
+        <link rel="stylesheet" as="preload" href="./variable.css" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" as="icon" />
         <InitTheme />
         <InitScroll />

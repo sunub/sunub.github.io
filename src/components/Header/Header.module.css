@@ -1,6 +1,5 @@
 .HeaderContainer {
 	position: relative;
-	background: var(--surface-1);
 	top: 0px;
 
 	display: flex;
