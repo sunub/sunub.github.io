@@ -44,15 +44,10 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"src/components/Header/Logo.ssx",
-		"src/constants/Spacer.ts",
-		"src/components/Main/index.js",
-		"src/components/Header/index.tsx",
-		"src/components/Header/HeaderLeft.jsx",
-		"src/components/Theme/InitTheme.js",
 		"server/mongodbInit.ts",
 		"server/atlas_uri.ts",
 		"src/**/*.js",
+		"src/**/*",
 		"src/app/mdx/page.jsx"
 	],
 	"exclude": ["node_modules"]

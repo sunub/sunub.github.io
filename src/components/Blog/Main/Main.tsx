@@ -7,9 +7,9 @@ import { Spacer } from '@/constants/Spacer';
 
 export default function Main({ children }: { children: React.ReactNode }) {
     return (<>
-        <HeroImage />
-        <Spacer axis='vertical' size={64} />
         <div className={styles.main__content}>
+            <HeroImage />
+            <Spacer axis='vertical' size={64} />
             {children}
         </div>
     </>);

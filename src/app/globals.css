@@ -37,6 +37,10 @@ body {
 
 #__next {
 	isolation: isolate;
+
+	display: grid;
+	grid-template-columns: [side-header] 88px [main-content] 1fr;
+	grid-template-rows: 1fr;
 }
 
 body {

@@ -1,4 +1,6 @@
 .main__content {
+	grid-area: main-content;
+
 	position: relative;
 	z-index: 2;
 
