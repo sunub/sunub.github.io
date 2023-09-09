@@ -35,8 +35,13 @@ const Elevation = styled.div<{
 
 	--higlight-border-color: oklch(73.44% 0.152 21.47);
 	--default-border-color: oklch(61.8% 0.027 30.58 / 0.3);
+
+	--default-bg-color: oklch(97.14% 0.011 31.07);
+	--card-content-bg-color: oklch(98.8% 0 31.07);
+
 	width: ${(props) => props.$size}px;
 	height: ${(props) => props.$size}px;
+	padding: 1rem;
 
 	border: 2px solid
 		var(
@@ -46,7 +51,12 @@ const Elevation = styled.div<{
 					: "--default-border-color"}
 		);
 	border-radius: ${(props) => Math.floor(props.$size * 0.2)}px;
-	background: oklch(97.14% 0.011 31.07);
+	background: var(
+		${(props) =>
+			props.$usage === "content"
+				? "--card-content-bg-color"
+				: "--default-bg-color"}
+	);
 
 	box-shadow: var(${(props) => getBoxShadow(props.$distance)});
 

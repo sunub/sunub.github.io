@@ -9,7 +9,6 @@ export default async function PostCard() {
 
     return (<>
         <PostCardCtx>
-            <AsideMenu categories={post.categories} />
             <PostCardList categorizedPost={post.categorizedPost} />
         </PostCardCtx>
     </>);

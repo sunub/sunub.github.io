@@ -4,9 +4,9 @@ import { useSpring, a, animated } from "@react-spring/web";
 import React, { useEffect } from "react"
 import styled from "styled-components";
 import * as Icons from "./Icons"
-import usePrevious from "./use-previous.hook";
-import useMeasure from "./use-measure.hook";
-import useMounted from "./use-mounted.hook";
+import usePrevious from "@/hooks/use-previous.hook";
+import useMeasure from "@/hooks/use-measure.hook";
+import useMounted from "@/hooks/use-mounted.hook";
 
 
 /**

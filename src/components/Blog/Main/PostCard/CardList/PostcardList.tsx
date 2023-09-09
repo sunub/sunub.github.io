@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import styles from "./PostCardList.module.css";
 
 const List = styled.li`
-    position: sticky;
+    position: relative;
     transform-origin: center top;
 
     overflow-wrap: break-word;
@@ -149,7 +149,7 @@ export default function PostCardList({ categorizedPost }: { categorizedPost: Map
         <div className={styles.PostCardListContainer}>
             {
                 posts.map(desc => {
-                    return (
+                    return (<>
                         <List key={`${desc.tags}${Math.random() * 100}`}>
                             <article>
                                 <CardContent
@@ -162,7 +162,7 @@ export default function PostCardList({ categorizedPost }: { categorizedPost: Map
                                 />
                             </article>
                         </List>
-                    )
+                    </>)
                 })
             }
         </div>

@@ -35,7 +35,8 @@
 			"@/icon": ["./src/components/icon"],
 			"@/utils/*": ["./src/utils/*"],
 			"@/lib/*": ["./src/lib/*"],
-			"@/components/*": ["./src/components/*"]
+			"@/components/*": ["./src/components/*"],
+			"@/hooks/*": ["./src/hooks/*"]
 		},
 		"sourceMap": true
 	},

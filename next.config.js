@@ -12,6 +12,7 @@ const nextConfig = {
 	compiler: {
 		styledComponents: true,
 	},
+	output: "standalone",
 	experimental: {
 		turbo: {
 			rules: {
