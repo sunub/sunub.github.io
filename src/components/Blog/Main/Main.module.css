@@ -11,8 +11,6 @@
 	background: var(--surface-1);
 	transition: background 350ms ease 0s;
 
-	padding-left: 32px;
-	padding-right: 32px;
 	@media (max-width: 768px) {
 		& {
 			grid-template-columns: [main-blogpost] 1fr;
