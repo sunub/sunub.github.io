@@ -10,6 +10,7 @@ import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
 import InitScroll from '@/components/Toaster/InitScroll';
 import HeaderProvider from '@/components/Header/Header.context';
 import ThemeToggler from '@/components/Theme/ThemeToggler';
+import { baseURL } from "@/utils/getBaseUrl";
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +44,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <InitScroll />
       </head>
       <body>
+        <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" />
         <StyledComponentsRegistry>
           <ThemeProvider>
             <HeaderProvider>

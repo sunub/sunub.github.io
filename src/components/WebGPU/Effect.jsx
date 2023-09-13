@@ -10,13 +10,13 @@ import React from "react";
 
 export default function Effects() {
 	const ref = React.useRef();
-	const { width, target, focalLength, bokehScale } = useControls({
+	const config = useControls({
 		width: {
 			value: 1600,
 			step: 1,
 		},
 		target: {
-			value: [0, 0, 30],
+			value: [0, 0, 35],
 			step: 0.1,
 		},
 		focusDistance: {
@@ -28,7 +28,7 @@ export default function Effects() {
 		focalLength: {
 			min: 0,
 			max: 1,
-			value: 0.1,
+			value: 0.4,
 		},
 		bokehScale: {
 			value: 8,
@@ -38,13 +38,7 @@ export default function Effects() {
 
 	return (
 		<EffectComposer disableNormalPass multisampling={0}>
-			<DepthOfField
-				ref={ref}
-				target={[0, 0, 30]}
-				bokehScale={8}
-				focalLength={0.35}
-				width={1024}
-			/>
+			<DepthOfField ref={ref} {...config} />
 			<Vignette />
 		</EffectComposer>
 	);

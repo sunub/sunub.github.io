@@ -11,12 +11,6 @@ const Container = styled.div`
 	width: 100%;
 	height: 100%;
 	padding: 2rem;
-
-	/* background-color: oklch(21.08% 0.055 34.69 / 0.5); */
-`;
-
-const StyledImage = styled(Image)`
-	transform: rotateZ(-180deg);
 `;
 
 export default function HeroImage() {
