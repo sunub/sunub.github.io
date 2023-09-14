@@ -13,11 +13,28 @@ const Container = styled.div`
 	padding: 2rem;
 `;
 
+const Button = styled.button`
+	position: relative;
+	left: calc(50% - 100px);
+	padding: 1rem;
+	background-color: black;
+	color: white;
+
+	width: 200px;
+	border-radius: 30px;
+	margin-bottom: 15px;
+`;
+
 export default function HeroImage() {
+	const [trigger, setTrigger] = React.useState(0);
+
 	return (
-		<Container>
-			<BaseCanvas />
-		</Container>
+		<>
+			<Container>
+				<BaseCanvas key={trigger} />
+			</Container>
+			<Button onClick={() => setTrigger(trigger + 1)}>Rerender</Button>
+		</>
 	);
 }
 

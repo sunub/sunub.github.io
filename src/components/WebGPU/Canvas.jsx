@@ -2,11 +2,13 @@
 
 import React from "react";
 import styled from "styled-components";
-import Matter from "matter-js";
+import Matter, { Common } from "matter-js";
 import birdPng from "public/bird.png";
 import foot from "public/foot.png";
 import body from "public/body.png";
 import head from "public/head.png";
+import * as decomp from "poly-decomp";
+import frame from "public/birdFrame.svg";
 
 const Container = styled.canvas`
 	width: 100%;
@@ -15,8 +17,9 @@ const Container = styled.canvas`
 
 function setPhysics() {
 	const root = document.getElementById("2d-physics");
-	let clientWidth = root.clientWidth,
-		clientHeight = root.clientHeight;
+	const pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
+	let clientWidth = root.clientWidth * pixelRatio,
+		clientHeight = root.clientHeight * pixelRatio;
 
 	const Engine = Matter.Engine,
 		Render = Matter.Render,
@@ -24,26 +27,67 @@ function setPhysics() {
 		Composites = Matter.Composites,
 		Composite = Matter.Composite,
 		Body = Matter.Body,
-		Runner = Matter.Runner;
+		Runner = Matter.Runner,
+		Mouse = Matter.Mouse,
+		Svg = Matter.Svg,
+		Vertices = Matter.Vertices,
+		Common = Matter.Common,
+		MouseConstraint = Matter.MouseConstraint;
+
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	Common.setDecomp(require("poly-decomp"));
 
 	const engine = Engine.create(),
 		world = engine.world;
 
 	const render = Render.create({
-		canvas: root,
+		element: document.body,
 		engine: engine,
 		options: {
-			width: clientWidth,
-			height: clientHeight * 0.7,
-			showAngleIndicator: false,
-			background: "transparent",
-			wireframes: false,
+			width: 800,
+			height: 600,
 		},
 	});
 
 	Render.run(render);
 
-	const Box = Bodies.rectangle(clientWidth / 2, 200, 40, 30);
+	const runner = Runner.create();
+	Runner.run(runner, engine);
+
+	const select = (root, selector) => {
+		return Array.prototype.slice.call(root.querySelectorAll(selector));
+	};
+
+	const loadSvg = (url) => {
+		return fetch(url)
+			.then((res) => res.text())
+			.then((raw) =>
+				new window.DOMParser().parseFromString(raw, "image/svg+xml")
+			);
+	};
+
+	loadSvg(frame.src).then((root) => {
+		const vertexSets = select(root, "path").map((path) =>
+			Svg.pathToVertices(path, 30)
+		);
+
+		Composite.add(
+			world,
+			Bodies.fromVertices(
+				clientWidth / 2,
+				0,
+				vertexSets,
+				{
+					render: {
+						fillStyle: "black",
+						strokeStyle: "black",
+						lineWidth: 1,
+					},
+				},
+				true
+			)
+		);
+	});
 
 	const ground = Bodies.rectangle(
 		clientWidth / 2,
@@ -54,162 +98,170 @@ function setPhysics() {
 			isStatic: true,
 		}
 	);
-	const BirdFoot = Bodies.rectangle(
-		clientWidth / 2,
-		clientHeight / 2 + 60,
-		100,
-		15,
-		{
-			render: {
-				sprite: {
-					texture: foot.src,
-				},
-			},
-		}
-	);
-	const BirdBody = Bodies.rectangle(
-		clientWidth / 2 - 9,
-		clientHeight / 2 + 10,
-		155,
-		94,
-		{
-			render: {
-				sprite: {
-					texture: body.src,
-				},
-			},
-		}
-	);
-	const BirdHead = Bodies.rectangle(
-		clientWidth / 2 + 22,
-		clientHeight / 2 - 80,
-		139,
-		88,
-		{
-			render: {
-				sprite: {
-					texture: head.src,
-				},
-			},
-		}
-	);
-
-	const Bird = Body.create({
-		parts: [BirdFoot, BirdBody, BirdHead],
-	});
-	Composite.add(world, [Bird, ground]);
-
-	const runner = Runner.create();
-	Runner.run(runner, engine);
+	Composite.add(world, [ground]);
 }
 
 export default function BaseCanvas() {
+	const canvasRef = React.useRef(null);
 	const [isLoaded, setLoaded] = React.useState(false);
 
 	const loadPhysics = React.useCallback(setPhysics, []);
 
 	React.useEffect(() => {
-		loadPhysics();
+		if (canvasRef) {
+			const canvas = canvasRef.current;
+			const context = canvas.getContext("2d");
+
+			context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+			loadPhysics();
+		}
+	}, []);
+
+	React.useEffect(() => {
+		if (isLoaded) {
+			loadPhysics();
+		}
+
 		if (!isLoaded) {
 			setLoaded(!isLoaded);
 		}
 	}, [isLoaded]);
 
-	return <Container id="2d-physics"></Container>;
+	return <Container ref={canvasRef} id="2d-physics"></Container>;
 }
 
-// const container = document.getElementById("2d-physics");
-
-// const Engine = Matter.Engine,
-// 	Render = Matter.Render,
-// 	Runner = Matter.Runner,
-// 	Composites = Matter.Composites,
-// 	Composite = Matter.Composite,
-// 	Bodies = Matter.Bodies,
-// 	Body = Matter.Body,
-// 	Svg = Matter.Svg,
-// 	Vector = Matter.Vector,
-// 	Common = Matter.Common,
-// 	Vertices = Matter.Vertices;
-
 // const engine = Engine.create(),
-// 	world = engine.world;
+// world = engine.world;
+
 // const render = Render.create({
-// 	element: container,
-// 	engine: engine,
-// 	options: {
-// 		width: container.clientWidth,
-// 		height: container.clientHeight,
-// 		background: "transparent",
-// 		wireframes: false,
+// canvas: root,
+// engine: engine,
+// options: {
+// 	width: clientWidth,
+// 	height: clientHeight * 0.7,
+// 	showAngleIndicator: false,
+// 	background: "transparent",
+// 	wireframes: false,
+// },
+// });
+
+// Render.run(render);
+
+// const ground = Bodies.rectangle(
+// clientWidth / 2,
+// clientHeight - 190,
+// clientWidth,
+// 20,
+// {
+// 	isStatic: true,
+// }
+// );
+
+// // const BirdFoot = Bodies.rectangle(
+// // 	clientWidth / 2,
+// // 	clientHeight / 2 + 60,
+// // 	80,
+// // 	15,
+// // 	{
+// // 		render: {
+// // 			sprite: {
+// // 				texture: foot.src,
+// // 			},
+// // 		},
+// // 	}
+// // );
+// const BirdBody = Bodies.rectangle(
+// clientWidth / 2 - 9,
+// clientHeight / 2 + 10,
+// 155,
+// 30,
+// {
+// 	render: {
+// 		sprite: {
+// 			texture: body.src,
+// 		},
+// 	},
+// }
+// );
+// const BirdHead = Bodies.rectangle(
+// clientWidth / 2 + 22,
+// clientHeight / 2 - 80,
+// 139,
+// 88,
+// {
+// 	render: {
+// 		sprite: {
+// 			texture: head.src,
+// 		},
+// 	},
+// }
+// );
+
+// // const Bird = Body.create({
+// // 	parts: [BirdFoot, BirdBody],
+// // 	mass: 3,
+// // 	density: 1,
+// // });
+
+// const Box = Bodies.rectangle(clientWidth / 2, 0, 100, 15, {
+// render: {
+// 	sprite: {
+// 		texture: foot.src,
+// 	},
+// },
+// });
+
+// const Box2 = Bodies.rectangle(clientWidth / 2, 0, 155, 94, {
+// render: {
+// 	sprite: {
+// 		texture: body.src,
+// 	},
+// },
+// });
+
+// const aBody = Body.create({
+// parts: [Box, Box2],
+// });
+
+// const select = (root, selctor) => {
+// return Array.prototype.slice.call(root.querySelectorAll(selctor));
+// };
+
+// const loadSvg = (url) => {
+// return fetch(url)
+// 	.then((res) => res.text())
+// 	.then((raw) =>
+// 		new window.DOMParser().parseFromString(raw, "image/svg+xml")
+// 	);
+// };
+
+// loadSvg(frame.src).then((root) => {
+// const paths = select(root, "path");
+
+// paths.forEach((path, index) => {
+// 	const vertices = Svg.pathToVertices(path);
+
+// 	let svgBody = Bodies.fromVertices(clientWidth / 2, 0, [vertices]);
+// 	Composite.add(engine.world, svgBody);
+// });
+// });
+
+// const aExam = Bodies.trapezoid(clientWidth / 2, 0, 30, 150, 3);
+
+// Composite.add(world, [aExam, ground]);
+
+// const mouse = Mouse.create(render.canvas),
+// mouseConstraint = MouseConstraint.create(engine, {
+// 	mouse: mouse,
+// 	constraint: {
+// 		stiffness: 0.2,
+// 		render: {
+// 			visible: false,
+// 		},
 // 	},
 // });
 
-// const bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
-// 	return Bodies;
-// });
-
-// const BirdFoot = Bodies.rectangle(
-// 	container.clientWidth / 2,
-// 	container.clientHeight / 2 + 60,
-// 	100,
-// 	15,
-// 	{
-// 		render: {
-// 			sprite: {
-// 				texture: foot.src,
-// 			},
-// 		},
-// 	}
-// );
-// const BirdBody = Bodies.rectangle(
-// 	container.clientWidth / 2 - 9,
-// 	container.clientHeight / 2 + 10,
-// 	155,
-// 	94,
-// 	{
-// 		render: {
-// 			sprite: {
-// 				texture: body.src,
-// 			},
-// 		},
-// 	}
-// );
-// const BirdHead = Bodies.rectangle(
-// 	container.clientWidth / 2 + 22,
-// 	container.clientHeight / 2 - 80,
-// 	139,
-// 	88,
-// 	{
-// 		render: {
-// 			sprite: {
-// 				texture: head.src,
-// 			},
-// 		},
-// 	}
-// );
-
-// const ground = Bodies.rectangle(400, 500, 2000, 30, { isStatic: true });
-// const Bird = Body.create({
-// 	parts: [BirdFoot, BirdBody, BirdHead],
-// });
-
-// const Box = Bodies.rectangle(
-// 	container.clientWidth / 2,
-// 	container.clientHeight / 2 - 300,
-// 	190,
-// 	190,
-// 	{
-// 		render: {
-// 			sprite: {
-// 				texture: birdPng.src,
-// 			},
-// 		},
-// 	}
-// );
-
-// Composite.add(engine.world, [ground]);
-
-// Render.run(render);
+// Composite.add(world, mouseConstraint);
 // const runner = Runner.create();
 // Runner.run(runner, engine);
