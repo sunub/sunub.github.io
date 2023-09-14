@@ -3,7 +3,11 @@
 import React from "react";
 import styled from "styled-components";
 import Matter from "matter-js";
-import frame from "public/birdFrame.svg";
+import frame from "public/bird.svg";
+import birdPng from "public/bird.png";
+import birdHead from "public/head.png";
+import birdBody from "public/body.png";
+import birdFoot from "public/foot.png";
 
 const Container = styled.canvas`
 	width: 100%;
@@ -25,13 +29,12 @@ function setPhysics() {
 		Composite = Matter.Composite,
 		Body = Matter.Body,
 		Runner = Matter.Runner,
-		Mouse = Matter.Mouse,
 		Svg = Matter.Svg,
 		Vertices = Matter.Vertices,
 		Common = Matter.Common,
+		Mouse = Matter.Mouse,
 		MouseConstraint = Matter.MouseConstraint;
 
-	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	Common.setDecomp(require("poly-decomp"));
 
 	const engine = Engine.create(),
@@ -53,27 +56,12 @@ function setPhysics() {
 	const runner = Runner.create();
 	Runner.run(runner, engine);
 
-	const select = (root, selctor) => {
-		return Array.prototype.slice.call(root.querySelectorAll(selctor));
-	};
-
-	const loadSvg = (url) => {
-		return fetch(url)
-			.then((res) => res.text())
-			.then((raw) =>
-				new window.DOMParser().parseFromString(raw, "image/svg+xml")
-			);
-	};
-
-	loadSvg(frame.src).then((root) => {
-		const paths = select(root, "path");
-
-		paths.forEach((path, index) => {
-			const vertices = Svg.pathToVertices(path);
-
-			let svgBody = Bodies.fromVertices(clientWidth / 2, 0, [vertices]);
-			Composite.add(engine.world, svgBody);
-		});
+	const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 88, 96, {
+		render: {
+			sprite: {
+				texture: birdPng.src,
+			},
+		},
 	});
 
 	const ground = Bodies.rectangle(
@@ -85,14 +73,32 @@ function setPhysics() {
 			isStatic: true,
 		}
 	);
-	Composite.add(world, [ground]);
+	Composite.add(world, [BirdBox, ground]);
+
+	const mouse = Mouse.create(render.canvas),
+		mouseContraint = MouseConstraint.create(engine, {
+			mouse: mouse,
+			constraint: {
+				stiffness: 0.2,
+				render: {
+					visible: false,
+				},
+			},
+		});
+
+	Composite.add(world, mouseContraint);
+	render.mouse = mouse;
 }
 
 export default function BaseCanvas() {
 	const canvasRef = React.useRef(null);
 	const [isLoaded, setLoaded] = React.useState(false);
 
-	const loadPhysics = React.useCallback(setPhysics, [isLoaded]);
+	const loadPhysics = React.useCallback(setPhysics, []);
+
+	React.useEffect(() => {
+		loadPhysics();
+	}, [loadPhysics]);
 
 	React.useEffect(() => {
 		if (canvasRef) {
@@ -101,16 +107,39 @@ export default function BaseCanvas() {
 
 			context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-			loadPhysics();
 			setLoaded(!isLoaded);
 		}
 	}, []);
 
-	React.useEffect(() => {
-		if (!isLoaded) {
-			setLoaded(!isLoaded);
-		}
-	}, [isLoaded]);
-
 	return <Container ref={canvasRef} id="2d-physics"></Container>;
 }
+
+// const select = (root, selctor) => {
+// 	return Array.prototype.slice.call(root.querySelectorAll(selctor));
+// };
+
+// const loadSvg = (url) => {
+// 	return fetch(url)
+// 		.then((res) => res.text())
+// 		.then((raw) =>
+// 			new window.DOMParser().parseFromString(raw, "image/svg+xml")
+// 		);
+// };
+
+// const svg = await loadSvg(frame.src);
+// const path = select(svg, "path").pop();
+
+// const vertices = Svg.pathToVertices(path);
+// const svgBody = Bodies.fromVertices(
+// 	clientWidth / 2,
+// 	0,
+// 	[vertices],
+// 	{
+// 		render: {
+// 			sprite: {
+// 				texture: birdPng.src,
+// 			},
+// 		},
+// 	},
+// 	true
+// );
