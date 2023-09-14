@@ -10,7 +10,6 @@ import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
 import InitScroll from '@/components/Toaster/InitScroll';
 import HeaderProvider from '@/components/Header/Header.context';
 import ThemeToggler from '@/components/Theme/ThemeToggler';
-import { baseURL } from "@/utils/getBaseUrl";
 
 export const metadata: Metadata = {
   title: {
