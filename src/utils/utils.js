@@ -21,7 +21,7 @@ const range = (start, end, step = 1) => {
 const chunkArray = (array, size) => {
 	let results = [];
 	while (array.length) {
-		results.push(array.slice(0, size));
+		results.push(array.splice(0, size));
 	}
 	return results;
 };

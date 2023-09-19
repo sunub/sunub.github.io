@@ -2,7 +2,7 @@
 title: 타입스크립트의 선언문들
 date: 2023-06-12
 tags: code
-summary: 타입 선언문 Interface에 대해서 이해하고 또 다른 타입 선언문인 type 과의 차이를 이해하고 적용해보자.
+summary: 타입 선언문 Interface에 대해서 이해해보자
 slug: whatis-declaration
 category: typescript
 ---

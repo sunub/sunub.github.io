@@ -1,13 +1,17 @@
+"use client";
+
 import React from "react";
 import styled from "styled-components";
 import Content from "./Content";
 import Elevation from "@/constants/Elevation";
 import { chunkArray, range } from "@/utils/utils";
 
-const Wrapper = styled.li`
+const Wrapper = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	width: 100%;
 	position: relative;
-	width: fit-content;
-	transform-origin: center top;
 
 	overflow-wrap: break-word;
 	white-space: normal;
@@ -22,26 +26,34 @@ export default function CardList({ post }) {
 	const chunkedPost = chunkArray([...post], 3);
 	return (
 		<>
-			{chunkedPost.map((row) => (
-				<ul key={crypto.randomUUID()}>
-					{row.map(
-						({ category, date, summary, slug, title, tags }) => {
-							<Wrapper key={`${tags}${crypto.randomUUID()}`}>
-								<article>
+			{chunkedPost.map((row) => {
+				return (
+					<Wrapper key={crypto.randomUUID()}>
+						{row.map(
+							({
+								category,
+								date,
+								summary,
+								slug,
+								title,
+								tags,
+							}) => {
+								return (
 									<Content
+										key={crypto.randomUUID()}
 										category={category}
-										tags={tags}
 										date={date}
 										summary={summary}
-										title={title}
 										slug={slug}
+										title={title}
+										tags={tags}
 									/>
-								</article>
-							</Wrapper>;
-						}
-					)}
-				</ul>
-			))}
+								);
+							}
+						)}
+					</Wrapper>
+				);
+			})}
 		</>
 	);
 }

@@ -108,7 +108,7 @@ export default function Content({
 }) {
 	return (
 		<Link href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
-			<Wrapper $size={320} $distance="mid" $usage="other">
+			<Wrapper $size={256} $distance="mid" $usage="other">
 				<Icon
 					src={`/icon_${tags}.svg`}
 					width={32}
