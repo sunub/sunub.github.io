@@ -5,6 +5,8 @@ import { SpacerBar } from '@/constants/Spacer';
 import styled from 'styled-components';
 
 const Container = styled.div`
+    grid-area: main-content;
+
     position: relative;
     width: 100%;
     max-width: 1100px;

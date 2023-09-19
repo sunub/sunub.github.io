@@ -7,8 +7,7 @@ import { Spacer } from '@/constants/Spacer';
 
 export default function Main({ children }: { children: React.ReactNode }) {
     return (
-        <div className={styles.main__content}>
-            <HeroImage />
+        <div id="side-ng__main-content" className={styles.main__content}>
             {children}
         </div>
     );

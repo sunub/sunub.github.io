@@ -2,7 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
-import { drawBackground } from "./Canvas.helper";
+import { drawBackground, setPhysics } from "./Canvas.helper";
 
 const Canvas = styled.canvas`
 	width: 100%;
@@ -28,7 +28,6 @@ export default function BaseCanvas() {
 
 			context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
 
-			drawBackground(canvas);
 			setLoaded(!isLoaded);
 		}
 	}, []);
@@ -44,7 +43,6 @@ export default function BaseCanvas() {
 			canvasRef.current.width = clientWidth;
 			canvasRef.current.height = clientHeight;
 			ctx.scale(2, 2);
-			drawBackground(canvasRef.current);
 
 			setWidth(clientWidth);
 			setHeight(clientHeight);

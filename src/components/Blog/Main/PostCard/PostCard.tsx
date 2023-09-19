@@ -9,7 +9,7 @@ export default async function PostCard() {
 
     return (<>
         <PostCardCtx>
-            {/* <PostCardList categorizedPost={post.categorizedPost} /> */}
+            <PostCardList categorizedPost={post.categorizedPost} />
         </PostCardCtx>
     </>);
 }

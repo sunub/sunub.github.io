@@ -1,7 +1,7 @@
 ---
 title: 무한 스크롤링으로!
 date: 2023-08-10
-tags: javascript
+tags: code
 summary: sns에서 자주 보이던 무한스크롤링은 무엇일까?
 slug: howto-activate-infinite-scrolling
 category: javascript

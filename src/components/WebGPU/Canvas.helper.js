@@ -10,44 +10,29 @@ export function drawBackground(canvas) {
 		const width = canvas.clientWidth;
 		const height = canvas.clientHeight;
 		const aspect = Math.floor(image.height / image.width);
+		const dpr = window.devicePixelRatio || 1;
 
 		canvas.height = width * aspect;
 
 		const curr = {
-			width: Math.floor(image.width * 0.5),
-			height: Math.floor(image.height * 0.5),
+			width: Math.floor(image.width * 0.5) * dpr,
+			height: Math.floor(image.height * 0.5) * dpr,
 		};
 
 		canvas.width = curr.width;
 		canvas.height = curr.height;
 
-		ctx.drawImage(image, 0, 0, curr.width, curr.height);
-
-		while (curr.width * 0.5 > width) {
-			(curr.width = Math.floor(curr.width * 0.5)),
-				(curr.height = Math.floor(curr.height * 0.5));
-
-			ctx.drawImage(
-				image,
-				0,
-				0,
-				curr.width,
-				curr.height,
-				0,
-				0,
-				curr.width,
-				curr.height
-			);
-		}
+		ctx.drawImage(image, 0, 0, 1600, 903, 0, 0, curr.width, curr.height);
+		ctx.imageSmoothingEnabled = false;
+		ctx.scale(dpr, dpr);
 	};
 	image.src = bg.src;
 }
 
-function setPhysics(width, height) {
-	console.log(width, height);
+export function setPhysics(width, height) {
 	const root = document.getElementById("2d-physics");
 	const pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
-	const SVG_WITH_AS_PERCENT = 90 * 0.3;
+	const SVG_WITH_AS_PERCENT = SVG_WIDTH * 0.3;
 	const SVG_WIDTH = 90;
 	let clientWidth = root.clientWidth * pixelRatio,
 		clientHeight = root.clientHeight * pixelRatio;
@@ -77,43 +62,11 @@ function setPhysics(width, height) {
 			wireframes: false,
 		},
 	});
-
 	Render.run(render);
-
 	const runner = Runner.create();
 	Runner.run(runner, engine);
 
-	const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 88, 96, {
-		render: {
-			sprite: {
-				texture: birdPng.src,
-			},
-		},
-	});
-
-	const ground = Bodies.rectangle(
-		clientWidth / 2,
-		clientHeight + 10,
-		clientWidth,
-		20,
-		{
-			isStatic: true,
-		}
-	);
-	Composite.add(world, [BirdBox, ground]);
-
-	function scaleBodies() {
-		const allBodies = Composite.allBodies(engine.world);
-
-		allBodies.forEach((body) => {
-			if (body.isStatic) return;
-			const { min, max } = body.bounds;
-			const bodyWidth = max.x - min.x;
-			let scaleFactor = (clientWidth * SVG_WITH_AS_PERCENT) / bodyWidth;
-
-			Body.scale(body, scaleFactor, scaleFactor);
-		});
-	}
+	drawBirdOnCanvas();
 
 	const mouse = Mouse.create(render.canvas),
 		mouseContraint = MouseConstraint.create(engine, {
@@ -128,4 +81,38 @@ function setPhysics(width, height) {
 
 	Composite.add(world, mouseContraint);
 	render.mouse = mouse;
+
+	function drawBirdOnCanvas() {
+		const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 88, 96, {
+			render: {
+				sprite: {
+					texture: birdPng.src,
+				},
+			},
+		});
+
+		const ground = Bodies.rectangle(
+			clientWidth / 2,
+			clientHeight + 10,
+			clientWidth,
+			20,
+			{
+				isStatic: true,
+			}
+		);
+		Composite.add(world, [BirdBox, ground]);
+	}
+
+	function scaleBodies() {
+		const allBodies = Composite.allBodies(engine.world);
+
+		allBodies.forEach((body) => {
+			if (body.isStatic) return;
+			const { min, max } = body.bounds;
+			const bodyWidth = max.x - min.x;
+			let scaleFactor = (clientWidth * SVG_WITH_AS_PERCENT) / bodyWidth;
+
+			Body.scale(body, scaleFactor, scaleFactor);
+		});
+	}
 }

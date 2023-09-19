@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import React from "react";
 
 function getBoxShadow(distance: string) {
 	let boxShadow: string;
