@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Image from "next/image";
 import Link from "next/link";
 import { baseURL } from "@/utils/getBaseUrl";
+import Elevation from "@/constants/Elevation";
 
 const Icon = styled(Image)`
 	grid-area: icon;
@@ -42,37 +43,24 @@ const Description = styled.section`
 	display: inline-flex;
 `;
 
-const Wrapper = styled(Link)`
+const Wrapper = styled(Elevation)`
 	display: grid;
 	grid-template:
 		"icon header"
 		"empty content" / 50px minmax(1ch, 1fr);
 	position: relative;
 
-	background: var(--color-primary);
 	transition: background 350ms ease 0s;
-	border: none 0px transparent;
-	border-radius: var(--size-5);
-	background-color: var(--color-primary);
-
-	padding: 2rem 2rem 3rem 2rem;
-	gap: clamp(1rem, 1.25rem, 1.5rem);
 
 	cursor: pointer;
 	touch-action: manipulation;
 	&:hover {
-		box-shadow: var(--box-shadow-1);
-
 		h1 {
 			color: var(--color-highlightColor);
 			text-decoration: underline;
 			text-decoration-thickness: 6px;
 			text-underline-offset: 10px;
 		}
-	}
-
-	&:active {
-		border-radius: 30px;
 	}
 
 	@media (max-width: 768px) {
@@ -109,6 +97,7 @@ const Wrapper = styled(Link)`
 		}
 	}
 `;
+
 export default function Content({
 	category,
 	date,
@@ -118,20 +107,22 @@ export default function Content({
 	tags,
 }) {
 	return (
-		<Wrapper href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
-			<Icon
-				src={`/icon_${tags}.svg`}
-				width={32}
-				height={32}
-				alt={`Image ${category}`}
-			/>
-			<Header>
-				<h3>{title}</h3>
-				<time>{date}</time>
-			</Header>
-			<Description>
-				<p>{summary}</p>
-			</Description>
-		</Wrapper>
+		<Link href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
+			<Wrapper $size={320} $distance="mid" $usage="other">
+				<Icon
+					src={`/icon_${tags}.svg`}
+					width={32}
+					height={32}
+					alt={`Image ${category}`}
+				/>
+				<Header>
+					<h3>{title}</h3>
+					<time>{date}</time>
+				</Header>
+				<Description>
+					<p>{summary}</p>
+				</Description>
+			</Wrapper>
+		</Link>
 	);
 }
