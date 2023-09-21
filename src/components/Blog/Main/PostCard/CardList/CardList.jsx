@@ -9,9 +9,10 @@ import { chunkArray, range } from "@/utils/utils";
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: row;
-	justify-content: space-evenly;
+	justify-content: flex-start;
 	width: 100%;
 	position: relative;
+	gap: 2rem;
 
 	overflow-wrap: break-word;
 	white-space: normal;

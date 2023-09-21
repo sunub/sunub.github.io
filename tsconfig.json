@@ -42,12 +42,10 @@
 	},
 	"include": [
 		"next-env.d.ts",
+		"**/*.js",
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"server/mongodbInit.ts",
-		"server/atlas_uri.ts",
-		"src/**/*.js",
 		"src/**/*",
 		"src/app/mdx/page.jsx"
 	],

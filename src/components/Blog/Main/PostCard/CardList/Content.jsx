@@ -49,6 +49,7 @@ const Wrapper = styled(Elevation)`
 		"icon header"
 		"empty content" / 50px minmax(1ch, 1fr);
 	position: relative;
+	border-radius: 30px;
 
 	transition: background 350ms ease 0s;
 

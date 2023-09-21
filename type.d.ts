@@ -1,4 +1,6 @@
-type Category = "web" | "algorithm" | "javascript" | "typescript";
+import { POST_CATEGORY } from "@/utils/post/Post.constant";
+
+type Category = (typeof POST_CATEGORY)[number];
 
 type Files = {
 	[k in Tag]: FileData[];
@@ -11,7 +13,7 @@ type PostData = {
 
 type Folders = ["web", "algorithm", "javascript", "typescript"] | string[];
 
-type Tag = "web" | "algorithm" | "javascript" | "typescript";
+type Tag = (typeof POST_CATEGORY)[number];
 
 interface Description {
 	[key: string]: string;
