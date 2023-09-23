@@ -2,14 +2,15 @@
 
 import { chunkArray } from "@/utils/utils";
 import React from "react";
+import CardList from "./CardList/index";
 
 function LandingPage({ post }) {
 	const id = React.useId();
-	const chunkedPost = chunkArray([...post], 3);
+	const chunkedList = chunkArray([...post], 3);
 
 	return (
 		<div>
-			<h1>HI!</h1>
+			<CardList list={chunkedList} />
 		</div>
 	);
 }

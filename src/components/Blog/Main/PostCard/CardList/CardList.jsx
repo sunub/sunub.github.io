@@ -3,8 +3,7 @@
 import React from "react";
 import styled from "styled-components";
 import Content from "./Content";
-import Elevation from "@/constants/Elevation";
-import { chunkArray, range } from "@/utils/utils";
+import { chunkArray } from "@/utils/utils";
 
 const Wrapper = styled.div`
 	display: flex;
