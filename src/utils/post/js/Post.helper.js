@@ -1,13 +1,10 @@
 import fs from "fs";
 import { marked } from "marked";
-import { POST_CATEGORY } from "./Post.constant";
-import { Description, Files, PostData } from "type";
+import { POST_ROOT_PATH } from "./Post.constant.js";
 
-export function categorizePostByCategory(
-	files: Files
-): Map<string, Description[]> {
+export function categorizePostByCategory(files) {
 	const all = [];
-	const descriptions: Map<string, Description[]> = new Map();
+	const descriptions = new Map();
 	const categorizedPost = Object.entries(files);
 
 	for (const [category, post] of categorizedPost) {
@@ -25,11 +22,10 @@ export function categorizePostByCategory(
 
 	return descriptions;
 }
-export function getLocalTagFiles(): Files {
-	const root = "posts/";
+export function getLocalTagFiles() {
+	const root = POST_ROOT_PATH;
 	const folders = fs.readdirSync(root, "utf-8");
-	const files: Files | any = {};
-
+	const files = {};
 	for (const name of folders) {
 		const path = root + name;
 		const fileData = readFiles(path, []);
@@ -39,7 +35,7 @@ export function getLocalTagFiles(): Files {
 	return files;
 }
 
-function readFiles(path: string, structure: PostData[] | any): Files {
+function readFiles(path, structure) {
 	const currPaths = fs.readdirSync(path, "utf-8");
 
 	for (const currPath of currPaths) {
@@ -55,7 +51,7 @@ function readFiles(path: string, structure: PostData[] | any): Files {
 		}
 	}
 
-	structure.sort((file1: PostData, file2: PostData) => {
+	structure.sort((file1, file2) => {
 		return (
 			new Date(file2.description.date).getTime() -
 			new Date(file1.description.date).getTime()
@@ -65,11 +61,11 @@ function readFiles(path: string, structure: PostData[] | any): Files {
 	return structure;
 }
 
-function divideDescriptionAndContent(text: string): PostData {
+function divideDescriptionAndContent(text) {
 	const pattern = /---\n([\s\S]*?)\n---/;
 	const match = text.match(pattern);
 
-	const description: Description | any = {};
+	const description = {};
 
 	if (match) {
 		const extractedText = match[1];
@@ -87,7 +83,7 @@ function divideDescriptionAndContent(text: string): PostData {
 	};
 }
 
-function convertContentToHtml(content: string) {
+function convertContentToHtml(content) {
 	let result = ``;
 
 	const options = {

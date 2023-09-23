@@ -1,16 +1,12 @@
-import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper";
-import { Files, Description, Tag, Contents, Category } from "type";
+import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper.js";
 
 class Post {
-	_localPostFilesData: Files;
-	_categorizedFrontmatters: Map<Category, Description[]>;
-	_localPostContents: Contents;
 	constructor() {
 		this._localPostFilesData = getLocalTagFiles();
 		this._categorizedFrontmatters = categorizePostByCategory(
 			this._localPostFilesData
 		);
-		this._localPostContents = this.getLocalPostContents();
+		this._localPostContent = this.getLocalPostContent();
 	}
 
 	get allTagPost() {
@@ -18,19 +14,19 @@ class Post {
 	}
 
 	get contents() {
-		return this._localPostContents;
+		return this._localPostContent;
 	}
 
 	get categories() {
 		return Object.keys(this._localPostFilesData);
 	}
 
-	get frontMatters() {
+	get frontmatters() {
 		return this._categorizedFrontmatters;
 	}
 
-	getLocalPostContents(): Contents {
-		const result: Contents = {};
+	getLocalPostContent() {
+		const result = {};
 		const localPostData = Object.entries(this._localPostFilesData);
 
 		for (const [folder, data] of localPostData) {
@@ -43,7 +39,7 @@ class Post {
 		return result;
 	}
 
-	getCategorizedPost(key: Tag) {
+	getCategorizedPost(key) {
 		return this._localPostFilesData[key];
 	}
 }

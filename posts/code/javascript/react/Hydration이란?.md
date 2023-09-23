@@ -4,7 +4,7 @@ date: 2023-07-28
 tags: code
 summary: react에서 이야기하는 Hydration이란 무엇인가?
 slug: howto-activate-hydration
-category: javascript
+category: react
 ---
 ## Hydration이란?
 

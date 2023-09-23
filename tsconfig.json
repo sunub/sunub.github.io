@@ -41,6 +41,7 @@
 		"sourceMap": true
 	},
 	"include": [
+		"./type.d.ts",
 		"next-env.d.ts",
 		"**/*.js",
 		"**/*.ts",

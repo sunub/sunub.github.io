@@ -6,6 +6,10 @@ type Files = {
 	[k in Tag]: FileData[];
 };
 
+type Contents = {
+	[k in Category]: string[];
+};
+
 type PostData = {
 	description: Description;
 	content: string;

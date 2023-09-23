@@ -99,14 +99,9 @@ const Wrapper = styled(Elevation)`
 	}
 `;
 
-export default function Content({
-	category,
-	date,
-	summary,
-	slug,
-	title,
-	tags,
-}) {
+export default function Content({ frontMatter }) {
+	const { category, date, summary, slug, title, tags } = frontMatter;
+
 	return (
 		<Link href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
 			<Wrapper $size={256} $distance="mid" $usage="other">

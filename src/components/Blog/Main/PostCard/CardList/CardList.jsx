@@ -24,34 +24,18 @@ function resize() {
 }
 
 export default function CardList({ post }) {
+	const id = React.useId();
 	const chunkedPost = chunkArray([...post], 3);
 	return (
 		<>
 			{chunkedPost.map((row) => {
 				return (
 					<Wrapper key={crypto.randomUUID()}>
-						{row.map(
-							({
-								category,
-								date,
-								summary,
-								slug,
-								title,
-								tags,
-							}) => {
-								return (
-									<Content
-										key={crypto.randomUUID()}
-										category={category}
-										date={date}
-										summary={summary}
-										slug={slug}
-										title={title}
-										tags={tags}
-									/>
-								);
-							}
-						)}
+						{row.map((frontMatter) => {
+							return (
+								<Content key={id} frontMatter={frontMatter} />
+							);
+						})}
 					</Wrapper>
 				);
 			})}
