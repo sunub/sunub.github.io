@@ -1,15 +1,16 @@
-"use client";
-
-import { chunkArray } from "@/utils/utils";
 import React from "react";
+import styles from "./LandingPage.module.css";
 import CardList from "./CardList/index";
+import { chunkArray } from "@/utils/utils";
+import Post from "@/utils/post/Post";
 
-function LandingPage({ post }) {
-	const id = React.useId();
-	const chunkedList = chunkArray([...post], 3);
+function LandingPage() {
+	const post = new Post();
+	const allList = post.frontMatters.get("all");
+	const chunkedList = chunkArray([...allList], 3);
 
 	return (
-		<div>
+		<div className={styles.landingPage}>
 			<CardList list={chunkedList} />
 		</div>
 	);

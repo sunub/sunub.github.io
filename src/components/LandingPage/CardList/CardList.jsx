@@ -7,7 +7,7 @@ import Card from "../Card/index";
 const Wrapper = styled.div`
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-start;
+	justify-content: center;
 	width: 100%;
 	position: relative;
 	gap: 2rem;
@@ -17,13 +17,10 @@ const Wrapper = styled.div`
 `;
 
 function CardList({ list }) {
-	const listId = React.useId();
-	const postId = React.useId();
-
-	return list.map((posts) => (
-		<Wrapper key={listId}>
+	return list.map((posts, i) => (
+		<Wrapper key={i}>
 			{posts.map((frontMatter) => (
-				<Card key={postId} frontMatter={frontMatter} />
+				<Card key={frontMatter.title} frontMatter={frontMatter} />
 			))}
 		</Wrapper>
 	));

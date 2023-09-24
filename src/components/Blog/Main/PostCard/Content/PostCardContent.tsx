@@ -3,6 +3,7 @@
 import React from 'react';
 import { SpacerBar } from '@/constants/Spacer';
 import styled from 'styled-components';
+import { PostData } from "type";
 
 const Container = styled.div`
     grid-area: main-content;

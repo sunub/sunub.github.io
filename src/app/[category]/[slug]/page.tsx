@@ -2,12 +2,13 @@ import React from 'react';
 import Post from '@/utils/post/Post';
 import { findPostByCategoryAndSlug } from '@/components/Blog/Main/PostCard/Content/PostCardContent.helper';
 import PostCardContent from '@/components/Blog/Main/PostCard/Content/PostCardContent';
+import { Tag } from "type";
 
 const post = new Post();
 export async function generateStaticParams() {
     const params: any[] = [];
 
-    const cateogrizedPost = post.categorizedPost;
+    const cateogrizedPost = post.frontMatters;
     cateogrizedPost.get("all")?.map(desc => {
         params.push({
             category: desc.category,

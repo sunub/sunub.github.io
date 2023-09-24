@@ -6,7 +6,7 @@ import React from "react";
 const SiteHeader = () => {
 	return (
 		<div id="side-ng__header-content" className={styles.HeaderContainer} >
-			<form>
+			<form className={styles.HeaderContainer}>
 				<HeaderLeft />
 				<HeaderRight />
 			</form>

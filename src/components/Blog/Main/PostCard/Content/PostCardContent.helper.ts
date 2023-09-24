@@ -1,3 +1,5 @@
+import { Files, PostData, Tag } from "type";
+
 export function findPostByCategoryAndSlug(
 	category: Tag,
 	slug: string,
