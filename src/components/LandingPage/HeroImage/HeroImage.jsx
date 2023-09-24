@@ -1,10 +1,6 @@
 import React from "react";
-import Image from "next/image";
-import { baseURL } from "@/utils/getBaseUrl";
 import BaseCanvas from "@/components/WebGPU/Canvas";
 import styled from "styled-components";
-
-const url = `${baseURL}/bird.svg`;
 
 const Container = styled.div`
 	display: flex;

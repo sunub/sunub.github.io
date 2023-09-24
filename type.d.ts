@@ -7,11 +7,11 @@ type Files = {
 };
 
 type Contents = {
-	[k in Category]: string[];
+	[k in FrontMatter.slug]: string;
 };
 
 type PostData = {
-	description: Description;
+	description: FrontMatter;
 	content: string;
 };
 
@@ -19,7 +19,7 @@ type Folders = ["web", "algorithm", "javascript", "typescript"] | string[];
 
 type Tag = (typeof POST_CATEGORY)[number];
 
-interface Description {
+interface FrontMatter {
 	[key: string]: string;
 	title: string;
 	date: string;

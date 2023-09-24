@@ -1,4 +1,4 @@
-import Matter, { Body } from "matter-js";
+import Matter from "matter-js";
 import birdPng from "public/bird.png";
 import bg from "public/background.jpg";
 
@@ -8,7 +8,6 @@ export function drawBackground(canvas) {
 	const image = new Image();
 	image.onload = () => {
 		const width = canvas.clientWidth;
-		const height = canvas.clientHeight;
 		const aspect = Math.floor(image.height / image.width);
 		const dpr = window.devicePixelRatio || 1;
 
@@ -29,11 +28,9 @@ export function drawBackground(canvas) {
 	image.src = bg.src;
 }
 
-export function setPhysics(width, height) {
+export function setPhysics() {
 	const root = document.getElementById("2d-physics");
 	const pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
-	const SVG_WITH_AS_PERCENT = SVG_WIDTH * 0.3;
-	const SVG_WIDTH = 90;
 	let clientWidth = root.clientWidth * pixelRatio,
 		clientHeight = root.clientHeight * pixelRatio;
 
@@ -103,16 +100,16 @@ export function setPhysics(width, height) {
 		Composite.add(world, [BirdBox, ground]);
 	}
 
-	function scaleBodies() {
-		const allBodies = Composite.allBodies(engine.world);
+	// function scaleBodies() {
+	// 	const allBodies = Composite.allBodies(engine.world);
 
-		allBodies.forEach((body) => {
-			if (body.isStatic) return;
-			const { min, max } = body.bounds;
-			const bodyWidth = max.x - min.x;
-			let scaleFactor = (clientWidth * SVG_WITH_AS_PERCENT) / bodyWidth;
+	// 	allBodies.forEach((body) => {
+	// 		if (body.isStatic) return;
+	// 		const { min, max } = body.bounds;
+	// 		const bodyWidth = max.x - min.x;
+	// 		let scaleFactor = (clientWidth * SVG_WITH_AS_PERCENT) / bodyWidth;
 
-			Body.scale(body, scaleFactor, scaleFactor);
-		});
-	}
+	// 		Body.scale(body, scaleFactor, scaleFactor);
+	// 	});
+	// }
 }

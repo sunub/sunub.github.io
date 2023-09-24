@@ -1,7 +1,6 @@
 "use client";
 
-import { Plane, useAspect, useTexture } from "@react-three/drei";
-import { extend, useFrame, useLoader } from "@react-three/fiber";
+import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import React, { Suspense } from "react";
@@ -11,7 +10,7 @@ function SVG({ url }) {
 	const { paths } = useLoader(SVGLoader, `${baseURL}/${url}.svg`);
 	const shapes = React.useMemo(
 		() =>
-			paths.flatMap((p, i) =>
+			paths.flatMap((p) =>
 				p.toShapes(true).map((shape) => ({
 					shape,
 					color: p.color,
@@ -23,7 +22,7 @@ function SVG({ url }) {
 
 	return (
 		<group>
-			{shapes.map((props, i) => (
+			{shapes.map((props) => (
 				<Bird key={props.shape.uuid} {...props} />
 			))}
 		</group>

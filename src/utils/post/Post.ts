@@ -1,9 +1,9 @@
 import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper";
-import { Files, Description, Tag, Contents, Category } from "type";
+import { Files, FrontMatter, Tag, Contents, Category } from "type";
 
 class Post {
 	_localPostFilesData: Files;
-	_categorizedFrontmatters: Map<Category, Description[]>;
+	_categorizedFrontmatters: Map<Category, FrontMatter[]>;
 	_localPostContents: Contents;
 	constructor() {
 		this._localPostFilesData = getLocalTagFiles();
@@ -29,14 +29,28 @@ class Post {
 		return this._categorizedFrontmatters;
 	}
 
+	getSpecificFrontMatter(
+		frontMatters: FrontMatter[],
+		slug: string
+	): FrontMatter {
+		for (const frontMatter of frontMatters) {
+			if (frontMatter.slug === slug) {
+				return frontMatter;
+			}
+		}
+		throw new Error(
+			`FrontMatter에서 ${slug}와 관련된 slug를 발견할 수 없습니다.`
+		);
+	}
+
 	getLocalPostContents(): Contents {
 		const result: Contents = {};
-		const localPostData = Object.entries(this._localPostFilesData);
+		const localPostData = Object.values(this._localPostFilesData);
 
-		for (const [folder, data] of localPostData) {
-			result[folder] = [];
+		for (const data of localPostData) {
 			for (const info of data) {
-				result[folder].push(info.content);
+				const key = info.description.slug;
+				result[key] = info.content;
 			}
 		}
 

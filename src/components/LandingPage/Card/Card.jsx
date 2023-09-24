@@ -1,18 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import Image from "next/image";
 import Link from "next/link";
 import { baseURL } from "@/utils/getBaseUrl";
 import Elevation from "@/constants/Elevation";
+import { CODE, CS, ALGORITHM, WEB } from "@/components/icon/Category";
 
-const Icon = styled(Image)`
+const Icon = styled.div`
 	grid-area: icon;
-
-	align-self: center;
-	justify-self: center;
-
-	visibility: visible;
-	opacity: 1;
 `;
 
 const Header = styled.header`
@@ -100,17 +94,27 @@ const Wrapper = styled(Elevation)`
 `;
 
 export default function Card({ frontMatter }) {
-	const { category, date, summary, slug, title, tags } = frontMatter;
+	const { category, date, summary, slug, title } = frontMatter;
+	let icon;
+	switch (category.toUpperCase()) {
+		case "WEB":
+			icon = WEB;
+			break;
+		case "ALGORITHM":
+			icon = ALGORITHM;
+			break;
+		case "CODE":
+			icon = CODE;
+			break;
+		case "CS":
+			icon = CS;
+			break;
+	}
 
 	return (
 		<Link href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
 			<Wrapper $size={256} $distance="mid" $usage="other">
-				<Icon
-					src={`/icon_${tags}.svg`}
-					width={32}
-					height={32}
-					alt={`Image ${category}`}
-				/>
+				<Icon>{icon}</Icon>
 				<Header>
 					<h3>{title}</h3>
 					<time>{date}</time>

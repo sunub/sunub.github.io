@@ -1,13 +1,12 @@
 import fs from "fs";
 import { marked } from "marked";
-import { POST_CATEGORY } from "./Post.constant";
-import { Description, Files, PostData } from "type";
+import { FrontMatter, Files, PostData } from "type";
 
 export function categorizePostByCategory(
 	files: Files
-): Map<string, Description[]> {
+): Map<string, FrontMatter[]> {
 	const all = [];
-	const descriptions: Map<string, Description[]> = new Map();
+	const descriptions: Map<string, FrontMatter[]> = new Map();
 	const categorizedPost = Object.entries(files);
 
 	for (const [category, post] of categorizedPost) {
@@ -69,7 +68,7 @@ function divideDescriptionAndContent(text: string): PostData {
 	const pattern = /---\n([\s\S]*?)\n---/;
 	const match = text.match(pattern);
 
-	const description: Description | any = {};
+	const description: FrontMatter | any = {};
 
 	if (match) {
 		const extractedText = match[1];

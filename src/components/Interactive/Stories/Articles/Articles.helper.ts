@@ -15,10 +15,7 @@ export function observingOfTheView(
 
 	targets.forEach((target) => observer.observe(target));
 
-	function chaningTheCurrentView(
-		entries: IntersectionObserverEntry[],
-		observer: IntersectionObserver
-	) {
+	function chaningTheCurrentView(entries: IntersectionObserverEntry[]) {
 		entries.forEach((entry) => {
 			if (entry.isIntersecting) {
 				const currTarget = entry.target as HTMLElement;

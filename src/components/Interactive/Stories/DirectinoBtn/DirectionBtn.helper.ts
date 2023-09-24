@@ -2,13 +2,6 @@
  * Type declartino
  */
 
-import React from "react";
-
-type StoryStateSetter = {
-	data: Element | null;
-	setter: React.Dispatch<React.SetStateAction<Element | null>>;
-};
-
 /**
  * Functions
  */

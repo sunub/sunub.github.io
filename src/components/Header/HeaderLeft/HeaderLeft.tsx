@@ -2,7 +2,6 @@
 
 import styled from 'styled-components';
 import { Spacer } from '@/constants/Spacer';
-import Link from 'next/link';
 import Elevation from '@/constants/Elevation';
 import Dash from '@/constants/Dash';
 import * as Icons from "../icon/Icons"
@@ -14,15 +13,6 @@ const Container = styled.nav`
     flex-direction: column;
     align-items: center;
     background: oklch(90.8% 0.046 29.64);
-`;
-
-const LogoLink = styled(Link)`
-	display: flex;
-	flex-direction: row;
-	cursor: pointer;
-	font-size: 20px;
-	margin-right: 32px;
-	letter-spacing: -1px;
 `;
 
 const MenuContainer = styled.nav`

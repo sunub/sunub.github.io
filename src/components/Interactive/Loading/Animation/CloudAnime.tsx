@@ -42,7 +42,6 @@ export default function CloudAnime({ id, startPosition, duration }: CloudProps) 
     React.useEffect(() => {
         const cloud = document.getElementById(`${id}`) as HTMLElement;
         const clientWidth = cloud.clientWidth;
-        const clientHeight = cloud.clientHeight;
 
         const isBtnPressed = ctx?.state;
         if (isBtnPressed) {

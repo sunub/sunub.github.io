@@ -2,7 +2,6 @@
 
 import React from "react";
 import styled from "styled-components";
-import { drawBackground, setPhysics } from "./Canvas.helper";
 
 const Canvas = styled.canvas`
 	width: 100%;
@@ -12,14 +11,7 @@ const Canvas = styled.canvas`
 export default function BaseCanvas() {
 	const canvasRef = React.useRef(null);
 
-	const [width, setWidth] = React.useState(0);
-	const [height, setHeight] = React.useState(0);
 	const [isLoaded, setLoaded] = React.useState(false);
-
-	React.useLayoutEffect(() => {
-		setWidth(canvasRef.current.clientWidth);
-		setHeight(canvasRef.current.clientHeight);
-	}, []);
 
 	React.useEffect(() => {
 		if (canvasRef) {
@@ -43,9 +35,6 @@ export default function BaseCanvas() {
 			canvasRef.current.width = clientWidth;
 			canvasRef.current.height = clientHeight;
 			ctx.scale(2, 2);
-
-			setWidth(clientWidth);
-			setHeight(clientHeight);
 		}
 
 		window.addEventListener("resize", resize, false);

@@ -27,12 +27,12 @@ class Post {
 
 	getLocalPostContent() {
 		const result = {};
-		const localPostData = Object.entries(this._localPostFilesData);
+		const localPostData = Object.values(this._localPostFilesData);
 
-		for (const [folder, data] of localPostData) {
-			result[folder] = [];
+		for (const data of localPostData) {
 			for (const info of data) {
-				result[folder].push(info.content);
+				const key = info.description.slug;
+				result[key] = info.content;
 			}
 		}
 

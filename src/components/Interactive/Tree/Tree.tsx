@@ -1,7 +1,7 @@
 "use client"
 
 import { useSpring, a, animated } from "@react-spring/web";
-import React, { useEffect } from "react"
+import React from "react"
 import styled from "styled-components";
 import * as Icons from "./Icons"
 import usePrevious from "@/hooks/use-previous.hook";

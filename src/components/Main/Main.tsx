@@ -1,7 +1,6 @@
 "use client"
 
 import styles from './Main.module.css';
-import HeroImage from './HeroImage';
 import React from 'react';
 
 export default function Main({ children }: { children: React.ReactNode }) {

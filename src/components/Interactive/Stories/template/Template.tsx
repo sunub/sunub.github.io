@@ -7,7 +7,7 @@ import styled from "styled-components";
 import DirectionBtn from "../DirectinoBtn/index"
 import ProgressBar from "../ProgressBar/index"
 import FocusProvider from "../Context/FocusProvider";
-import { DayBirdIcon } from "@/components/Blog/icon/BirdIcon";
+import { DayBirdIcon } from "@/components/icon/BirdIcon";
 
 /**
  * Styled components
