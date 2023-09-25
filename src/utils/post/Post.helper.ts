@@ -1,6 +1,7 @@
 import fs from "fs";
 import { marked } from "marked";
 import { FrontMatter, Files, PostData } from "type";
+import { POST_ROOT_PATH } from "./js/Post.constant";
 
 export function categorizePostByCategory(
 	files: Files
@@ -25,7 +26,7 @@ export function categorizePostByCategory(
 	return descriptions;
 }
 export function getLocalTagFiles(): Files {
-	const root = "posts/";
+	const root = POST_ROOT_PATH;
 	const folders = fs.readdirSync(root, "utf-8");
 	const files: Files | any = {};
 

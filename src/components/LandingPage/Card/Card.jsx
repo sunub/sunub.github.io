@@ -94,9 +94,9 @@ const Wrapper = styled(Elevation)`
 `;
 
 export default function Card({ frontMatter }) {
-	const { category, date, summary, slug, title } = frontMatter;
+	const { category, date, summary, slug, title, tags } = frontMatter;
 	let icon;
-	switch (category.toUpperCase()) {
+	switch (tags.toUpperCase()) {
 		case "WEB":
 			icon = WEB;
 			break;

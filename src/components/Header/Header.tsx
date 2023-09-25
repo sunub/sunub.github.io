@@ -8,8 +8,8 @@ const SiteHeader = () => {
 		<div id="side-ng__header-content" className={styles.HeaderContainer} >
 			<form className={styles.HeaderContainer}>
 				<HeaderLeft />
-				<HeaderRight />
 			</form>
+			<HeaderRight />
 		</div>
 	);
 };

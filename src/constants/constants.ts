@@ -15,6 +15,10 @@ export const COLORS = {
 		light: `oklch(70.8% 0.165 32.85)`,
 		dark: `oklch(64.86% 0.181 249.54)`,
 	},
+	header: {
+		light: `oklch(90.8% 0.046 29.64)`,
+		dark: ``,
+	},
 };
 
 export const COLOR_MODE_KEY = "theme-preference";

@@ -40,7 +40,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" as="icon" />
         <InitTheme />
-        <InitScroll />
       </head>
       <body>
         <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" />
