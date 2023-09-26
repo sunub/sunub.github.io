@@ -1,7 +1,7 @@
 import fs from "fs";
 import { marked } from "marked";
 import { FrontMatter, Files, PostData } from "type";
-import { POST_ROOT_PATH } from "./js/Post.constant";
+import { POST_ROOT_PATH } from "./Post.constant";
 
 export function categorizePostByCategory(
 	files: Files

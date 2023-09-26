@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const POST_ROOT_PATH =
+export const POST_ROOT_PATH =
 	process.env.NODE_ENV === "development"
 		? `${process.env.DEV_PORT}/post`
 		: `${process.env.DEPLOY_PORT}/post`;
