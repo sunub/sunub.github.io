@@ -1,9 +1,7 @@
 .landingPage {
 	grid-area: main-content;
 
-	display: flex;
-	gap: 2rem;
-	flex-direction: column;
-	justify-content: center;
-	align-content: center;
+	margin-left: 32px;
+	margin-right: 32px;
+	padding: 0;
 }

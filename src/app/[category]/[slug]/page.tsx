@@ -23,7 +23,7 @@ export async function generateStaticParams() {
 export default async function Page({ params }: { params: { category: Tag, slug: string } }) {
     const { category, slug } = params;
     const content = posts.contents[slug];
-    const frontMatter = posts.getSpecificFrontMatter(posts.frontMatters.get(category) ?? [], slug);
+    const frontMatter = posts.getSpecificPost(category, slug);
 
     return (
         <PostContent frontMatter={frontMatter} content={content} />

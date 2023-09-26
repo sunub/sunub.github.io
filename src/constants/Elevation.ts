@@ -23,6 +23,7 @@ const Elevation = styled.div<{
 	$size: number;
 	$distance: string;
 	$usage: string;
+	$background?: string;
 }>`
 	--mid-shadow: 0px 4px 8px 3px oklch(0% 0 11 / 0.15),
 		0px 1px 3px 0px oklch(0% 0 11 / 0.3);
@@ -40,7 +41,6 @@ const Elevation = styled.div<{
 
 	width: ${(props) => props.$size}px;
 	height: ${(props) => props.$size}px;
-	padding: 1rem;
 
 	border: 2px solid
 		var(
@@ -50,12 +50,7 @@ const Elevation = styled.div<{
 					: "--default-border-color"}
 		);
 	border-radius: ${(props) => Math.floor(props.$size * 0.2)}px;
-	background: var(
-		${(props) =>
-			props.$usage === "content"
-				? "--card-content-bg-color"
-				: "--default-bg-color"}
-	);
+	background: var(--color-elevation);
 
 	box-shadow: var(${(props) => getBoxShadow(props.$distance)});
 
@@ -65,4 +60,3 @@ const Elevation = styled.div<{
 `;
 
 export default Elevation;
-// hsla(10, 11%, 54%, 0.5)

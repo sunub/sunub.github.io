@@ -29,11 +29,8 @@ class Post {
 		return this._categorizedFrontmatters;
 	}
 
-	getSpecificFrontMatter(
-		frontMatters: FrontMatter[],
-		slug: string
-	): FrontMatter {
-		for (const frontMatter of frontMatters) {
+	getSpecificPost(category: string, slug: string): FrontMatter {
+		for (const frontMatter of this.frontMatters.get(category)!) {
 			if (frontMatter.slug === slug) {
 				return frontMatter;
 			}

@@ -7,11 +7,10 @@ import Post from "@/utils/post/Post";
 function LandingPage() {
 	const post = new Post();
 	const allList = post.frontMatters.get("all");
-	const chunkedList = chunkArray([...allList], 3);
 
 	return (
 		<div className={styles.landingPage}>
-			<CardList list={chunkedList} />
+			<CardList list={allList} />
 		</div>
 	);
 }

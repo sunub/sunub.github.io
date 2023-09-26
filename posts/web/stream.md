@@ -2,7 +2,7 @@
 title: 스트림이란?
 date: 2023-06-12
 tags: web
-summary: 스트림은 자바에서도 사용되지만 이 경우에는 Web API로써 Stream 이 무엇인지에 대해서 다룬다.
+summary: Web API에서 Stream 이 무엇인지에 관하여.
 category: web
 slug: whatis-stream
 ---

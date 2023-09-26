@@ -5,7 +5,7 @@ export const COLORS = {
 	},
 	background: {
 		light: `oklch(97.14% 0.011 31.07)`,
-		dark: `oklch(54.74% 0.023 238.99)`,
+		dark: `oklch(23.93% 0 0)`,
 	},
 	primary: {
 		light: `oklch(100% 0 0 / 0.8)`,
@@ -17,8 +17,15 @@ export const COLORS = {
 	},
 	header: {
 		light: `oklch(90.8% 0.046 29.64)`,
-		dark: ``,
+		dark: `oklch(30.4% 0.005 247.98)`,
+	},
+	icon: {
+		light: `oklch(61.8% 0.027 30.58)`,
+		dark: `oklch(97.14% 0.011 31.07)`,
+	},
+	elevation: {
+		light: "oklch(97.14% 0.011 31.07)",
+		dark: "oklch(45.42% 0.007 239.95)",
 	},
 };
-
 export const COLOR_MODE_KEY = "theme-preference";

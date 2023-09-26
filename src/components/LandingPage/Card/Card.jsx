@@ -37,16 +37,18 @@ const Description = styled.section`
 	display: inline-flex;
 `;
 
-const Wrapper = styled(Elevation)`
+const Wrapper = styled(Link)`
 	display: grid;
 	grid-template:
 		"icon header"
-		"empty content" / 50px minmax(1ch, 1fr);
-	position: relative;
-	border-radius: 30px;
+		"empty content" / 80px minmax(1ch, 1fr);
+	align-items: center;
+
+	width: 100%;
+	height: 100%;
+	padding: 1rem;
 
 	transition: background 350ms ease 0s;
-
 	cursor: pointer;
 	touch-action: manipulation;
 	&:hover {
@@ -96,7 +98,7 @@ const Wrapper = styled(Elevation)`
 export default function Card({ frontMatter }) {
 	const { category, date, summary, slug, title, tags } = frontMatter;
 	let icon;
-	switch (tags.toUpperCase()) {
+	switch (category.toUpperCase()) {
 		case "WEB":
 			icon = WEB;
 			break;
@@ -112,17 +114,20 @@ export default function Card({ frontMatter }) {
 	}
 
 	return (
-		<Link href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
-			<Wrapper $size={256} $distance="mid" $usage="other">
+		<Elevation $size={256} $distance="mid" $usage="other">
+			<Wrapper href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
 				<Icon>{icon}</Icon>
 				<Header>
 					<h3>{title}</h3>
-					<time>{date}</time>
 				</Header>
 				<Description>
-					<p>{summary}</p>
+					<p>
+						{summary.length > 46
+							? summary.slice(0, 43) + "..."
+							: summary}
+					</p>
 				</Description>
 			</Wrapper>
-		</Link>
+		</Elevation>
 	);
 }

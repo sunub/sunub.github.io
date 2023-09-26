@@ -1,10 +1,10 @@
 ---
-title: 자바스크립트의 작동 방식(1)
+title: 자바스크립트의 작동 방식
 date: 2023-06-12
-tags: code
+tags: javascript
 summary: 자바스크립트는 어떻게 동작하는 녀석일까?
 slug: howto-activate-javascript
-category: javascript
+category: code
 ---
 
 ## EventLoop & Task Que

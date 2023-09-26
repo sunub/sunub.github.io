@@ -11,12 +11,12 @@ const Container = styled.div`
 
     visibility: visible;
     opacity: 1;
-    @media (max-width: 768px) {
+    /* @media (max-width: 768px) {
         & {
             visibility: hidden;
             opacity: 0;
         }
-    }
+    } */
 `
 
 const Content = styled.div`
@@ -29,7 +29,7 @@ const Content = styled.div`
     border: 1px solid oklch(61.8% 0.027 30.58 / 0.3);
     border-radius: 50%;
     aspect-ratio: 1 / 1;
-    background: oklch(97.14% 0.011 31.07);
+    background: var(--color-elevation);
 `
 
 export default function HeaderRight() {

@@ -1,14 +1,15 @@
 .HeaderContainer {
 	grid-area: side-header;
 
-	position: sticky;
-	height: 100dvh;
+	position: fixed;
+	width: 88px;
+	height: 100%;
 	top: 0px;
 
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	background: oklch(90.8% 0.046 29.64);
+	background: var(--color-header);
 }
 
 /* max-width: 1100px; */

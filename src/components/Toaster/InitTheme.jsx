@@ -3,12 +3,12 @@ import React from "react";
 function setColorsByTheme() {
 	const COLORS = {
 		text: {
-			light: `oklch(21.08% 0.055 34.69)`,
-			dark: `oklch(100% 0 31.08)`,
+			light: `oklch(32.31% 0.0262 34.69 / 90%)`,
+			dark: `oklch(97.14% 0.011 31.07)`,
 		},
 		background: {
 			light: `oklch(97.14% 0.011 31.07)`,
-			dark: `oklch(54.74% 0.023 238.99)`,
+			dark: `oklch(23.93% 0 0)`,
 		},
 		primary: {
 			light: `oklch(100% 0 0 / 0.8)`,
@@ -16,7 +16,19 @@ function setColorsByTheme() {
 		},
 		highlightColor: {
 			light: `oklch(70.8% 0.165 32.85)`,
-			dark: `oklch(64.86% 0.181 249.54)`,
+			dark: `oklch(90.97% 0.046 246.35)`,
+		},
+		header: {
+			light: `oklch(90.8% 0.046 29.64)`,
+			dark: `oklch(30.4% 0.005 247.98)`,
+		},
+		icon: {
+			light: `oklch(61.8% 0.027 30.58)`,
+			dark: `oklch(97.14% 0.011 31.07)`,
+		},
+		elevation: {
+			light: "oklch(97.14% 0.011 31.07)",
+			dark: "oklch(45.42% 0.007 239.95)",
 		},
 	};
 

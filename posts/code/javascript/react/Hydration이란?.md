@@ -1,10 +1,10 @@
 ---
 title: Hydration에 대해 알아보자
 date: 2023-07-28
-tags: code
+tags: react
 summary: react에서 이야기하는 Hydration이란 무엇인가?
 slug: howto-activate-hydration
-category: react
+category: code
 ---
 ## Hydration이란?
 

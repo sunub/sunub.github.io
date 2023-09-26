@@ -1,15 +1,17 @@
 import HeaderLeft from "./HeaderLeft/index";
 import HeaderRight from "./HeaderRight/index";
 import styles from './Header.module.css';
-import React from "react";
+import React, { FormEvent } from "react";
 
 const SiteHeader = () => {
+
 	return (
-		<div id="side-ng__header-content" className={styles.HeaderContainer} >
-			<form className={styles.HeaderContainer}>
+		<div id="side-ng__header-content"  >
+			<div
+				className={styles.HeaderContainer}>
 				<HeaderLeft />
-			</form>
-			<HeaderRight />
+				<HeaderRight />
+			</div>
 		</div>
 	);
 };

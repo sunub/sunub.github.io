@@ -5,14 +5,14 @@ import { Spacer } from '@/constants/Spacer';
 import Elevation from '@/constants/Elevation';
 import Dash from '@/constants/Dash';
 import * as Icons from "../icon/Icons"
-import NgContent from '@/constants/NgContent';
+import Menu from "../Menu";
 
 const Container = styled.nav`
     display: flex;
 
     flex-direction: column;
     align-items: center;
-    background: oklch(90.8% 0.046 29.64);
+    background: transparent;
 `;
 
 const MenuContainer = styled.nav`
@@ -26,15 +26,15 @@ const HeaderLeft = () => {
     return (<>
         <Container>
             <Spacer axis='vertical' size={16} />
-            <Elevation $size={64} $distance='mid' $usage='logo'>
+            <Elevation $size={64} $distance='mid' $usage='logo' $background="color-elevation">
                 <Icons.BirdLogo />
             </Elevation>
             <Dash />
             <MenuContainer>
-                <NgContent usage='web' />
-                <NgContent usage='code' />
-                <NgContent usage='cs' />
-                <NgContent usage='algo' />
+                <Menu usage='web' />
+                <Menu usage='code' />
+                <Menu usage='cs' />
+                <Menu usage='algorithm' />
             </MenuContainer>
         </Container>
     </>);
