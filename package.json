@@ -47,6 +47,7 @@
     "rehype-stringify": "^9.0.3",
     "remark-parse": "^10.0.2",
     "remark-rehype": "^10.1.0",
+    "sharp": "^0.32.6",
     "styled-components": "^5.3.11",
     "supports-color": "^8.1.1",
     "three": "^0.156.1",

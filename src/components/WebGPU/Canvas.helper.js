@@ -1,32 +1,31 @@
 import Matter from "matter-js";
 import birdPng from "public/bird.png";
-import bg from "public/background.jpg";
 
-export function drawBackground(canvas) {
-	const ctx = canvas.getContext("2d");
+// export function drawBackground(canvas) {
+// 	const ctx = canvas.getContext("2d");
 
-	const image = new Image();
-	image.onload = () => {
-		const width = canvas.clientWidth;
-		const aspect = Math.floor(image.height / image.width);
-		const dpr = window.devicePixelRatio || 1;
+// 	const image = new Image();
+// 	image.onload = () => {
+// 		const width = canvas.clientWidth;
+// 		const aspect = Math.floor(image.height / image.width);
+// 		const dpr = window.devicePixelRatio || 1;
 
-		canvas.height = width * aspect;
+// 		canvas.height = width * aspect;
 
-		const curr = {
-			width: Math.floor(image.width * 0.5) * dpr,
-			height: Math.floor(image.height * 0.5) * dpr,
-		};
+// 		const curr = {
+// 			width: Math.floor(image.width * 0.5) * dpr,
+// 			height: Math.floor(image.height * 0.5) * dpr,
+// 		};
 
-		canvas.width = curr.width;
-		canvas.height = curr.height;
+// 		canvas.width = curr.width;
+// 		canvas.height = curr.height;
 
-		ctx.drawImage(image, 0, 0, 1600, 903, 0, 0, curr.width, curr.height);
-		ctx.imageSmoothingEnabled = false;
-		ctx.scale(dpr, dpr);
-	};
-	image.src = bg.src;
-}
+// 		ctx.drawImage(image, 0, 0, 1600, 903, 0, 0, curr.width, curr.height);
+// 		ctx.imageSmoothingEnabled = false;
+// 		ctx.scale(dpr, dpr);
+// 	};
+// 	image.src = bg.src;
+// }
 
 export function setPhysics() {
 	const root = document.getElementById("2d-physics");
@@ -80,7 +79,7 @@ export function setPhysics() {
 	render.mouse = mouse;
 
 	function drawBirdOnCanvas() {
-		const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 88, 96, {
+		const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 180, 192, {
 			render: {
 				sprite: {
 					texture: birdPng.src,

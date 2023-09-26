@@ -2,9 +2,7 @@
 
 import styled from 'styled-components';
 import { Spacer } from '@/constants/Spacer';
-import Elevation from '@/constants/Elevation';
 import Dash from '@/constants/Dash';
-import * as Icons from "../icon/Icons"
 import Menu from "../Menu";
 
 const Container = styled.nav`
@@ -26,9 +24,6 @@ const HeaderLeft = () => {
     return (<>
         <Container>
             <Spacer axis='vertical' size={16} />
-            <Elevation $size={64} $distance='mid' $usage='logo' $background="color-elevation">
-                <Icons.BirdLogo />
-            </Elevation>
             <Dash />
             <MenuContainer>
                 <Menu usage='web' />

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./LandingPage.module.css";
 import CardList from "./CardList/index";
-import { chunkArray } from "@/utils/utils";
+import HeroImage from "./HeroImage";
 import Post from "@/utils/post/Post";
 
 function LandingPage() {
@@ -10,6 +10,7 @@ function LandingPage() {
 
 	return (
 		<div className={styles.landingPage}>
+			<HeroImage />
 			<CardList list={allList} />
 		</div>
 	);

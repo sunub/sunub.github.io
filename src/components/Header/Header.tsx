@@ -1,7 +1,7 @@
 import HeaderLeft from "./HeaderLeft/index";
 import HeaderRight from "./HeaderRight/index";
 import styles from './Header.module.css';
-import React, { FormEvent } from "react";
+import React from "react";
 
 const SiteHeader = () => {
 
