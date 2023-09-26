@@ -90,7 +90,7 @@ export function setPhysics() {
 		const ground = Bodies.rectangle(
 			clientWidth / 2,
 			clientHeight + 10,
-			clientWidth,
+			clientWidth * 2,
 			20,
 			{
 				isStatic: true,
