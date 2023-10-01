@@ -46,7 +46,7 @@ const Elevation = styled.div<{
 		var(
 			${(props) =>
 				props.$usage === "logo"
-					? "--higlight-border-color"
+					? "--color-bird"
 					: "--default-border-color"}
 		);
 	border-radius: ${(props) => Math.floor(props.$size * 0.2)}px;

@@ -30,6 +30,10 @@ function setColorsByTheme() {
 			light: "oklch(97.14% 0.011 31.07)",
 			dark: "oklch(45.42% 0.007 239.95)",
 		},
+		bird: {
+			light: "oklch(73.44% 0.152 21.47)",
+			dark: "oklch(93.29% 0.129 112.44)",
+		},
 	};
 
 	function getInitialColorMode() {

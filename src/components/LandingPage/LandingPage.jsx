@@ -3,6 +3,7 @@ import styles from "./LandingPage.module.css";
 import CardList from "./CardList/index";
 import HeroImage from "./HeroImage";
 import Post from "@/utils/post/Post";
+import HeroLandscape from "./HeroImage/Image";
 
 function LandingPage() {
 	const post = new Post();
@@ -10,7 +11,7 @@ function LandingPage() {
 
 	return (
 		<div className={styles.landingPage}>
-			<HeroImage />
+			<HeroLandscape />
 			<CardList list={allList} />
 		</div>
 	);
