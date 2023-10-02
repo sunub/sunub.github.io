@@ -23,7 +23,12 @@ function LandScape({ children }) {
 
 	return (
 		<Wrapper>
-			<Canvas style={{ height: "80dvh", width: "100%" }} dpr={2}>
+			<Canvas
+				camera={{ position: [0, 0, 20], fov: 35, near: 1, far: 40 }}
+				orthographic
+				style={{ height: "80dvh", width: "100%" }}
+				dpr={[1, 1.5]}
+			>
 				<Object />
 			</Canvas>
 			{children}

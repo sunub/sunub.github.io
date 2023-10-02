@@ -13,21 +13,21 @@ const nextConfig = {
 		styledComponents: true,
 	},
 	output: "standalone",
-	experimental: {
-		turbo: {
-			rules: {
-				".md": [
-					{
-						loader: "@mdx-js/loader",
-						options: {
-							format: "md",
-						},
-					},
-				],
-				".mdx": ["@mdx-js/loader"],
-			},
-		},
-	},
+	// experimental: {
+	// 	turbo: {
+	// 		rules: {
+	// 			".md": [
+	// 				{
+	// 					loader: "@mdx-js/loader",
+	// 					options: {
+	// 						format: "md",
+	// 					},
+	// 				},
+	// 			],
+	// 			".mdx": ["@mdx-js/loader"],
+	// 		},
+	// 	},
+	// },
 };
 
 export default nextConfig;
