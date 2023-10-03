@@ -23,37 +23,43 @@ function Object({ ...delegated }) {
 			"background.jpg",
 		]);
 	const scene = useThree((state) => state.scene);
-	const { x, y, z } = useControls("dirlight helper", {
+	const { x, y, z, scale } = useControls("bird helper", {
 		x: {
 			value: 0,
 			step: 0.1,
 		},
 		y: {
-			value: -50,
+			value: 0,
 			step: 0.1,
 		},
 		z: {
-			value: 100,
+			value: 10,
+			step: 0.1,
+		},
+		scale: {
+			value: 1,
 			step: 0.1,
 		},
 	});
 
-	React.useEffect(() => {
-		helperRef.current = new THREE.DirectionalLightHelper(
-			ref.current,
-			30,
-			"red"
-		);
-		scene.add(helperRef.current);
+	const colors = new THREE.Color();
 
-		return () => scene.remove(helperRef.current);
-	}, [ref.current]);
+	// React.useEffect(() => {
+	// 	helperRef.current = new THREE.DirectionalLightHelper(
+	// 		ref.current,
+	// 		30,
+	// 		"red"
+	// 	);
+	// 	scene.add(helperRef.current);
 
-	useFrame(() => {
-		if (helperRef.current) {
-			helperRef.current.update();
-		}
-	});
+	// 	return () => scene.remove(helperRef.current);
+	// }, [ref.current]);
+
+	// useFrame(() => {
+	// 	if (helperRef.current) {
+	// 		helperRef.current.update();
+	// 	}
+	// });
 
 	return (
 		<>
@@ -64,10 +70,15 @@ function Object({ ...delegated }) {
 						console.log(curr.object);
 					}}
 				/>
-				<directionalLight ref={ref} position={[x, y, z]} />
-				<mesh position={[0, 0, 30]}>
+				<directionalLight ref={ref} position={[0, -50, 100]} />
+				<mesh scale={scale} position={[x, y, z]}>
 					<planeGeometry args={[51, 57]} />
-					<layerMaterial textr={bird} factor={0.7} scale={1} />
+					<meshMatcapMaterial
+						map={bird}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+					{/* <layerMaterial textr={bird} factor={0.7} scale={1} /> */}
 				</mesh>
 				<mesh position={[0, 136, 10]}>
 					<planeGeometry args={[471, 116]} />
@@ -109,16 +120,8 @@ function Object({ ...delegated }) {
 						side={THREE.DoubleSide}
 					/>
 				</mesh>
-				<mesh position={[-4, 100, -10]}>
-					<planeGeometry args={[459, 310]} />
-					<meshMatcapMaterial
-						map={background}
-						transparent
-						side={THREE.DoubleSide}
-					/>
-				</mesh>
 			</group>
-			<Effects />
+			{/* <Effects /> */}
 		</>
 	);
 }

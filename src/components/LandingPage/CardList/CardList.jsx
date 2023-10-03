@@ -3,11 +3,13 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "../Card/index";
+import { Spacer } from "@/constants/Spacer";
 
 const Wrapper = styled.div`
 	width: 100%;
 	display: grid;
 	grid-template-columns: ${(props) => props.$division};
+	justify-content: center;
 	gap: 1rem;
 
 	position: relative;
@@ -18,9 +20,9 @@ const gapSize = "minmax(min-content ,256px)";
 function CardList({ list }) {
 	const [boxWidth, setBoxWidth] = React.useState(0);
 	const [gap, setGap] = React.useState("");
-	const wrapperRef = React.useRef(null);
 
 	React.useEffect(() => {
+		const root = document.getElementById("__next");
 		const observer = new ResizeObserver((entries) => {
 			const [entry] = entries;
 			const { width } = entry.contentRect;
@@ -28,32 +30,29 @@ function CardList({ list }) {
 			setBoxWidth(width);
 		});
 
-		observer.observe(wrapperRef.current);
+		observer.observe(root);
 		return () => observer.disconnect();
 	}, []);
 
 	React.useEffect(() => {
-		let newGapSize = 3;
-		if (boxWidth <= 650) {
-			newGapSize = 1;
-		} else if (boxWidth < 924 && boxWidth > 648) {
-			newGapSize = 2;
+		let newGap = `${gapSize} ${gapSize} ${gapSize}`;
+		if (boxWidth <= 630) {
+			newGap = `${gapSize}`;
+		} else if (boxWidth <= 936) {
+			newGap = `${gapSize} ${gapSize}`;
 		}
-
-		let newGap = gapSize;
-		for (let i = 0; i < newGapSize - 1; i++) {
-			newGap = newGap.concat(gapSize);
-		}
-
 		setGap(newGap);
 	}, [boxWidth]);
 
 	return (
-		<Wrapper $division={gap} ref={wrapperRef}>
-			{list.map((frontMatter) => (
-				<Card key={frontMatter.title} frontMatter={frontMatter} />
-			))}
-		</Wrapper>
+		<>
+			<Spacer axis="vertical" size={32} />
+			<Wrapper $division={gap}>
+				{list.map((frontMatter) => (
+					<Card key={frontMatter.title} frontMatter={frontMatter} />
+				))}
+			</Wrapper>
+		</>
 	);
 }
 
