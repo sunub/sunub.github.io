@@ -24,12 +24,17 @@ function LandScape({ children }) {
 	return (
 		<Wrapper>
 			<Canvas
-				camera={{ position: [0, 0, 20], fov: 35, near: 1, far: 40 }}
 				orthographic
+				camera={{
+					zoom: 2,
+					position: [0, 0, 200],
+					far: 300,
+					near: 50,
+				}}
 				style={{ height: "80dvh", width: "100%" }}
 				dpr={[1, 1.5]}
 			>
-				<Object />
+				<Object position={[0, -100, 0]} />
 			</Canvas>
 			{children}
 		</Wrapper>

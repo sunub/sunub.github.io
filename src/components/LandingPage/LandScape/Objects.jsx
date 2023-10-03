@@ -6,8 +6,10 @@ import * as THREE from "three";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useControls } from "leva";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
+import "./layersMaterial";
+import Effects from "./Effect";
 
-function Object() {
+function Object({ ...delegated }) {
 	const ref = React.useRef(null);
 	const helperRef = React.useRef(null);
 	const [bird, clouds, poles, sun, carsAndBridge, waterShadow, background] =
@@ -55,63 +57,68 @@ function Object() {
 
 	return (
 		<>
-			<directionalLight ref={ref} position={[x, y, z]} />
-			<mesh position={[0, 10, 10]}>
-				<planeGeometry args={[51, 57]} />
-				<meshBasicMaterial
-					map={bird}
-					transparent
-					side={THREE.DoubleSide}
+			<group {...delegated}>
+				<OrbitControls
+					onChange={(e) => {
+						const curr = e.target;
+						console.log(curr.object);
+					}}
 				/>
-			</mesh>
-			<mesh position={[0, 136, 10]}>
-				<planeGeometry args={[471, 116]} />
-				<meshBasicMaterial
-					map={clouds}
-					transparent
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
-			<mesh position={[0, 69, 0]}>
-				<planeGeometry args={[403, 17]} />
-				<meshBasicMaterial
-					map={poles}
-					transparent
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
-			<mesh position={[136, 174, 5]}>
-				<planeGeometry args={[72, 72]} />
-				<meshBasicMaterial
-					map={sun}
-					transparent
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
-			<mesh position={[0, 110, 0]}>
-				<planeGeometry args={[459, 156]} />
-				<meshBasicMaterial
-					map={carsAndBridge}
-					transparent
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
-			<mesh position={[-4, 10, 0]}>
-				<planeGeometry args={[459, 86]} />
-				<meshBasicMaterial
-					map={waterShadow}
-					transparent
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
-			<mesh position={[-4, 100, -10]}>
-				<planeGeometry args={[459, 310]} />
-				<meshBasicMaterial
-					map={background}
-					transparent
-					side={THREE.DoubleSide}
-				/>
-			</mesh>
+				<directionalLight ref={ref} position={[x, y, z]} />
+				<mesh position={[0, 0, 30]}>
+					<planeGeometry args={[51, 57]} />
+					<layerMaterial textr={bird} factor={0.7} scale={1} />
+				</mesh>
+				<mesh position={[0, 136, 10]}>
+					<planeGeometry args={[471, 116]} />
+					<meshMatcapMaterial
+						map={clouds}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+				<mesh position={[0, 69, 0]}>
+					<planeGeometry args={[403, 17]} />
+					<meshMatcapMaterial
+						map={poles}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+				<mesh position={[136, 174, 5]}>
+					<planeGeometry args={[72, 72]} />
+					<meshMatcapMaterial
+						map={sun}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+				<mesh position={[0, 110, 0]}>
+					<planeGeometry args={[459, 156]} />
+					<meshMatcapMaterial
+						map={carsAndBridge}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+				<mesh position={[-4, 10, 0]}>
+					<planeGeometry args={[459, 86]} />
+					<meshMatcapMaterial
+						map={waterShadow}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+				<mesh position={[-4, 100, -10]}>
+					<planeGeometry args={[459, 310]} />
+					<meshMatcapMaterial
+						map={background}
+						transparent
+						side={THREE.DoubleSide}
+					/>
+				</mesh>
+			</group>
+			<Effects />
 		</>
 	);
 }
