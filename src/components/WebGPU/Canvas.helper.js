@@ -1,4 +1,4 @@
-import Matter from "matter-js";
+import Matter, { Body, Constraint } from "matter-js";
 import birdPng from "public/bird.png";
 
 // export function drawBackground(canvas) {
@@ -37,6 +37,7 @@ export function setPhysics() {
 		Render = Matter.Render,
 		Bodies = Matter.Bodies,
 		Composite = Matter.Composite,
+		Composites = Matter.Composites,
 		Runner = Matter.Runner,
 		Common = Matter.Common,
 		Mouse = Matter.Mouse,
@@ -63,6 +64,7 @@ export function setPhysics() {
 	Runner.run(runner, engine);
 
 	drawBirdOnCanvas();
+	drawBridge();
 
 	const mouse = Mouse.create(render.canvas),
 		mouseContraint = MouseConstraint.create(engine, {
@@ -79,7 +81,7 @@ export function setPhysics() {
 	render.mouse = mouse;
 
 	function drawBirdOnCanvas() {
-		const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 180, 192, {
+		const BirdBox = Bodies.rectangle(clientWidth / 2, 0, 180, 165, {
 			render: {
 				sprite: {
 					texture: birdPng.src,
@@ -96,7 +98,56 @@ export function setPhysics() {
 				isStatic: true,
 			}
 		);
-		Composite.add(world, [BirdBox, ground]);
+		Composite.add(world, [BirdBox]);
+	}
+
+	function drawBridge() {
+		const group = Body.nextCategory(true);
+
+		const bridge = Composites.stack(160, 290, 15, 1, 0, 0, function (x, y) {
+			return Bodies.rectangle(x - 20, y, 53, 20, {
+				collisionFilter: { group: group },
+				chamfer: 5,
+				density: 0.005,
+				frictionAir: 0.05,
+				render: {
+					fillStyle: "#060a19",
+				},
+			});
+		});
+
+		Composites.chain(bridge, 0.3, 0, -0.3, 0, {
+			stiffness: 0.99,
+			length: 0.0001,
+			render: {
+				visible: false,
+			},
+		});
+		Composite.add(world, [
+			bridge,
+			Bodies.rectangle(-70, 490, 220, 380, {
+				isStatic: true,
+				chamfer: { radius: 20 },
+			}),
+			Bodies.rectangle(760, 490, 220, 380, {
+				isStatic: true,
+				chamfer: { radius: 20 },
+			}),
+			Constraint.create({
+				pointA: { x: 40, y: 300 },
+				bodyB: bridge.bodies[0],
+				pointB: { x: 0, y: 0 },
+				length: 2,
+				stiffness: 0.9,
+			}),
+			Constraint.create({
+				pointA: { x: 660, y: 300 },
+				bodyB: bridge.bodies[bridge.bodies.length - 1],
+				pointB: { x: 25, y: 0 },
+				length: 2,
+				stiffness: 0.9,
+			}),
+		]);
 	}
 
 	// function scaleBodies() {

@@ -26,7 +26,6 @@ function LandScape({ children }) {
 	return (
 		<Wrapper>
 			<Spacer axis="vertical" size={32} />
-			<HeroImage />
 			{children}
 		</Wrapper>
 	);

@@ -37,7 +37,7 @@ body {
 	isolation: isolate;
 
 	container-name: root;
-	container-type: size;
+	container-type: normal;
 
 	display: grid;
 	grid-template-columns: [side-header] 88px [main-content] 1fr;

@@ -24,7 +24,7 @@ export const COLORS = {
 		dark: `oklch(97.14% 0.011 31.07)`,
 	},
 	elevation: {
-		light: "oklch(97.14% 0.011 31.07)",
+		light: "oklch(100% 0 0)",
 		dark: "oklch(45.42% 0.007 239.95)",
 	},
 	bird: {

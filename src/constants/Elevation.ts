@@ -20,10 +20,11 @@ function getBoxShadow(distance: string) {
 }
 
 const Elevation = styled.div<{
-	$size: number;
+	$width: number;
+	$height: number;
+	$border: number;
 	$distance: string;
 	$usage: string;
-	$background?: string;
 }>`
 	--mid-shadow: 0px 4px 8px 3px oklch(0% 0 11 / 0.15),
 		0px 1px 3px 0px oklch(0% 0 11 / 0.3);
@@ -39,17 +40,17 @@ const Elevation = styled.div<{
 	--default-bg-color: oklch(97.14% 0.011 31.07);
 	--card-content-bg-color: oklch(98.8% 0 31.07);
 
-	width: ${(props) => props.$size}px;
-	height: ${(props) => props.$size}px;
+	width: ${(props) => props.$width}px;
+	height: ${(props) => props.$height}px;
 
-	border: 2px solid
+	border: ${(props) => (props.$usage === "logo" ? 2 : 1)}px solid
 		var(
 			${(props) =>
 				props.$usage === "logo"
 					? "--color-bird"
 					: "--default-border-color"}
 		);
-	border-radius: ${(props) => Math.floor(props.$size * 0.2)}px;
+	border-radius: ${(props) => props.$border}px;
 	background: var(--color-elevation);
 
 	box-shadow: var(${(props) => getBoxShadow(props.$distance)});

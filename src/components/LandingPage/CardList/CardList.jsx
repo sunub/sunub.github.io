@@ -7,8 +7,9 @@ import { Spacer } from "@/constants/Spacer";
 
 const Wrapper = styled.div`
 	width: 100%;
-	display: grid;
-	grid-template-columns: ${(props) => props.$division};
+	display: flex;
+	flex-direction: row;
+	/* grid-template-columns: ${(props) => props.$division}; */
 	justify-content: center;
 	gap: 1rem;
 
@@ -46,7 +47,6 @@ function CardList({ list }) {
 
 	return (
 		<>
-			<Spacer axis="vertical" size={32} />
 			<Wrapper $division={gap}>
 				{list.map((frontMatter) => (
 					<Card key={frontMatter.title} frontMatter={frontMatter} />

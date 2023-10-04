@@ -5,6 +5,9 @@ import Link from "next/link";
 import * as Icons from "@/components/Header/icon/Icons";
 import { baseURL } from "@/utils/getBaseUrl";
 import Elevation from "@/constants/Elevation";
+import styled from "styled-components";
+
+const Wrapper = styled(Link)``;
 
 function Icon({ usage }) {
 	switch (usage) {
@@ -23,19 +26,22 @@ function Icon({ usage }) {
 
 function Menu({ usage }) {
 	return (
-		<Elevation
-			style={{
-				cursor: "pointer",
-				outlineOffset: "4px",
-			}}
-			$size={64}
-			$distance="none"
-			$usage="others"
-		>
-			<Link href={`${baseURL}/${usage}`}>
+		<Link href={`${baseURL}/${usage}`}>
+			<Elevation
+				style={{
+					cursor: "pointer",
+					outlineOffset: "4px",
+					padding: "4px",
+				}}
+				$width={64}
+				$height={64}
+				$border={16}
+				$distance="none"
+				$usage="others"
+			>
 				<Icon usage={usage} />
-			</Link>
-		</Elevation>
+			</Elevation>
+		</Link>
 	);
 }
 

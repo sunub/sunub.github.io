@@ -21,7 +21,7 @@ const Header = styled.header`
 
 	& > time {
 		justify-self: flex-start;
-		font-size: calc(1.375rem);
+		font-size: calc(1rem);
 	}
 
 	@media (max-width: 768px) {
@@ -39,10 +39,10 @@ const Description = styled.section`
 
 const Wrapper = styled(Link)`
 	display: grid;
-	grid-template:
-		"icon header"
-		"empty content" / 80px minmax(1ch, 1fr);
 	align-items: center;
+
+	grid-template-rows: [icon] 15px [header] minmax(1ch, 1fr) [time] 15px;
+	grid-template-columns: 1fr;
 
 	width: 100%;
 	height: 100%;
@@ -114,19 +114,18 @@ export default function Card({ frontMatter }) {
 	}
 
 	return (
-		<Elevation $size={256} $distance="mid" $usage="other">
+		<Elevation
+			$width={120}
+			$height={216}
+			$border={15}
+			$distance="short"
+			$usage="other"
+		>
 			<Wrapper href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
 				<Icon>{icon}</Icon>
 				<Header>
-					<h3>{title}</h3>
+					<p>{title}</p>
 				</Header>
-				<Description>
-					<p>
-						{summary.length > 46
-							? summary.slice(0, 43) + "..."
-							: summary}
-					</p>
-				</Description>
 			</Wrapper>
 		</Elevation>
 	);

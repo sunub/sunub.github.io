@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const Canvas = styled.canvas`
 	width: 100%;
-	height: 300px;
+	height: 80dvh;
 `;
 
 export default function BaseCanvas() {

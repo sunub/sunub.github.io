@@ -15,7 +15,13 @@ const LogoLink = styled(Link)`
 
 function Logo() {
 	return (
-		<Elevation $size={64} $usage="logo" $distance="long">
+		<Elevation
+			$width={64}
+			$height={64}
+			$border={16}
+			$usage="logo"
+			$distance="long"
+		>
 			<LogoLink href={`${baseURL}/`}>
 				<Icons.BirdLogo />
 			</LogoLink>
