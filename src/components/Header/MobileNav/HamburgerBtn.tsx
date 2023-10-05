@@ -111,11 +111,6 @@ const Btn = styled.button.attrs({
 
     padding: 0;
     cursor: pointer;
-
-    @media (min-width: 769px) {
-        display: none;
-    }
-
     &[aria-label='Open menu'] ${Open} {
         #center {
             transform: scaleX(1);
@@ -238,7 +233,7 @@ export default function HamburgerBtn() {
                 context.setOpen(!isOpen);
             }}
             style={{
-                top: "12px"
+                top: "16px"
             }}
         >
             <Hamburger />

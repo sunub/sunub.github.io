@@ -13,6 +13,11 @@
 	src: url("/fonts/NanumSquareNeo-cBd.ttf");
 }
 
+@font-face {
+	font-family: "MaruBuri Bold";
+	src: url("/fonts/MaruBuri-Bold.ttf");
+}
+
 * {
 	margin: 0px;
 	line-height: calc(1em + 0.8rem);
@@ -36,8 +41,7 @@ body {
 #__next {
 	isolation: isolate;
 
-	container-name: root;
-	container-type: normal;
+	container: root / inline-size;
 
 	display: grid;
 	grid-template-columns: [side-header] 88px [main-content] 1fr;

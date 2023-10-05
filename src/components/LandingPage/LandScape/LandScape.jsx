@@ -11,9 +11,7 @@ import HeroImage from "../HeroImage";
 const Wrapper = styled.div`
 	grid-area: main-content;
 
-	margin-left: 32px;
-	margin-right: 32px;
-	padding: 0;
+	width: 100dvw;
 `;
 
 function LandScape({ children }) {

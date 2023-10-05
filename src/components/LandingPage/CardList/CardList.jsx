@@ -7,9 +7,9 @@ import { Spacer } from "@/constants/Spacer";
 
 const Wrapper = styled.div`
 	width: 100%;
-	display: flex;
+	display: grid;
 	flex-direction: row;
-	/* grid-template-columns: ${(props) => props.$division}; */
+	grid-template-columns: ${(props) => props.$division};
 	justify-content: center;
 	gap: 1rem;
 
@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 	overflow-wrap: break-word;
 `;
 
-const gapSize = "minmax(min-content ,256px)";
+const gapSize = "minmax(min-content ,5px)";
 function CardList({ list }) {
 	const [boxWidth, setBoxWidth] = React.useState(0);
 	const [gap, setGap] = React.useState("");
@@ -36,11 +36,11 @@ function CardList({ list }) {
 	}, []);
 
 	React.useEffect(() => {
-		let newGap = `${gapSize} ${gapSize} ${gapSize}`;
+		let newGap = `${gapSize} ${gapSize} ${gapSize} ${gapSize}`;
 		if (boxWidth <= 630) {
-			newGap = `${gapSize}`;
-		} else if (boxWidth <= 936) {
 			newGap = `${gapSize} ${gapSize}`;
+		} else if (boxWidth <= 936) {
+			newGap = `${gapSize} ${gapSize} ${gapSize}`;
 		}
 		setGap(newGap);
 	}, [boxWidth]);

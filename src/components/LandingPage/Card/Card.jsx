@@ -4,6 +4,7 @@ import Link from "next/link";
 import { baseURL } from "@/utils/getBaseUrl";
 import Elevation from "@/constants/Elevation";
 import { CODE, CS, ALGORITHM, WEB } from "@/components/icon/Category";
+import { Spacer } from "@/constants/Spacer";
 
 const Icon = styled.div`
 	grid-area: icon;
@@ -18,6 +19,7 @@ const Header = styled.header`
 	margin-left: var(--size4);
 	text-align: left;
 	word-break: break-all;
+	font-weight: 700;
 
 	& > time {
 		justify-self: flex-start;
@@ -37,11 +39,19 @@ const Description = styled.section`
 	display: inline-flex;
 `;
 
+const Footer = styled.time`
+	grid-area: footer;
+
+	font-size: 10px;
+	word-break: break-all;
+	justify-self: center;
+`;
+
 const Wrapper = styled(Link)`
 	display: grid;
 	align-items: center;
 
-	grid-template-rows: [icon] 15px [header] minmax(1ch, 1fr) [time] 15px;
+	grid-template-rows: [icon] 15px [header] minmax(1ch, 1fr) [footer] 15px;
 	grid-template-columns: 1fr;
 
 	width: 100%;
@@ -96,7 +106,7 @@ const Wrapper = styled(Link)`
 `;
 
 export default function Card({ frontMatter }) {
-	const { category, date, summary, slug, title, tags } = frontMatter;
+	const { category, date, slug, title } = frontMatter;
 	let icon;
 	switch (category.toUpperCase()) {
 		case "WEB":
@@ -122,10 +132,14 @@ export default function Card({ frontMatter }) {
 			$usage="other"
 		>
 			<Wrapper href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
-				<Icon>{icon}</Icon>
+				<Icon>
+					<Spacer axis="vertical" size={32} />
+					{icon}
+				</Icon>
 				<Header>
 					<p>{title}</p>
 				</Header>
+				<Footer>{date.slice(2)}</Footer>
 			</Wrapper>
 		</Elevation>
 	);

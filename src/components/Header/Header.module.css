@@ -12,10 +12,10 @@
 	background: var(--color-header);
 	transition: transform 10ms ease-in;
 
-	@container ( width <= 768px ) {
+	@container root ( width <= 768px ) {
 		transform: translateX(-100%);
 	}
-	@container ( width > 768px ) {
+	@container root ( width > 768px ) {
 		transform: translateX(0%);
 	}
 }
