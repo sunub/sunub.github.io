@@ -9,7 +9,6 @@ const nextConfig = {
 		DEV_PORT: "http://localhost:3000",
 		DEPLOY_PORT: "https://sunub.github.io",
 	},
-	productionBrowserSourceMaps: true,
 	compiler: {
 		styledComponents: true,
 	},

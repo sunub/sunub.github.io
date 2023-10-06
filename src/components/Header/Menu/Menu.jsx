@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import * as Icons from "@/components/Header/icon/Icons";
-import { baseURL } from "@/utils/getBaseUrl";
 import Elevation from "@/constants/Elevation";
 import styled from "styled-components";
 
@@ -26,7 +25,7 @@ function Icon({ usage }) {
 
 function Menu({ usage }) {
 	return (
-		<Link href={`${baseURL}/${usage}`}>
+		<Link href={`/${usage}`}>
 			<Elevation
 				style={{
 					cursor: "pointer",

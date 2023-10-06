@@ -30,7 +30,9 @@ class Post {
 	}
 
 	getSpecificPost(category: string, slug: string): FrontMatter {
-		for (const frontMatter of this.frontMatters.get(category)!) {
+		const frontMatters = this.frontMatters.get(category) ?? [];
+
+		for (const frontMatter of frontMatters) {
 			if (frontMatter.slug === slug) {
 				return frontMatter;
 			}
