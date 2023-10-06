@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 	images: {
 		unoptimized: true,
 	},
@@ -13,21 +14,6 @@ const nextConfig = {
 		styledComponents: true,
 	},
 	output: "standalone",
-	// experimental: {
-	// 	turbo: {
-	// 		rules: {
-	// 			".md": [
-	// 				{
-	// 					loader: "@mdx-js/loader",
-	// 					options: {
-	// 						format: "md",
-	// 					},
-	// 				},
-	// 			],
-	// 			".mdx": ["@mdx-js/loader"],
-	// 		},
-	// 	},
-	// },
 };
 
 export default nextConfig;

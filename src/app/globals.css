@@ -18,23 +18,8 @@ body {
 	height: 100%;
 }
 
-#__next {
-	isolation: isolate;
-
-	container: root / inline-size;
-
-	display: grid;
-	grid-template-columns: [side-header] 88px [main-content] 1fr;
-	grid-template-rows: 1fr;
-
-	@media screen and (max-width: 768px) {
-		grid-template-columns: [main-content] 1fr;
-		grid-template-rows: 1fr;
-	}
-}
-
 body {
-	font-family: "Nanum SquareNeo";
+	font-family: var(--font-nanum);
 	color: var(--color-text);
 	background: var(--color-background);
 	transition:

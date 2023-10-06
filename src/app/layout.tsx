@@ -9,6 +9,8 @@ import MobileNav from "@/components/Header/MobileNav/index";
 import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
 import HeaderProvider from '@/components/Header/Header.context';
 import ThemeToggler from '@/components/Theme/ThemeToggler';
+import localFont from "next/font/local";
+import clsx from "clsx";
 
 export const metadata: Metadata = {
   title: {
@@ -19,9 +21,33 @@ export const metadata: Metadata = {
   description: "This site is sunub's personal blog ",
 };
 
+const nanumFont = localFont({
+  src: [
+    {
+      path: "../../public/fonts/NanumSquareNeo-Variable.woff2",
+      weight: "400",
+      style: "normal",
+    }
+  ],
+  variable: '--font-nanum',
+  display: 'swap'
+})
+
+const wotfardFont = localFont({
+  src: [
+    {
+      path: "../../public/fonts/wotfard-regular-webfont.woff2",
+      weight: "400",
+      style: "normal",
+    }
+  ],
+  variable: '--font-wotfard',
+  display: 'swap'
+})
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="kor" suppressHydrationWarning={true}>
+    <html lang="kor" className={clsx(nanumFont.variable, wotfardFont.variable)} suppressHydrationWarning={true}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="/fonts/NanumSquareNeo-Variable.woff2" rel="stylesheet" as="font" type="text/css" />
@@ -35,8 +61,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           rel="stylesheet"
           href="//fonts.googleapis.com/css2?family=Material+Icons&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block"
         />
-        <link rel="preload" href="./global.css" as="style" />
-        <link rel="icon" type="image/x-icon" sizes="32x32" href="/favicon.ico" as="icon" />
+        <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" as="icon" />
         <InitTheme />
         <style>
           {
@@ -62,21 +87,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               --scrollbar-background-color: oklch(92.54% 0.01 32.52);
               --scrollbar-thumb-color: oklch(45.88% 0.029 30.71);
             }
-            `
-          }
-        </style>
-        <style>
-          {
-            `
-            @font-face {
-              font-family: "Nanum SquareNeo";
-              src: url("/fonts/NanumSquareNeo-Variable.woff2")
-                  format('woff2');
-            }
-            @font-face {
-              font-family: "Wotfard";
-              src: url("/fonts/fonts/wotfard-regular-webfont.woff2")
-                  format('woff2');
+
+            #__next {
+              isolation: isolate;
+            
+              container: root / inline-size;
+            
+              display: grid;
+              grid-template-columns: [side-header] 88px [main-content] 1fr;
+              grid-template-rows: 1fr;
+            
+              @media screen and (max-width: 768px) {
+                grid-template-columns: [main-content] 1fr;
+                grid-template-rows: 1fr;
+              }
             }
             `
           }
