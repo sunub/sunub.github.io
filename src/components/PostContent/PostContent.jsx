@@ -23,9 +23,8 @@ const Article = styled.article`
 	word-spacing: 0.2ch;
 	text-align: left;
 
-	background-color: var(--color-primary);
+	background-color: var(--color-background);
 	box-shadow: var(--box-shadow-2);
-	border-radius: 15dvw;
 
 	text-align: left;
 `;

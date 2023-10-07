@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import BaseCanvas from "@/components/WebGPU/Canvas";
-import { setPhysics } from "@/components/WebGPU/Canvas.helper";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -24,15 +22,9 @@ const Container = styled.div`
 // `;
 
 export default function HeroImage() {
-	React.useEffect(() => {
-		setPhysics();
-	}, []);
-
 	return (
 		<>
-			<Container>
-				<BaseCanvas key={"2d-physic__base-canvas"} />
-			</Container>
+			<Container></Container>
 		</>
 	);
 }
