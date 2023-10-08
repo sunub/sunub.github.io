@@ -24,11 +24,12 @@ const Wrapper = styled(animated.div)`
 	outline-offset: 4px;
 	padding: 4px;
 
-	transition: box-shadow 0.2s ease-in-out;
+	/* transform: translateY(-525%); */
 	:hover {
 		box-shadow: var(--mid-shadow);
 	}
 `;
+// 150, 275 400 525,
 
 function Icon({ usage }) {
 	switch (usage) {
@@ -45,13 +46,18 @@ function Icon({ usage }) {
 	}
 }
 
-function Menu({ usage, y, ...delegated }) {
-	console.log(y);
+function Menu({ usage, opacity, translateY, ...delegated }, ref) {
+	React.useEffect(() => {
+		console.log(translateY._state);
+	}, [translateY]);
+
 	return (
 		<>
 			<Wrapper
-				onMouseOver={() => y.start("10%")}
-				onMouseOut={() => y.start("0%")}
+				style={{
+					translateY,
+					opacity,
+				}}
 				{...delegated}
 				href={`/${usage}`}
 			>
@@ -63,4 +69,4 @@ function Menu({ usage, y, ...delegated }) {
 	);
 }
 
-export default Menu;
+export default React.forwardRef(Menu);
