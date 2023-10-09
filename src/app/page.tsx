@@ -3,8 +3,6 @@ import LandingPage from "@/components/LandingPage";
 
 export default function Page() {
   return (
-    <LandScape>
-      <LandingPage />
-    </LandScape>
+    <LandingPage />
   )
 }

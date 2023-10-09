@@ -2,7 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
-import { BirdLogo } from "../../icon/Icons";
+import { BirdLogo } from "../../../icon/Icons";
 import Elevation from "@/constants/Elevation";
 import { Spacer } from "@/constants/Spacer";
 

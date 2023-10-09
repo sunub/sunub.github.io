@@ -5,7 +5,7 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
-	reactStrictMode: false,
+	reactStrictMode: true,
 	env: {
 		DEV_PORT: "http://localhost:3000",
 		DEPLOY_PORT: "https://www.sunub.com/",

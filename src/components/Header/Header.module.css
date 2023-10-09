@@ -13,10 +13,8 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	transition: transform 10ms ease-in;
-
 	@container root ( width <= 768px ) {
-		transform: translateX(-100%);
+		transform: translateX(100%);
 	}
 	@container root ( width > 768px ) {
 		transform: translateX(0%);

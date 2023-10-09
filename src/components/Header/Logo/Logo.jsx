@@ -1,6 +1,5 @@
 "use client";
 
-import Elevation from "@/constants/Elevation";
 import * as Icons from "../icon/Icons";
 import { baseURL } from "@/utils/getBaseUrl";
 import Link from "next/link";
@@ -28,24 +27,11 @@ const LogoLink = styled(Link)`
 	justify-content: center;
 	align-items: center;
 `;
-// 150, 275 400 525,
 
-function Logo({ transaltes, ...delegated }, ref) {
+function Logo({ handleMouverHover, transformValues, ...delegated }) {
 	return (
 		<LogoLink
-			onMouseOver={() =>
-				transaltes.map(({ translateY, opacity }, i) => {
-					opacity.start(1);
-					translateY.start(0);
-				})
-			}
-			onMouseOut={() =>
-				transaltes.map(({ translateY, opacity, yValue }, i) => {
-					translateY.start(yValue);
-					opacity.start(0);
-				})
-			}
-			ref={ref}
+			onMouseOver={() => handleMouverHover(transformValues)}
 			{...delegated}
 			href={`${baseURL}/`}
 		>
@@ -54,4 +40,4 @@ function Logo({ transaltes, ...delegated }, ref) {
 	);
 }
 
-export default React.forwardRef(Logo);
+export default Logo;

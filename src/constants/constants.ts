@@ -1,4 +1,4 @@
-export const COLORS = {
+const COLORS = {
 	text: {
 		light: `oklch(21.08% 0.055 34.69)`,
 		dark: `oklch(100% 0 31.08)`,
@@ -32,4 +32,8 @@ export const COLORS = {
 		dark: "oklch(93.29% 0.129 112.44)",
 	},
 };
-export const COLOR_MODE_KEY = "theme-preference";
+
+const NAV_MENU = ["web", "code", "cs", "algorithm"];
+const COLOR_MODE_KEY = "theme-preference";
+
+export { COLORS, NAV_MENU, COLOR_MODE_KEY };

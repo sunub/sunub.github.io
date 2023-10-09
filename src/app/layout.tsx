@@ -5,12 +5,13 @@ import { Metadata } from 'next';
 import ThemeProvider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
 import StyledComponentsRegistry from '@/lib/registry';
-import MobileNav from "@/components/Header/MobileNav/index";
-import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
-import HeaderProvider from '@/components/Header/Header.context';
+import MobileNav from "@/components/Header/mobile/MobileNav/index";
+import MobileContent from "@/components/Header/mobile/MobileNav/MenuContent/index";
 import ThemeToggler from '@/components/Theme/ThemeToggler';
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/react"
 import clsx from "clsx";
+import PostProvider from "@/context/PostProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -42,10 +43,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet preload"
           as="style"
-        />
-        <link
-          rel="stylesheet"
-          href="//fonts.googleapis.com/css2?family=Material+Icons&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block"
         />
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" as="icon" />
         <InitTheme />
@@ -94,19 +91,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" />
         <StyledComponentsRegistry>
-          <ThemeProvider>
-            <HeaderProvider>
+          <PostProvider>
+            <ThemeProvider>
               <MobileNav>
-                <MobileContent>
-                  <ThemeToggler maskId='mobile-theme-btn' />
-                </MobileContent>
+
               </MobileNav>
-            </HeaderProvider>
-            <div id='__next'>
-              <Header />
-              {children}
-            </div>
-          </ThemeProvider>
+              <div id='__next'>
+                <Header />
+                {children}
+              </div>
+              <Analytics />
+            </ThemeProvider>
+          </PostProvider>
         </StyledComponentsRegistry>
       </body>
     </html>

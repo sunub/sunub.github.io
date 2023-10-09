@@ -23,6 +23,7 @@ export async function generateStaticParams() {
 export default async function Page({ params }: { params: { category: Tag, slug: string } }) {
     const { category, slug } = params;
     const content = posts.contents[slug];
+    console.log(slug);
     const frontMatter = posts.getSpecificPost(category, slug);
 
     return (
