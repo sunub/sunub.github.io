@@ -1,16 +1,17 @@
 import '@/app/globals.css';
 import React from 'react';
-import Header from '../components/Header/index';
+import Header from "@/components/Header";
 import { Metadata } from 'next';
 import ThemeProvider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
 import StyledComponentsRegistry from '@/lib/registry';
-import MobileNav from "@/components/Header/MobileNav/index";
-import MobileContent from "@/components/Header/MobileNav/MenuContent/index";
-import HeaderProvider from '@/components/Header/Header.context';
+import MobileNav from "@/components/Header/mobile/MobileNav/index";
+import MobileContent from "@/components/Header/mobile/MobileNav/MenuContent/index";
 import ThemeToggler from '@/components/Theme/ThemeToggler';
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/react"
 import clsx from "clsx";
+import PostProvider from "@/context/PostProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +26,6 @@ const nanumFont = localFont({
   src: [
     {
       path: "../../public/fonts/NanumSquareNeo-Variable.woff2",
-      weight: "400",
       style: "normal",
     }
   ],
@@ -33,33 +33,16 @@ const nanumFont = localFont({
   display: 'swap'
 })
 
-const wotfardFont = localFont({
-  src: [
-    {
-      path: "../../public/fonts/wotfard-regular-webfont.woff2",
-      weight: "400",
-      style: "normal",
-    }
-  ],
-  variable: '--font-wotfard',
-  display: 'swap'
-})
-
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="kor" className={clsx(nanumFont.variable, wotfardFont.variable)} suppressHydrationWarning={true}>
+    <html lang="kor" className={clsx(nanumFont.variable)} suppressHydrationWarning={true}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="/fonts/NanumSquareNeo-Variable.woff2" rel="stylesheet" as="font" type="text/css" />
-        <link href="/fonts/wotfard-regular-webfont.woff2" rel="stylesheet" as="font" type="text/css" />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet preload"
           as="style"
-        />
-        <link
-          rel="stylesheet"
-          href="//fonts.googleapis.com/css2?family=Material+Icons&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=block"
         />
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" as="icon" />
         <InitTheme />
@@ -86,21 +69,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               --scrollbar-height: 12px;
               --scrollbar-background-color: oklch(92.54% 0.01 32.52);
               --scrollbar-thumb-color: oklch(45.88% 0.029 30.71);
-            }
-
-            #__next {
-              isolation: isolate;
-            
-              container: root / inline-size;
-            
-              display: grid;
-              grid-template-columns: [side-header] 88px [main-content] 1fr;
-              grid-template-rows: 1fr;
-            
-              @media screen and (max-width: 768px) {
-                grid-template-columns: [main-content] 1fr;
-                grid-template-rows: 1fr;
-              }
+              
+              --mid-shadow: 0px 4px 8px 3px oklch(0% 0 11 / 0.15),
+              0px 1px 3px 0px oklch(0% 0 11 / 0.3);
+              --short-shadow: 0px 1px 2px 0px oklch(0% 0 11 / 0.3),
+              0px 1px 3px 1px oklch(0% 0 11 / 0.15);
+              --long-shadow: 0px 8px 12px 6px oklch(0% 0 11 / 0.15),
+              0px 4px 4px 0px oklch(0% 0 11 / 0.3);
+              --none-shadow: none;
+          
+              --higlight-border-color: oklch(73.44% 0.152 21.47);
+              --default-border-color: oklch(61.8% 0.027 30.58 / 0.3);
+          
+              --default-bg-color: oklch(97.14% 0.011 31.07);
+              --card-content-bg-color: oklch(98.8% 0 31.07);
             }
             `
           }
@@ -109,19 +91,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" />
         <StyledComponentsRegistry>
-          <ThemeProvider>
-            <HeaderProvider>
+          <PostProvider>
+            <ThemeProvider>
               <MobileNav>
-                <MobileContent>
-                  <ThemeToggler maskId='mobile-theme-btn' />
-                </MobileContent>
+
               </MobileNav>
-            </HeaderProvider>
-            <div id='__next'>
-              <Header />
-              {children}
-            </div>
-          </ThemeProvider>
+              <div id='__next'>
+                <Header />
+                {children}
+              </div>
+              <Analytics />
+            </ThemeProvider>
+          </PostProvider>
         </StyledComponentsRegistry>
       </body>
     </html>

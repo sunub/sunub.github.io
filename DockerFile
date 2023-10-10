@@ -1,7 +1,0 @@
-#base node image
-FROM node:18-jammy as base
-
-WORKDIR /usr/src/app
-
-COPY package.json /usr/src/app/
-COPY package-lock.json /usr/src/app/

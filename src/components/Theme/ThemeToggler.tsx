@@ -44,7 +44,7 @@ const SunAndMoon = styled.svg<{ $colorTheme: string }>`
     --icon-fill: ${props =>
         props.$colorTheme === 'light'
             ? "oklch(45.88% 0.029 30.71)"
-            : "oklch(100% 0 31.08 / 0.7)"};
+            : "var(--color-bird)"};
 	--icon-hover-fill: ${props =>
         props.$colorTheme === 'light'
             ? "oklch(21.08% 0.055 34.69)"
