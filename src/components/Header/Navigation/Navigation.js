@@ -43,10 +43,7 @@ function Navigation({ navMenus }) {
 				const opacity = transform.opacity;
 
 				return (
-					<Link
-						key={`header_nav_${menu}`}
-						href={`${baseURL}/${menu}`}
-					>
+					<Link key={`header_nav_${menu}`} href={`/${menu}`}>
 						<MenuIcon
 							translateY={translateY}
 							opacity={opacity}

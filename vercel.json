@@ -6,19 +6,19 @@
 	"redirects": [
 		{
 			"source": "/code",
-			"destination": "https://sunub.github.io/code"
+			"destination": "https://sunub-github-io.vercel.app/code"
 		},
 		{
 			"source": "/web",
-			"destination": "https://sunub.github.io/web"
+			"destination": "https://sunub-github-io.vercel.app/web"
 		},
 		{
 			"source": "/algorithm",
-			"destination": "https://sunub.github.io/algorithm"
+			"destination": "https://sunub-github-io.vercel.app/algorithm"
 		},
 		{
 			"source": "/cs",
-			"destination": "https://sunub.github.io/cs"
+			"destination": "https://sunub-github-io.vercel.app/cs"
 		}
 	]
 }
