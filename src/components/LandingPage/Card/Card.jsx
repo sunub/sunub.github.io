@@ -108,7 +108,6 @@ const Wrapper = styled(Link)`
 export default function Card({ frontMatter }) {
 	const { category, date, slug, title } = frontMatter;
 	let icon;
-
 	switch (category.toUpperCase()) {
 		case "WEB":
 			icon = WEB;

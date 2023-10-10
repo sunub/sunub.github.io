@@ -14,7 +14,10 @@
 	flex-direction: column;
 	justify-content: space-between;
 	@container root ( width <= 768px ) {
-		display: none;
+		transform: translateX(100%);
+	}
+	@container root ( width > 768px ) {
+		transform: translateX(0%);
 	}
 }
 

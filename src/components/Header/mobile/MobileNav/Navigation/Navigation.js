@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import React from "react";
 
-const BackDropBtn = styled.button.attrs({
+const NavWrapper = styled.button.attrs({
 	className: "navigation-menu",
 })`
 	position: absolute;
@@ -28,7 +28,7 @@ const BackDropBtn = styled.button.attrs({
 	}
 `;
 
-const BackDropWrapper = styled.div.attrs({
+const MobileContainer = styled.div.attrs({
 	id: "mobile-nav-btn",
 })`
 	position: fixed;
@@ -37,16 +37,19 @@ const BackDropWrapper = styled.div.attrs({
 	overflow: hidden;
 `;
 
-function BackDrop({ isOpen, setOpen }) {
+function Navigation({ isOpen, setOpen, children }) {
 	return (
-		<BackDropWrapper>
-			<BackDropBtn
+		<MobileContainer>
+			<NavWrapper
 				onClick={() => setOpen(!isOpen)}
 				aria-hidden={!isOpen}
 				tabIndex={-1}
-			/>
-		</BackDropWrapper>
+			>
+				{children}
+			</NavWrapper>
+		</MobileContainer>
 	);
 }
 
-export default BackDrop;
+export default Navigation;
+// style={context.isOpen ? { pointerEvents: "auto" } : { pointerEvents: "none" }
