@@ -8,7 +8,7 @@ const nextConfig = {
 	reactStrictMode: true,
 	env: {
 		DEV_PORT: "http://localhost:3000",
-		DEPLOY_PORT: "https://www.sunub.com/",
+		DEPLOY_PORT: "https://sunub-github-a4vko3ey6-sunub.vercel.app/",
 	},
 	compiler: {
 		styledComponents: true,

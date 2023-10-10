@@ -1,23 +1,24 @@
 import Category from "@/components/Category/index";
-import Post from "@/utils/post/Post";
+import useFrontMatters from "@/hooks/use-frontMatters.hook";
 
-const posts = new Post();
 export async function generateStaticParams() {
 	const params = [];
+	const visit = new Set();
 
-	posts.frontMatters.get("all")?.map((frontmatter) => {
+	const posts = await useFrontMatters("all");
+	for (const frontmatter of posts) {
+		if (visit.has(frontmatter.category)) continue;
 		params.push({
 			category: frontmatter.category,
 		});
-	});
+		visit.add(frontmatter.category);
+	}
 
-	return params.map((param) => ({
-		category: param.cateogry,
-	}));
+	return params;
 }
 async function Page({ params }) {
 	const { category } = params;
-	const cateogries = posts.frontMatters.get(category);
+	const cateogries = await useFrontMatters(category);
 
 	return <Category title={category} categories={cateogries} />;
 }

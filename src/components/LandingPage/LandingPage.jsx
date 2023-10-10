@@ -1,14 +1,13 @@
 import React from "react";
 import CardList from "./CardList/index";
-import Post from "@/utils/post/Post";
+import useFrontMatters from "@/hooks/use-frontMatters.hook";
 
-function LandingPage() {
-	const post = new Post();
-	const allList = post.frontMatters.get("all");
+async function LandingPage() {
+	const frontMatterList = await useFrontMatters("all");
 
 	return (
 		<div style={{ gridArea: "main-content" }}>
-			<CardList list={allList} />
+			<CardList list={frontMatterList} />
 		</div>
 	);
 }
