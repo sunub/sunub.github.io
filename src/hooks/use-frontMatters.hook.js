@@ -2,7 +2,9 @@ import { getBaseUrl } from "@/utils/getBaseUrl.mjs";
 
 export default async function useFrontMatters(category) {
 	const baseURL = await getBaseUrl();
-	const res = await fetch(`/api`);
+	const res = await fetch(
+		`https://sunub-github-io-git-dev-sunub.vercel.app/api`
+	);
 	const json = await res.json();
 	const data = json.data;
 	const frontMatters = getFrontMatters(data.post, category);
