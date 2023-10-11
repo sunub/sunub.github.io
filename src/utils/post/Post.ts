@@ -29,7 +29,7 @@ class Post {
 		return this._categorizedFrontmatters;
 	}
 
-	getSpecificPost(category: string, slug: string): FrontMatter {
+	getSpecificFrontmatter(category: string, slug: string): FrontMatter {
 		const frontMatters = this.frontMatters.get(category) ?? [];
 
 		for (const frontMatter of frontMatters) {

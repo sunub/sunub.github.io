@@ -1,7 +1,6 @@
 import React from "react";
 import Post from "@/utils/post/Post";
 import PostContent from "@/components/PostContent/index";
-import getSpecificPost from "@/utils/getSpecificPost";
 
 export async function generateStaticParams() {
 	const params = [];
@@ -25,9 +24,9 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }) {
 	const { category, slug } = params;
-	const posts = await getSpecificPost(category, slug);
+	const posts = new Post();
+	const frontMatter = posts.getSpecificFrontmatter(category, slug);
+	const content = posts.contents[slug];
 
-	return (
-		<PostContent frontMatter={posts.description} content={posts.content} />
-	);
+	return <PostContent frontMatter={frontMatter} content={content} />;
 }
