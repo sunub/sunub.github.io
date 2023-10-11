@@ -1,25 +1,16 @@
 import Category from "@/components/Category/index";
-import Post from "@/utils/post/Post";
+import useCateogry from "@/hooks/use-category";
+import useFrontMatters from "@/hooks/use-frontMatters.hook";
 
-const posts = new Post();
 export async function generateStaticParams() {
-	const params = [];
-
-	posts.frontMatters.get("all")?.map((frontmatter) => {
-		params.push({
-			category: frontmatter.category,
-		});
-	});
-
-	return params.map((param) => ({
-		category: param.cateogry,
-	}));
+	const params = await useCateogry();
+	return params;
 }
 async function Page({ params }) {
 	const { category } = params;
-	const cateogries = posts.frontMatters.get(category);
+	const frontMatters = await useFrontMatters(category);
 
-	return <Category title={category} categories={cateogries} />;
+	return <Category title={category} categories={frontMatters} />;
 }
 
 export default Page;

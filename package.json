@@ -5,14 +5,16 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
-		"start": "next start",
+		"start": "next build && next start -p 4004",
 		"lint": "next lint",
+		"analyze": "cross-env ANALYZE=true npm run build",
 		"dev:server": "nodemon --watch server --exec 'npx' 'ts-node' server/index.ts",
 		"test": "jest"
 	},
 	"dependencies": {
 		"@mdx-js/loader": "^2.3.0",
 		"@mdx-js/react": "^2.3.0",
+		"@next/bundle-analyzer": "^13.5.4",
 		"@next/mdx": "^13.4.13",
 		"@react-spring/types": "^9.7.3",
 		"@react-spring/web": "^9.7.3",
@@ -27,6 +29,7 @@
 		"@types/three": "^0.156.0",
 		"@vercel/analytics": "^1.1.0",
 		"clsx": "^2.0.0",
+		"cross-env": "^7.0.3",
 		"eslint-config-next": "^13.5.2",
 		"eslint-config-prettier": "^8.8.0",
 		"eslint-plugin-import": "^2.27.5",

@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import { baseURL } from "@/utils/getBaseUrl";
 import Elevation from "@/constants/Elevation";
 import { CODE, CS, ALGORITHM, WEB } from "@/components/icon/Category";
 import { Spacer } from "@/constants/Spacer";
@@ -105,7 +104,7 @@ const Wrapper = styled(Link)`
 	}
 `;
 
-export default function Card({ frontMatter }) {
+export default function Card({ baseURL, frontMatter }) {
 	const { category, date, slug, title } = frontMatter;
 	let icon;
 	switch (category.toUpperCase()) {

@@ -5,11 +5,7 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
-	reactStrictMode: true,
-	env: {
-		DEV_PORT: "http://localhost:3000",
-		DEPLOY_PORT: "https://sunub-github-io.vercel.app/",
-	},
+	reactStrictMode: false,
 	compiler: {
 		styledComponents: true,
 	},

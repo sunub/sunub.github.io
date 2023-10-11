@@ -102,9 +102,10 @@ const Moon = styled.mask<{ $colorTheme: string }>`
     }
 `
 
-function ThemeIcon({ colorTheme, maskId }: { colorTheme: string, maskId: string }) {
+function ThemeIcon({ colorTheme, maskId, ...delegated }: { colorTheme: string, maskId: string }) {
     return (
         <SunAndMoon
+            {...delegated}
             $colorTheme={colorTheme}
             width="24"
             height="24"

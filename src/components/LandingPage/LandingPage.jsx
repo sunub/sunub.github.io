@@ -1,14 +1,15 @@
 import React from "react";
 import CardList from "./CardList/index";
-import Post from "@/utils/post/Post";
+import { getBaseUrl } from "@/utils/getBaseUrl.mjs";
+import useFrontMatters from "@/hooks/use-frontMatters.hook";
 
-function LandingPage() {
-	const post = new Post();
-	const allList = post.frontMatters.get("all");
+async function LandingPage() {
+	const baseURL = await getBaseUrl();
+	const allList = await useFrontMatters("all");
 
 	return (
 		<div style={{ gridArea: "main-content" }}>
-			<CardList list={allList} />
+			<CardList baseURL={baseURL} list={allList} />
 		</div>
 	);
 }

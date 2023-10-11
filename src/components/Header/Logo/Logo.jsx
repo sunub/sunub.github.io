@@ -1,7 +1,6 @@
 "use client";
 
 import * as Icons from "../icon/Icons";
-import { baseURL } from "@/utils/getBaseUrl";
 import Link from "next/link";
 import styled from "styled-components";
 import React from "react";
@@ -28,7 +27,7 @@ const LogoLink = styled(Link)`
 	align-items: center;
 `;
 
-function Logo({ handleMouverHover, transformValues, ...delegated }) {
+function Logo({ handleMouverHover, transformValues, baseURL, ...delegated }) {
 	return (
 		<LogoLink
 			onMouseOver={() => handleMouverHover(transformValues)}

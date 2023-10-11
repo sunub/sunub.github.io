@@ -3,7 +3,6 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "../Card/index";
-import { Spacer } from "@/constants/Spacer";
 
 const Wrapper = styled.div`
 	width: 100%;
@@ -18,7 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const gapSize = "minmax(min-content ,5px)";
-function CardList({ list }) {
+function CardList({ baseURL, list }) {
 	const [boxWidth, setBoxWidth] = React.useState(0);
 	const [gap, setGap] = React.useState("");
 
@@ -49,7 +48,11 @@ function CardList({ list }) {
 		<>
 			<Wrapper $division={gap}>
 				{list.map((frontMatter) => (
-					<Card key={frontMatter.title} frontMatter={frontMatter} />
+					<Card
+						key={frontMatter.title}
+						frontMatter={frontMatter}
+						baseURL={baseURL}
+					/>
 				))}
 			</Wrapper>
 		</>

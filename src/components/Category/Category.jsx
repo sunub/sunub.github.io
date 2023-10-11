@@ -17,7 +17,7 @@ function Category({ title, categories }) {
 					{categories &&
 						categories.map((frontMatter) => (
 							<Card
-								key={React.useId()}
+								key={`category-${frontMatter.title}`}
 								frontMatter={frontMatter}
 							/>
 						))}

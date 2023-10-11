@@ -3,7 +3,6 @@
 import React from "react";
 import styled from "styled-components";
 import * as Icons from "../icon/Icons";
-import { baseURL } from "@/utils/getBaseUrl";
 import { animated } from "@react-spring/web";
 import Link from "next/link";
 
@@ -35,7 +34,7 @@ const AnimateIcon = styled(animated.span)`
 	}
 `;
 
-function Navigation({ navMenus }) {
+function Navigation({ baseURL, navMenus }) {
 	return (
 		<MenuWrapper>
 			{navMenus.map(({ menu, transform }) => {
@@ -43,7 +42,10 @@ function Navigation({ navMenus }) {
 				const opacity = transform.opacity;
 
 				return (
-					<Link key={`header_nav_${menu}`} href={`/${menu}`}>
+					<Link
+						key={`header_nav_${menu}`}
+						href={`${baseURL}/${menu}`}
+					>
 						<MenuIcon
 							translateY={translateY}
 							opacity={opacity}

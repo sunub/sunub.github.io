@@ -2,6 +2,7 @@
 
 import React from "react";
 import styled from "styled-components";
+
 const Open = styled.g`
 	transform-origin: center;
 	transform: scale(1);
@@ -259,7 +260,9 @@ function Hamburger({ isOpen, setOpen }) {
 	React.useEffect(() => {
 		if (ref.current) {
 			const label = isOpen ? "Close menu" : "Open menu";
+			const mobileNav = document.querySelector(".mobile-menu__wrapper");
 
+			mobileNav.setAttribute("aria-hidden", !isOpen);
 			ref.current.setAttribute("aria-label", label);
 			ref.current.setAttribute("aria-hidden", !isOpen);
 		}
@@ -267,6 +270,7 @@ function Hamburger({ isOpen, setOpen }) {
 
 	return (
 		<Btn
+			id="hamburger-btn"
 			ref={ref}
 			aria-label="Open menu"
 			onClick={() => setOpen(!isOpen)}

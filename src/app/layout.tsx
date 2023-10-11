@@ -5,13 +5,10 @@ import { Metadata } from 'next';
 import ThemeProvider from '@/components/Theme/ThemeProvider';
 import InitTheme from "@/components/Toaster/InitTheme"
 import StyledComponentsRegistry from '@/lib/registry';
-import MobileNav from "@/components/Header/mobile/MobileNav/index";
-import MobileContent from "@/components/Header/mobile/MobileNav/MenuContent/index";
-import ThemeToggler from '@/components/Theme/ThemeToggler';
+import MobileNav from "@/components/Header/mobile/MobileNav";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/react"
 import clsx from "clsx";
-import PostProvider from "@/context/PostProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -91,18 +88,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" />
         <StyledComponentsRegistry>
-          <PostProvider>
-            <ThemeProvider>
-              <MobileNav>
-
-              </MobileNav>
-              <div id='__next'>
-                <Header />
-                {children}
-              </div>
-              <Analytics />
-            </ThemeProvider>
-          </PostProvider>
+          <ThemeProvider>
+            <MobileNav />
+            <div id='__next'>
+              <Header />
+              {children}
+            </div>
+            <Analytics />
+          </ThemeProvider>
         </StyledComponentsRegistry>
       </body>
     </html>
