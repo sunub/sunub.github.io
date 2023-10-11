@@ -3,7 +3,7 @@ import { getBaseUrl } from "@/utils/getBaseUrl.mjs";
 async function useCateogry() {
 	const baseURL = await getBaseUrl();
 	const res = await fetch(
-		`https://sunub-github-io-git-dev-sunub.vercel.app/api`
+		`https://sunub-github-mv07w22c5-sunub.vercel.app/api`
 	);
 	const json = await res.json();
 	const data = json.data;
