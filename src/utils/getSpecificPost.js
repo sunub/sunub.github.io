@@ -2,7 +2,8 @@ import { getBaseUrl } from "./getBaseUrl.mjs";
 
 export default async function getSpecificPost(category, slug) {
 	const baseURL = await getBaseUrl();
-	const res = await fetch(`https://sunub.vercel.app/api`);
+	const endPoint = `${baseURL}/api`;
+	const res = await fetch(endPoint);
 	const json = await res.json();
 	const data = json.data;
 	const posts = data.post;

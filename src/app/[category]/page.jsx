@@ -1,5 +1,6 @@
 import Category from "@/components/Category/index";
 import Post from "@/utils/post/Post";
+import useFrontMatters from "@/hooks/use-frontMatters.hook";
 
 export async function generateStaticParams() {
 	const params = [];
@@ -16,8 +17,7 @@ export async function generateStaticParams() {
 }
 async function Page({ params }) {
 	const { category } = params;
-	const posts = new Post();
-	const cateogries = posts.frontMatters.get(category);
+	const cateogries = await useFrontMatters(category);
 
 	return <Category title={category} categories={cateogries} />;
 }
