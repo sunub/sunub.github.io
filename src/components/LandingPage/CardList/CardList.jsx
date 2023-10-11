@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const gapSize = "minmax(min-content ,5px)";
-function CardList({ baseURL, list }) {
+function CardList({ list }) {
 	const [boxWidth, setBoxWidth] = React.useState(0);
 	const [gap, setGap] = React.useState("");
 
@@ -48,11 +48,7 @@ function CardList({ baseURL, list }) {
 		<>
 			<Wrapper $division={gap}>
 				{list.map((frontMatter) => (
-					<Card
-						key={frontMatter.title}
-						frontMatter={frontMatter}
-						baseURL={baseURL}
-					/>
+					<Card key={frontMatter.title} frontMatter={frontMatter} />
 				))}
 			</Wrapper>
 		</>

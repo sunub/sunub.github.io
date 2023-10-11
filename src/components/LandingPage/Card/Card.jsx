@@ -104,7 +104,7 @@ const Wrapper = styled(Link)`
 	}
 `;
 
-export default function Card({ baseURL, frontMatter }) {
+export default function Card({ frontMatter }) {
 	const { category, date, slug, title } = frontMatter;
 	let icon;
 	switch (category.toUpperCase()) {
@@ -130,7 +130,7 @@ export default function Card({ baseURL, frontMatter }) {
 			$distance="short"
 			$usage="other"
 		>
-			<Wrapper href={`${baseURL}/${category}/${slug}`} tabIndex={1}>
+			<Wrapper href={`/${category}/${slug}`} tabIndex={1}>
 				<Icon>
 					<Spacer axis="vertical" size={32} />
 					{icon}

@@ -18,7 +18,7 @@ const Container = styled.nav`
 	padding-bottom: 16px;
 `;
 
-function LogoDrawer({ baseURL }) {
+function LogoDrawer() {
 	const [isHovering, setIsHovering] = React.useState(false);
 
 	const transformValues = [];
@@ -57,12 +57,11 @@ function LogoDrawer({ baseURL }) {
 	return (
 		<Container onMouseLeave={() => handleMouseLeave(transformValues)}>
 			<Logo
-				baseURL={baseURL}
 				handleMouverHover={handleMouverHover}
 				transformValues={transformValues}
 			/>
 			<Dash />
-			<Navigation baseURL={baseURL} navMenus={navMenus} />
+			<Navigation navMenus={navMenus} />
 		</Container>
 	);
 }

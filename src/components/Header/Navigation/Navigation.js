@@ -34,7 +34,7 @@ const AnimateIcon = styled(animated.span)`
 	}
 `;
 
-function Navigation({ baseURL, navMenus }) {
+function Navigation({ navMenus }) {
 	return (
 		<MenuWrapper>
 			{navMenus.map(({ menu, transform }) => {
@@ -42,10 +42,7 @@ function Navigation({ baseURL, navMenus }) {
 				const opacity = transform.opacity;
 
 				return (
-					<Link
-						key={`header_nav_${menu}`}
-						href={`${baseURL}/${menu}`}
-					>
+					<Link key={`header_nav_${menu}`} href={`/${menu}`}>
 						<MenuIcon
 							translateY={translateY}
 							opacity={opacity}

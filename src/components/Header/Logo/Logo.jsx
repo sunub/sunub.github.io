@@ -27,12 +27,12 @@ const LogoLink = styled(Link)`
 	align-items: center;
 `;
 
-function Logo({ handleMouverHover, transformValues, baseURL, ...delegated }) {
+function Logo({ handleMouverHover, transformValues, ...delegated }) {
 	return (
 		<LogoLink
 			onMouseOver={() => handleMouverHover(transformValues)}
 			{...delegated}
-			href={`${baseURL}/`}
+			href={`/`}
 		>
 			<Icons.BirdLogo />
 		</LogoLink>
