@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { SpacerBar } from "@/constants/Spacer";
+import Spacer from "../Spacer";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -63,19 +63,19 @@ function PostContent({ frontMatter, content }) {
 	return (
 		<Container key={crypto.randomUUID()}>
 			<Article>
-				<SpacerBar axis="vertical" size={144} />
+				<Spacer axis="vertical" size={144} />
 				<Header>
 					<Title>{frontMatter.title}</Title>
 					<Date className="post__article__header--date">
 						<dd>{frontMatter.date}</dd>
 					</Date>
 				</Header>
-				<SpacerBar axis="vertical" size={120} />
+				<Spacer axis="vertical" size={120} />
 				<Main
 					className="post__article__main"
 					dangerouslySetInnerHTML={{ __html: `${content}` }}
 				/>
-				<SpacerBar axis="vertical" size={144} />
+				<Spacer axis="vertical" size={144} />
 			</Article>
 		</Container>
 	);

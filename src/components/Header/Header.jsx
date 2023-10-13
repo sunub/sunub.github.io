@@ -3,7 +3,7 @@ import styles from "./Header.module.css";
 import React from "react";
 import LogoDrawer from "./LogoDrawer";
 
-const SiteHeader = () => {
+const SiteHeader = async () => {
 	return (
 		<div id="side-ng__header-content" className={styles.HeaderWrapper}>
 			<div className={styles.HeaderContainer}>

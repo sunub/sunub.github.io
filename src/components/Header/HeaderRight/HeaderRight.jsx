@@ -1,8 +1,8 @@
 "use client";
 
 import styled from "styled-components";
-import ThemeToggler from "../../Theme/ThemeToggler";
-import { Spacer } from "@/constants/Spacer";
+import ThemeToggler from "@/components/Theme/Toggler/index";
+import Spacer from "@/components/Spacer";
 
 const Container = styled.div`
 	display: flex;
@@ -32,7 +32,7 @@ export default function HeaderRight() {
 			<Content>
 				<ThemeToggler maskId="header-mask-id" />
 			</Content>
-			<Spacer axis="vertical" size={16} />
+			<Spacer axis={"vertical"} size={16} />
 		</Container>
 	);
 }

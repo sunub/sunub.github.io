@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components";
 import Logo from "../Logo/Logo";
 import Dash from "@/constants/Dash";
-import { Spacer } from "@/constants/Spacer";
 import Navigation from "../Navigation";
 import { NAV_MENU } from "@/constants/constants";
 import { useSpringValue } from "@react-spring/web";

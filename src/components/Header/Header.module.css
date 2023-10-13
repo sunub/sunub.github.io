@@ -11,13 +11,13 @@
 	height: 100dvh;
 
 	display: flex;
+	opacity: 1;
+	visibility: visible;
 	flex-direction: column;
 	justify-content: space-between;
 	@container root ( width <= 768px ) {
-		transform: translateX(100%);
-	}
-	@container root ( width > 768px ) {
-		transform: translateX(0%);
+		opacity: 0;
+		visibility: hidden;
 	}
 }
 

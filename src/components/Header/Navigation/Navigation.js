@@ -3,9 +3,9 @@
 import React from "react";
 import styled from "styled-components";
 import * as Icons from "../icon/Icons";
-import { baseURL } from "@/utils/getBaseUrl";
 import { animated } from "@react-spring/web";
 import Link from "next/link";
+import { baseUrl } from "@/utils/baseUrl";
 
 const MenuWrapper = styled.nav`
 	display: flex;
@@ -30,7 +30,7 @@ const AnimateIcon = styled(animated.span)`
 	outline-offset: 4px;
 	padding: 4px;
 
-	:hover {
+	&:hover {
 		box-shadow: var(--mid-shadow);
 	}
 `;
@@ -45,7 +45,7 @@ function Navigation({ navMenus }) {
 				return (
 					<Link
 						key={`header_nav_${menu}`}
-						href={`${baseURL}/${menu}`}
+						href={`${baseUrl}/${menu}`}
 					>
 						<MenuIcon
 							translateY={translateY}

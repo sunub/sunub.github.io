@@ -1,10 +1,10 @@
 "use client";
 
 import * as Icons from "../icon/Icons";
-import { baseURL } from "@/utils/getBaseUrl";
 import Link from "next/link";
 import styled from "styled-components";
 import React from "react";
+import { baseUrl } from "@/utils/baseUrl";
 
 const LogoLink = styled(Link)`
 	display: flex;
@@ -33,7 +33,7 @@ function Logo({ handleMouverHover, transformValues, ...delegated }) {
 		<LogoLink
 			onMouseOver={() => handleMouverHover(transformValues)}
 			{...delegated}
-			href={`${baseURL}/`}
+			href={`${baseUrl}/`}
 		>
 			<Icons.BirdLogo />
 		</LogoLink>

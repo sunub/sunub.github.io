@@ -1,8 +1,7 @@
-import LandScape from "@/components/LandingPage/LandScape";
 import LandingPage from "@/components/LandingPage";
 
+export const fetchCache = "default-no-store";
+
 export default function Page() {
-  return (
-    <LandingPage />
-  )
+  return <LandingPage />
 }

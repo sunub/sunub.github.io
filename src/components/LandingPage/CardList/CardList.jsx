@@ -3,7 +3,6 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "../Card/index";
-import { Spacer } from "@/constants/Spacer";
 
 const Wrapper = styled.div`
 	width: 100%;
