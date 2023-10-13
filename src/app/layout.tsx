@@ -1,14 +1,11 @@
-import '@/app/globals.css';
-import React from 'react';
-import Header from "@/components/Header";
-import { Metadata } from 'next';
-import ThemeProvider from '@/components/Theme/ThemeProvider';
-import InitTheme from "@/components/Toaster/InitTheme"
-import StyledComponentsRegistry from '@/lib/registry';
-import MobileNav from "@/components/Header/mobile/MobileNav";
-import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/react"
 import clsx from "clsx";
+import './globals.css'
+import type { Metadata } from 'next';
+import localFont from "next/font/local";
+import StyledComponentsRegistry from "@/components/Resgistry/";
+import ThemeProvider from "@/components/Theme/Provider";
+import Header from "@/components/Header";
+import InitTheme from "@/components/Theme/InitTheme";
 
 export const metadata: Metadata = {
   title: {
@@ -17,7 +14,7 @@ export const metadata: Metadata = {
   },
   keywords: ['sunub', 'sun_ub'],
   description: "This site is sunub's personal blog ",
-};
+}
 
 const nanumFont = localFont({
   src: [
@@ -30,19 +27,21 @@ const nanumFont = localFont({
   display: 'swap'
 })
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="kor" className={clsx(nanumFont.variable)} suppressHydrationWarning={true}>
+    <html lang="kor" className={clsx(nanumFont.variable)}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="/fonts/NanumSquareNeo-Variable.woff2" rel="stylesheet" as="font" type="text/css" />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet preload"
           as="style"
         />
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" as="icon" />
-        <InitTheme />
         <style>
           {
             `
@@ -84,20 +83,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             `
           }
         </style>
+        <InitTheme />
       </head>
       <body>
-        <script src="https://cdn.jsdelivr.net/npm/pathseg@1.2.1/pathseg.min.js" />
         <StyledComponentsRegistry>
           <ThemeProvider>
-            <MobileNav />
-            <div id='__next'>
+            <div id="__next">
               <Header />
               {children}
             </div>
-            <Analytics />
           </ThemeProvider>
         </StyledComponentsRegistry>
       </body>
     </html>
-  );
+  )
 }

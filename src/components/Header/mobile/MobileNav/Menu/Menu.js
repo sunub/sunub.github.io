@@ -1,20 +1,14 @@
-import Link from "next/link";
+import Post from "@/utils/Post";
 import styles from "./Menu.module.css";
+import Link from "next/link";
 
-// async function getPostCategories() {
-// 	const res = await fetch(`${baseURL}/api`);
-// 	const json = await res.json();
-// 	const data = json.data;
-// 	const posts = data.post;
-// 	return Object.keys(posts);
-// }
 async function Menu() {
-	// const categories = await getPostCategories();
+	const post = new Post();
+	const categories = post.categories;
 	const staggeredDelay = 100;
 	return (
 		<nav className={styles[`menu-content__container`]}>
-			<h1>HI</h1>
-			{/* {categories.map((category, columnIndex) => {
+			{categories.map((category, columnIndex) => {
 				return (
 					<Link
 						href={`/${category}`}
@@ -27,7 +21,7 @@ async function Menu() {
 						<span>{category}</span>
 					</Link>
 				);
-			})} */}
+			})}
 		</nav>
 	);
 }

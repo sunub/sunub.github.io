@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
 import { BirdLogo } from "../../../icon/Icons";
 import Elevation from "@/constants/Elevation";
-import { Spacer } from "@/constants/Spacer";
+import Link from "next/link";
 
 function Title() {
 	return (
@@ -20,7 +19,9 @@ function Title() {
 				$border={8}
 				$distance="short"
 			>
-				<BirdLogo stroke="" />
+				<Link href={"/"}>
+					<BirdLogo stroke="" />
+				</Link>
 			</Elevation>
 		</>
 	);

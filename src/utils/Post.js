@@ -1,10 +1,6 @@
 import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper";
-import { Files, FrontMatter, Tag, Contents, Category } from "type";
 
 class Post {
-	_localPostFilesData: Files;
-	_categorizedFrontmatters: Map<Category, FrontMatter[]>;
-	_localPostContents: Contents;
 	constructor() {
 		this._localPostFilesData = getLocalTagFiles();
 		this._categorizedFrontmatters = categorizePostByCategory(
@@ -29,8 +25,8 @@ class Post {
 		return this._categorizedFrontmatters;
 	}
 
-	getSpecificFrontmatter(category: string, slug: string): FrontMatter {
-		const frontMatters = this.frontMatters.get(category) ?? [];
+	getSpecificFrontmatter(category, slug) {
+		const frontMatters = this.frontMatters[category] ?? [];
 
 		for (const frontMatter of frontMatters) {
 			if (frontMatter.slug === slug) {
@@ -42,8 +38,8 @@ class Post {
 		);
 	}
 
-	getLocalPostContents(): Contents {
-		const result: Contents = {};
+	getLocalPostContents() {
+		const result = {};
 		const localPostData = Object.values(this._localPostFilesData);
 
 		for (const data of localPostData) {
@@ -56,7 +52,7 @@ class Post {
 		return result;
 	}
 
-	getCategorizedPost(key: Tag) {
+	getCategorizedPost(key) {
 		return this._localPostFilesData[key];
 	}
 }

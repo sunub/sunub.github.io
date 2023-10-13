@@ -2,7 +2,7 @@
 
 import { useContext } from 'react';
 import styled from 'styled-components';
-import { ThemeContext } from '@/components/Theme/ThemeProvider';
+import { ThemeContext } from '../Provider/ThemeProvider';
 
 type Theme = {
     colorMode?: string | null,

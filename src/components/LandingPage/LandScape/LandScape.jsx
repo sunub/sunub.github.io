@@ -3,10 +3,10 @@
 import React from "react";
 import styled from "styled-components";
 import useHasMounted from "@/hooks/use-mounted.hook";
-import { Canvas } from "@react-three/fiber";
-import Object from "./Objects";
+// import { Canvas } from "@react-three/fiber";
+// import Object from "./Objects";
 import { Spacer } from "@/constants/Spacer";
-import HeroImage from "../HeroImage";
+// import HeroImage from "../HeroImage";
 
 const Wrapper = styled.div`
 	grid-area: main-content;

@@ -1,9 +1,10 @@
+"use client";
+
 import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import Elevation from "@/constants/Elevation";
-import { CODE, CS, ALGORITHM, WEB } from "@/components/icon/Category";
-import { Spacer } from "@/constants/Spacer";
+import * as Icons from "@/components/LandingPage/Icons/Icons";
 
 const Icon = styled.div`
 	grid-area: icon;
@@ -103,24 +104,16 @@ const Wrapper = styled(Link)`
 		}
 	}
 `;
+const ICONS_BY_VARIANT = {
+	web: Icons.WEB,
+	algorithm: Icons.ALGORITHM,
+	code: Icons.CODE,
+	cs: Icons.CS,
+};
 
 export default function Card({ frontMatter }) {
 	const { category, date, slug, title } = frontMatter;
-	let icon;
-	switch (category.toUpperCase()) {
-		case "WEB":
-			icon = WEB;
-			break;
-		case "ALGORITHM":
-			icon = ALGORITHM;
-			break;
-		case "CODE":
-			icon = CODE;
-			break;
-		case "CS":
-			icon = CS;
-			break;
-	}
+	const IconComponent = ICONS_BY_VARIANT[category];
 
 	return (
 		<Elevation
@@ -131,10 +124,7 @@ export default function Card({ frontMatter }) {
 			$usage="other"
 		>
 			<Wrapper href={`/${category}/${slug}`} tabIndex={1}>
-				<Icon>
-					<Spacer axis="vertical" size={32} />
-					{icon}
-				</Icon>
+				{IconComponent}
 				<Header>
 					<p>{title}</p>
 				</Header>

@@ -29,7 +29,7 @@ const AnimateIcon = styled(animated.span)`
 	outline-offset: 4px;
 	padding: 4px;
 
-	:hover {
+	&:hover {
 		box-shadow: var(--mid-shadow);
 	}
 `;

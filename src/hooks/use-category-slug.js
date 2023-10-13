@@ -11,7 +11,7 @@ async function useSlugAndCateogry() {
 
 	for (const [category, post] of Object.entries(posts)) {
 		for (const frontmatter of post) {
-			const { description, content } = frontmatter;
+			const { description } = frontmatter;
 			const slug = description.slug;
 			result.push({
 				category,
