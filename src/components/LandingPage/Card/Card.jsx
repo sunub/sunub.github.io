@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import Elevation from "@/constants/Elevation";
 import * as Icons from "@/components/LandingPage/Icons/Icons";
+import { baseUrl } from "@/utils/baseUrl";
 
 const Icon = styled.div`
 	grid-area: icon;
@@ -123,7 +124,7 @@ export default function Card({ frontMatter }) {
 			$distance="short"
 			$usage="other"
 		>
-			<Wrapper href={`/${category}/${slug}`} tabIndex={1}>
+			<Wrapper href={`${baseUrl}/${category}/${slug}`} tabIndex={1}>
 				{IconComponent}
 				<Header>
 					<p>{title}</p>

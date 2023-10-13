@@ -1,5 +1,6 @@
 "use client";
 
+import { baseUrl } from "@/utils/baseUrl";
 import styles from "./Menu.module.css";
 import Link from "next/link";
 
@@ -10,7 +11,7 @@ function Menu({ isOpen, setOpen, categories }) {
 			{categories.map((category, columnIndex) => {
 				return (
 					<Link
-						href={`/${category}`}
+						href={`${baseUrl}/${category}`}
 						key={category}
 						onClick={() => setOpen(!isOpen)}
 						className="mobile-menu__content"

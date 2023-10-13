@@ -2,9 +2,9 @@
 
 import React from "react";
 import { BirdLogo } from "../../icon/Icons";
-import Elevation from "@/constants/Elevation";
 import Link from "next/link";
 import styled from "styled-components";
+import { baseUrl } from "@/utils/baseUrl";
 
 const Wrapper = styled(Link)`
 	width: 45px;
@@ -24,7 +24,7 @@ const Wrapper = styled(Link)`
 
 function Title() {
 	return (
-		<Wrapper href={"/"}>
+		<Wrapper href={`${baseUrl}/`}>
 			<BirdLogo stroke="" />
 		</Wrapper>
 	);
