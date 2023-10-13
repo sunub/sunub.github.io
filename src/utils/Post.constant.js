@@ -1,6 +1,7 @@
 import fs from "fs";
-import { baseUrl } from "./baseUrl";
 
-export const POST_ROOT_PATH = `${baseUrl}posts/`;
+const DIR_REPLACE_STRING = "/posts";
+
+export const POST_ROOT_PATH = `${process.cwd()}${DIR_REPLACE_STRING}`;
 
 export const POST_CATEGORY = fs.readdirSync(POST_ROOT_PATH, "utf-8");

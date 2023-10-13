@@ -28,7 +28,7 @@ export function getLocalTagFiles() {
 	const files = {};
 
 	for (const name of folders) {
-		const path = root + name;
+		const path = `${root}/${name}`;
 		const fileData = readFiles(path, []);
 		files[name] = fileData;
 	}
