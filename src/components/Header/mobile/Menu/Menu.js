@@ -11,7 +11,7 @@ function Menu({ isOpen, setOpen, categories }) {
 			{categories.map((category, columnIndex) => {
 				return (
 					<Link
-						href={`${baseUrl}/${category}`}
+						href={`/${category}`}
 						key={category}
 						onClick={() => setOpen(!isOpen)}
 						className="mobile-menu__content"

@@ -33,7 +33,7 @@ function Logo({ handleMouverHover, transformValues, ...delegated }) {
 		<LogoLink
 			onMouseOver={() => handleMouverHover(transformValues)}
 			{...delegated}
-			href={`${baseUrl}/`}
+			href={`/`}
 		>
 			<Icons.BirdLogo />
 		</LogoLink>

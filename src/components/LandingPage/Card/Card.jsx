@@ -124,7 +124,7 @@ export default function Card({ frontMatter }) {
 			$distance="short"
 			$usage="other"
 		>
-			<Wrapper href={`${baseUrl}/${category}/${slug}`} tabIndex={1}>
+			<Wrapper href={`/${category}/${slug}`} tabIndex={1}>
 				{IconComponent}
 				<Header>
 					<p>{title}</p>
