@@ -6,6 +6,7 @@ import StyledComponentsRegistry from "@/components/Resgistry/";
 import ThemeProvider from "@/components/Theme/Provider";
 import Header from "@/components/Header";
 import InitTheme from "@/components/Theme/InitTheme";
+import MobileNav from "@/components/Header/mobile/MobileNav";
 
 export const metadata: Metadata = {
   title: {
@@ -89,6 +90,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
+              <MobileNav />
               <Header />
               {children}
             </div>

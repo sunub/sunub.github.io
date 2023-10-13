@@ -1,10 +1,9 @@
-import Post from "@/utils/Post";
+"use client";
+
 import styles from "./Menu.module.css";
 import Link from "next/link";
 
-async function Menu() {
-	const post = new Post();
-	const categories = post.categories;
+function Menu({ isOpen, setOpen, categories }) {
 	const staggeredDelay = 100;
 	return (
 		<nav className={styles[`menu-content__container`]}>
@@ -13,6 +12,7 @@ async function Menu() {
 					<Link
 						href={`/${category}`}
 						key={category}
+						onClick={() => setOpen(!isOpen)}
 						className="mobile-menu__content"
 						style={{
 							animationDelay: columnIndex * staggeredDelay + "ms",

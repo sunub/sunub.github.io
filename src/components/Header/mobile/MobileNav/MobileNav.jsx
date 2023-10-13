@@ -1,16 +1,15 @@
 import styles from "./MobileNav.module.css";
 import React from "react";
-import Wrapper from "./Wrapper";
-import Menu from "./Menu";
-import ThemeToggler from "@/components/Theme/ThemeToggler";
+import Post from "@/utils/Post";
+import Nav from "../Nav/Nav";
 
 export default function MobileNav() {
+	const post = new Post();
+	const categories = post.categories;
+
 	return (
 		<div id="mobile-nav" className={styles.MobileMenu}>
-			<Wrapper>
-				<Menu />
-				<ThemeToggler maskId={"mobile-nav__theme-toggler"} />
-			</Wrapper>
+			<Nav categories={categories} />
 		</div>
 	);
 }
