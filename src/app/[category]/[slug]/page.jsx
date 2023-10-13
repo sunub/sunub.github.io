@@ -8,7 +8,6 @@ export async function generateStaticParams() {
 	const params = [];
 	for (const frontmatter of frontmatters) {
 		params.push({
-			category: frontmatter.category,
 			slug: frontmatter.slug,
 		});
 	}
