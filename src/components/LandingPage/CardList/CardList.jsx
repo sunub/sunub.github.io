@@ -11,6 +11,7 @@ const Wrapper = styled.div`
 	grid-template-columns: ${(props) => props.$division};
 	justify-content: center;
 	gap: 1rem;
+	padding-top: 32px;
 
 	position: relative;
 	overflow-wrap: break-word;

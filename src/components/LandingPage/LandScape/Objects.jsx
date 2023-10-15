@@ -4,7 +4,6 @@ import React from "react";
 import { TextureLoader } from "three/src/loaders/TextureLoader";
 import * as THREE from "three";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { useControls } from "leva";
 import { OrbitControls, OrthographicCamera } from "@react-three/drei";
 import "./layersMaterial";
 import Effects from "./Effect";
@@ -23,25 +22,6 @@ function Object({ ...delegated }) {
 			"background.jpg",
 		]);
 	const scene = useThree((state) => state.scene);
-	const { x, y, z, scale } = useControls("bird helper", {
-		x: {
-			value: 0,
-			step: 0.1,
-		},
-		y: {
-			value: 0,
-			step: 0.1,
-		},
-		z: {
-			value: 10,
-			step: 0.1,
-		},
-		scale: {
-			value: 1,
-			step: 0.1,
-		},
-	});
-
 	const colors = new THREE.Color();
 
 	// React.useEffect(() => {
@@ -71,7 +51,7 @@ function Object({ ...delegated }) {
 					}}
 				/>
 				<directionalLight ref={ref} position={[0, -50, 100]} />
-				<mesh scale={scale} position={[x, y, z]}>
+				<mesh scale={1} position={[0, 0, 10]}>
 					<planeGeometry args={[51, 57]} />
 					<meshMatcapMaterial
 						map={bird}

@@ -2,29 +2,23 @@
 
 import React from "react";
 import styled from "styled-components";
+import Images from "./Images";
+import Spacer from "@/components/Spacer";
 
 const Container = styled.div`
-	display: flex;
 	width: 100%;
-	padding: 2rem;
+
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 32px;
+	padding-right: 32px;
 `;
-
-// const Button = styled.button`
-// 	position: relative;
-// 	left: calc(50% - 100px);
-// 	padding: 1rem;
-// 	background-color: black;
-// 	color: white;
-
-// 	width: 200px;
-// 	border-radius: 30px;
-// 	margin-bottom: 15px;
-// `;
 
 export default function HeroImage() {
 	return (
-		<>
-			<Container></Container>
-		</>
+		<Container>
+			<Spacer axis={"vertical"} size={32} />
+			<Images />
+		</Container>
 	);
 }
