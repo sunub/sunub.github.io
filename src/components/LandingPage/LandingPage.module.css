@@ -1,7 +1,7 @@
 .landingPage {
 	grid-area: main-content;
 
-	margin-left: 32px;
-	margin-right: 32px;
-	padding: 0;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 32px;
 }

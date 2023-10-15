@@ -15,9 +15,11 @@
 	visibility: visible;
 	flex-direction: column;
 	justify-content: space-between;
+
 	@container root ( width <= 768px ) {
 		opacity: 0;
 		visibility: hidden;
+		display: none;
 	}
 }
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { baseUrl } from "@/utils/baseUrl";
 import styles from "./Menu.module.css";
 import Link from "next/link";
 

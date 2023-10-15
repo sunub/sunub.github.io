@@ -5,7 +5,6 @@ import styled from "styled-components";
 import * as Icons from "../icon/Icons";
 import { animated } from "@react-spring/web";
 import Link from "next/link";
-import { baseUrl } from "@/utils/baseUrl";
 
 const MenuWrapper = styled.nav`
 	display: flex;

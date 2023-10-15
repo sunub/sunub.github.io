@@ -4,7 +4,6 @@ import * as Icons from "../icon/Icons";
 import Link from "next/link";
 import styled from "styled-components";
 import React from "react";
-import { baseUrl } from "@/utils/baseUrl";
 
 const LogoLink = styled(Link)`
 	display: flex;

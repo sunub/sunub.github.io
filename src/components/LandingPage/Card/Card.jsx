@@ -5,7 +5,6 @@ import styled from "styled-components";
 import Link from "next/link";
 import Elevation from "@/constants/Elevation";
 import * as Icons from "@/components/LandingPage/Icons/Icons";
-import { baseUrl } from "@/utils/baseUrl";
 
 const Icon = styled.div`
 	grid-area: icon;
@@ -52,7 +51,7 @@ const Wrapper = styled(Link)`
 	display: grid;
 	align-items: center;
 
-	grid-template-rows: [icon] 15px [header] minmax(1ch, 1fr) [footer] 15px;
+	grid-template-rows: [card-icon] 0.2fr [header] minmax(1ch, 1fr) [footer] 15px;
 	grid-template-columns: 1fr;
 
 	width: 100%;
@@ -62,16 +61,8 @@ const Wrapper = styled(Link)`
 	transition: background 350ms ease 0s;
 	cursor: pointer;
 	touch-action: manipulation;
-	&:hover {
-		h1 {
-			color: var(--color-highlightColor);
-			text-decoration: underline;
-			text-decoration-thickness: 6px;
-			text-underline-offset: 10px;
-		}
-	}
 
-	@media (max-width: 768px) {
+	/* @media (max-width: 768px) {
 		grid-template:
 			"header"
 			"content" / 1fr;
@@ -103,8 +94,14 @@ const Wrapper = styled(Link)`
 			font-size: 8px;
 			justify-self: center;
 		}
-	}
+	} */
 `;
+
+const IconWrapper = styled.div`
+	grid-area: card-icon;
+	display: flex;
+`;
+
 const ICONS_BY_VARIANT = {
 	web: Icons.WEB,
 	algorithm: Icons.ALGORITHM,
@@ -125,7 +122,7 @@ export default function Card({ frontMatter }) {
 			$usage="other"
 		>
 			<Wrapper href={`/${category}/${slug}`} tabIndex={1}>
-				{IconComponent}
+				<IconWrapper>{IconComponent}</IconWrapper>
 				<Header>
 					<p>{title}</p>
 				</Header>
