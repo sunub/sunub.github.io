@@ -10,6 +10,9 @@ const nextConfig = {
 		styledComponents: true,
 	},
 	output: "standalone",
+	experimental: {
+		serverComponentsExternalPackages: ["sharp"],
+	},
 };
 
 export default nextConfig;

@@ -5,10 +5,15 @@ import styled from "styled-components";
 import Card from "../Card/index";
 
 const Wrapper = styled.div`
+	grid-area: main-card-list;
+
 	width: 100%;
 	display: grid;
 	flex-direction: row;
-	grid-template-columns: ${(props) => props.$division};
+	grid-template-columns: repeat(
+		${(props) => props.$division},
+		minmax(min-content, 5px)
+	);
 	justify-content: center;
 	gap: 1rem;
 	padding-top: 32px;
@@ -17,10 +22,9 @@ const Wrapper = styled.div`
 	overflow-wrap: break-word;
 `;
 
-const gapSize = "minmax(min-content ,5px)";
 function CardList({ list }) {
 	const [boxWidth, setBoxWidth] = React.useState(0);
-	const [gap, setGap] = React.useState("");
+	const [gap, setGap] = React.useState(4);
 
 	React.useEffect(() => {
 		const root = document.getElementById("__next");
@@ -35,24 +39,12 @@ function CardList({ list }) {
 		return () => observer.disconnect();
 	}, []);
 
-	React.useEffect(() => {
-		let newGap = `${gapSize} ${gapSize} ${gapSize} ${gapSize}`;
-		if (boxWidth <= 630) {
-			newGap = `${gapSize} ${gapSize}`;
-		} else if (boxWidth <= 936) {
-			newGap = `${gapSize} ${gapSize} ${gapSize}`;
-		}
-		setGap(newGap);
-	}, [boxWidth]);
-
 	return (
-		<>
-			<Wrapper $division={gap}>
-				{list.map((frontMatter) => (
-					<Card key={frontMatter.title} frontMatter={frontMatter} />
-				))}
-			</Wrapper>
-		</>
+		<Wrapper $division={gap}>
+			{list.map((frontMatter) => (
+				<Card key={frontMatter.title} frontMatter={frontMatter} />
+			))}
+		</Wrapper>
 	);
 }
 

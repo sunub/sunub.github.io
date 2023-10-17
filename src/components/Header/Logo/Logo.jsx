@@ -30,6 +30,7 @@ const LogoLink = styled(Link)`
 function Logo({ handleMouverHover, transformValues, ...delegated }) {
 	return (
 		<LogoLink
+			aria-label={`Move to sunub's web home page.`}
 			onMouseOver={() => handleMouverHover(transformValues)}
 			{...delegated}
 			href={`/`}

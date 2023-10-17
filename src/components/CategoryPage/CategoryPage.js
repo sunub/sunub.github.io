@@ -1,9 +1,18 @@
 import Card from "../LandingPage/Card";
 import Post from "@/utils/Post";
 
-function CategoryPage({ category }) {
+async function getFrontmatters(category) {
 	const post = new Post();
 	const frontmatters = post.frontMatters[category];
+	return frontmatters;
+}
+
+async function CategoryPage({ category }) {
+	const frontmatters = await getFrontmatters(category);
+
+	if (!frontmatters) {
+		return null;
+	}
 
 	return (
 		<div style={{ gridArea: "main-content" }}>

@@ -1,0 +1,9 @@
+.hero-image__root-wrapper {
+	grid-area: main-hero-image;
+
+	display: flex;
+	justify-content: center;
+
+	padding-left: 32px;
+	padding-right: 32px;
+}

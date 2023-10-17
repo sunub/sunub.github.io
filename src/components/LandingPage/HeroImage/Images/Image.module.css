@@ -1,0 +1,20 @@
+.hero-image__wrapper {
+	display: grid;
+	grid: [hero-image] 1fr / [hero-image] 1fr;
+	position: relative;
+
+	justify-content: center;
+	align-items: center;
+
+	background: linear-gradient(
+		oklch(82.9% 0.09573202406959574 31.111262465234525),
+		oklch(97.14% 0.011 31.07)
+	);
+}
+
+.hero-image__image {
+	position: relative;
+	grid-area: hero-image;
+
+	height: 400px;
+}

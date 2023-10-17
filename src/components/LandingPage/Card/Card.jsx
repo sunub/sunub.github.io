@@ -6,12 +6,12 @@ import Link from "next/link";
 import Elevation from "@/constants/Elevation";
 import * as Icons from "@/components/LandingPage/Icons/Icons";
 
-const Icon = styled.div`
-	grid-area: icon;
+const Wrapper = styled.article`
+	${Elevation(170, 216, 15, "short", "other")}
 `;
 
-const Header = styled.header`
-	grid-area: header;
+const Header = styled.h3`
+	grid-area: card-header;
 
 	display: flex;
 	align-items: center;
@@ -21,9 +21,8 @@ const Header = styled.header`
 	word-break: break-all;
 	font-weight: 700;
 
-	& > time {
-		justify-self: flex-start;
-		font-size: calc(1rem);
+	& > h3 {
+		font-size: calc(1.375rem);
 	}
 
 	@media (max-width: 768px) {
@@ -40,61 +39,28 @@ const Description = styled.section`
 `;
 
 const Footer = styled.time`
-	grid-area: footer;
+	grid-area: card-footer;
 
 	font-size: 10px;
 	word-break: break-all;
 	justify-self: center;
 `;
 
-const Wrapper = styled(Link)`
+const LinkWrapper = styled(Link)`
 	display: grid;
 	align-items: center;
 
-	grid-template-rows: [card-icon] 0.2fr [header] minmax(1ch, 1fr) [footer] 15px;
-	grid-template-columns: 1fr;
+	grid:
+		[card-icon] 0.2fr
+		[card-header] minmax(1ch, 1fr)
+		[card-footer] 15px / 1fr;
 
-	width: 100%;
 	height: 100%;
 	padding: 1rem;
 
 	transition: background 350ms ease 0s;
 	cursor: pointer;
 	touch-action: manipulation;
-
-	/* @media (max-width: 768px) {
-		grid-template:
-			"header"
-			"content" / 1fr;
-
-		${Icon} {
-			display: none;
-			visibility: hidden;
-			opacity: 0;
-		}
-	}
-
-	@media (max-width: 320px) {
-		padding: 16px;
-		column-gap: 0;
-
-		${Header} {
-			flex-direction: column;
-
-			h1 {
-				font-size: 1.25rem;
-			}
-
-			time {
-				font-size: 4px;
-			}
-		}
-
-		${Description} {
-			font-size: 8px;
-			justify-self: center;
-		}
-	} */
 `;
 
 const IconWrapper = styled.div`
@@ -112,22 +78,13 @@ const ICONS_BY_VARIANT = {
 export default function Card({ frontMatter }) {
 	const { category, date, slug, title } = frontMatter;
 	const IconComponent = ICONS_BY_VARIANT[category];
-
 	return (
-		<Elevation
-			$width={120}
-			$height={216}
-			$border={15}
-			$distance="short"
-			$usage="other"
-		>
-			<Wrapper href={`/${category}/${slug}`} tabIndex={1}>
+		<Wrapper>
+			<LinkWrapper href={`/${category}/${slug}`} tabIndex={1}>
 				<IconWrapper>{IconComponent}</IconWrapper>
-				<Header>
-					<p>{title}</p>
-				</Header>
+				<Header>{title}</Header>
 				<Footer>{date.slice(2)}</Footer>
-			</Wrapper>
-		</Elevation>
+			</LinkWrapper>
+		</Wrapper>
 	);
 }

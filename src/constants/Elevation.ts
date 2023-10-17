@@ -1,4 +1,5 @@
-import styled from "styled-components";
+type Distance = "short" | "mid" | "long";
+type Usage = "logo" | "other";
 
 function getBoxShadow(distance: string) {
 	let boxShadow: string;
@@ -19,31 +20,29 @@ function getBoxShadow(distance: string) {
 	return boxShadow;
 }
 
-const Elevation = styled.div<{
-	$width: number;
-	$height: number;
-	$border: number;
-	$distance: string;
-	$usage: string;
-}>`
-	width: ${(props) => props.$width}px;
-	height: ${(props) => props.$height}px;
+function Elevation(
+	width: number,
+	height: number,
+	border: number,
+	distance: Distance,
+	usage: Usage
+) {
+	return `
+	width: ${width}px;
+	height: ${height}px;
 
-	border: ${(props) => (props.$usage === "logo" ? 2 : 1)}px solid
-		var(
-			${(props) =>
-				props.$usage === "logo"
-					? "--color-bird"
-					: "--default-border-color"}
-		);
-	border-radius: ${(props) => props.$border}px;
+	border: ${usage === "logo" ? 2 : 1}px solid
+		var(${usage === "logo" ? "--color-bird" : "--default-border-color"});
+
+	border-radius: ${border}px;
 	background: var(--color-elevation);
 
-	box-shadow: var(${(props) => getBoxShadow(props.$distance)});
+	box-shadow: var(${getBoxShadow(distance)});
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
-`;
+	`;
+}
 
 export default Elevation;
