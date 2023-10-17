@@ -10,15 +10,12 @@ async function getFrontmatters(category) {
 async function CategoryPage({ category }) {
 	const frontmatters = await getFrontmatters(category);
 
-	if (!frontmatters) {
-		return null;
-	}
-
 	return (
 		<div style={{ gridArea: "main-content" }}>
-			{frontmatters.map((frontmatter) => (
-				<Card key={crypto.randomUUID()} frontMatter={frontmatter} />
-			))}
+			{frontmatters &&
+				frontmatters.map((frontmatter) => (
+					<Card key={crypto.randomUUID()} frontMatter={frontmatter} />
+				))}
 		</div>
 	);
 }

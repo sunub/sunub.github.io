@@ -12,7 +12,7 @@ async function getFrontmatterList() {
 async function LandingPage() {
 	const frontmatterList = await getFrontmatterList();
 
-	return <CardList list={frontmatterList} />;
+	return frontmatterList && <CardList list={frontmatterList} />;
 }
 
 export default LandingPage;

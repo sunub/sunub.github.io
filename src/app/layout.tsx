@@ -1,7 +1,5 @@
-import clsx from "clsx";
 import './globals.css'
 import type { Metadata } from 'next';
-import localFont from "next/font/local";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import ThemeProvider from "@/components/Theme/Provider";
 import Header from "@/components/Header";
@@ -17,24 +15,13 @@ export const metadata: Metadata = {
   description: "This site is sunub's personal blog ",
 }
 
-const nanumFont = localFont({
-  src: [
-    {
-      path: "../../public/fonts/NanumSquareNeo-Variable.woff2",
-      style: "normal",
-    }
-  ],
-  variable: '--font-nanum',
-  display: 'swap'
-})
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="ko" className={clsx(nanumFont.variable)}>
+    <html lang="ko" >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -43,6 +30,15 @@ export default function RootLayout({
           as="style"
         />
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" as="icon" />
+        <style dangerouslySetInnerHTML={{
+          __html: `
+          @font-face {
+            font-family: 'NanumSquareNeo';
+            src: url('/fonts/NanumSquareNeo-Variable.woff2') format('woff2'),
+            font-style: normal;
+            font-display: fallback;
+          }
+        `}} />
         <style>
           {
             `
@@ -95,7 +91,7 @@ export default function RootLayout({
             }
 
             body {
-              font-family: var(--font-nanum), sans-serif;
+              font-family: NanumSquareNeo, sans-serif;
               color: var(--color-text);
               min-height: 100vh;
               background: var(--color-background);
