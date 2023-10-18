@@ -1,7 +1,8 @@
 import React from "react";
 // import Spacer from "../Spacer";
-import { MDXRemote, compileMDX } from "next-mdx-remote/rsc";
+import { compileMDX } from "next-mdx-remote/rsc";
 import styles from "./PostContent.module.css";
+import CodeSnippet from "../CodeSnippet";
 
 // const Container = styled.div`
 // 	grid-area: main-content;
@@ -62,6 +63,9 @@ async function PostContent({ postcontent }) {
 	const { content, frontmatter } = await compileMDX({
 		source: postcontent,
 		options: { parseFrontmatter: true },
+		components: {
+			pre: CodeSnippet,
+		},
 	});
 	return (
 		<div className={styles.Wrapper} key={crypto.randomUUID()}>

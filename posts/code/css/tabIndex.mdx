@@ -16,17 +16,11 @@ tabIndex를 이용하면 tab키로 접근이 가능하게 끔 만들어주는 Ht
 이론적으로 tabIndex는 양수의 모든 값으로 제공할 수 있습니다. 예를 들어 보겠습니다.
 
 ```html
-<div tabindex={"4"} >
-Please Press Tab!
-</div>
+<div tabindex="4">Please Press Tab!</div>
 
-<div tabindex={"5"}>
-Please Press Tab!
-</div
+<div tabindex="5">Please Press Tab!</div>
 
-<div tabindex={"2"}>
-Please Press Tab!
-</div>
+<div tabindex="2">Please Press Tab!</div>
 ```
 
 위의 경우 tab을 누른다면 어떤 요소가 포커스 될까요? 답은 당연히 tabindex가 가장 낮은 값인 2가 포커스가 됩니다. 여기서 잠깐 생각 해볼것은 <div/> 태그가 원래 tab으로 접근이 가능한 html 요소였을까요?
@@ -38,16 +32,13 @@ Please Press Tab!
 하지만 여기서 우리가 조심해야 할 부분이 있습니다. 비 대화형 요소에 tabindex를 추가하여 대화형 요소들과 같이 사용하면 어떻게 될까요?
 
 ```html
-<div tabindex={"4"} >
-	Please Press Tab!
-</div>
+<div tabindex="4">Please Press Tab!</div>
 
-<div tabindex={"5"}>
-	Please Press Tab!
-</div
+<div tabindex="5">Please Press Tab!</div>
 
 <label>
-	<input type="text"/>
+	Please Press Tab!
+	<input type="text" />
 </label>
 ```
 
