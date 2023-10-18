@@ -43,7 +43,7 @@ function readFiles(path, structure) {
 		const nextPath = `${path}/${currPath}`;
 		const stat = fs.statSync(nextPath);
 
-		if (stat.isFile() && nextPath.match(/\.(md)$/i)?.length) {
+		if (stat.isFile() && nextPath.match(/\.md|mdx$/i)?.length) {
 			structure.push(
 				divideDescriptionAndContent(fs.readFileSync(nextPath, "utf-8"))
 			);
@@ -76,11 +76,11 @@ function divideDescriptionAndContent(text) {
 			description[key] = value;
 		}
 	}
-	const content = text.split("---").slice(2).join("").trim();
+	// const content = text.split("---").slice(2).join("").trim();
 
 	return {
 		description: description,
-		content: convertContentToHtml(content),
+		content: text,
 	};
 }
 

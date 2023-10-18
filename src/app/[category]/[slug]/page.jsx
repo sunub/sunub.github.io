@@ -16,10 +16,9 @@ export async function generateStaticParams() {
 }
 
 export default function Page({ params }) {
-	const { category, slug } = params;
+	const { slug } = params;
 	const post = new Post();
-	const frontmatter = post.getSpecificFrontmatter(category, slug);
-	const content = post.contents[slug];
+	const postcontent = post.contents[slug];
 
-	return <PostContent frontMatter={frontmatter} content={content} />;
+	return <PostContent postcontent={postcontent} />;
 }
