@@ -1,0 +1,52 @@
+.Wrapper {
+	display: grid;
+
+	grid: [cateogry-hero] 1fr / [cateogry-hero] 1fr;
+	overflow: hidden;
+}
+
+.Title {
+	grid-area: cateogry-hero-image;
+
+	position: relative;
+	padding: 98px 32px 66px 128px;
+
+	font-family: "Wotfard", sans-serif;
+	font-size: 5rem;
+	color: var(--color-text);
+	text-transform: capitalize;
+
+	animation: showup;
+	animation-delay: 100ms;
+	animation-duration: 500ms;
+	animation-fill-mode: backwards;
+	z-index: 10;
+}
+
+.LowerCloud {
+	grid-area: cateogry-hero-image;
+
+	animation: showup;
+	animation-delay: 100ms;
+	animation-duration: 500ms;
+	animation-fill-mode: backwards;
+}
+
+.HigherCloud {
+	grid-area: cateogry-hero-image;
+
+	animation: showup;
+	animation-delay: 100ms;
+	animation-duration: 500ms;
+	animation-fill-mode: backwards;
+}
+
+@keyframes showup {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}

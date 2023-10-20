@@ -38,6 +38,12 @@ export default function RootLayout({
             font-style: normal;
             font-display: fallback;
           }
+          @font-face {
+            font-family: 'Wotfard';
+            src: url('/fonts/wotfard-regular-webfont.woff2') format('woff2'),
+            font-style: normal;
+            font-display: fallback;
+          }
         `}} />
         <style>
           {

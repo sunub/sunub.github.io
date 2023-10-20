@@ -1,5 +1,7 @@
-import Card from "../LandingPage/Card";
 import Post from "@/utils/Post";
+import styles from "./CategoryPage.module.css";
+import CardList from "../LandingPage/CardList";
+import HeroImage from "./HeroImage";
 
 async function getFrontmatters(category) {
 	const post = new Post();
@@ -11,11 +13,9 @@ async function CategoryPage({ category }) {
 	const frontmatters = await getFrontmatters(category);
 
 	return (
-		<div style={{ gridArea: "main-content" }}>
-			{frontmatters &&
-				frontmatters.map((frontmatter) => (
-					<Card key={crypto.randomUUID()} frontMatter={frontmatter} />
-				))}
+		<div className={styles.Wrapper}>
+			<HeroImage category={category} />
+			<CardList list={frontmatters} />
 		</div>
 	);
 }
