@@ -27,11 +27,10 @@ const LogoLink = styled(Link)`
 	align-items: center;
 `;
 
-function Logo({ handleMouverHover, transformValues, ...delegated }) {
+function Logo({ ...delegated }) {
 	return (
 		<LogoLink
 			aria-label={`Move to sunub's web home page.`}
-			onMouseOver={() => handleMouverHover(transformValues)}
 			{...delegated}
 			href={`/`}
 		>

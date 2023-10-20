@@ -1,63 +1,7 @@
 import React from "react";
-// import Spacer from "../Spacer";
 import { compileMDX } from "next-mdx-remote/rsc";
 import styles from "./PostContent.module.css";
 import CodeSnippet from "../CodeSnippet";
-
-// const Container = styled.div`
-// 	grid-area: main-content;
-
-// 	position: relative;
-// 	width: 100%;
-// 	max-width: 1100px;
-
-// 	margin-left: auto;
-// 	margin-right: auto;
-// `;
-
-// const Article = styled.article`
-// 	display: flex;
-// 	flex-direction: column;
-// 	justify-content: center;
-
-// 	word-spacing: 0.2ch;
-// 	text-align: left;
-
-// 	background-color: var(--color-background);
-// 	box-shadow: var(--box-shadow-2);
-
-// 	text-align: left;
-// `;
-
-// const Header = styled.header`
-// 	text-align: center;
-// `;
-
-// const Title = styled.h1`
-// 	font-size: calc(2.76rem);
-// 	text-align: center;
-// 	color: color-mix(in oklch, var(--color-highlightColor) 90%, transparent);
-// `;
-// const Date = styled.dl`
-// 	text-align: center;
-// 	color: color-mix(in oklch, var(--color-text) 50%, transparent);
-// 	font-size: var(--size-4);
-// `;
-
-// const Main = styled.main`
-// 	display: flex;
-// 	flex-direction: column;
-// 	justify-content: center;
-
-// 	width: 100%;
-// 	max-width: 800px;
-
-// 	row-gap: 1.5rem;
-// 	margin-left: auto;
-// 	margin-right: auto;
-// 	padding-left: 32px;
-// 	padding-right: 32px;
-// `;
 
 async function PostContent({ postcontent }) {
 	const { content, frontmatter } = await compileMDX({
@@ -67,10 +11,19 @@ async function PostContent({ postcontent }) {
 			pre: CodeSnippet,
 		},
 	});
+	const { title, date, tags, summary, slug, category } = frontmatter;
+	const time = new Intl.DateTimeFormat("ko-KR").format(date);
 	return (
-		<div className={styles.Wrapper} key={crypto.randomUUID()}>
-			<h1>{frontmatter.title}</h1>
-			{content}
+		<div className={styles.Wrapper}>
+			<article className={styles.Article}>
+				<header className={styles.Header}>
+					<h1 className={styles.Title}>{title}</h1>
+					<time dateTime={time}>{time}</time>
+				</header>
+				<main style={{ maxWidth: "675px" }} className={styles.Main}>
+					{content}
+				</main>
+			</article>
 		</div>
 	);
 }

@@ -33,7 +33,6 @@ const COLORS = {
 	},
 };
 
-const NAV_MENU = ["web", "code", "cs", "algorithm"];
 const COLOR_MODE_KEY = "theme-preference";
 
-export { COLORS, NAV_MENU, COLOR_MODE_KEY };
+export { COLORS, COLOR_MODE_KEY };

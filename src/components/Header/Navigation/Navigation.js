@@ -37,21 +37,14 @@ const AnimateIcon = styled(animated.span)`
 function Navigation({ navMenus }) {
 	return (
 		<MenuWrapper>
-			{navMenus.map(({ menu, transform }) => {
-				const translateY = transform.translateY;
-				const opacity = transform.opacity;
-
+			{navMenus.map((menu) => {
 				return (
 					<Link
 						aria-label={`Move to sunub's ${menu} web page.`}
 						key={`header_nav_${menu}`}
 						href={`/${menu}`}
 					>
-						<MenuIcon
-							translateY={translateY}
-							opacity={opacity}
-							name={menu}
-						/>
+						<MenuIcon name={menu} />
 					</Link>
 				);
 			})}
@@ -64,10 +57,10 @@ function MenuIcon({ name, translateY, opacity, ...delegated }) {
 	const Icon = Icons[key];
 	return (
 		<AnimateIcon
-			style={{
-				translateY,
-				opacity,
-			}}
+			// style={{
+			// 	translateY,
+			// 	opacity,
+			// }}
 			{...delegated}
 		>
 			<Icon {...delegated} />
