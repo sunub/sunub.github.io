@@ -29,19 +29,3 @@ async function PostContent({ postcontent }) {
 }
 
 export default PostContent;
-
-// <article>
-// 	<Spacer axis="vertical" size={144} />
-// 	<header>
-// 		<h1>{frontMatter.title}</h1>
-// 		<time className="post__article__header--date">
-// 			<dd>{frontMatter.date}</dd>
-// 		</time>
-// 	</header>
-// 	<Spacer axis="vertical" size={120} />
-// 	<main
-// 		className="post__article__main"
-// 		dangerouslySetInnerHTML={{ __html: `${content}` }}
-// 	/>
-// 	<Spacer axis="vertical" size={144} />
-// </article>
