@@ -68,7 +68,7 @@ function setColorsByTheme() {
 
 	const root = document.firstElementChild;
 
-	root.setAttribute("data-color-mode", colorMode);
+	root.setAttribute("data-theme", colorMode);
 	Object.entries(COLORS).forEach(([name, colorByTheme]) => {
 		const cssVar = `--color-`;
 		const cssVarName = cssVar + name;

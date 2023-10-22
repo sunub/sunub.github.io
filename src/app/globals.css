@@ -19,7 +19,6 @@ input {
 	text-align: start;
 	appearance: auto;
 	cursor: text;
-	margin: 0em;
 }
 
 button {
@@ -98,8 +97,8 @@ button {
 }
 
 span {
-	font-size: var(--size-6);
-	font-weight: 600;
+	font-size: calc(1.15rem);
+	font-weight: 900;
 }
 
 a {
@@ -110,10 +109,6 @@ a {
 	&:visited {
 		color: var(--color-core-text);
 	}
-}
-
-:is(blockquote, dd, dl, figure, h1, h2, h3, h4, h5, h6, hr, p, pre) {
-	margin: 0;
 }
 
 table {

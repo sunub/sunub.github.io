@@ -37,12 +37,15 @@ export default function RootLayout({
             src: url('/fonts/NanumSquareNeo-Variable.woff2') format('woff2'),
             font-style: normal;
             font-display: fallback;
+            unicode-range: U+AC00-D7AF;
           }
           @font-face {
             font-family: 'Wotfard';
             src: url('/fonts/wotfard-regular-webfont.woff2') format('woff2'),
+            font-weight: 900;
             font-style: normal;
             font-display: fallback;
+            uniconde-range: U+0020-007E;
           }
         `}} />
         <style>
@@ -97,7 +100,7 @@ export default function RootLayout({
             }
 
             body {
-              font-family: NanumSquareNeo, sans-serif;
+            	font-family: Wotfard, NanumSquareNeo, sans-serif;
               color: var(--color-text);
               min-height: 100vh;
               background: var(--color-background);

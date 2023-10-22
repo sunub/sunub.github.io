@@ -1,13 +1,16 @@
 .wrapper {
 	border-radius: 0px !important;
-	margin: 0px calc(24 * -1) 64px !important;
+	margin: 0px 24px 48px !important;
 	border: 1px solid transparent;
+	border-radius: 8px !important;
 }
 .wrapper pre {
 	padding: 24px !important;
 }
+
 .wrapper code {
-	font-family: "NanumFontNeo";
+	display: flex;
+	font-family: "Wotfard", sans-serif;
 }
 .wrapper code > div {
 	font-size: 1.125rem;

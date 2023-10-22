@@ -1,11 +1,15 @@
 import React from "react";
 import { Code } from "bright";
 
-import theme from "./theme";
 import styles from "./CodeSnippet.module.css";
 
+Code.theme = {
+	dark: "dracula",
+	light: "github-light",
+};
+
 function CodeSnippet(props) {
-	return <Code {...props} theme={theme} className={styles.wrapper} />;
+	return <Code {...props} className={styles.wrapper} />;
 }
 
 export default CodeSnippet;

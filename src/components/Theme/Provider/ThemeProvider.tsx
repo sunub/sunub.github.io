@@ -13,14 +13,14 @@ export default function ThemeProvider({
 
 	React.useEffect(() => {
 		const root = document.documentElement;
-		const initColorValue = root.getAttribute("data-color-mode");
+		const initColorValue = root.getAttribute("data-theme");
 		rawSetColorMode(initColorValue);
 	}, []);
 
 	const contextValue = React.useMemo(() => {
 		const setColorMode = (newValue: "dark" | "light") => {
 			const root = window.document.documentElement;
-			root.setAttribute("data-color-mode", newValue);
+			root.setAttribute("data-theme", newValue);
 
 			localStorage.setItem(COLOR_MODE_KEY, newValue);
 			Object.entries(COLORS).map(([name, colorByTheme]) => {
