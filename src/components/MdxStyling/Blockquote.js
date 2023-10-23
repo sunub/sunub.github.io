@@ -10,7 +10,7 @@ const Wrapper = styled.blockquote`
 	grid-template-rows: 1fr;
 	align-items: center;
 
-	background-color: oklch(90.75% 0.042 30.85);
+	background-color: oklch(90.75% 0.042 30.85 / 20%);
 	box-shadow: var(--long-shadow);
 	border-radius: 16px;
 	border-left: 20px solid oklch(69.22% 0.19756920371119113 23.834155126049858);

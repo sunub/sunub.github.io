@@ -1,0 +1,79 @@
+---
+title: 클린 코드책 공부
+date: 2023-10-23
+tags: mathmatics
+summary: 깨끗한 코드를 위한 여정
+slug: about-clean-code
+category: cs
+---
+
+# Naming
+
+프로그래밍을 하면서 가~장! 어려운 부분이다. 하지만 제일 중요한 부분이다. 책에서 얻은 팁이 있다.
+
+> ## 함수의 이름에 키워드를 넣어주어라
+>
+> 예를 들어 <code>asertEquals</code> 보다는 <code>assertExpectedEqualsActual(expected, actual)</code>이 더 좋다.
+
+인수에 대한 정보가 함수에 포함되므로 인수에 대한 힌트를 제공할 수 있기 때문에 이 방법이 더 효율적이라는 것이다.
+
+**인수는 함수의 입력으로만 사용되는 것이 이상적이다**. 인수는 우리의 적이다. 인수는 없는 것이 최상이고 그 다음은 1개이고 그 다음은 2개, 3개까지는 괜찮다고 한다. 생각해보면 이는 굉장히 일리가 있다. 우리가 짠 코드도 함수에 인수를 전달할 경우 굉장히 헷갈리는 경우가 대다수이다. 아무리 열심히 이름은 짜더라도 인수가 있을 경우 우리의 뜻이 제대로 전달되지 않는 경우가 대다수이다.
+
+그렇기에 우리는 인수가 없는 함수를 짜기 위해 노력해야 하고 그 함수의 이름을 의도가 명확하게 들어나게끔 이름을 지어야 한다!
+
+# 자료의 추상화
+
+추상화를 무슨 뜻일까? 어떤 뜻을 명료하게 설명하기 보다는 돌려 말하자라는 뜻이다. 그렇다면 자료의 추상화를 하라는 것은 무슨 뜻일까? 아래의 예제를 봐보자.
+
+```typescript
+// 구체적인 Point
+interface Point {
+	x: number;
+	y: number;
+}
+
+// 추상적인 Point
+interface Point {
+	getX: () => number;
+	getY: () => number;
+	setCartesian: (x: number, y: number) => void;
+	getR: () => number;
+	getTheta: () => number;
+	setPolar: (r: number, theta: number) => void;
+}
+```
+
+위에서 제시한 Point는 누가 보아도 직교좌표계를 사용하는 Point지만 아래의 경우 아래에 제시한 Point는 정확히 뭘 나타내는지 알기 어렵다.
+
+이외에도 차이점이라고 한다면 위의 경우 변수의 값에 직접적으로 간섭하기 쉽다. x와 y좌표가 궁금하다면 Point.x를 통해 직접적으로 접근이 가능하다. 하지만 아래의 경우는 어떠한가? set과 get을 통해 값을 얻기 위해서 무엇을 호출해야하는지는 명확하지만 직접적으로 값을 들어내지는 않는다.
+
+그렇다면 왜 직접적으로 접근하여 얻는 것보다 추상적인 표현을 통해서 얻는 것이 좋을까? 예를 들어 사용자가 움직인 좌표를 원한다고 해보자. 단순히 추상화 없이 변수만을 이용하여 호출할 경우 <code>Math.sqrt(x _ x + y _ y)</code>식을 통해서 구할 수 있을 것이다. 하지만 추상화를 하면 어떻게 하면 될까? 클래스 내부에 <code>getMovingDistance()</code> 를 만든 다면 사용자는 더 확실하게 자신이 원하는 값을 얻을 수 있을 것이다.
+
+추상화가 필요한 이유에 대해서 한 가지 예시를 통해서 더 알아보자.
+
+```typescript
+interface Vehicle {
+	getPercentFuelRemaining: () => number;
+}
+
+class Customer extends Vehcile {
+	getDistanceGoWithRemainingFuel() {
+		const remainingDistance =
+			this.getPercentFuelRemaining() / fuel_efficiency;
+		return remainingDistance;
+	}
+}
+```
+
+위의 경우 고객이 현재 남은 연료로 갈 수 있는 거리를 얻기를 바랬다. 우선 우리는 Vechicle 클래스의 메소드를 통해 쉽게 남은 기름량을 얻을 수 있다. 그리고 우리는 이를 활용한 계산을 통해서 남은 거리를 구했다. 우리는 자료를 이용하긴 했지만 Vehicle 클래스에 있는 어떠한 데이터에 손상을 주지 않고 원하는 값을 쉽게 얻어 왔다.
+
+또한 우리가 만약 새로운 기능을 추가하고 싶다 하더라도 Vehicle 자료에는 어떠한 악영향을 주지 않고 데이터를 조회하고 추가할 수 있다는 것이 큰 장점이다.
+
+이렇듯 추상화는 굉장히 중요하다. 그리고 추상화는 표현력이 좋아야 하기 때문에 쉽지 않은 길이다. 우리는 객체가 포함하는 자료를 표현할 방법에 가장 좋은 방법을 심각하게 고민해봐야하고 생각없이 조회(get...)/ 설정(set...) 함수를 추가하는 방법은 가장 피해야하는 방법이다!
+
+# 에러 핸들링
+
+에러 핸들링은 코드를 짜는데 굉장히 도움을 주는 방법이다.
+if(set("username", "unclebob"))
+
+오류 코드를 if 문을 통해서 사용하지 말고 try, catch를 통해 예외가 발생하는 경우를 다루는 함수를 따로 만들어라. 기존에 함수에 try, catch를 집어넣을 경우 함수가 지저분해지므로 따로 분류하여 다루는 것이 좋다.
