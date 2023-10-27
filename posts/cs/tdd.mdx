@@ -1,0 +1,86 @@
+---
+title: 테스트 주도 개발이 뭘까?
+date: 2023-10-21
+tags: design-pattern
+summary: 테스트 주도 개발은 무엇이고 왜 지향할까?
+slug: about-test-driven-dev
+category: cs
+---
+
+테스트 주도 개발을 하기 위해서는 코드의 응집도는 높고 결합도는 낮아야 한다. 그렇다면 여기서 응집도와 결합도는 무엇을 의미하는가? 이에 대해서 확실하게 짚고 넘어가야 한다.
+
+## 코드의 응집도
+
+응집도(cohesion)는 모듈 내부에 존재하는 구성 요소들 사이의 밀접한 정도를 이야기 한다. 이 뜻을 의미상으로 분석해보면 이러하다. 
+
+> "선생님은 반 아이들의 순서를 이름의 가나다 순으로 정리했다.", "선생님은 정리된 순서에 따라 아이들에게 번호를 부여해주었다.","선생님은 반 아이들의 이름과 번호를 호출했다." 
+
+위의 예제는 응집도가 높은 말일까? 이를 판단하기 위해서 주체가 무엇을 하고 있는지를 봐보자. 여기서 **주체**는 누구일까? 선생님이다. 그렇다면 선생님이 집중하고 있는 **대상**은 누구인가? 학생들이다. 그렇다면 대상의 무엇에 집중하고 있는가? 그 중에서도 학생들의 정보를 **정리하고 호출하는데** 집중하고 있다. 현재 주체는 대상의 정보를 정리하는데 집중하고 있다는 것을 알 수 있다. 
+
+> 이렇듯 주체(코드에서는 class나 함수)가 하나의 목적을 달성하기 위해 집중하고 있을 경우 응집도가 높다고 표현한다.
+
+## 코드의 결합도
+
+결합도(coupling)은 모듈과 모듈 사이의 관계에서 관련 정도를 나타낸다. 모듈 간에는 관련이 적을수록 상호 의존성이 줄어 모듈의 독립성이 높아지고 독립성이 높으면 모듈 간에 영향이 적어 좋은 셜계가 된다. 
+
+예를들어 생각해보자 
+
+```javascript
+class Parent{
+	givingPocketMoney() {
+		Child.receivingPocketMoney();
+		return pocketMoney;
+	}
+	...
+}
+
+class Child{
+	static receivingPocketMoney(){...}
+}
+```
+
+위의 경우 부모님에게 용돈을 받기 위해서 하기 위한 행동은 아이가 부모님에게 요청을 용돈을 요구하면 주는 형식으로 구성이 되어 있다. 아이가 모듈 내에서 어떠한 요구조건(메소드)를 추가하더라도 부모의 입장은 변하지 않는다. 반면에 아래의 경우를 봐보자.
+
+```javascript
+class Parent{
+	constructor(){
+		this.mother = new Mother();
+		this.father = new Father();
+	}
+
+	givingPocketMoney() {
+		const child = new Child();
+		const motherIsOk = this.mother.to(child.explainHowToUseIt());
+		const fatherIsOk = mother.negotiateWith(this.father);
+
+		if(fatherIsOk && motherIsOk) {
+			return pockeMoney;
+		}
+	}
+}
+
+class Child{
+	receivingPocketMoney() {
+		
+	}
+
+	exlpainHowToUseIt() {
+		this.explainWhenToUseIt();
+		this.explainIsItAppropriateSum();
+	}
+	explainWhenToUseIt() {...}
+	explainIsItAppropriateSum(){...}
+}
+```
+
+위의 경우 아이가 용돈을 받기 위해서는 아빠의 허락이 떨어져야 하고 엄마의 허락까지 떨어져야지 용돈을 받을 수 있다. 만약 여기서 아빠의 요구는 그대로이지만 엄마의 요구 조건이 바뀐다면 어떻게 될까? 
+
+아이는 바뀐 요구 조건에 따라서 메소드들을 변경하여야 한다. 또한 아빠와 협상을 해야 하므로 아빠 또한 협상 내용에 따라 메소드를 변경해야 할 것이다. 이와 같이 하나의 행동의 변화가 서로에게 미치는 영향이 너무 클 경우 결합도가 높다고 한다.
+
+위에서 설명한 것과 같이 서로가 서로에게 미치는 영향이 낮을 수록 결합도가 낮고 수정해야하는 필요가 줄어들기 때문에 코드 내에서 결합도는 낮게끔 유지해야 한다.
+
+# Example
+
+'pobi,woni,jun'(이름을 쉼표로 구분한 경우)
+names를 private로 만들기
+Cars 부작용(side effect)?
