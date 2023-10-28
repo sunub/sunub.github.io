@@ -20,8 +20,6 @@ const Container = styled.nav`
 `;
 
 function LogoDrawer() {
-	const [isHovering, setIsHovering] = React.useState(false);
-
 	return (
 		<Container>
 			<Logo />

@@ -6,21 +6,14 @@ const BackDropBtn = styled.button.attrs({
 })`
 	position: absolute;
 	inset: 0px;
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 	display: flex;
 	background: color-mix(in oklch, var(--color-primary) 80%, transparent);
 	backdrop-filter: blur(8px);
 	transition: all 500ms ease;
-	&[aria-hidden="true"] {
-		visibility: hidden;
-		opacity: 0;
-	}
-	&[aria-hidden="false"] {
-		visibility: visible;
-		opacity: 1;
-	}
-`;
+
+	`;
 
 const BackDropWrapper = styled.div.attrs({
 	id: "mobile-nav-btn",
@@ -29,14 +22,22 @@ const BackDropWrapper = styled.div.attrs({
 	inset: 0px;
 	z-index: 10000;
 	overflow: hidden;
+	height: 100dvh;
+	transition: width 500ms ease;
+
+	&[aria-hidden='true'] {
+		width: 0vh;
+	}
+	&[aria-hidden='false'] {
+		width: 100vh;
+	}
 `;
 
 function BackDrop({ isOpen, setOpen }) {
 	return (
-		<BackDropWrapper>
+		<BackDropWrapper aria-hidden={!isOpen}>
 			<BackDropBtn
 				onClick={() => setOpen(!isOpen)}
-				aria-hidden={!isOpen}
 				tabIndex={-1}
 			/>
 		</BackDropWrapper>

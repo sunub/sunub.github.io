@@ -1,5 +1,4 @@
 import fs from "fs";
-import { marked } from "marked";
 import { POST_ROOT_PATH } from "./Post.constant";
 
 export function categorizePostByCategory(files) {
@@ -82,17 +81,4 @@ function divideDescriptionAndContent(text) {
 		description: description,
 		content: text,
 	};
-}
-
-function convertContentToHtml(content) {
-	let result = ``;
-
-	const options = {
-		mangle: false,
-		headerIds: false,
-	};
-	marked.use(options);
-
-	result = marked(content);
-	return result;
 }

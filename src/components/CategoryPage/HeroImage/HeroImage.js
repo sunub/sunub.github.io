@@ -7,7 +7,7 @@ function HeroImage({ category }) {
 	return (
 		<div className={styles.Wrapper}>
 			<h1 className={styles.Title}>{category}</h1>
-			<Image
+			{/* <Image
 				className={styles.LowerCloud}
 				src={`${lowerSky.src}?format=webp`}
 				alt={"Cateogry Page HeroImage"}
@@ -24,7 +24,7 @@ function HeroImage({ category }) {
 				height={higherSky.height}
 				priority={true}
 				quality={10}
-			/>
+			/> */}
 		</div>
 	);
 }

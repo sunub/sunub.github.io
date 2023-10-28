@@ -2,14 +2,12 @@
 	display: grid;
 
 	grid: [cateogry-hero] 1fr / [cateogry-hero] 1fr;
-	overflow: hidden;
+	justify-content: start;
 }
 
 .Title {
-	grid-area: cateogry-hero-image;
-
 	position: relative;
-	padding: 98px 32px 66px 128px;
+	padding: 98px 32px 66px 88px;
 
 	font-family: "Wotfard", sans-serif;
 	font-size: 5rem;

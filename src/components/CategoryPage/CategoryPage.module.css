@@ -1,5 +1,6 @@
 .Wrapper {
 	grid-area: main-content;
+	width: 100dvw;
 
 	padding-left: 32px;
 	padding-right: 32px;

@@ -33,11 +33,6 @@ const Header = styled.h3`
 	}
 `;
 
-const Description = styled.section`
-	grid-area: content;
-	display: inline-flex;
-`;
-
 const Footer = styled.time`
 	grid-area: card-footer;
 

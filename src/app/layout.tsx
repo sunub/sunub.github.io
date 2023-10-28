@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ko" >
+    <html lang="ko" suppressHydrationWarning={true} >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -131,7 +131,7 @@ export default function RootLayout({
         </style>
         <InitTheme />
       </head>
-      <body suppressHydrationWarning={true} >
+      <body>
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
