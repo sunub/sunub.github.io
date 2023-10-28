@@ -21,7 +21,7 @@ function Nav({ categories }) {
 					setOpen={setOpen}
 					categories={categories}
 				/>
-				<Toggler maskId={"mobile-nav__theme-toggler"} />
+				<Toggler id={"mobile-header__theme-toggler"} maskId={"mobile-nav__theme-toggler"} />
 			</div>
 		</header>
 	);

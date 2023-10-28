@@ -32,17 +32,35 @@ function CardList({ list }) {
 			const [entry] = entries;
 			const { width } = entry.contentRect;
 
-			setBoxWidth(width);
+			
+			setBoxWidth(() => {
+				const newWidth = width;
+				return newWidth;
+			});
 		});
 
+		
 		observer.observe(root);
 		return () => observer.disconnect();
 	}, []);
+	
+	React.useEffect(() => {
+		if(boxWidth >= 975 && gap !== 4) {
+			setGap(() => 4);
+		} else if(boxWidth < 975 && boxWidth > 605 && boxWidth && gap !== 3) {
+			setGap(() => 3);
+		} else if(boxWidth <= 605 && boxWidth > 425 && boxWidth && gap !== 2) {
+			setGap(() => 2);
+		} else if(boxWidth <= 425 && boxWidth >= 320 && gap !== 1) {
+			setGap(() => 1);
+		}
+	}, [boxWidth, gap])
+
 
 	return (
 		<Wrapper $division={gap}>
 			{list.map((frontMatter) => (
-				<Card key={frontMatter.title} frontMatter={frontMatter} />
+				<Card key={frontMatter.slug} frontMatter={frontMatter} />
 			))}
 		</Wrapper>
 	);

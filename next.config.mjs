@@ -3,7 +3,7 @@
 const nextConfig = {
 	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 	images: {
-		unoptimized: true,
+		formats: ['image/webp'],
 	},
 	reactStrictMode: false,
 	compiler: {

@@ -131,7 +131,7 @@ export default function RootLayout({
         </style>
         <InitTheme />
       </head>
-      <body>
+      <body suppressHydrationWarning={true} >
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">

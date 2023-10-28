@@ -1,9 +1,22 @@
-.hero-image__root-wrapper {
+
+
+.hero-image__wrapper {
 	grid-area: main-hero-image;
+	
+	display: grid;
+	grid: [hero-image] 1fr / [hero-image] 1fr;
+	position: relative;
 
-	display: flex;
 	justify-content: center;
+	align-items: center;
+	object-fit: contain;
 
-	padding-left: 32px;
-	padding-right: 32px;
+	background: linear-gradient(
+		oklch(82.9% 0.09573202406959574 31.111262465234525),
+		oklch(97.14% 0.011 31.07)
+	);
+}
+
+.hero-image__image {
+	grid-area: hero-image;
 }

@@ -11,7 +11,7 @@ function Menu({ isOpen, setOpen, categories }) {
 				return (
 					<Link
 						href={`/${category}`}
-						key={category}
+						key={crypto.randomUUID()}
 						onClick={() => setOpen(!isOpen)}
 						className="mobile-menu__content"
 						style={{
