@@ -87,6 +87,46 @@ export default function RootLayout({
               --default-bg-color: oklch(97.14% 0.011 31.07);
               --card-content-bg-color: oklch(98.8% 0 31.07);
             }
+
+            * {
+            margin: 0px;
+            line-height: calc(1em + 0.8rem);
+            -webkit-font-smoothing: antialiased;
+          }
+          *,
+          *::before,
+          *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+          font-family: Wotfard, NanumSquareNeo, sans-serif;
+          color: var(--color-text);
+          min-height: 100vh;
+          background: var(--color-background);
+          transition:
+            color 350ms ease 0s,
+            background 350ms ease 0s;
+        
+            overflow-y: scroll;
+        }
+
+        #__next {
+          isolation: isolate;
+          container: root / inline-size;
+        
+          display: grid;
+          grid-template-columns: [side-header] 88px [main-content] 1fr;
+          grid-template-rows: 1fr;
+        
+          transition: grid-template-columns 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
+        
+          @media screen and (max-width: 768px) {
+            grid-template-columns: [main-content] 1fr;
+            grid-template-rows: 1fr;
+          }
+        }
+
             `
           }
         </style>
