@@ -2,6 +2,7 @@ import Post from "@/utils/Post";
 import styles from "./CategoryPage.module.css";
 import CardList from "../LandingPage/CardList";
 import HeroImage from "./HeroImage";
+import Footer from "../Footer";
 
 async function getFrontmatters(category) {
 	const post = new Post();

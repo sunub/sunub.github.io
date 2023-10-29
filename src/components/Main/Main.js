@@ -3,6 +3,7 @@
 import styled from "styled-components";
 import HeroImage from "../LandingPage/HeroImage";
 import Spacer from "../Spacer";
+import Footer from "../Footer";
 
 const Wrapper = styled.main`
 	grid-area: main-content;
@@ -17,6 +18,7 @@ function Main({ children }) {
 			<Spacer axis={"vertical"} size={32} />
 			<HeroImage />
 			{children}
+			<Footer />
 		</Wrapper>
 	);
 }
