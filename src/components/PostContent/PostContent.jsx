@@ -3,6 +3,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import styles from "./PostContent.module.css";
 import CodeSnippet from "../CodeSnippet";
 import Blockquote from "../MdxStyling/Blockquote";
+import Footer from "../Footer";
 
 async function PostContent({ postcontent }) {
 	const { content, frontmatter } = await compileMDX({
@@ -26,6 +27,7 @@ async function PostContent({ postcontent }) {
 					{content}
 				</main>
 			</article>
+			<Footer />
 		</div>
 	);
 }
