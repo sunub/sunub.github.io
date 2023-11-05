@@ -1,0 +1,50 @@
+---
+title: 디자인 패턴
+date: 2023-11-03
+tags: design-pattern
+summary: 팩토리 함수가 무엇일까?
+slug: about-factory-method
+category: cs
+---
+# Factory Function
+팩토리 함수는 클래스나 생성자를 반환하는것이 아닌 객체를 반환하는 함수를 뜻한다.
+
+팩토리 함수의 장점은 클래스와 달리 접근하기 쉽다는 것이다. 클래스의 정적인 필드에 작성된 변수가 아닌 이상 `new` 를 이용하여 인스턴스를 생성하여 접근해야 한다는 귀찮음이 있다. 하지만 팩토리 함수는 단순하다!
+
+```javascript
+const createUser = ({ userName, avatar } => ({
+	userName,
+	avatar,
+	setUserName(userName) {
+		this.userName = userName,
+		return this;
+	}
+}))
+
+class User {
+	get userName() {
+		return this.userName;
+	}
+	set userNmae(userName) {
+		this.userName = userName;
+	}
+
+	get avatar() {
+		return this.avatar;
+	}
+
+	set avatar(avatar) {
+		this.avatar = avatar;
+	}
+}
+```
+
+```javascript
+const createUser = ({  
+userName = 'Anonymous',  
+avatar = 'anon.png'  
+} = {}) => ({  
+userName,  
+avatar  
+});
+```
