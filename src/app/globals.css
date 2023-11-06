@@ -215,6 +215,15 @@ td {
 	}
 }
 
+code {
+	font-family: 'WotFord', sans-serif;
+	color: var(--color-bird);
+	background-color: var(--color-elevation);
+	padding: 4px;
+	margin-right: 4px;
+	border-radius: 8px;
+}
+
 @keyframes fadeIn {
 	0% {
 		transform: translateX(-500px);

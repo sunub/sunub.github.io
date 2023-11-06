@@ -1,6 +1,6 @@
 ---
 title: 객체지향을 향해
-date: 2023-10-21
+date: 2023-11-06
 tags: mathmatics
 summary: 객체란 무엇이고 왜 지향할까?
 slug: about-object-oriented
@@ -59,3 +59,35 @@ class Airplane{
 이렇듯 우리는 현실 세계의 복잡한 부분을 추상화를 통해 클라이언트가 알지 않아도 되는 내용들을 과감하게 생략하고 필요한 기능들만 접근하여 사용할 수 있게끔 추상화 해줄 필요가 있다.
 
 ## 2. 캡슐화
+
+캡슐화란 무엇일까? 우리가 약을 먹을 때 캡슐 안에 무엇이 들었는지 알고서 먹는 사람은 아마 매우 드물 것이다. 우리는 단순히 알약을 먹음으로써 질병이 사라지기를 꾀할 것이다.
+
+우리는 복잡한 내부 사정보다는 객체(현실에서의 물건)을 통해서 얻고자 하는 목적만을 빠르게 얻기를 원한다.
+
+캡슐화는 이러한 목적을 달성하기 위한 방법이다. 복잡한 내부 사정을 외부에서 알 수 없게끔 데이터를 감추고 중요한 부분만 들어내는 방법을 캡슐화라고 한다.
+
+이러한 캡슐화를 위해 우리는 `interface`를 만든다.
+
+> ### `interface`란 무엇일까?
+> `interface`는 객체 내부의 필드나, 특정 상태는 존재하지 않고 method 만 존재하는 객체를 `interface` 객체라고 표현한다.
+
+아래의 코드 예시를 봐보자
+
+```javascript
+class FlyingTransPort {
+	fly(origin, destination, passengers) {...}
+}
+
+class Helicopter extends FlyingTransPort {
+	constructor() {
+		super();
+	}
+}
+
+const helicopter = new Helicopter();
+helicopter.fly(korea, ameria, 300);
+```
+
+위의 경우 `FlyingTransPort`는 `interface`에 해당한다. 위의 예시의 경우 헬리콥터를 날게 하기 위해서는 `FlyingTransPort`의 `fly()` 메소드를 사용하기만 하면 된다.
+이런 `interface`를 만든 덕분에 우리는 헬리콥터가 아니더라도 비행기든 제트기든 날 수 있는 것들을 쉽게 날게 만들 수 있다.
+또한 헬리콥터가 어떤 상태인지 우리는 신경쓰지 않는다. 이렇듯 불필요한 부분은 감추고 외부에서는 목적에 부합한 요소만 접근할 수 있게끔 객체를 만드는 것을 <b>캡슐화</b>라고 한다. 
