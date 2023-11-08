@@ -14,15 +14,18 @@ const Container = styled.footer`
   
   align-items: flex-end;
   justify-content: flex-end;
-
+  
   padding-left: 32px;
   padding-right: 32px;
-`
+  
+  margin-top: 64px;
+  `
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-
+  
+  border-top: 1px solid oklch(93.47% 0.0209 31.07);
   padding-top: 32px;
   padding-bottom: 32px;
 `
