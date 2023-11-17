@@ -11,6 +11,13 @@ li {
 	list-style: none;
 }
 
+#__next {
+	@media screen and (max-width: 768px) {
+		grid-template-columns: [main-content] 1fr;
+		grid-template-rows: 1fr;
+	}
+}
+
 input {
 	writing-mode: horizontal-tb !important;
 	text-transform: none;
@@ -216,7 +223,7 @@ td {
 }
 
 code {
-	font-family: 'WotFord', sans-serif;
+	font-family: "WotFord", sans-serif;
 	color: var(--color-bird);
 	background-color: var(--color-elevation);
 	padding: 4px;

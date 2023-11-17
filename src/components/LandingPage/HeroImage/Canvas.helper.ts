@@ -13,6 +13,8 @@ class CanvasClass {
 		this.pixel = window.devicePixelRatio > 1 ? 2 : 1;
 		this.stageWidth = 0;
 		this.stageHeight = 0;
+
+		window.addEventListener("resize", this.resize.bind(this), false);
 		this.resize();
 	}
 

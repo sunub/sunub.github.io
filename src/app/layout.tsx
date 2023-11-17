@@ -120,11 +120,6 @@ export default function RootLayout({
           grid-template-rows: 1fr;
         
           transition: grid-template-columns 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
-        
-          @media screen and (max-width: 768px) {
-            grid-template-columns: [main-content] 1fr;
-            grid-template-rows: 1fr;
-          }
         }
 
             `

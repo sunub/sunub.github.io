@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import HeroImage from '../LandingPage/HeroImage';
+import HeroImage from "../LandingPage/HeroImage";
 import Spacer from "../Spacer";
 import Footer from "../Footer";
 
