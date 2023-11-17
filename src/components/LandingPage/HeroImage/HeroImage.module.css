@@ -1,8 +1,6 @@
-
-
 .hero-image__wrapper {
 	grid-area: main-hero-image;
-	
+
 	display: grid;
 	grid: [hero-image] 1fr / [hero-image] 1fr;
 	position: relative;
@@ -19,4 +17,5 @@
 
 .hero-image__image {
 	grid-area: hero-image;
+	display: none;
 }
