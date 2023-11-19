@@ -9,6 +9,8 @@ class Canvas {
   frontX: number;
   behindX: number;
   speed: number;
+  imageAspectRatio: number;
+  distance: number;
 
   constructor(
     canvasDom: HTMLCanvasElement,
@@ -23,8 +25,10 @@ class Canvas {
     this.stageHeight = 0;
     this.pixel = 0;
     this.frontX = 0;
-    this.behindX = -this.cloudsDom.width - 295;
+    this.behindX = 0;
     this.speed = 0.5;
+    this.imageAspectRatio = imageDom.width / imageDom.height;
+    this.distance = 0;
 
     this.resize();
     window.addEventListener("resize", this.resize.bind(this), false);
@@ -35,24 +39,47 @@ class Canvas {
     this.stageHeight = this.image.clientHeight;
     this.pixel = window.devicePixelRatio > 1 ? 2 : 1;
 
-    this.canvas.width = this.stageWidth * this.pixel;
-    this.canvas.height = this.stageHeight * this.pixel;
+    this.canvas.width = this.stageWidth * this.pixel - 2;
+    this.canvas.height = this.stageHeight * this.pixel - 2;
+
+    this.distance = this.stageWidth * 0.21;
+    this.behindX = -(this.stageWidth + this.distance);
+
+    const imageHeight = this.stageHeight;
+    const imageWidth = imageHeight * this.imageAspectRatio;
+
+    this.image.width = imageWidth;
+    this.image.height = imageHeight;
+
+    this.ctx?.scale(this.pixel, this.pixel);
   }
 
   draw(imageDom: HTMLImageElement) {
     this.ctx?.clearRect(0, 0, this.stageWidth, this.stageHeight);
-    this.ctx?.drawImage(imageDom, this.frontX, 0);
-    this.ctx?.drawImage(imageDom, this.behindX, 0);
+    this.ctx?.drawImage(
+      imageDom,
+      this.frontX,
+      0,
+      this.stageWidth,
+      this.stageHeight
+    );
+    this.ctx?.drawImage(
+      imageDom,
+      this.behindX,
+      0,
+      this.stageWidth,
+      this.stageHeight
+    );
 
     this.frontX += this.speed;
     this.behindX += this.speed;
 
     if (this.frontX > this.stageWidth) {
-      this.frontX = this.behindX - this.cloudsDom.width - 295;
+      this.frontX = this.behindX - this.stageWidth - this.distance;
     }
 
     if (this.behindX > this.stageWidth) {
-      this.behindX = this.frontX - this.cloudsDom.width - 295;
+      this.behindX = this.frontX - this.stageWidth - this.distance;
     }
 
     requestAnimationFrame(this.draw.bind(this, imageDom));

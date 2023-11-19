@@ -20,6 +20,12 @@
   display: none;
 }
 
+.hero-image__image-frame {
+  grid-area: hero-image;
+
+  z-index: 80;
+}
+
 /* background: linear-gradient(
 	  oklch(82.9% 0.09573202406959574 31.111262465234525),
 	  oklch(97.14% 0.011 31.07)

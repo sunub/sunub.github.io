@@ -2,7 +2,7 @@ import { BirdIcon, BridgeIcon, CloudsIcon } from "./HeroImageIcon";
 
 export const BACKGROUNDS = [
   {
-    src: "/assets/hero_image_scene.webp",
+    src: "/assets/hero_image_scene2.webp",
     alt: "front scene hero image",
     zIndex: 40,
   },

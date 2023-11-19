@@ -13,9 +13,16 @@ export default function HeroImage() {
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const cloudsRef = React.useRef<HTMLImageElement>(null);
+  const frameRef = React.useRef<HTMLImageElement>(null);
 
   React.useEffect(() => {
-    if (!imageRef.current || !canvasRef.current || !cloudsRef.current) return;
+    if (
+      !imageRef.current ||
+      !canvasRef.current ||
+      !cloudsRef.current ||
+      !frameRef.current
+    )
+      return;
     const canvas = new Canvas(
       canvasRef.current,
       imageRef.current,
@@ -33,10 +40,11 @@ export default function HeroImage() {
           key={background.alt}
           src={`${background.src}?format=webp`}
           alt={background.alt}
-          width={884}
+          width={883}
           height={325}
           priority={true}
           quality={100}
+          sizes="100vw"
           style={{
             width: "auto",
             height: "auto",
@@ -44,6 +52,22 @@ export default function HeroImage() {
           }}
         />
       ))}
+      <Image
+        ref={frameRef}
+        className={styles["hero-image__image-frame"]}
+        key={"background sky clouds frame"}
+        src={`/assets/hero_image-frame.png?format=png`}
+        alt={"background sky clouds frame"}
+        width={883}
+        height={325}
+        priority={true}
+        quality={100}
+        sizes="100vw"
+        style={{
+          width: "auto",
+          height: "auto",
+        }}
+      />
       <Image
         ref={cloudsRef}
         className={styles["hero-image__image-clouds"]}
@@ -54,6 +78,7 @@ export default function HeroImage() {
         height={325}
         priority={true}
         quality={100}
+        sizes="100vw"
         style={{
           width: "auto",
           height: "auto",
