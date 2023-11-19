@@ -12,6 +12,12 @@
 
 .hero-image__image {
   grid-area: hero-image;
+
+  z-index: 60;
+}
+
+.hero-image__image-clouds {
+  display: none;
 }
 
 /* background: linear-gradient(
