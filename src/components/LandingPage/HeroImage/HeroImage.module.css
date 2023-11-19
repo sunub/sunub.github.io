@@ -1,22 +1,20 @@
-
-
 .hero-image__wrapper {
-	grid-area: main-hero-image;
-	
-	display: grid;
-	grid: [hero-image] 1fr / [hero-image] 1fr;
-	position: relative;
+  grid-area: main-hero-image;
 
-	justify-content: center;
-	align-items: center;
-	object-fit: contain;
+  display: grid;
+  grid: [hero-image] 1fr / [hero-image] 1fr;
+  position: relative;
 
-	background: linear-gradient(
-		oklch(82.9% 0.09573202406959574 31.111262465234525),
-		oklch(97.14% 0.011 31.07)
-	);
+  justify-items: center;
+  align-items: center;
+  object-fit: contain;
 }
 
 .hero-image__image {
-	grid-area: hero-image;
+  grid-area: hero-image;
 }
+
+/* background: linear-gradient(
+	  oklch(82.9% 0.09573202406959574 31.111262465234525),
+	  oklch(97.14% 0.011 31.07)
+  ); */

@@ -1,26 +1,26 @@
 "use client";
 
 import styled from "styled-components";
-import HeroImage from "../LandingPage/HeroImage";
+import HeroImage from "../LandingPage/HeroImage/index";
 import Spacer from "../Spacer";
 import Footer from "../Footer";
 
 const Wrapper = styled.main`
-	grid-area: main-content;
+  grid-area: main-content;
 
-	padding-left: 32px;
-	padding-right: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
 `;
 
 function Main({ children }) {
-	return (
-		<Wrapper>
-			<Spacer axis={"vertical"} size={32} />
-			<HeroImage />
-			{children}
-			<Footer />
-		</Wrapper>
-	);
+  return (
+    <Wrapper>
+      <Spacer axis={"vertical"} size={32} />
+      <HeroImage />
+      {children}
+      <Footer />
+    </Wrapper>
+  );
 }
 
 export default Main;
