@@ -13,32 +13,37 @@ export default function HeroImage() {
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const cloudsRef = React.useRef<HTMLImageElement>(null);
-  const frameRef = React.useRef<HTMLImageElement>(null);
+  const wrapperRef = React.useRef<HTMLImageElement>(null);
+
+  const REF_KEYS: any = {
+    image: imageRef,
+    clouds: cloudsRef,
+  };
 
   React.useEffect(() => {
     if (
       !imageRef.current ||
       !canvasRef.current ||
       !cloudsRef.current ||
-      !frameRef.current
+      !wrapperRef.current
     )
       return;
     const canvas = new Canvas(
       canvasRef.current,
       imageRef.current,
-      cloudsRef.current
+      wrapperRef.current
     );
     canvas.draw(cloudsRef.current);
   });
 
   return (
-    <div className={styles["hero-image__wrapper"]}>
+    <div ref={wrapperRef} className={styles["hero-image__wrapper"]}>
       {BACKGROUNDS.map((background) => (
         <Image
-          ref={imageRef}
-          className={styles["hero-image__image"]}
-          key={background.alt}
-          src={`${background.src}?format=webp`}
+          ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
+          className={styles[`${background.className}`]}
+          key={background.key}
+          src={background.src}
           alt={background.alt}
           width={883}
           height={325}
@@ -46,46 +51,11 @@ export default function HeroImage() {
           quality={100}
           sizes="100vw"
           style={{
-            width: "auto",
-            height: "auto",
-            zIndex: `${background.zIndex}`,
+            objectFit: "cover",
           }}
         />
       ))}
-      <Image
-        ref={frameRef}
-        className={styles["hero-image__image-frame"]}
-        key={"background sky clouds frame"}
-        src={`/assets/hero_image-frame.png?format=png`}
-        alt={"background sky clouds frame"}
-        width={883}
-        height={325}
-        priority={true}
-        quality={100}
-        sizes="100vw"
-        style={{
-          width: "auto",
-          height: "auto",
-        }}
-      />
-      <Image
-        ref={cloudsRef}
-        className={styles["hero-image__image-clouds"]}
-        key={"background sky clouds scene"}
-        src={`/assets/background_clouds.png?format=png`}
-        alt={"background sky clouds scene"}
-        width={890}
-        height={325}
-        priority={true}
-        quality={100}
-        sizes="100vw"
-        style={{
-          width: "auto",
-          height: "auto",
-          zIndex: "40",
-        }}
-      />
-      <CanvasCompo ref={canvasRef} className={styles["hero-image__image"]} />
+      <CanvasCompo ref={canvasRef} className={styles["hero-image__canvas"]} />
     </div>
   );
 }

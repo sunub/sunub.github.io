@@ -30,28 +30,26 @@ class Canvas extends CanvasImage {
   resize() {
     this.resizeStageSize();
     this.resizeCanvasSize();
-    this.resizeImageSize();
 
     this.distance = this.stageWidth * 0.21;
     this.behindX = -(this.stageWidth + this.distance);
-    this.ctx?.scale(this.pixel, this.pixel);
   }
 
   resizeStageSize() {
-    this.stageWidth = this.image.clientWidth;
     this.stageHeight = this.image.clientHeight;
+    this.stageWidth = this.image.clientWidth;
     this.pixel = window.devicePixelRatio > 1 ? 2 : 1;
   }
 
   resizeCanvasSize() {
     this.canvas.width = this.stageWidth * this.pixel - 2;
     this.canvas.height = this.stageHeight * this.pixel - 2;
+    this.ctx?.scale(this.pixel, this.pixel);
   }
 
   resizeImageSize() {
     const imageHeight = this.stageHeight;
-    const imageWidth = imageHeight * this.imageAspectRatio;
-
+    const imageWidth = this.stageWidth * this.imageAspectRatio;
     this.image.width = imageWidth;
     this.image.height = imageHeight;
   }
