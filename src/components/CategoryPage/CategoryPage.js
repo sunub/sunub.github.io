@@ -5,20 +5,20 @@ import HeroImage from "./HeroImage";
 import Footer from "../Footer";
 
 async function getFrontmatters(category) {
-	const post = new Post();
-	const frontmatters = post.frontMatters[category];
-	return frontmatters;
+  const post = new Post();
+  const frontmatters = post.frontMatters[category];
+  return frontmatters;
 }
 
 async function CategoryPage({ category }) {
-	const frontmatters = await getFrontmatters(category);
+  const frontmatters = await getFrontmatters(category);
 
-	return (
-		<div className={styles.Wrapper}>
-			<HeroImage category={category} />
-			<CardList list={frontmatters} />
-		</div>
-	);
+  return (
+    <main className={styles.Wrapper}>
+      <HeroImage category={category} />
+      <CardList id={"cateogry-page__card-list"} list={frontmatters} />
+    </main>
+  );
 }
 
 export default CategoryPage;

@@ -2,11 +2,8 @@
 
 import styled from "styled-components";
 import Spacer from "../Spacer";
-import Footer from "../Footer";
 
 const Wrapper = styled.main`
-  grid-area: main-content;
-
   padding-left: 32px;
   padding-right: 32px;
 
@@ -21,7 +18,6 @@ function Main({ children }) {
     <Wrapper>
       <Spacer axis={"vertical"} size={32} />
       {children}
-      <Footer />
     </Wrapper>
   );
 }

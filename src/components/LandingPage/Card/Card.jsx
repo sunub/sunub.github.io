@@ -8,6 +8,10 @@ import * as Icons from "@/components/LandingPage/Icons/Icons";
 
 const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
+
+  @media screen and (max-width: 320px) {
+    width: 120px;
+  }
 `;
 
 const Header = styled.h3`
