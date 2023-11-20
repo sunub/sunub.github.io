@@ -13,26 +13,26 @@ export default function HeroImage() {
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const cloudsRef = React.useRef<HTMLImageElement>(null);
-  const frameRef = React.useRef<HTMLImageElement>(null);
+  const wrapperRef = React.useRef<HTMLImageElement>(null);
 
   React.useEffect(() => {
     if (
       !imageRef.current ||
       !canvasRef.current ||
       !cloudsRef.current ||
-      !frameRef.current
+      !wrapperRef.current
     )
       return;
     const canvas = new Canvas(
       canvasRef.current,
       imageRef.current,
-      cloudsRef.current
+      wrapperRef.current
     );
     canvas.draw(cloudsRef.current);
   });
 
   return (
-    <div className={styles["hero-image__wrapper"]}>
+    <div ref={wrapperRef} className={styles["hero-image__wrapper"]}>
       {BACKGROUNDS.map((background) => (
         <Image
           ref={imageRef}
@@ -45,15 +45,9 @@ export default function HeroImage() {
           priority={true}
           quality={100}
           sizes="100vw"
-          style={{
-            width: "auto",
-            height: "auto",
-            zIndex: `${background.zIndex}`,
-          }}
         />
       ))}
       <Image
-        ref={frameRef}
         className={styles["hero-image__image-frame"]}
         key={"background sky clouds frame"}
         src={`/assets/hero_image-frame.png?format=png`}
@@ -85,7 +79,7 @@ export default function HeroImage() {
           zIndex: "40",
         }}
       />
-      <CanvasCompo ref={canvasRef} className={styles["hero-image__image"]} />
+      <CanvasCompo ref={canvasRef} className={styles["hero-image__canvas"]} />
     </div>
   );
 }

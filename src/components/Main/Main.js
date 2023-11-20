@@ -10,6 +10,11 @@ const Wrapper = styled.main`
 
   padding-left: 32px;
   padding-right: 32px;
+
+  @media (max-width: 425px) {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
 `;
 
 function Main({ children }) {

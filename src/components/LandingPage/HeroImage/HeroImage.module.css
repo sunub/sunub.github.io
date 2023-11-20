@@ -13,7 +13,17 @@
 .hero-image__image {
   grid-area: hero-image;
 
+  z-index: 40;
+  width: auto;
+  height: auto;
+}
+
+.hero-image__canvas {
+  grid-area: hero-image;
   z-index: 60;
+
+  width: 90%;
+  height: 100%;
 }
 
 .hero-image__image-clouds {
