@@ -18,7 +18,6 @@ const Wrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
 
-  max-width: 890px;
   width: 100%;
 
   position: relative;
