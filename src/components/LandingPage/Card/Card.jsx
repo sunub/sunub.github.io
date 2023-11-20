@@ -8,8 +8,6 @@ import * as Icons from "@/components/LandingPage/Icons/Icons";
 
 const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
-
-  flex: 2 0 135px;
 `;
 
 const Header = styled.h3`
