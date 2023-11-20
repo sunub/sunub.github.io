@@ -45,6 +45,9 @@ export default function HeroImage() {
           priority={true}
           quality={100}
           sizes="100vw"
+          style={{
+            objectFit: "cover",
+          }}
         />
       ))}
       <Image
@@ -58,8 +61,7 @@ export default function HeroImage() {
         quality={100}
         sizes="100vw"
         style={{
-          width: "auto",
-          height: "auto",
+          objectFit: "cover",
         }}
       />
       <Image
@@ -74,8 +76,7 @@ export default function HeroImage() {
         quality={100}
         sizes="100vw"
         style={{
-          width: "auto",
-          height: "auto",
+          objectFit: "cover",
           zIndex: "40",
         }}
       />

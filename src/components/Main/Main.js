@@ -1,7 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import HeroImage from "../LandingPage/HeroImage/index";
 import Spacer from "../Spacer";
 import Footer from "../Footer";
 
@@ -21,7 +20,6 @@ function Main({ children }) {
   return (
     <Wrapper>
       <Spacer axis={"vertical"} size={32} />
-      <HeroImage />
       {children}
       <Footer />
     </Wrapper>
