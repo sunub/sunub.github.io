@@ -1,5 +1,5 @@
-import './globals.css'
-import type { Metadata } from 'next';
+import "./globals.css";
+import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import ThemeProvider from "@/components/Theme/Provider";
 import Header from "@/components/Header";
@@ -9,20 +9,20 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: {
-    default: 'sun_ub',
-    template: '%s | sun_ub',
+    default: "sun_ub",
+    template: "%s | sun_ub",
   },
-  keywords: ['sunub', 'sun_ub'],
+  keywords: ["sunub", "sun_ub"],
   description: "This site is sunub's personal blog ",
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" suppressHydrationWarning={true} >
+    <html lang="ko" suppressHydrationWarning={true}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -30,9 +30,16 @@ export default function RootLayout({
           rel="stylesheet preload"
           as="style"
         />
-        <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" as="icon" />
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <link
+          rel="icon"
+          type="image/x-icon"
+          sizes="32x32"
+          href="/assets/favicon.ico"
+          as="icon"
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           @font-face {
             font-family: 'NanumSquareNeo';
             src: url('/fonts/NanumSquareNeo-Variable.woff2') format('woff2'),
@@ -48,10 +55,11 @@ export default function RootLayout({
             font-display: fallback;
             uniconde-range: U+0020-007E;
           }
-        `}} />
+        `,
+          }}
+        />
         <style>
-          {
-            `
+          {`
             html{
               --scrollbar-width: 12px;
               --scrollbar-height: 12px;
@@ -127,8 +135,7 @@ export default function RootLayout({
           }
         }
 
-            `
-          }
+            `}
         </style>
         <InitTheme />
       </head>
@@ -138,11 +145,14 @@ export default function RootLayout({
             <div id="__next">
               <MobileNav />
               <Header />
-              {children}
+              <div id="side-ng__main-content">
+                {children}
+                <Footer />
+              </div>
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>
       </body>
     </html>
-  )
+  );
 }
