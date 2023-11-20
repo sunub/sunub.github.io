@@ -30,7 +30,6 @@ class Canvas extends CanvasImage {
   resize() {
     this.resizeStageSize();
     this.resizeCanvasSize();
-    this.resizeImageSize();
 
     this.distance = this.stageWidth * 0.21;
     this.behindX = -(this.stageWidth + this.distance);

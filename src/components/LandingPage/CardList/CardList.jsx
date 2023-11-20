@@ -7,52 +7,25 @@ import Card from "../Card/index";
 const Wrapper = styled.div`
   grid-area: main-card-list;
 
-  width: 100%;
-
-  display: flex;
+  display: grid;
   flex-direction: row;
-  flex-wrap: wrap;
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  justify-items: center;
 
-  justify-content: center;
+  gap: 3rem 1rem;
   padding-top: 32px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  max-width: 890px;
+  width: 100%;
 
   position: relative;
   overflow-wrap: break-word;
 `;
 
 function CardList({ list }) {
-  const [boxWidth, setBoxWidth] = React.useState(0);
-  const [gap, setGap] = React.useState(4);
-
-  // React.useEffect(() => {
-  // 	const root = document.getElementById("__next");
-  // 	const observer = new ResizeObserver((entries) => {
-  // 		const [entry] = entries;
-  // 		const { width } = entry.contentRect;
-
-  // 		setBoxWidth(() => {
-  // 			const newWidth = width;
-  // 			return newWidth;
-  // 		});
-  // 	});
-
-  // 	observer.observe(root);
-  // 	return () => observer.disconnect();
-  // }, []);
-
-  // React.useEffect(() => {
-  // 	if(boxWidth >= 975 && gap !== 4) {
-  // 		setGap(() => 4);
-  // 	} else if(boxWidth < 975 && boxWidth > 605 && boxWidth && gap !== 3) {
-  // 		setGap(() => 3);
-  // 	} else if(boxWidth <= 605 && boxWidth > 425 && boxWidth && gap !== 2) {
-  // 		setGap(() => 2);
-  // 	} else if(boxWidth <= 425 && boxWidth >= 320 && gap !== 1) {
-  // 		setGap(() => 1);
-  // 	}
-  // }, [boxWidth, gap])
-
   return (
     <Wrapper>
       {list.map((frontMatter) => (
