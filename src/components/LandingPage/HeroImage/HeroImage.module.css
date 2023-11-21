@@ -17,23 +17,21 @@
 
 .hero-image__image {
   grid-area: hero-image;
+  transition: opacity 350ms ease 0s;
 
   z-index: 40;
 }
 
-.hero-image__lazy-image {
-  grid-area: hero-image;
-}
-
 .hero-image__image-frame {
   grid-area: hero-image;
-
+  transition: opacity 350ms ease 0s;
   z-index: 80;
 }
 
 .hero-image__canvas {
   grid-area: hero-image;
   z-index: 60;
+  transition: opacity 350ms ease 0s;
 
   width: 90%;
   height: 100%;
@@ -44,6 +42,7 @@
 .hero-image__image-clouds {
   display: none;
   z-index: 40;
+  transition: opacity 350ms ease 0s;
 }
 
 @keyframes showup {

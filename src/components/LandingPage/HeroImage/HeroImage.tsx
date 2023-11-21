@@ -1,11 +1,11 @@
 "use client";
 
 import styles from "./HeroImage.module.css";
-import { BACKGROUNDS_LIGHT, BACKGROUNDS_DARK } from "./HeroImage.constant";
 import Canvas from "./Canvas.helper";
-import Image from "next/image";
 import React from "react";
 import { ThemeContext } from "@/components/Theme/Provider";
+import DarkHeroImage from "./DarkHeroImage";
+import LightHeroImage from "./LightHeroImage";
 
 type Theme = {
   colorMode?: string | null;
@@ -16,19 +16,16 @@ export default function HeroImage() {
 
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const cloudsRef = React.useRef<HTMLImageElement>(null);
+  const lightCloudsRef = React.useRef<HTMLImageElement>(null);
+  const darkCloudsRef = React.useRef<HTMLImageElement>(null);
   const wrapperRef = React.useRef<HTMLImageElement>(null);
-
-  const REF_KEYS: any = {
-    image: imageRef,
-    clouds: cloudsRef,
-  };
 
   React.useEffect(() => {
     if (
       !imageRef.current ||
       !canvasRef.current ||
-      !cloudsRef.current ||
+      !lightCloudsRef.current ||
+      !darkCloudsRef.current ||
       !wrapperRef.current
     )
       return;
@@ -38,50 +35,25 @@ export default function HeroImage() {
       wrapperRef.current,
     );
 
-    canvas.draw(cloudsRef.current);
+    theme.colorMode === "light"
+      ? canvas.draw(lightCloudsRef.current)
+      : canvas.draw(darkCloudsRef.current);
   }, [theme.colorMode]);
 
   return (
     <div ref={wrapperRef} className={styles["hero-image__wrapper"]}>
-      {theme.colorMode === "light"
-        ? BACKGROUNDS_LIGHT.map((background) => {
-            return (
-              <Image
-                ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
-                className={styles[`${background.className}`]}
-                key={background.key}
-                src={background.src}
-                alt={background.alt}
-                width={883}
-                height={325}
-                priority={true}
-                quality={75}
-                sizes="100vw"
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            );
-          })
-        : BACKGROUNDS_DARK.map((background) => {
-            return (
-              <Image
-                ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
-                className={styles[`${background.className}`]}
-                key={background.key}
-                src={background.src}
-                alt={background.alt}
-                width={883}
-                height={325}
-                priority={true}
-                quality={75}
-                sizes="100vw"
-                style={{
-                  objectFit: "cover",
-                }}
-              />
-            );
-          })}
+      <LightHeroImage
+        styles={styles}
+        imageRef={imageRef}
+        cloudsRef={lightCloudsRef}
+        opacity={theme.colorMode === "light" ? 1 : 0}
+      />
+      <DarkHeroImage
+        styles={styles}
+        imageRef={imageRef}
+        cloudsRef={darkCloudsRef}
+        opacity={theme.colorMode === "dark" ? 1 : 0}
+      />
       <canvas ref={canvasRef} className={styles["hero-image__canvas"]} />
     </div>
   );

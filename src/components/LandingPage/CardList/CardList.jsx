@@ -31,9 +31,10 @@ const Wrapper = styled.div`
 function CardList({ list, ...delegated }) {
   return (
     <Wrapper {...delegated}>
-      {list.map((frontMatter) => (
-        <Card key={frontMatter.slug} frontMatter={frontMatter} />
-      ))}
+      {list &&
+        list.map((frontMatter) => (
+          <Card key={frontMatter.slug} frontMatter={frontMatter} />
+        ))}
     </Wrapper>
   );
 }
