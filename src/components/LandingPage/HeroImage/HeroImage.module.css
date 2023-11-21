@@ -9,29 +9,29 @@
   align-items: center;
   object-fit: contain;
 
-  animation: showup;
+  & > img {
+    transition: opacity 350ms ease 0s;
+  }
+  /* animation: showup;
   animation-delay: 100ms;
   animation-duration: 500ms;
-  animation-fill-mode: backwards;
+  animation-fill-mode: backwards; */
 }
 
 .hero-image__image {
   grid-area: hero-image;
-  transition: opacity 350ms ease 0s;
 
-  z-index: 40;
+  z-index: 50;
 }
 
 .hero-image__image-frame {
   grid-area: hero-image;
-  transition: opacity 350ms ease 0s;
   z-index: 80;
 }
 
 .hero-image__canvas {
   grid-area: hero-image;
   z-index: 60;
-  transition: opacity 350ms ease 0s;
 
   width: 90%;
   height: 100%;
@@ -40,9 +40,10 @@
 }
 
 .hero-image__image-clouds {
-  display: none;
+  grid-area: hero-image;
+
   z-index: 40;
-  transition: opacity 350ms ease 0s;
+  animation: movement 2s infinite running linear;
 }
 
 @keyframes showup {

@@ -259,6 +259,7 @@ code {
     visibility: hidden;
   }
 }
+
 /* Variables */
 
 @layer base.props {

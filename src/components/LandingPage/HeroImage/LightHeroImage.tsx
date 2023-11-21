@@ -1,46 +1,77 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
-import { BACKGROUNDS_LIGHT } from "./HeroImage.constant";
+import styled from "styled-components";
+import LightBaseImage from "public/assets/hero_image--light-base-scene-reduce.webp";
+import LightCloud from "public/assets/hero_image--light_clouds.webp";
+
+const Picture = styled.picture`
+  display: contents;
+  max-width: 100%;
+`;
+
+const BaseImage = styled(Image)<{ $theme: any }>`
+  grid-area: hero-image;
+  position: relative;
+  z-index: 2;
+  transition: opacity 350ms ease 0s;
+
+  display: block;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+
+  opacity: ${({ $theme }) => ($theme === "light" ? 1 : 0)};
+  background: linear-gradient(
+    15deg,
+    oklch(97.14% 0.011 31.07 / 71%) 4%,
+    oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 53%
+  );
+`;
+
+const Clouds = styled(Image)`
+  grid-area: hero-image;
+
+  display: none;
+`;
 
 function LightHeroImage({
   imageRef,
   cloudsRef,
-  styles,
-  opacity,
+  theme,
 }: {
   imageRef: React.RefObject<HTMLImageElement>;
   cloudsRef: React.RefObject<HTMLImageElement>;
-  styles: any;
-  opacity: number;
+  theme: any;
 }): React.ReactNode {
-  const REF_KEYS: any = {
-    image: imageRef,
-    clouds: cloudsRef,
-  };
-
   return (
-    <>
-      {BACKGROUNDS_LIGHT.map((background) => {
-        return (
-          <Image
-            ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
-            className={styles[`${background.className}`]}
-            key={background.key}
-            src={background.src}
-            alt={background.alt}
-            width={883}
-            height={325}
-            priority={true}
-            quality={75}
-            sizes="100vw"
-            style={{
-              objectFit: "cover",
-              opacity: opacity,
-            }}
-          />
-        );
-      })}
-    </>
+    <Picture>
+      <BaseImage
+        ref={imageRef}
+        src={LightBaseImage}
+        alt="base hero image"
+        quality={75}
+        sizes="100vw"
+        style={{
+          opacity: theme === "light" ? 1 : 0,
+          objectFit: "cover",
+        }}
+        loading="lazy"
+        $theme={theme}
+      />
+      <Clouds
+        ref={cloudsRef}
+        src={LightCloud}
+        alt="light cloud hero image"
+        quality={75}
+        sizes="100vw"
+        style={{
+          objectFit: "cover",
+        }}
+        loading="lazy"
+      />
+    </Picture>
   );
 }
 
