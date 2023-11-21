@@ -224,6 +224,14 @@ code {
   border-radius: 8px;
 }
 
+#side-ng__main-content {
+  grid-area: main-content;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 @keyframes fadeIn {
   0% {
     transform: translateX(-500px);
@@ -251,15 +259,6 @@ code {
     visibility: hidden;
   }
 }
-
-#side-ng__main-content {
-  grid-area: main-content;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 /* Variables */
 
 @layer base.props {

@@ -6,11 +6,9 @@ export const fetchCache = "default-no-store";
 
 export default function Page() {
   return (
-    <>
-      <Main>
-        <HeroImage />
-        <LandingPage />
-      </Main>
-    </>
+    <Main>
+      <HeroImage />
+      <LandingPage />
+    </Main>
   );
 }
