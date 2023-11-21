@@ -1,36 +1,45 @@
-import { BirdIcon, BridgeIcon, CloudsIcon } from "./HeroImageIcon";
-
-export const BACKGROUNDS = [
+export const BACKGROUNDS_LIGHT = [
   {
     className: "hero-image__image",
-    src: "/assets/hero_image_scene2.webp?format=webp",
-    alt: "hero-image back scene",
-    key: "hero-image back scene",
+    src: "/assets/hero_image--light_scene.webp?format=webp",
+    alt: "hero image light scene",
+    key: "hero image light scene",
     ref: "image",
   },
   {
     className: "hero-image__image-frame",
-    src: "/assets/hero_image-frame.png?format=png",
-    alt: "hero-image front frame",
-    key: "hero-image front frame",
+    src: "/assets/hero_image--light_frame.png?format=png",
+    alt: "hero-image light frame",
+    key: "hero-image light frame",
   },
   {
     className: "hero-image__image-clouds",
-    src: "/assets/background_clouds.png?format=png",
-    alt: "background sky clouds scene",
-    key: "background sky clouds scene",
+    src: "/assets/hero_image--light_clouds.png?format=png",
+    alt: "background light clouds scene",
+    key: "background light clouds scene",
     ref: "clouds",
   },
 ];
 
-export const BACKGROUND_SVG = [
-  <BirdIcon key="bird" />,
-  <BridgeIcon key="bridge" />,
-  <CloudsIcon key="clouds" />,
+export const BACKGROUNDS_DARK = [
+  {
+    className: "hero-image__image",
+    src: "/assets/hero_image--dark_scene.webp?format=webp",
+    alt: "hero image dark scene",
+    key: "hero image dark scene",
+    ref: "image",
+  },
+  {
+    className: "hero-image__image-frame",
+    src: "/assets/hero_image--dark_frame.png?format=png",
+    alt: "hero-image dark frame",
+    key: "hero-image dark frame",
+  },
+  {
+    className: "hero-image__image-clouds",
+    src: "/assets/hero_image--dark_clouds.png?format=png",
+    alt: "background dark clouds scene",
+    key: "background dark clouds scene",
+    ref: "clouds",
+  },
 ];
-
-// {
-//   src: "/assets/ground_scene.webp",
-//   alt: "ground scene hero image",
-//   zIndex: 20,
-// },

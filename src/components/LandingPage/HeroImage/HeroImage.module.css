@@ -8,12 +8,21 @@
   justify-items: center;
   align-items: center;
   object-fit: contain;
+
+  animation: showup;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
 }
 
 .hero-image__image {
   grid-area: hero-image;
 
   z-index: 40;
+}
+
+.hero-image__lazy-image {
+  grid-area: hero-image;
 }
 
 .hero-image__image-frame {
@@ -35,6 +44,16 @@
 .hero-image__image-clouds {
   display: none;
   z-index: 40;
+}
+
+@keyframes showup {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 /* background: linear-gradient(
