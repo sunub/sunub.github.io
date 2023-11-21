@@ -1,4 +1,12 @@
-export const BACKGROUNDS_LIGHT = [
+interface Background {
+  className: string;
+  src: string;
+  alt: string;
+  key: string;
+  ref?: string;
+}
+
+export const BACKGROUNDS_LIGHT: Background[] = [
   {
     className: "hero-image__image",
     src: "/assets/hero_image--light_scene.webp?format=webp",
@@ -21,7 +29,7 @@ export const BACKGROUNDS_LIGHT = [
   },
 ];
 
-export const BACKGROUNDS_DARK = [
+export const BACKGROUNDS_DARK: Background[] = [
   {
     className: "hero-image__image",
     src: "/assets/hero_image--dark_scene.webp?format=webp",
