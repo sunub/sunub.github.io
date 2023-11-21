@@ -13,9 +13,12 @@ async function LandingPage() {
   const frontmatterList = await getFrontmatterList();
 
   return (
-    frontmatterList && (
-      <CardList id={"landing-page__card-list"} list={frontmatterList} />
-    )
+    <>
+      <h1>Recently published</h1>
+      {frontmatterList && (
+        <CardList id={"landing-page__card-list"} list={frontmatterList} />
+      )}
+    </>
   );
 }
 

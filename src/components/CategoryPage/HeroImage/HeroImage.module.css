@@ -1,50 +1,50 @@
 .Wrapper {
-	display: grid;
+  display: grid;
 
-	grid: [cateogry-hero] 1fr / [cateogry-hero] 1fr;
-	justify-content: start;
+  grid: [cateogry-hero] 1fr / [cateogry-hero] 1fr;
+  justify-content: start;
 }
 
 .Title {
-	position: relative;
-	padding: 98px 32px 66px 88px;
+  position: relative;
+  padding: 98px 32px 66px 88px;
 
-	font-family: "Wotfard", sans-serif;
-	font-size: 5rem;
-	color: var(--color-text);
-	text-transform: capitalize;
+  font-family: "Wotfard", sans-serif;
+  font-size: 5rem;
+  color: var(--color-text);
+  text-transform: capitalize;
 
-	animation: showup;
-	animation-delay: 100ms;
-	animation-duration: 500ms;
-	animation-fill-mode: backwards;
-	z-index: 10;
+  animation: showup;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
+  z-index: 10;
 }
 
 .LowerCloud {
-	grid-area: cateogry-hero-image;
+  grid-area: cateogry-hero-image;
 
-	animation: showup;
-	animation-delay: 100ms;
-	animation-duration: 500ms;
-	animation-fill-mode: backwards;
+  animation: showup;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
 }
 
 .HigherCloud {
-	grid-area: cateogry-hero-image;
+  grid-area: cateogry-hero-image;
 
-	animation: showup;
-	animation-delay: 100ms;
-	animation-duration: 500ms;
-	animation-fill-mode: backwards;
+  animation: showup;
+  animation-delay: 100ms;
+  animation-duration: 500ms;
+  animation-fill-mode: backwards;
 }
 
 @keyframes showup {
-	0% {
-		opacity: 0;
-	}
+  0% {
+    opacity: 0;
+  }
 
-	100% {
-		opacity: 1;
-	}
+  100% {
+    opacity: 1;
+  }
 }

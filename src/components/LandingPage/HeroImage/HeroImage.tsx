@@ -1,15 +1,19 @@
 "use client";
 
 import styles from "./HeroImage.module.css";
-import { BACKGROUNDS } from "./HeroImage.constant";
+import { BACKGROUNDS_LIGHT, BACKGROUNDS_DARK } from "./HeroImage.constant";
 import Canvas from "./Canvas.helper";
 import Image from "next/image";
-import styled from "styled-components";
 import React from "react";
+import { ThemeContext } from "@/components/Theme/Provider";
 
-const CanvasCompo = styled.canvas``;
-
+type Theme = {
+  colorMode?: string | null;
+  setColorMode?: (value: string) => void;
+};
 export default function HeroImage() {
+  const theme: Theme = React.useContext(ThemeContext);
+
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const cloudsRef = React.useRef<HTMLImageElement>(null);
@@ -31,31 +35,54 @@ export default function HeroImage() {
     const canvas = new Canvas(
       canvasRef.current,
       imageRef.current,
-      wrapperRef.current
+      wrapperRef.current,
     );
+
     canvas.draw(cloudsRef.current);
-  });
+  }, [theme.colorMode]);
 
   return (
     <div ref={wrapperRef} className={styles["hero-image__wrapper"]}>
-      {BACKGROUNDS.map((background) => (
-        <Image
-          ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
-          className={styles[`${background.className}`]}
-          key={background.key}
-          src={background.src}
-          alt={background.alt}
-          width={883}
-          height={325}
-          priority={true}
-          quality={100}
-          sizes="100vw"
-          style={{
-            objectFit: "cover",
-          }}
-        />
-      ))}
-      <CanvasCompo ref={canvasRef} className={styles["hero-image__canvas"]} />
+      {theme.colorMode === "light"
+        ? BACKGROUNDS_LIGHT.map((background) => {
+            return (
+              <Image
+                ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
+                className={styles[`${background.className}`]}
+                key={background.key}
+                src={background.src}
+                alt={background.alt}
+                width={883}
+                height={325}
+                priority={true}
+                quality={75}
+                sizes="100vw"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            );
+          })
+        : BACKGROUNDS_DARK.map((background) => {
+            return (
+              <Image
+                ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
+                className={styles[`${background.className}`]}
+                key={background.key}
+                src={background.src}
+                alt={background.alt}
+                width={883}
+                height={325}
+                priority={true}
+                quality={75}
+                sizes="100vw"
+                style={{
+                  objectFit: "cover",
+                }}
+              />
+            );
+          })}
+      <canvas ref={canvasRef} className={styles["hero-image__canvas"]} />
     </div>
   );
 }
