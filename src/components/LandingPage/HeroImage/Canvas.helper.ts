@@ -3,21 +3,15 @@ import CanvasImage from "./CanvasImage.helper";
 class Canvas extends CanvasImage {
   canvas: HTMLCanvasElement;
   image: HTMLImageElement;
-  cloudsDom: HTMLImageElement;
   ctx: CanvasRenderingContext2D | null;
   stageWidth: number;
   stageHeight: number;
   imageAspectRatio: number;
 
-  constructor(
-    canvasDom: HTMLCanvasElement,
-    imageDom: HTMLImageElement,
-    cloudsDom: HTMLImageElement
-  ) {
+  constructor(canvasDom: HTMLCanvasElement, imageDom: HTMLImageElement) {
     super();
     this.canvas = canvasDom;
     this.image = imageDom;
-    this.cloudsDom = cloudsDom;
     this.ctx = this.canvas?.getContext("2d") ?? null;
     this.stageWidth = 0;
     this.stageHeight = 0;
@@ -31,7 +25,7 @@ class Canvas extends CanvasImage {
     this.resizeStageSize();
     this.resizeCanvasSize();
 
-    this.distance = this.stageWidth * 0.21;
+    this.distance = this.stageWidth * 0.13;
     this.behindX = -(this.stageWidth + this.distance);
   }
 
@@ -54,34 +48,34 @@ class Canvas extends CanvasImage {
     this.image.height = imageHeight;
   }
 
-  draw(imageDom: HTMLImageElement) {
+  draw(cloudDom: HTMLImageElement) {
     this.ctx?.clearRect(0, 0, this.stageWidth, this.stageHeight);
-    this.drawFrontClouds(imageDom);
-    this.drawBehindClouds(imageDom);
+    this.drawFrontClouds(cloudDom);
+    this.drawBehindClouds(cloudDom);
 
     this.increaseSpeed();
     this.updateImageLocation(this.stageWidth);
 
-    requestAnimationFrame(this.draw.bind(this, imageDom));
+    requestAnimationFrame(this.draw.bind(this, cloudDom));
   }
 
-  drawFrontClouds(imageDom: HTMLImageElement) {
+  drawFrontClouds(cloudDom: HTMLImageElement) {
     this.ctx?.drawImage(
-      imageDom,
+      cloudDom,
       this.frontX,
       0,
       this.stageWidth,
-      this.stageHeight
+      this.stageHeight,
     );
   }
 
-  drawBehindClouds(imageDom: HTMLImageElement) {
+  drawBehindClouds(cloudDom: HTMLImageElement) {
     this.ctx?.drawImage(
-      imageDom,
+      cloudDom,
       this.behindX,
       0,
       this.stageWidth,
-      this.stageHeight
+      this.stageHeight,
     );
   }
 }

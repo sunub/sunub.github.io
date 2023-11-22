@@ -36,9 +36,9 @@ const Wrapper = styled.div`
 
 const StyledCanvas = styled.canvas`
   grid-area: hero-image;
-  z-index: 60;
+  z-index: 3;
 
-  width: 90%;
+  width: 88%;
   height: 100%;
 
   max-width: 883px;
@@ -51,43 +51,32 @@ export default function HeroImage() {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const lightCloudsRef = React.useRef<HTMLImageElement>(null);
   const darkCloudsRef = React.useRef<HTMLImageElement>(null);
-  const wrapperRef = React.useRef<HTMLImageElement>(null);
 
   React.useEffect(() => {
     if (
       !imageRef.current ||
       !canvasRef.current ||
       !lightCloudsRef.current ||
-      !darkCloudsRef.current ||
-      !wrapperRef.current
+      !darkCloudsRef.current
     )
       return;
-    const canvas = new Canvas(
-      canvasRef.current,
-      imageRef.current,
-      wrapperRef.current,
-    );
+    const canvas = new Canvas(canvasRef.current, imageRef.current);
 
-    theme.colorMode === "light"
-      ? canvas.draw(lightCloudsRef.current)
-      : canvas.draw(darkCloudsRef.current);
+    if (theme.colorMode) {
+      theme.colorMode === "light"
+        ? canvas.draw(lightCloudsRef.current)
+        : canvas.draw(darkCloudsRef.current);
+    }
   }, [theme.colorMode]);
 
   return (
-    <Wrapper
-      style={{ animationDuration: "600ms", animationDelay: "200ms" }}
-      ref={wrapperRef}
-    >
+    <Wrapper style={{ animationDuration: "600ms", animationDelay: "200ms" }}>
       <LightHeroImage
         imageRef={imageRef}
         cloudsRef={lightCloudsRef}
         theme={theme.colorMode}
       />
-      <DarkHeroImage
-        imageRef={imageRef}
-        cloudsRef={darkCloudsRef}
-        theme={theme.colorMode}
-      />
+      <DarkHeroImage cloudsRef={darkCloudsRef} theme={theme.colorMode} />
       <StyledCanvas ref={canvasRef} />
     </Wrapper>
   );

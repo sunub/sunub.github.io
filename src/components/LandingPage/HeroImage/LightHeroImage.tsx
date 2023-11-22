@@ -30,10 +30,11 @@ const BaseImage = styled(Image)<{ $theme: any }>`
   );
 `;
 
-const Clouds = styled(Image)`
+const Clouds = styled(Image)<{ $theme: any }>`
   grid-area: hero-image;
 
-  display: none;
+  opacity: ${({ $theme }) => ($theme === "light" ? 1 : 0)};
+  transform: translateX(20px) translateY(-20px) scale(0.9);
 `;
 
 function LightHeroImage({
@@ -70,6 +71,7 @@ function LightHeroImage({
           objectFit: "cover",
         }}
         loading="lazy"
+        $theme={theme}
       />
     </Picture>
   );
