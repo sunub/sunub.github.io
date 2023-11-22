@@ -30,25 +30,23 @@ const BaseImage = styled(Image)<{ $theme: any }>`
   );
 `;
 
-const Clouds = styled(Image)`
+const Clouds = styled(Image)<{ $theme: any }>`
   grid-area: hero-image;
 
-  display: none;
+  opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
+  transform: translateX(20px) translateY(-20px) scale(0.9);
 `;
 
 function DarkHeroImage({
-  imageRef,
   cloudsRef,
   theme,
 }: {
-  imageRef: React.RefObject<HTMLImageElement>;
   cloudsRef: React.RefObject<HTMLImageElement>;
   theme: any;
 }): React.ReactNode {
   return (
     <Picture>
       <BaseImage
-        ref={imageRef}
         src={DarkBaseImage}
         alt="base hero image"
         quality={75}
@@ -70,6 +68,7 @@ function DarkHeroImage({
           objectFit: "cover",
         }}
         loading="lazy"
+        $theme={theme}
       />
     </Picture>
   );
