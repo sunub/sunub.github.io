@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 
   display: grid;
   flex-direction: row;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   justify-items: center;
 
   gap: 3rem 1rem;
@@ -22,14 +22,19 @@ const Wrapper = styled.div`
 
   position: relative;
   overflow-wrap: break-word;
+
+  @media screen and (max-width: 320px) {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  }
 `;
 
-function CardList({ list }) {
+function CardList({ list, ...delegated }) {
   return (
-    <Wrapper>
-      {list.map((frontMatter) => (
-        <Card key={frontMatter.slug} frontMatter={frontMatter} />
-      ))}
+    <Wrapper {...delegated}>
+      {list &&
+        list.map((frontMatter) => (
+          <Card key={frontMatter.slug} frontMatter={frontMatter} />
+        ))}
     </Wrapper>
   );
 }

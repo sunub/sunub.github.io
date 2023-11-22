@@ -1,61 +1,83 @@
 "use client";
 
-import styles from "./HeroImage.module.css";
-import { BACKGROUNDS } from "./HeroImage.constant";
-import Canvas from "./Canvas.helper";
-import Image from "next/image";
 import styled from "styled-components";
+import Canvas from "./Canvas.helper";
 import React from "react";
+import { ThemeContext } from "@/components/Theme/Provider";
+import DarkHeroImage from "./DarkHeroImage";
+import LightHeroImage from "./LightHeroImage";
 
-const CanvasCompo = styled.canvas``;
+type Theme = {
+  colorMode?: string | null;
+  setColorMode?: (value: string) => void;
+};
+
+const Wrapper = styled.div`
+  animation-name: showUp;
+  animation-fill-mode: backwards;
+
+  display: grid;
+  grid: [hero-image] 1fr / [hero-image] 1fr;
+  position: relative;
+
+  justify-items: center;
+  align-items: center;
+  object-fit: contain;
+
+  @keyframes showUp {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`;
+
+const StyledCanvas = styled.canvas`
+  grid-area: hero-image;
+  z-index: 3;
+
+  width: 88%;
+  height: 100%;
+
+  max-width: 883px;
+`;
 
 export default function HeroImage() {
+  const theme: Theme = React.useContext(ThemeContext);
+
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const cloudsRef = React.useRef<HTMLImageElement>(null);
-  const wrapperRef = React.useRef<HTMLImageElement>(null);
-
-  const REF_KEYS: any = {
-    image: imageRef,
-    clouds: cloudsRef,
-  };
+  const lightCloudsRef = React.useRef<HTMLImageElement>(null);
+  const darkCloudsRef = React.useRef<HTMLImageElement>(null);
 
   React.useEffect(() => {
     if (
       !imageRef.current ||
       !canvasRef.current ||
-      !cloudsRef.current ||
-      !wrapperRef.current
+      !lightCloudsRef.current ||
+      !darkCloudsRef.current
     )
       return;
-    const canvas = new Canvas(
-      canvasRef.current,
-      imageRef.current,
-      wrapperRef.current
-    );
-    canvas.draw(cloudsRef.current);
-  });
+    const canvas = new Canvas(canvasRef.current, imageRef.current);
+
+    if (theme.colorMode) {
+      theme.colorMode === "light"
+        ? canvas.draw(lightCloudsRef.current)
+        : canvas.draw(darkCloudsRef.current);
+    }
+  }, [theme.colorMode]);
 
   return (
-    <div ref={wrapperRef} className={styles["hero-image__wrapper"]}>
-      {BACKGROUNDS.map((background) => (
-        <Image
-          ref={background.ref ? REF_KEYS[`${background.ref}`] : null}
-          className={styles[`${background.className}`]}
-          key={background.key}
-          src={background.src}
-          alt={background.alt}
-          width={883}
-          height={325}
-          priority={true}
-          quality={100}
-          sizes="100vw"
-          style={{
-            objectFit: "cover",
-          }}
-        />
-      ))}
-      <CanvasCompo ref={canvasRef} className={styles["hero-image__canvas"]} />
-    </div>
+    <Wrapper style={{ animationDuration: "600ms", animationDelay: "200ms" }}>
+      <LightHeroImage
+        imageRef={imageRef}
+        cloudsRef={lightCloudsRef}
+        theme={theme.colorMode}
+      />
+      <DarkHeroImage cloudsRef={darkCloudsRef} theme={theme.colorMode} />
+      <StyledCanvas ref={canvasRef} />
+    </Wrapper>
   );
 }
