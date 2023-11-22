@@ -55,7 +55,7 @@ function DarkHeroImage({
           opacity: theme === "dark" ? 1 : 0,
           objectFit: "cover",
         }}
-        loading="lazy"
+        priority={true}
         $theme={theme}
       />
       <Clouds
@@ -67,7 +67,7 @@ function DarkHeroImage({
         style={{
           objectFit: "cover",
         }}
-        loading="lazy"
+        priority={true}
         $theme={theme}
       />
     </Picture>
