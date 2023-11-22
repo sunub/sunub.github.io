@@ -58,7 +58,7 @@ function LightHeroImage({
           opacity: theme === "light" ? 1 : 0,
           objectFit: "cover",
         }}
-        loading="lazy"
+        priority={true}
         $theme={theme}
       />
       <Clouds
@@ -70,7 +70,7 @@ function LightHeroImage({
         style={{
           objectFit: "cover",
         }}
-        loading="lazy"
+        priority={true}
         $theme={theme}
       />
     </Picture>
