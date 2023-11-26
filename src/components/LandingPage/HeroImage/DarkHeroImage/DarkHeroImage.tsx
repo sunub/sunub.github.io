@@ -3,8 +3,6 @@
 import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
-import LightBaseImage from "public/assets/hero_image--light-base-scene-reduce.webp";
-import LightCloud from "public/assets/hero_image--light_clouds.webp";
 
 const Picture = styled.picture`
   display: contents;
@@ -22,59 +20,60 @@ const BaseImage = styled(Image)<{ $theme: any }>`
   left: 0px;
   pointer-events: none;
 
-  opacity: ${({ $theme }) => ($theme === "light" ? 1 : 0)};
+  opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
   background: linear-gradient(
-    15deg,
-    oklch(97.14% 0.011 31.07 / 71%) 4%,
-    oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 53%
+    1deg,
+    oklch(65.58% 0.064 263.98) 11%,
+    oklch(34.74% 0.071 244.49 / 77%) 55%
   );
 `;
 
 const Clouds = styled(Image)<{ $theme: any }>`
   grid-area: hero-image;
 
-  opacity: ${({ $theme }) => ($theme === "light" ? 1 : 0)};
-  transform: translateX(20px) translateY(-20px) scale(0.9);
+  opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
+  transform: translateX(18px) translateY(-20px) scale(0.9);
 `;
 
-function LightHeroImage({
-  imageRef,
+function DarkHeroImage({
   cloudsRef,
   theme,
 }: {
-  imageRef: React.RefObject<HTMLImageElement>;
   cloudsRef: React.RefObject<HTMLImageElement>;
   theme: any;
 }): React.ReactNode {
   return (
     <Picture>
       <BaseImage
-        ref={imageRef}
-        src={LightBaseImage}
+        src={"/assets/hero_image--dark-base-scene-reduce.webp?format=avif"}
         alt="base hero image"
+        width={883}
+        height={449}
         quality={75}
         sizes="100vw"
         style={{
-          opacity: theme === "light" ? 1 : 0,
+          opacity: theme === "dark" ? 1 : 0,
           objectFit: "cover",
         }}
-        priority={true}
         $theme={theme}
+        loading="lazy"
       />
       <Clouds
         ref={cloudsRef}
-        src={LightCloud}
+        src={"/assets/hero_image--dark_clouds.webp?format=avif"}
         alt="light cloud hero image"
+        width={883}
+        height={449}
         quality={75}
         sizes="100vw"
         style={{
           objectFit: "cover",
         }}
-        priority={true}
         $theme={theme}
+        loading="lazy"
       />
     </Picture>
   );
 }
 
-export default LightHeroImage;
+export default DarkHeroImage;

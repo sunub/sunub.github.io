@@ -12,6 +12,7 @@
   & > img {
     transition: opacity 350ms ease 0s;
   }
+
   /* animation: showup;
   animation-delay: 100ms;
   animation-duration: 500ms;
@@ -33,8 +34,10 @@
   grid-area: hero-image;
   z-index: 60;
 
-  width: 90%;
+  width: 100%;
   height: 100%;
+  padding-left: 25px;
+  padding-right: 25px;
 
   max-width: 883px;
 }

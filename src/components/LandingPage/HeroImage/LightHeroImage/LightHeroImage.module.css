@@ -1,0 +1,28 @@
+.light-image--picture {
+  display: contents;
+  max-width: 100%;
+}
+
+.light-image--base-image {
+  grid-area: hero-image;
+  position: relative;
+  z-index: 2;
+  transition: opacity 350ms ease 0s;
+
+  display: block;
+  top: 0px;
+  left: 0px;
+  pointer-events: none;
+
+  background: linear-gradient(
+    15deg,
+    oklch(97.14% 0.011 31.07 / 71%) 4%,
+    oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 53%
+  );
+}
+
+.light-image--clouds {
+  grid-area: hero-image;
+
+  transform: translateX(20px) translateY(-20px) scale(0.9);
+}
