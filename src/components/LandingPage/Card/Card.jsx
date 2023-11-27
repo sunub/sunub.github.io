@@ -79,7 +79,7 @@ export default function Card({ frontMatter }) {
   const IconComponent = ICONS_BY_VARIANT[category];
   return (
     <Wrapper>
-      <LinkWrapper href={`/${category}/${slug}`} tabIndex={1}>
+      <LinkWrapper href={`/${category}/${slug}`} tabIndex={0}>
         <IconWrapper>{IconComponent}</IconWrapper>
         <Header>{title}</Header>
         <Footer>{date.slice(2)}</Footer>

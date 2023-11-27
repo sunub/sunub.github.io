@@ -12,7 +12,10 @@ const CategoryTitle = styled.span`
 function Menu({ isOpen, setOpen, categories }) {
   const staggeredDelay = 100;
   return (
-    <nav className={styles[`menu-content__container`]}>
+    <nav
+      aria-label={"mobile header navigation"}
+      className={styles[`menu-content__container`]}
+    >
       {categories.map((category, columnIndex) => {
         return (
           <Link

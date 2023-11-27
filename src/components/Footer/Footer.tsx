@@ -23,8 +23,8 @@ const Container = styled.footer`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  border-top: 1px solid var(--color-text);
 
-  border-top: 1px solid oklch(93.47% 0.0209 31.07);
   padding-top: 32px;
   padding-bottom: 32px;
 `;
@@ -44,13 +44,19 @@ const IconsWrapper = styled.div`
 
 function Footer() {
   return (
-    <Container role="contentInfo">
+    <Container role="contentinfo">
       <Wrapper>
         <IconsWrapper>
-          <Link href={"https://github.com/sunub"}>
+          <Link
+            aria-label={"Link to sunub github page"}
+            href={"https://github.com/sunub"}
+          >
             <Github />
           </Link>
-          <Link href={"mailto:bsc5672@gmail.com"}>
+          <Link
+            aria-label={"Send email to sunub email"}
+            href={"mailto:bsc5672@gmail.com"}
+          >
             <Mail />
           </Link>
         </IconsWrapper>

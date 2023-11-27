@@ -1,6 +1,6 @@
 "use client";
 
-import styled from "styled-components";
+import styles from "./HeroImage.module.css";
 import Canvas from "./Canvas.helper";
 import React from "react";
 import { ThemeContext } from "@/components/Theme/Provider";
@@ -11,38 +11,6 @@ type Theme = {
   colorMode?: string | null;
   setColorMode?: (value: string) => void;
 };
-
-const Wrapper = styled.div`
-  animation-name: showUp;
-  animation-fill-mode: backwards;
-
-  display: grid;
-  grid: [hero-image] 1fr / [hero-image] 1fr;
-  position: relative;
-
-  justify-items: center;
-  align-items: center;
-  object-fit: contain;
-
-  @keyframes showUp {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`;
-
-const StyledCanvas = styled.canvas`
-  grid-area: hero-image;
-  z-index: 3;
-
-  width: 88%;
-  height: 100%;
-
-  max-width: 883px;
-`;
 
 export default function HeroImage() {
   const theme: Theme = React.useContext(ThemeContext);
@@ -70,14 +38,17 @@ export default function HeroImage() {
   }, [theme.colorMode]);
 
   return (
-    <Wrapper style={{ animationDuration: "600ms", animationDelay: "200ms" }}>
+    <div
+      className={styles["hero-image__wrapper"]}
+      style={{ animationDuration: "600ms", animationDelay: "200ms" }}
+    >
       <LightHeroImage
         imageRef={imageRef}
         cloudsRef={lightCloudsRef}
         theme={theme.colorMode}
       />
       <DarkHeroImage cloudsRef={darkCloudsRef} theme={theme.colorMode} />
-      <StyledCanvas ref={canvasRef} />
-    </Wrapper>
+      <canvas className={styles["hero-image__canvas"]} ref={canvasRef} />
+    </div>
   );
 }

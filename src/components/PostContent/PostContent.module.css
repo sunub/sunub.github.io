@@ -22,7 +22,6 @@
   text-align: left;
 
   background-color: var(--color-background);
-  box-shadow: var(--box-shadow-2);
 
   text-align: left;
 }
@@ -109,6 +108,14 @@
   h4,
   h5 {
     font-weight: 900;
+  }
+
+  & > h2,
+  h3,
+  h4,
+  h5 {
+    font-size: calc(1.5rem);
+    padding-top: 32px;
   }
 }
 

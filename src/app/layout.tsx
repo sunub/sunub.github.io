@@ -124,7 +124,7 @@ export default function RootLayout({
           container: root / inline-size;
         
           display: grid;
-          grid-template-columns: [side-header] 88px [main-content] 1fr;
+          grid-template-columns: [side-header] 96px [main-content] 1fr;
           grid-template-rows: 1fr;
         
           transition: grid-template-columns 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
