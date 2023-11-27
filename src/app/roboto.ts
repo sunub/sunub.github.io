@@ -6,6 +6,5 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
     },
     sitemap: "https://sunub.vercel.app/sitemap.xml",
-    host: "https://sunub.vercel.app/",
   };
 }

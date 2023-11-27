@@ -45,8 +45,8 @@ function DarkHeroImage({
   return (
     <Picture>
       <BaseImage
-        src={"/assets/hero_image--dark-base-scene-reduce.webp?format=avif"}
-        alt="base hero image"
+        src={"/assets/hero_image--dark-base-scene.avif?format=avif"}
+        alt="dark base hero image"
         width={883}
         height={449}
         quality={75}
@@ -60,8 +60,8 @@ function DarkHeroImage({
       />
       <Clouds
         ref={cloudsRef}
-        src={"/assets/hero_image--dark_clouds.webp?format=avif"}
-        alt="light cloud hero image"
+        src={"/assets/hero_image--dark-clouds.avif?format=avif"}
+        alt="dark clouds hero image"
         width={883}
         height={449}
         quality={75}

@@ -134,20 +134,27 @@ strong {
   overflow-wrap: break-word;
 }
 
-::-webkit-scrollbar {
-  width: var(--scrollbar-width, 12px);
-  height: var(--scrollbar-height, 12px);
-  background-color: oklch(92.54% 0.01 32.52);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  border: 2px solid oklch(92.54% 0.01 32.52);
-  background-color: oklch(53.88% 0.029 30.71);
+@media (orientation: landscape) {
+  ::-webkit-scrollbar {
+    width: var(--scrollbar-width, 12px);
+    height: var(--scrollbar-height, 12px);
+    background-color: var(--color-thumbBackground);
+  }
 }
 
-::-webkit-scrollbar-track {
-  border-radius: 3px;
-  background-color: oklch(53.88% 0.029 30.71) transparent;
+@media (orientation: landscape) {
+  ::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid var(--color-thumbBackground);
+    background-color: var(--color-thumb);
+  }
+}
+
+@media (orientation: landscape) {
+  ::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background: var(--color-thumb) transparent;
+  }
 }
 
 .mobile-menu__wrapper {
@@ -272,37 +279,6 @@ code {
 
 @layer base.props {
   :root {
-    --shadow-color: 26.79% 0.003 264.51;
-    --shadow-strength: 1%;
-    --box-shadow-1: 0 -1px 2px 0 oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 2%)),
-      0 2px 1px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 3%)),
-      0 5px 5px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 3%)),
-      0 10px 10px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 4%)),
-      0 20px 20px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 5%)),
-      0 40px 40px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 7%));
-    --box-shadow-2: 0 -1px 2px 0 oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 1%)),
-      0 -15px 10px 0px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 3%)),
-      0 15px 5px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 3%)),
-      0 10px 10px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 9%)),
-      0 20px 20px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 5%)),
-      0 40px 40px -2px oklch(var(--shadow-color) /
-            calc(var(--shadow-strength) + 7%));
-
-    --surface-header: var(--pink-2);
-
-    --on-primary: var(--surface-1) --primary-container: var(--pink-2) --size-1:
-      0.25rem;
     --size-2: 0.5rem;
     --size-3: 0.75rem;
     --size-4: 1rem;
@@ -310,37 +286,5 @@ code {
     --size-6: 1.5rem;
     --size-7: 1.75rem;
     --size-8: 2rem;
-
-    --size-content-1: 20ch;
-    --size-contnet-2: 45ch;
-    --size-content-3: 60ch;
-
-    --font-size-0: 0.75rem;
-    --font-size-1: 1rem;
-    --font-size-2: 1.1rem;
-    --font-size-3: 1.25rem;
-    --font-size-4: 1.5rem --font-size-5: 2rem;
-    --font-size-6: 2.5rem;
-
-    --nav-height: 77px;
-    --size-inline-1: var(--size-6);
-
-    --shadow-color: 10deg 22% 62%;
-    --shadow-elevation-low: 0px 0.2px 0.2px hsl(var(--shadow-color) / 0.36),
-      0px 0.3px 0.3px -1.3px hsl(var(--shadow-color) / 0.34),
-      0px 0.7px 0.8px -2.7px hsl(var(--shadow-color) / 0.32);
-    --shadow-elevation-medium: 0px 0.2px 0.2px hsl(var(--shadow-color) / 0.37),
-      0px 0.5px 0.5px -0.9px hsl(var(--shadow-color) / 0.36),
-      -0.1px 1.3px 1.4px -1.8px hsl(var(--shadow-color) / 0.35),
-      -0.2px 3.3px 3.6px -2.7px hsl(var(--shadow-color) / 0.33);
-    --shadow-elevation-high: 0px 0.2px 0.2px hsl(var(--shadow-color) / 0.31),
-      0px 0.8px 20.9px -0.3px hsl(var(--shadow-color) / 0.3),
-      -0.1px 1.4px 1.5px -0.7px hsl(var(--shadow-color) / 0.3),
-      -0.1px 2.3px 2.5px -1px hsl(var(--shadow-color) / 0.29),
-      -0.2px 3.5px 3.8px -1.3px hsl(var(--shadow-color) / 0.29),
-      -0.3px 5.3px 5.8px -1.7px hsl(var(--shadow-color) / 0.28),
-      -0.4px 7.9px 8.7px -2px hsl(var(--shadow-color) / 0.28),
-      -0.6px 11.4px 12.5px -2.4px hsl(var(--shadow-color) / 0.27),
-      -0.9px 16.1px 17.7px -2.7px hsl(var(--shadow-color) / 0.27);
   }
 }

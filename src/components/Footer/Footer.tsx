@@ -23,8 +23,8 @@ const Container = styled.footer`
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  border-top: 1px solid var(--color-text);
 
-  border-top: 1px solid oklch(93.47% 0.0209 31.07);
   padding-top: 32px;
   padding-bottom: 32px;
 `;

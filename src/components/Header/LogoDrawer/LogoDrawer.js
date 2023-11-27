@@ -9,24 +9,21 @@ import Navigation from "../Navigation";
 const NAV_MENU = ["web", "code", "cs", "algorithm"];
 
 const Container = styled.nav`
-	display: flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-	flex-direction: column;
-	align-items: center;
-
-	border-radius: 18px;
-	padding-top: 16px;
-	padding-bottom: 16px;
+  width: 80px;
 `;
 
 function LogoDrawer() {
-	return (
-		<Container>
-			<Logo />
-			<Dash />
-			<Navigation navMenus={NAV_MENU} />
-		</Container>
-	);
+  return (
+    <Container aria-label="desktop header sidebar navigation">
+      <Logo />
+      <Dash />
+      <Navigation navMenus={NAV_MENU} />
+    </Container>
+  );
 }
 
 export default LogoDrawer;
