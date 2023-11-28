@@ -30,7 +30,7 @@ const Wrapper = styled.div`
 
 const StyledCanvas = styled.canvas`
   grid-area: hero-image;
-  z-index: 60;
+  z-index: 2;
 
   width: 100%;
   height: 100%;
@@ -48,21 +48,25 @@ export default function HeroImage() {
 
   const lightCloudsRef = React.useRef<HTMLImageElement>(null);
   const darkCloudsRef = React.useRef<HTMLImageElement>(null);
+  const lightCarsRef = React.useRef<HTMLImageElement>(null);
+  const darkCarsRef = React.useRef<HTMLImageElement>(null);
 
   React.useEffect(() => {
     if (
       !imageRef.current ||
       !canvasRef.current ||
       !lightCloudsRef.current ||
-      !darkCloudsRef.current
+      !darkCloudsRef.current ||
+      !lightCarsRef.current ||
+      !darkCarsRef.current
     )
       return;
     const canvas = new Canvas(canvasRef.current, imageRef.current);
 
     if (theme.colorMode) {
       theme.colorMode === "light"
-        ? canvas.draw(lightCloudsRef.current)
-        : canvas.draw(darkCloudsRef.current);
+        ? canvas.draw(lightCloudsRef.current, lightCarsRef.current)
+        : canvas.draw(darkCloudsRef.current, darkCarsRef.current);
     }
   }, [theme.colorMode]);
 
@@ -71,9 +75,14 @@ export default function HeroImage() {
       <LightHeroImage
         imageRef={imageRef}
         cloudsRef={lightCloudsRef}
+        carsRef={lightCarsRef}
         theme={theme.colorMode}
       />
-      <DarkHeroImage cloudsRef={darkCloudsRef} theme={theme.colorMode} />
+      <DarkHeroImage
+        cloudsRef={darkCloudsRef}
+        carsRef={darkCarsRef}
+        theme={theme.colorMode}
+      />
       <StyledCanvas ref={canvasRef} />
     </Wrapper>
   );

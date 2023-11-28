@@ -5,6 +5,7 @@ import React from "react";
 import styled from "styled-components";
 import LightBaseImage from "public/assets/hero_image--light-base-scene.avif";
 import LightCloudImage from "public/assets/hero_image--light-clouds.avif";
+import LightCars from "public/assets/hero_image--light-cars.avif";
 
 const Picture = styled.picture`
   display: contents;
@@ -35,13 +36,22 @@ const Clouds = styled(Image)`
   transform: translateX(20px) translateY(-20px) scale(0.9);
 `;
 
+const Cars = styled(Image)`
+  grid-area: hero-image;
+
+  display: none;
+  z-index: 2;
+`;
+
 function LightHeroImage({
   imageRef,
   cloudsRef,
+  carsRef,
   theme,
 }: {
   imageRef: React.RefObject<HTMLImageElement>;
   cloudsRef: React.RefObject<HTMLImageElement>;
+  carsRef: React.RefObject<HTMLImageElement>;
   theme: any;
 }): React.ReactNode {
   return (
@@ -62,6 +72,18 @@ function LightHeroImage({
         ref={cloudsRef}
         src={LightCloudImage}
         alt="light cloud hero image"
+        quality={75}
+        sizes="100vw"
+        style={{
+          opacity: `${theme === "light" ? 1 : 0}`,
+          objectFit: "cover",
+        }}
+        priority={true}
+      />
+      <Cars
+        ref={carsRef}
+        src={LightCars}
+        alt="light cars hero image"
         quality={75}
         sizes="100vw"
         style={{

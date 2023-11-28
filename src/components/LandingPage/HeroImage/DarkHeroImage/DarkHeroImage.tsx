@@ -5,6 +5,7 @@ import React from "react";
 import styled from "styled-components";
 import DarkBaseImage from "public/assets/hero_image--dark-base-scene.avif";
 import DarkCloudImage from "public/assets/hero_image--dark-clouds.avif";
+import DarkCars from "public/assets/hero_image--dark-cars.avif";
 
 const Picture = styled.picture`
   display: contents;
@@ -41,11 +42,20 @@ const Clouds = styled(Image)<{ $theme: any }>`
   transform: translateX(18px) translateY(-20px) scale(0.9);
 `;
 
+const Cars = styled(Image)`
+  grid-area: hero-image;
+
+  display: none;
+  z-index: 2;
+`;
+
 function DarkHeroImage({
   cloudsRef,
+  carsRef,
   theme,
 }: {
   cloudsRef: React.RefObject<HTMLImageElement>;
+  carsRef: React.RefObject<HTMLImageElement>;
   theme: any;
 }): React.ReactNode {
   return (
@@ -72,6 +82,17 @@ function DarkHeroImage({
           objectFit: "cover",
         }}
         $theme={theme}
+        priority={true}
+      />
+      <Cars
+        ref={carsRef}
+        src={DarkCars}
+        alt="dark cars hero image"
+        quality={75}
+        sizes="100vw"
+        style={{
+          objectFit: "cover",
+        }}
         priority={true}
       />
     </Picture>
