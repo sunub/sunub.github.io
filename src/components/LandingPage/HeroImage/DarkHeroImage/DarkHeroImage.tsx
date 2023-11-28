@@ -3,6 +3,8 @@
 import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
+import DarkBaseImage from "public/assets/hero_image--dark-base-scene.avif";
+import DarkCloudImage from "public/assets/hero_image--dark-clouds.avif";
 
 const Picture = styled.picture`
   display: contents;
@@ -49,10 +51,8 @@ function DarkHeroImage({
   return (
     <Picture>
       <BaseImage
-        src={"/assets/hero_image--dark-base-scene.avif?format=avif"}
+        src={DarkBaseImage}
         alt="dark base hero image"
-        width={883}
-        height={449}
         quality={75}
         sizes="100vw"
         style={{
@@ -64,10 +64,8 @@ function DarkHeroImage({
       />
       <Clouds
         ref={cloudsRef}
-        src={"/assets/hero_image--dark-clouds.avif?format=avif"}
+        src={DarkCloudImage}
         alt="dark clouds hero image"
-        width={883}
-        height={449}
         quality={75}
         sizes="100vw"
         style={{

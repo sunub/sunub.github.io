@@ -3,6 +3,8 @@
 import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
+import LightBaseImage from "public/assets/hero_image--light-base-scene.avif";
+import LightCloudImage from "public/assets/hero_image--light-clouds.avif";
 
 const Picture = styled.picture`
   display: contents;
@@ -20,8 +22,6 @@ const BaseImage = styled(Image)`
   left: 0px;
   pointer-events: none;
 
-  height: auto;
-
   background: linear-gradient(
     15deg,
     oklch(97.14% 0.011 31.07 / 71%) 4%,
@@ -31,8 +31,6 @@ const BaseImage = styled(Image)`
 
 const Clouds = styled(Image)`
   grid-area: hero-image;
-
-  height: auto;
 
   transform: translateX(20px) translateY(-20px) scale(0.9);
 `;
@@ -50,11 +48,9 @@ function LightHeroImage({
     <Picture>
       <BaseImage
         ref={imageRef}
-        src={"/assets/hero_image--light-base-scene.avif?format=avif"}
+        src={LightBaseImage}
         alt="base hero image"
         quality={75}
-        width={883}
-        height={449}
         sizes="100vw"
         style={{
           opacity: theme === "light" ? 1 : 0,
@@ -64,11 +60,9 @@ function LightHeroImage({
       />
       <Clouds
         ref={cloudsRef}
-        src={"/assets/hero_image--light-clouds.avif?format=avif"}
+        src={LightCloudImage}
         alt="light cloud hero image"
         quality={75}
-        width={883}
-        height={449}
         sizes="100vw"
         style={{
           opacity: `${theme === "light" ? 1 : 0}`,
