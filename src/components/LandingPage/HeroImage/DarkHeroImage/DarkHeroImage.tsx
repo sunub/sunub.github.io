@@ -20,6 +20,8 @@ const BaseImage = styled(Image)<{ $theme: any }>`
   left: 0px;
   pointer-events: none;
 
+  height: auto;
+
   opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
   background: linear-gradient(
     1deg,
@@ -30,6 +32,8 @@ const BaseImage = styled(Image)<{ $theme: any }>`
 
 const Clouds = styled(Image)<{ $theme: any }>`
   grid-area: hero-image;
+
+  height: auto;
 
   opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
   transform: translateX(18px) translateY(-20px) scale(0.9);
@@ -55,12 +59,8 @@ function DarkHeroImage({
           opacity: theme === "dark" ? 1 : 0,
           objectFit: "cover",
         }}
-<<<<<<< HEAD:src/components/LandingPage/HeroImage/DarkHeroImage.tsx
-        priority={true}
-=======
->>>>>>> sunub:src/components/LandingPage/HeroImage/DarkHeroImage/DarkHeroImage.tsx
         $theme={theme}
-        loading="lazy"
+        priority={true}
       />
       <Clouds
         ref={cloudsRef}
@@ -73,12 +73,8 @@ function DarkHeroImage({
         style={{
           objectFit: "cover",
         }}
-<<<<<<< HEAD:src/components/LandingPage/HeroImage/DarkHeroImage.tsx
-        priority={true}
-=======
->>>>>>> sunub:src/components/LandingPage/HeroImage/DarkHeroImage/DarkHeroImage.tsx
         $theme={theme}
-        loading="lazy"
+        priority={true}
       />
     </Picture>
   );
