@@ -20,7 +20,7 @@ const ImageWrapper = styled.div`
 `;
 
 function PostContentImage({ src, alt }) {
-  const url = new URL(src, "https://localhost:3000");
+  const url = new URL(src, "https://sunub.vercel.app/");
   const searchParams = url.searchParams;
 
   return (
