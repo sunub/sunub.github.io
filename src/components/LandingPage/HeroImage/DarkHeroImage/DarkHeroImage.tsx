@@ -3,6 +3,9 @@
 import Image from "next/image";
 import React from "react";
 import styled from "styled-components";
+import DarkBaseImage from "public/assets/hero_image--dark-base-scene.avif";
+import DarkCloudImage from "public/assets/hero_image--dark-clouds.avif";
+import DarkCars from "public/assets/hero_image--dark-cars.avif";
 
 const Picture = styled.picture`
   display: contents;
@@ -20,6 +23,8 @@ const BaseImage = styled(Image)<{ $theme: any }>`
   left: 0px;
   pointer-events: none;
 
+  height: auto;
+
   opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
   background: linear-gradient(
     1deg,
@@ -31,24 +36,33 @@ const BaseImage = styled(Image)<{ $theme: any }>`
 const Clouds = styled(Image)<{ $theme: any }>`
   grid-area: hero-image;
 
+  height: auto;
+
   opacity: ${({ $theme }) => ($theme === "dark" ? 1 : 0)};
   transform: translateX(18px) translateY(-20px) scale(0.9);
 `;
 
+const Cars = styled(Image)`
+  grid-area: hero-image;
+
+  display: none;
+  z-index: 2;
+`;
+
 function DarkHeroImage({
   cloudsRef,
+  carsRef,
   theme,
 }: {
   cloudsRef: React.RefObject<HTMLImageElement>;
+  carsRef: React.RefObject<HTMLImageElement>;
   theme: any;
 }): React.ReactNode {
   return (
     <Picture>
       <BaseImage
-        src={"/assets/hero_image--dark-base-scene.avif?format=avif"}
+        src={DarkBaseImage}
         alt="dark base hero image"
-        width={883}
-        height={449}
         quality={75}
         sizes="100vw"
         style={{
@@ -56,21 +70,30 @@ function DarkHeroImage({
           objectFit: "cover",
         }}
         $theme={theme}
-        loading="lazy"
+        priority={true}
       />
       <Clouds
         ref={cloudsRef}
-        src={"/assets/hero_image--dark-clouds.avif?format=avif"}
+        src={DarkCloudImage}
         alt="dark clouds hero image"
-        width={883}
-        height={449}
         quality={75}
         sizes="100vw"
         style={{
           objectFit: "cover",
         }}
         $theme={theme}
-        loading="lazy"
+        priority={true}
+      />
+      <Cars
+        ref={carsRef}
+        src={DarkCars}
+        alt="dark cars hero image"
+        quality={75}
+        sizes="100vw"
+        style={{
+          objectFit: "cover",
+        }}
+        priority={true}
       />
     </Picture>
   );

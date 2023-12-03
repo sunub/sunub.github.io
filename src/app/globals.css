@@ -239,6 +239,15 @@ code {
   border-radius: 8px;
 }
 
+.post-articles__images {
+  max-width: 1000px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0px auto 48px;
+  padding: 0px 24px;
+}
+
 #side-ng__main-content {
   grid-area: main-content;
 

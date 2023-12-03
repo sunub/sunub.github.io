@@ -3,6 +3,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import styles from "./PostContent.module.css";
 import CodeSnippet from "../CodeSnippet";
 import Blockquote from "../MdxStyling/Blockquote";
+import PostContentImage from "./PostContentImage";
 
 async function PostContent({ postcontent }) {
   const { content, frontmatter } = await compileMDX({
@@ -11,6 +12,7 @@ async function PostContent({ postcontent }) {
     components: {
       pre: CodeSnippet,
       blockquote: Blockquote,
+      PostContentImage: PostContentImage,
     },
   });
   const { title, date } = frontmatter;
