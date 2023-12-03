@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import InitTheme from "@/components/Theme/InitTheme";
 import MobileNav from "@/components/Header/mobile/MobileNav";
 import Footer from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
@@ -152,6 +153,7 @@ export default function RootLayout({
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>
+        <Analytics />
       </body>
     </html>
   );
