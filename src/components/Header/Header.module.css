@@ -19,7 +19,6 @@
 
   opacity: 1;
   visibility: visible;
-  background-color: var(--color-header);
   @container root ( width <= 768px ) {
     opacity: 0;
     visibility: hidden;

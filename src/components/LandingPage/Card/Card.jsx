@@ -9,6 +9,10 @@ import * as Icons from "@/components/LandingPage/Icons/Icons";
 const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
 
+  transition: box-shadow 300ms ease;
+  &:hover {
+    box-shadow: var(--long-shadow);
+  }
   @media screen and (max-width: 320px) {
     width: 120px;
   }
