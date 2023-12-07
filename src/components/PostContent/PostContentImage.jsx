@@ -8,6 +8,14 @@ const Container = styled.div`
   position: relative;
   left: calc(50%);
   margin-left: calc(-50vw);
+
+  @media (min-width: 770px) {
+    left: calc(50% + 48px);
+    padding-right: 6.5rem;
+  }
+  @media (min-width: 950px) {
+    padding-right: 0rem;
+  }
 `;
 
 const ImageWrapper = styled.div`
