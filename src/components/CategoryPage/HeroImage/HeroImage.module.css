@@ -6,6 +6,8 @@
 }
 
 .Title {
+  grid-area: cateogry-hero;
+
   position: relative;
   padding: 98px 32px 66px 88px;
 
