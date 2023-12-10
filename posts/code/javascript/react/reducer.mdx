@@ -1,0 +1,76 @@
+---
+title: useReducer
+date: 2023-12-08
+tags: react
+summary: useReducer와 useState의 차이점은 뭘까?
+slug: what-is-useReducer
+category: code
+complete: false
+---
+
+# Redux
+
+useReducer에 대해서 이야기 하기 전에 우리는 Redux에 대한 이야기가 필요합니다. Redux는 무엇을 더 좋게 만들기 위해서 등장한 툴일까요?
+
+Redux는 **global state management tool(글로벌 상태 관리 도구)** 이다. 우리가 모두 알다시피 모든 변수는 local(지역) 인지 global(전역)인지로 구분될 수 있다.
+
+Redux는 이 중 React의 State에 집중한 것으로 그 중에서도 Global State를 다루기 위한 상태 관리 도구이다. 그렇다면 이러한 도구가 왜 필요한 것일까? React 만으로는 역부족하기 때문에 등장할 것일까?
+
+이러한 질문에 답은 명확하게 나뉘지 않는다. 이 대답의 경우는 우리의 **상황**에 따라서 다르다. 우리가 어떠한 애플리케이션을 개발하냐에 따라서 React만으로 충분할 수도 있고 그렇지 않을 수도 있다.
+
+웹에서 가장 흔히 사용되는 global state는 무엇이 있을까? 가장 쉽게 접할 수 있는 것은 light/dark모드와 사이트내에서 로그인의 유무가 가장 흔히 접할 수 있는 global state이다.
+
+redux는 전역 상태에 대하여 관리하기 위해 그 변수의 action에 집중한다. 예를 들어 쇼핑 사이트에서 쇼핑 카트에 무엇을 담았는지에 대한 내역을 state로 하고 이 state의 상태중 어떠한 값이 변화하였는지에 대한 것을 집중하여 다루는 것이다.
+
+## useReduce
+
+```jsx
+import React from "react";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "add-number":
+      return (state.age = state.age + 1);
+  }
+}
+
+function MyComponent() {
+  const [state, dispatch] = React.useReducer(reducer, { age: 42 });
+
+  return (
+    <button onClick={() => dispatch({ type: "add-number" })}>Click</button>
+  );
+}
+```
+
+위의 useReducer가 useState와의 차이점이 무엇인지 생각해보자. 우선 기본적으로 초기의 값을 지닌 immertable한 state의 값을 갖는다는 것은 동일하다 하지만 그 값을 변경시키는 방법에 차이가 있다.
+
+위의 `dispatch` 는 `action`을 유일 변수로 전달하여 state의 변수를 re-render시키는 함수이다. `action` 변수의 상태를 변화 시킴으로써 state를 변화시키는 trigger의 역할을 한다.
+
+위의 `reducer` 는 state,와 action을 변수로 받는 콜백 함수이다. 이 콜백함수는 주로 action.type을 주로 구분하여 사용하고 이 타입에 따라서 각기 다른 state 값이 re-render되게 된다.
+
+> reducer는 반드시 pure function이어야 합니다!
+> pure function이란 항상 동일한 입력이 주어지면 동일한 출력을 반환해야 하는 함수를 뜻합니다.
+
+```javascript
+function sum(a, b) {
+  return a + b;
+}
+// pure function
+
+function getRandomNum() {
+  return Math.random();
+}
+
+// impure function
+```
+
+위의 경우만 보아서는 굳이 useReducer를 사용해야할 지 모르겠다. 실제로 useState를 사용하더라도 큰 문제 없이 useReducer를 대처할 수 있다. 그렇다면 useReducer를 사용하는 이유는 무엇일까?
+
+우선 **가독성**이 좋다는 특징이 있다. 그리고 또 다른 특징은 **reducer**를 이용할 경우 state에서 setter를 통해서 값이 예상치 못하게 변경될 수 있는 단점을 없앨 수 있는 특징이 있기 때문에 사용하기도 한다.
+
+코드가 여러명이 공유해서 사용하거나 너무 길어질 경우 의도치 않은 상황에서 setter 함수를 변경하여 기존의 state의 값을 변경할 위험이 있다. 하지만 reducer의 경우 state의 immutable을 해치지 않고서 여러 상황에 맞춰 값을 re-render할 수 있기 때문에 사용한다.
+
+## Immer
+
+Immer의 경우 앞서 사용하는 reducer를 더 편리하게 사용하기 위한 npm 패키지이다.
