@@ -1,0 +1,97 @@
+---
+title: DisjointSet에 가중치가 더해졌을 경우
+date: 2023-12-15
+tags:
+  - disjointset
+  - graph
+summary: 그래프에 가중치가 더해졌을 경우 어떻게 해야 할까?
+slug: weighted-disjointset
+category: algorithm
+completed: false
+---
+
+## 문제
+
+> [문제 링크](https://leetcode.com/problems/evaluate-division/description/)
+
+이 문제는 변수 쌍 배열인 'equations'과 실수 배열인 'values'가 주어지며, 여기서 `equations[i] = [Ai, Bi]`와 `values[i]`는 `Ai / Bi = values[i]` 식을 나타냅니다. 각 Ai 또는 Bi는 단일 변수를 나타내는 문자열입니다. 또한, 몇 가지 쿼리가 주어지며, 여기서` queries[j] = [Cj, Dj]`는 j번째 쿼리를 나타내며, 여기서`Cj / Dj = ?`의 답을 찾아야 합니다. 모든 쿼리에 대한 답변을 반환해야 합니다. 단일 답변을 결정할 수 없는 경우 -1.0을 반환합니다.
+
+```javascript
+class UnionFind {
+  constructor() {
+    this.weight = new Map();
+  }
+
+  find(node) {
+    if (!this.weight.has(node)) {
+      this.weight.set(node, {
+        key: node,
+        value: 1,
+      });
+    }
+
+    const entry = this.weight.get(node);
+    if (entry.key !== node) {
+      const newEntry = this.find(entry.key);
+      this.weight.set(node, {
+        key: newEntry.key,
+        value: newEntry.value * entry.value,
+      });
+    }
+
+    return this.weight.get(node);
+  }
+
+  union(dividend, divisor, value) {
+    const dividendEntry = this.find(dividend);
+    const divisorEntry = this.find(divisor);
+
+    const dividendGid = dividendEntry.key;
+    const divisorGid = divisorEntry.key;
+    const dividendWeight = dividendEntry.value;
+    const divisorWeight = divisorEntry.value;
+
+    if (dividendGid !== divisorGid) {
+      const newWeight = (divisorWeight * value) / dividendWeight;
+      for (const [key, entry] of this.weight.entries()) {
+        if (entry.key === dividendGid) {
+          this.weight.set(key, {
+            key: divisorGid,
+            value: entry.value * newWeight,
+          });
+        }
+      }
+      this.weight.set(dividendGid, {
+        key: divisorGid,
+        value: newWeight,
+      });
+    }
+  }
+}
+```
+
+위의 코드가 DisjointSet에 가중치가 더해졌을 경우 문제를 어떻게 해결한 것인지에 대한 해답 코드이다. 위의 코드를 find 부터 시작해서 찬찬히 뜯어 살펴봐봅시다!
+
+```javascript
+find(node) {
+  if (!this.weight.has(node)) {
+    this.weight.set(node, {
+      key: node,
+      value: 1,
+    });
+  }
+
+  const entry = this.weight.get(node);
+  if (entry.key !== node) {
+    const newEntry = this.find(entry.key);
+    this.weight.set(node, {
+      key: newEntry.key,
+      value: newEntry.value * entry.value,
+    });
+  }
+
+  return this.weight.get(node);
+}
+```
+
+DisjoinSet 알고리즘에서 find 메소드의 역할은 시작 노드의 루트 노드를 찾는 것입니다. 이는 가중치가 주어졌는지 안 주어졌는지에 관계 없이 수행되어야 하는 역할입니다.
