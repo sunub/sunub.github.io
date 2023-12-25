@@ -1,32 +1,50 @@
-import Spacer from "@/components/Spacer";
-import Post from "@/utils/Post";
+"use client";
 
-async function getFrontMatterList() {
-  const post = new Post();
-  const frontMatterList = await post.frontMatters["all"];
-  return frontMatterList;
-}
+import { FrontMatter } from "type";
+import * as Styled from "./BlogPost.style";
+import * as Icons from "@/components/LandingPage/Icons/Icons";
 
-async function BlogPost() {
-  const frontMatterList = await getFrontMatterList();
-  const recentlyPublished = frontMatterList.slice(0, 10);
+type PublishedPost = FrontMatter;
 
+const ICONS_BY_VARIANT: { [key: string]: JSX.Element } = {
+  web: Icons.WEB,
+  algorithm: Icons.ALGORITHM,
+  code: Icons.CODE,
+  cs: Icons.CS,
+};
+
+function BlogPost({
+  recentlyPublished,
+}: {
+  recentlyPublished: PublishedPost[];
+}) {
   return (
-    <>
-      {/* {recentlyPublished && (
-
-    )} */}
-      <div>
-        <h2>{recentlyPublished[0].title}</h2>
-        <p>{recentlyPublished[0].summary}</p>
-      </div>
-      <Spacer axis={"vertical"} size={48} />
-      <div>
-        <h2>{recentlyPublished[1].title}</h2>
-        <p>{recentlyPublished[1].summary}</p>
-      </div>
-      <Spacer axis={"vertical"} size={48} />
-    </>
+    <Styled.Wrapper>
+      {recentlyPublished &&
+        recentlyPublished.map((frontmatter) => {
+          const IconComponent = ICONS_BY_VARIANT[frontmatter.category];
+          const { category, slug, title, summary, tags } = frontmatter;
+          return (
+            <Styled.BlogPostWrapper key={frontmatter.slug}>
+              <Styled.BlogPost href={`/${category}/${slug}`}>
+                <Styled.BlogPostTitle>
+                  <Styled.BlogPostIcons>{IconComponent}</Styled.BlogPostIcons>
+                  <h2>{title}</h2>
+                </Styled.BlogPostTitle>
+                <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+                <Styled.BlogTagsWrapper>
+                  {tags.length > 0 &&
+                    tags.map((tag) => (
+                      <Styled.BlogTag key={`blog-post-${tag}`}>
+                        {tag}
+                      </Styled.BlogTag>
+                    ))}
+                </Styled.BlogTagsWrapper>
+              </Styled.BlogPost>
+            </Styled.BlogPostWrapper>
+          );
+        })}
+    </Styled.Wrapper>
   );
 }
 
