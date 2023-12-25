@@ -2,11 +2,13 @@ import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import ThemeProvider from "@/components/Theme/Provider";
-import Header from "@/components/Header";
+// import Header from "@/components/Header";
+import Header from "@/components/v2/Header";
 import InitTheme from "@/components/Theme/InitTheme";
 import MobileNav from "@/components/Header/mobile/MobileNav";
 import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/react";
+import HeaderContents from "@/components/v2/HeaderContents";
 
 export const metadata: Metadata = {
   title: {
@@ -52,6 +54,13 @@ export default function RootLayout({
             font-family: 'Wotfard';
             src: url('/fonts/wotfard-regular-webfont.woff2') format('woff2'),
             font-weight: 900;
+            font-style: normal;
+            font-display: fallback;
+            uniconde-range: U+0020-007E;
+          }
+          @font-face {
+            font-family: 'Bariol_serif';
+            src: url('/fonts/bariol_serif_regular-webfont.woff2') format('woff2'),
             font-style: normal;
             font-display: fallback;
             uniconde-range: U+0020-007E;
@@ -109,7 +118,7 @@ export default function RootLayout({
         }
 
         body {
-          font-family: Wotfard, NanumSquareNeo, sans-serif;
+          font-family: Bariol_serif, Wotfard, NanumSquareNeo, sans-serif;
           color: var(--color-text);
           min-height: 100vh;
           background: var(--color-background);
@@ -122,18 +131,6 @@ export default function RootLayout({
 
         #__next {
           isolation: isolate;
-          container: root / inline-size;
-        
-          display: grid;
-          grid-template-columns: [side-header] 96px [main-content] 1fr;
-          grid-template-rows: 1fr;
-        
-          transition: grid-template-columns 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
-        
-          @media screen and (max-width: 768px) {
-            grid-template-columns: [main-content] 1fr;
-            grid-template-rows: 1fr;
-          }
         }
 
             `}
@@ -143,9 +140,10 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <ThemeProvider>
+            <div id="nav-tooltip-portal"></div>
             <div id="__next">
+              <HeaderContents />
               <MobileNav />
-              <Header />
               <div id="side-ng__main-content">
                 {children}
                 <Footer />
@@ -158,3 +156,16 @@ export default function RootLayout({
     </html>
   );
 }
+
+// container: root / inline-size;
+
+// display: grid;
+// grid-template-columns: [side-header] 96px [main-content] 1fr;
+// grid-template-rows: 1fr;
+
+// transition: grid-template-columns 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
+
+// @media screen and (max-width: 768px) {
+//   grid-template-columns: [main-content] 1fr;
+//   grid-template-rows: 1fr;
+// }

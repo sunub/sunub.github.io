@@ -162,7 +162,6 @@ export default function ThemeToggler({
   ...delegated
 }: {
   maskId: string;
-  delegated: HTMLAttributes<HTMLButtonElement>;
 }) {
   const theme: Theme = useContext(ThemeContext);
 

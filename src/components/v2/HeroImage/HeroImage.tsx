@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import bridge from "@/public/v2_assets/hero-image__bridge.avif";
 import wave from "@/public/v2_assets/wave.avif";
@@ -9,6 +11,15 @@ import frontWave from "@/public/v2_assets/hero-image__front_wave.avif";
 import midWave from "@/public/v2_assets/hero-image__mid_wave.avif";
 import backWave from "@/public/v2_assets/hero-image__back_wave.avif";
 import waveBird from "@/public/v2_assets/hero-image__wave_bird.avif";
+import styled from "styled-components";
+
+const MirroredImage = styled(Image)`
+  grid-area: "hero-image";
+  width: 100%;
+  object-fit: cover;
+  transform: scaleY(-1) translateY(-75%) scaleY(0.5);
+  filter: blur(10px);
+`;
 
 function HeaderImage() {
   return (
@@ -62,7 +73,7 @@ function HeaderImage() {
             gridArea: "hero-image",
           }}
         />
-        <Image
+        <MirroredImage
           src={bridge}
           alt={"메인 히어로 이미지중 메인"}
           priority={true}
@@ -74,8 +85,6 @@ function HeaderImage() {
             width: "100%",
             objectFit: "cover",
             gridArea: "hero-image",
-            transform: "scaleY(-1) translateY(-75%) scaleY(0.5",
-            filter: "blur(10px)",
           }}
         />
       </div>
