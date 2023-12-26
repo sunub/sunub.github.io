@@ -1,7 +1,6 @@
 import * as Styled from "./Categories.style";
 
 function Categories({ categories }: { categories: string[] }) {
-  console.log(categories);
   return (
     <Styled.RootWrapper>
       <Styled.TitleWrapper>

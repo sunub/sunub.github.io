@@ -14,10 +14,25 @@ export const Wrapper = styled.main`
   margin-right: auto;
 
   gap: 64px 96px;
+  padding-left: 48px;
+  padding-right: 48px;
+
+  @media screen and (max-width: 786px) {
+    grid-template:
+      "newest"
+      "newset" 1fr / 1fr;
+
+    padding-left: 32px;
+    padding-right: 32px;
+  }
 `;
 
 export const RightSideWrapper = styled.div`
   position: sticky;
   top: 4rem;
   left: 0;
+
+  @media screen and (max-width: 786px) {
+    display: none;
+  }
 `;

@@ -21,6 +21,13 @@ const MirroredImage = styled(Image)`
   filter: blur(10px);
 `;
 
+const BlurImage = styled.div`
+  grid-area: hero-image;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+`;
+
 function HeaderImage() {
   return (
     <>
@@ -31,6 +38,7 @@ function HeaderImage() {
           grid: "[hero-image] 1fr / [hero-image] 1fr",
         }}
       >
+        <BlurImage />
         <Image
           src={clouds}
           alt={"메인 히어로 이미지중 구름"}

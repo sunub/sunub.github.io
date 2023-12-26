@@ -18,13 +18,12 @@ export const BlogPostIcons = styled.div`
 
 export const BlogPostWrapper = styled.article`
   display: flex;
+  flex-direction: column;
   text-decoration: none;
   &:not(:first-of-type) {
     padding-top: 48px;
   }
 `;
-
-export const BlogPost = styled(Link)``;
 
 export const BlogPostContent = styled.p`
   margin-top: 16px;
@@ -45,4 +44,5 @@ export const BlogTag = styled.span`
   font-size: 1rem;
   font-weight: 600;
   border: 1.35px solid var(--color-text);
+  user-select: none;
 `;

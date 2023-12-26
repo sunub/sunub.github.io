@@ -27,7 +27,7 @@ export const CategoryListWrapper = styled.div`
 export const List = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 1rem;
 `;
 
 export const Item = styled(Link)`
@@ -36,7 +36,13 @@ export const Item = styled(Link)`
   font-weight: 600;
   border-radius: 18px;
   background-color: var(--color-primary);
+  user-select: none;
   box-shadow:
     0px 1px 3px 1px rgba(0, 0, 0, 0.15),
     0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  transform: scale(1) translateX(0) translateZ(0);
+  transition: transform 200ms cubic-bezier(0.5, 1.25, 0.75, 1.25);
+  &:hover {
+    transform: scale(1.25) translateX(-2px) translateZ(16px);
+  }
 `;
