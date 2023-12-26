@@ -84,8 +84,8 @@ CREATE TABLE weather (
 
 ```sql
 CREATE TABLE IF NOT EXISTS weather (
-	id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    pin VARCHAR(4) NOT NULL CHECK (LENGTH(pin) = 4 AND pin ~ '[0-9]+$') -- 은행에 로그인시 필요한 PIN 번호
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    pin VARCHAR(4) NOT NULL CHECK (LENGTH(pin) = 4 AND pin ~ '[0-9]+$') -- 은행에 로그인시 필요한 PIN 번호
 );
 ```
 
@@ -115,7 +115,6 @@ WHERE 절의 특징은 다음과 같습니다.
 - SELECT, UPDATE, DELETE 문에서 사용됩니다.
 - 조회할 행이나 갱신할 행을 지정하는 데 사용됩니다.
 - 비교 연산자, 논리 연산자, 집합 연산자 등을 사용하여 조건을 지정할 수 있습니다.
--
 
 ```sql
 	client.query(`
@@ -146,7 +145,6 @@ WHERE name = 'John Doe';
 ```
 
 위의 예에서 WHERE 절은 `name` 열의 값이 `'John Doe'`인 행을 조회합니다.
-
 WHERE 절에서 사용할 수 있는 비교 연산자는 다음과 같습니다.
 
 - `=`: 같음

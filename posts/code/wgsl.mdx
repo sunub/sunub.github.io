@@ -1,8 +1,8 @@
 ---
 title: WGSL
 date: 2023-12-09
-tags: webgl, webgpu, wgsl, shader
-summary: shader를 만들기 위해서 알아야할 것
+tags: webgpu, wgsl, shader
+summary: wgsl은 webgpu를 위해 c언어를 기반으로 만들어진 언어이다. webgpu에서 특히 shader의 기능을 사용하기 위해서는 wgsl을 이해하는 것이 중요하다. 나만의 쉐이더를 만들기 위해 wgsl을 이해해보자.
 slug: whatis-wgsl
 category: code
 completed: false
@@ -22,7 +22,7 @@ WGSL은 webgpu를 위해 c언어를 기반으로 만들어진 언어이다. wgsl
 
 signed, unsigned는 C,C++에서 사용되는 정수에 대한 타입 선언인데 signed integar의 경우 -2,147,483,648~ 2,147,483,647 사이의 정수를 사용이 가능하지만 unsigned의 경우 0 ~ 2,147,483,647 양의 정수만 사용이 가능하다.
 
-```Typescript
+```typescript
 var a: number = 1;
 var c: number = 3;
 function d(e: number): number { return e * 2 }
@@ -35,11 +35,15 @@ var c: f32 = 3;
 fn d(e: f32) -> f32 { return e * 2 }
 // 함수 이름 -> 함수 매개변수의 타입 선언 -> 함수 반환에 대한 타입 선언
 
-let a = 1; // 이 경우 a는 i32
-let b = 2.0; // 이 경우 b는 f32 타입이 된다.
-let c = a + b; // 이 경우 서로 다른 타입의 변수를 더했기 때문에 에러가 발생하게 된다.
+let a = 1;
+// 이 경우 a는 i32
+let b = 2.0;
+// 이 경우 b는 f32 타입이 된다.
+let c = a + b;
+// 이 경우 서로 다른 타입의 변수를 더했기 때문에 에러가 발생하게 된다.
 
-let c = f32(a) + b // 이렇게 하면 위의 타입에 대한 오류를 수정할 수 있다.
+let c = f32(a) + b
+// 이렇게 하면 위의 타입에 대한 오류를 수정할 수 있다.
 ```
 
 ### 2. 변수 Type
