@@ -1,21 +1,23 @@
+import React from "react";
 import Header from "../Header/Header";
 import HeroImage from "../HeroImage";
 import Spacer from "@/components/Spacer";
+import * as Styled from "./HeaderContents.style";
+import { Theme } from "type";
+import Wave from "../Main/Wave";
 
-function HeaderContents() {
+function HeaderContents({
+  initColorTheme,
+}: {
+  initColorTheme: Theme | string;
+}) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        background:
-          "linear-gradient(1deg, rgba(253, 243, 241, 0.71) 30%, rgba(255, 176, 161, 0.68) 60%)",
-      }}
-    >
+    <Styled.Wrapper $theme={"light"}>
       <Spacer size={60} axis={"vertical"} />
-      <Header />
+      <Header initColorTheme={initColorTheme} />
       <HeroImage />
-    </div>
+      <Wave />
+    </Styled.Wrapper>
   );
 }
 
