@@ -7,7 +7,7 @@ import Logo from "./Logo";
 import Navigation from "./Navigation";
 import { Theme } from "type";
 
-function Header({ initColorTheme }: { initColorTheme: Theme }) {
+function Header({ initColorTheme }: { initColorTheme: Theme | string }) {
   return (
     <Styled.RootWrapper>
       <Styled.Header>
