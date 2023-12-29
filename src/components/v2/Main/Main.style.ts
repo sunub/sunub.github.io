@@ -36,3 +36,16 @@ export const RightSideWrapper = styled.div`
     display: none;
   }
 `;
+
+export const WaveSvgWrapper = styled.div`
+  grid-area: hero-wave;
+  display: grid;
+  align-items: flex-end;
+  grid: [wave] 1fr / [wave] 1fr;
+`;
+
+export const WaveSvg = styled.svg`
+  width: 100dvw;
+  object-fit: cover;
+  grid-area: wave;
+`;
