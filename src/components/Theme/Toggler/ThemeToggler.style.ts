@@ -31,19 +31,6 @@ export const ToggleBtn = styled.button`
   }
 `;
 
-export const SunAndMoon = styled.svg<{ $colorTheme: string }>`
-  transform-origin: center center;
-  transition: fill 0.3s ease-in-out;
-  --icon-fill: ${(props) =>
-    props.$colorTheme === "light"
-      ? "oklch(45.88% 0.029 30.71)"
-      : "var(--color-bird)"};
-  --icon-hover-fill: ${(props) =>
-    props.$colorTheme === "light"
-      ? "oklch(21.08% 0.055 34.69)"
-      : "oklch(100% 0 31.08)"};
-`;
-
 export const Sun = styled.circle<{ $colorTheme: string }>`
   transform-origin: center center;
   fill: var(--icon-fill);
@@ -51,11 +38,6 @@ export const Sun = styled.circle<{ $colorTheme: string }>`
 
   transform: ${(props) =>
     props.$colorTheme === "dark" ? "scale(1.75)" : "scale(1)"};
-
-  &:hover,
-  :focus-visible {
-    fill: var(--icon-hover-fill);
-  }
 `;
 
 export const SunAndBeams = styled.g<{ $colorTheme: string }>`
@@ -71,10 +53,26 @@ export const SunAndBeams = styled.g<{ $colorTheme: string }>`
     props.$colorTheme === "dark" ? "rotate(-70deg)" : "rotate(70deg)"};
   transform: ${(props) =>
     props.$colorTheme === "dark" ? "scale(0)" : "scale(1)"};
+`;
 
+export const SunAndMoon = styled.svg<{ $colorTheme: string }>`
+  transform-origin: center center;
+  transition: fill 0.3s ease-in-out;
+  --icon-fill: ${(props) =>
+    props.$colorTheme === "light"
+      ? "oklch(45.88% 0.029 30.71)"
+      : "var(--color-navlink)"};
+  --icon-hover-fill: ${(props) =>
+    props.$colorTheme === "light"
+      ? "oklch(21.08% 0.055 34.69)"
+      : "var(--color-navlink)"};
+
+  transition: transform 100ms cubic-bezier(0, 0.96, 0.32, 0.97);
   &:hover,
   :focus-visible {
-    fill: var(--icon-hover-fill);
+    ${SunAndBeams} {
+      transform: rotate(90deg);
+    }
   }
 `;
 

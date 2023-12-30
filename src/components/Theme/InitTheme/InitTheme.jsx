@@ -13,6 +13,11 @@ function setColorsByTheme() {
     "--color-bird": `oklch(73.44% 0.152 21.47)`,
     "--color-thumb": `oklch(92.54% 0.01 32.52)`,
     "--color-thumb-background": `oklch(53.74% 0.029 30.1)`,
+    "--color-frontWave": `oklch(97.14% 0.011 31.07)`,
+    "--color-midStart": `oklch(93.91% 0.026 32.24)`,
+    "--color-midStop": `oklch(87.16% 0.067 29.88)`,
+    "--color-endStart": `oklch(91.76% 0.034 31.16)`,
+    "--color-endStop": `oklch(89.29% 0.054 18.22)`,
   };
 
   const DARK_COLORS = {
@@ -27,6 +32,11 @@ function setColorsByTheme() {
     "--color-bird": `oklch(90.21% 0.055771670330652126 300.11937740281473)`,
     "--color-thumb": `oklch(92.17% 0.039 291.94)`,
     "--color-thumb-background": `oklch(45.42% 0.007 239.95)`,
+    "--color-frontWave": `oklch(23.93% 0 0)`,
+    "--color-midStart": `oklch(92.17% 0.039 291.94)`,
+    "--color-midStop": `oklch(58.12% 0.155 287.19)`,
+    "--color-endStart": `oklch(58.37% 0.154 286.76)`,
+    "--color-endStop": `oklch(38.11% 0.111 286.59)`,
   };
 
   function getInitialColorMode() {
