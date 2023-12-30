@@ -28,6 +28,7 @@ export const HeroImage = styled(Image).attrs({
   quality: 70,
   sizes: "100vw",
 })<{ $mirrored?: boolean }>`
+  pointer-events: none;
   grid-area: hero-image;
   width: 100%;
   height: auto;

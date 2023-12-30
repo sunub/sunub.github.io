@@ -1,34 +1,18 @@
 import React from "react";
 import * as Styled from "./HeroImage.style";
-import { LightMode } from "./LightMode";
-import { DarkMode, DarkModeWave } from "./DarkMode";
+import LightMode from "./LightMode";
+import DarkMode from "./DarkMode";
+import { Theme } from "type";
 
-function HeaderImage() {
+function HeroImage({ colorTheme }: { colorTheme: Theme }) {
   return (
     <Styled.RootWrapper>
       <Styled.HeroImageWrapper>
-        <LightMode />
-        {/* <DarkMode /> */}
+        <LightMode colorTheme={colorTheme} />
+        <DarkMode colorTheme={colorTheme} />
       </Styled.HeroImageWrapper>
     </Styled.RootWrapper>
   );
 }
-// <Styled.WaveWrapper>
-//   <LightModeWave />
-//   {/* <DarkModeWave /> */}
-// </Styled.WaveWrapper>
 
-export default HeaderImage;
-
-// return (
-//   <Styled.RootWrapper>
-//     <Styled.HeroIamgeWrapper>
-//       <LightMode />
-//       {/* <DarkMode /> */}
-//     </Styled.HeroIamgeWrapper>
-//     <Styled.WaveWrapper>
-//       <LightModeWave />
-//       {/* <DarkModeWave /> */}
-//     </Styled.WaveWrapper>
-//   </Styled.RootWrapper>
-// );
+export default HeroImage;
