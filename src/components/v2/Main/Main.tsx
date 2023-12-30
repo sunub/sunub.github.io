@@ -3,9 +3,6 @@ import * as Styled from "./Main.style";
 import Post from "@/utils/Post";
 import NewestPost from "./NewestPost";
 import Tags from "./Tags/Tags";
-import Wave from "./Wave";
-import LightWave from "./Wave/LightWave";
-import DarkWave from "./Wave/DarkWave";
 
 async function getFrontMatterList() {
   const post = new Post();
@@ -30,6 +27,7 @@ async function Main() {
     </Styled.Wrapper>
   );
 }
+
 export function FeatherIcon() {
   return (
     <svg

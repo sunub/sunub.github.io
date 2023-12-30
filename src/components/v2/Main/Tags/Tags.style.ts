@@ -27,6 +27,6 @@ export const Tag = styled.span`
   padding: 10px 16px 10px 16px;
   border-radius: 18px;
   background-color: var(--color-primary);
-  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+  /* box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3); */
   user-select: none;
 `;
