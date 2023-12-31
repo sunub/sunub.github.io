@@ -1,17 +1,12 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
-import ThemeProvider from "@/components/Theme/Provider";
-// import Header from "@/components/Header";
-import Header from "@/components/v2/Header";
 import InitTheme from "@/components/Theme/InitTheme";
-import MobileNav from "@/components/Header/mobile/MobileNav";
-import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/react";
-import HeaderContents from "@/components/v2/HeaderContents";
 import { cookies } from "next/headers";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
-import { Theme } from "type";
+import React from "react";
+import MobileNav from "@/components/MobileNav";
 
 export const metadata: Metadata = {
   title: {
@@ -116,31 +111,12 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <div id="__next">
-            <div className="blog-main__landing-page">
-              <HeaderContents initColorTheme={theme} />
-              <MobileNav />
-              <div id="side-ng__main-content">
-                {children}
-                <Footer />
-              </div>
-            </div>
+            <div className="blog-main__landing-page">{children}</div>
           </div>
         </StyledComponentsRegistry>
         <Analytics />
+        <MobileNav />
       </body>
     </html>
   );
 }
-
-// container: root / inline-size;
-
-// display: grid;
-// grid-template-columns: [side-header] 96px [main-content] 1fr;
-// grid-template-rows: 1fr;
-
-// transition: grid-template-columns 300ms cubic-bezier(0.3, 0.7, 0.4, 1);
-
-// @media screen and (max-width: 768px) {
-//   grid-template-columns: [main-content] 1fr;
-//   grid-template-rows: 1fr;
-// }

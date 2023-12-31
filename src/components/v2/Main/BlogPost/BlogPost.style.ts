@@ -16,15 +16,6 @@ export const BlogPostIcons = styled.div`
   place-items: center;
 `;
 
-export const BlogPostWrapper = styled.article`
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  &:not(:first-of-type) {
-    padding-top: 48px;
-  }
-`;
-
 export const BlogPostContent = styled.p`
   margin-top: 16px;
 `;
@@ -45,4 +36,13 @@ export const BlogTag = styled.span`
   font-weight: 600;
   border: 1.35px solid var(--color-text);
   user-select: none;
+`;
+
+export const BlogPostWrapper = styled.article`
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  &:not(:first-of-type) {
+    padding-top: 48px;
+  }
 `;

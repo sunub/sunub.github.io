@@ -138,8 +138,6 @@ strong {
   transition:
     color 350ms ease 0s,
     background 350ms ease 0s;
-
-  overflow-y: scroll;
 }
 
 @media (orientation: landscape) {

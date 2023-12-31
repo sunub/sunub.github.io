@@ -1,11 +1,17 @@
-import LandingPage from "@/components/LandingPage";
-import HeroImage from "@/components/LandingPage/HeroImage";
+import Footer from "@/components/Footer";
+import HeaderContents from "@/components/v2/HeaderContents";
 import Main from "@/components/v2/Main";
 
-export default function Page() {
+function Page() {
   return (
-    <Main />
-    // <main>
-    // </main>
+    <>
+      <HeaderContents heroImageVisible={true} />
+      <div id="side-ng__main-content">
+        <Main />
+        <Footer />
+      </div>
+    </>
   );
 }
+
+export default Page;

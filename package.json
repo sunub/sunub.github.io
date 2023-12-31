@@ -44,6 +44,8 @@
 		"postcss-preset-env": "^9.0.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-focus-lock": "^2.9.6",
+		"react-remove-scroll": "^2.5.7",
 		"rehype-stringify": "^9.0.3",
 		"remark-parse": "^10.0.2",
 		"remark-rehype": "^10.1.0",

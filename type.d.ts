@@ -33,3 +33,5 @@ type CTX = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;
 };
+
+type Theme = "light" | "dark";
