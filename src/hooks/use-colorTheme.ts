@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { Theme } from "type";
 
-function useColorTheme(): Theme {
+async function useColorTheme() {
   const colorTheme = cookies().get("color-theme");
 
   if (colorTheme == null) {

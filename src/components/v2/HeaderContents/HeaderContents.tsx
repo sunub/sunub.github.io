@@ -7,8 +7,12 @@ import { Theme } from "type";
 import Wave from "./Wave";
 import useColorTheme from "@/hooks/use-colorTheme";
 
-function HeaderContents({ heroImageVisible }: { heroImageVisible: boolean }) {
-  const colorTheme = useColorTheme();
+async function HeaderContents({
+  heroImageVisible,
+}: {
+  heroImageVisible: boolean;
+}) {
+  const colorTheme = await useColorTheme();
 
   return (
     <Styled.Wrapper $theme={colorTheme}>
