@@ -3,6 +3,15 @@
 import styled from "styled-components";
 import Image from "next/image";
 
+export const BackgroundColor = styled.div`
+  position: fixed;
+  top: 0px;
+  left: 0px;
+
+  width: 100%;
+  background-color: oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%);
+`;
+
 export const WaveWrapper = styled.div`
   display: grid;
   grid: [wave-image] 1fr / [wave-image] 1fr;

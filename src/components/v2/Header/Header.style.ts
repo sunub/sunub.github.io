@@ -13,11 +13,6 @@ export const RootWrapper = styled.div`
   padding-left: 32px;
   padding-right: 32px;
   z-index: 1000;
-
-  @media screen and (max-width: 768px) {
-    display: none;
-    opacity: 0;
-  }
 `;
 
 export const Header = styled.header`
@@ -34,6 +29,11 @@ export const NavigationWrapper = styled.ul`
   display: flex;
   align-items: center;
   gap: 2rem;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+    opacity: 0;
+  }
 `;
 
 export const NavigationItem = styled.li`
@@ -52,4 +52,9 @@ export const PostNaviation = styled.div`
 export const ThemeWrapper = styled.div`
   display: grid;
   place-items: center;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+    opacity: 0;
+  }
 `;

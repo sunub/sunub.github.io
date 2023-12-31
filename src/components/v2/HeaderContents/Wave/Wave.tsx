@@ -8,6 +8,7 @@ import { Theme } from "type";
 function Wave({ colorTheme }: { colorTheme: Theme }) {
   return (
     <Styled.WaveWrapper>
+      <Styled.BackgroundColor />
       <WaveSvg
         style={{
           transition: "all 350ms ease 0s",

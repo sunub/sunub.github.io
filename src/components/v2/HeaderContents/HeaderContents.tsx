@@ -7,19 +7,12 @@ import { Theme } from "type";
 import Wave from "./Wave";
 import useColorTheme from "@/hooks/use-colorTheme";
 
-function HeaderContents({
-  heroImageVisible,
-  initColorTheme,
-}: {
-  heroImageVisible: boolean;
-  initColorTheme: Theme | string;
-}) {
+function HeaderContents({ heroImageVisible }: { heroImageVisible: boolean }) {
   const colorTheme = useColorTheme();
 
   return (
     <Styled.Wrapper $theme={colorTheme}>
-      <Spacer size={60} axis={"vertical"} />
-      <Header initColorTheme={initColorTheme} />
+      <Header initColorTheme={colorTheme} />
       {heroImageVisible && <HeroImage colorTheme={colorTheme} />}
       <Wave colorTheme={colorTheme} />
     </Styled.Wrapper>

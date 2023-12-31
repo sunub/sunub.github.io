@@ -9,20 +9,23 @@ import { Theme } from "type";
 
 function Header({ initColorTheme }: { initColorTheme: Theme | string }) {
   return (
-    <Styled.RootWrapper>
-      <Styled.Header>
-        <Styled.LogoAndNavWrapper>
-          <Logo />
-          <Navigation />
-        </Styled.LogoAndNavWrapper>
-        <Styled.ThemeWrapper>
-          <ThemeToggler
-            initColorTheme={initColorTheme}
-            maskId="desktop-header-theme-toggler"
-          />
-        </Styled.ThemeWrapper>
-      </Styled.Header>
-    </Styled.RootWrapper>
+    <>
+      <Spacer size={60} axis={"vertical"} />
+      <Styled.RootWrapper>
+        <Styled.Header>
+          <Styled.LogoAndNavWrapper>
+            <Logo />
+            <Navigation />
+          </Styled.LogoAndNavWrapper>
+          <Styled.ThemeWrapper>
+            <ThemeToggler
+              initColorTheme={initColorTheme}
+              maskId="desktop-header-theme-toggler"
+            />
+          </Styled.ThemeWrapper>
+        </Styled.Header>
+      </Styled.RootWrapper>
+    </>
   );
 }
 
