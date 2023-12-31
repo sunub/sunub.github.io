@@ -15,14 +15,9 @@ export const NavigationWrapper = styled.nav`
   position: absolute;
   top: 0;
   left: 0;
-
-  width: 100%;
+  padding-bottom: 3rem;
+  padding-top: 6rem;
   height: calc(100% + 0px);
-
-  display: grid;
-  justify-content: flex-start;
-  place-items: center;
-  gap: 1rem;
 
   @media screen and (min-width: 768px) {
     padding-left: 3rem;
@@ -36,12 +31,18 @@ export const NavigationWrapper = styled.nav`
 export const Wrapper = styled.div`
   z-index: 1000;
   position: relative;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 export const ListWrapper = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: calc() 0.5;
+
   font-size: 32px;
   font-weight: 700;
 `;
@@ -54,7 +55,6 @@ export const List = styled.li`
 export const Item = styled(Link)``;
 
 export const ThemeWrapper = styled.div`
-  margin-top: 10rem;
   padding-left: 3rem;
 `;
 
@@ -67,6 +67,6 @@ export const Backdrop = styled.button`
   height: calc(100% + 0px);
   padding-left: 3rem;
 
-  background: color-mix(in oklch, var(--color-bakcgruond) 20%, transparent);
+  background: color-mix(in oklch, var(--color-bakcgruond) 30%, transparent);
   backdrop-filter: blur(8px);
 `;
