@@ -29,19 +29,16 @@ export default function ThemeToggler({
   }
 
   return (
-    <>
-      <Styled.ToggleBtn
-        {...delegated}
-        title="Toggles light & dark"
-        aria-label="auto"
-        onClick={async () => handleClick()}
-      >
-        <ThemeIcon colorTheme={theme} maskId={maskId} />
-      </Styled.ToggleBtn>
-    </>
+    <Styled.ToggleBtn
+      {...delegated}
+      title="Toggles light & dark"
+      aria-label="auto"
+      onClick={async () => handleClick()}
+    >
+      <ThemeIcon colorTheme={theme} maskId={maskId} />
+    </Styled.ToggleBtn>
   );
 }
-
 function ThemeIcon({
   colorTheme,
   maskId,

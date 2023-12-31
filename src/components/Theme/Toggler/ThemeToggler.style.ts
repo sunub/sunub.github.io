@@ -34,7 +34,7 @@ export const ToggleBtn = styled.button`
 export const Sun = styled.circle<{ $colorTheme: string }>`
   transform-origin: center center;
   fill: var(--icon-fill);
-  transition: transform 0.5s ease-in-out;
+  transition: transform 250ms ease-in-out;
 
   transform: ${(props) =>
     props.$colorTheme === "dark" ? "scale(1.75)" : "scale(1)"};
@@ -67,7 +67,6 @@ export const SunAndMoon = styled.svg<{ $colorTheme: string }>`
       ? "oklch(21.08% 0.055 34.69)"
       : "var(--color-navlink)"};
 
-  transition: transform 100ms cubic-bezier(0, 0.96, 0.32, 0.97);
   &:hover,
   :focus-visible {
     ${SunAndBeams} {
