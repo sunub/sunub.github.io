@@ -2,7 +2,6 @@
 
 import Canvas from "./Canvas.helper";
 import React from "react";
-import { ThemeContext } from "@/components/Theme/Provider";
 import LightHeroImage from "./LightHeroImage";
 import DarkHeroImage from "./DarkHeroImage";
 import styled from "styled-components";
@@ -41,8 +40,6 @@ const StyledCanvas = styled.canvas`
 `;
 
 export default function HeroImage() {
-  const theme: Theme = React.useContext(ThemeContext);
-
   const imageRef = React.useRef<HTMLImageElement>(null);
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -51,28 +48,28 @@ export default function HeroImage() {
   const lightCarsRef = React.useRef<HTMLImageElement>(null);
   const darkCarsRef = React.useRef<HTMLImageElement>(null);
 
-  React.useEffect(() => {
-    if (
-      !imageRef.current ||
-      !canvasRef.current ||
-      !lightCloudsRef.current ||
-      !darkCloudsRef.current ||
-      !lightCarsRef.current ||
-      !darkCarsRef.current
-    )
-      return;
-    const canvas = new Canvas(canvasRef.current, imageRef.current);
+  // React.useEffect(() => {
+  //   if (
+  //     !imageRef.current ||
+  //     !canvasRef.current ||
+  //     !lightCloudsRef.current ||
+  //     !darkCloudsRef.current ||
+  //     !lightCarsRef.current ||
+  //     !darkCarsRef.current
+  //   )
+  //     return;
+  //   const canvas = new Canvas(canvasRef.current, imageRef.current);
 
-    if (theme.colorMode) {
-      theme.colorMode === "light"
-        ? canvas.draw(lightCloudsRef.current, lightCarsRef.current)
-        : canvas.draw(darkCloudsRef.current, darkCarsRef.current);
-    }
-  }, [theme.colorMode]);
+  //   if (theme.colorMode) {
+  //     theme.colorMode === "light"
+  //       ? canvas.draw(lightCloudsRef.current, lightCarsRef.current)
+  //       : canvas.draw(darkCloudsRef.current, darkCarsRef.current);
+  //   }
+  // }, [theme.colorMode]);
 
   return (
     <Wrapper style={{ animationDuration: "600ms", animationDelay: "200ms" }}>
-      <LightHeroImage
+      {/* <LightHeroImage
         imageRef={imageRef}
         cloudsRef={lightCloudsRef}
         carsRef={lightCarsRef}
@@ -82,7 +79,7 @@ export default function HeroImage() {
         cloudsRef={darkCloudsRef}
         carsRef={darkCarsRef}
         theme={theme.colorMode}
-      />
+      /> */}
       <StyledCanvas ref={canvasRef} />
     </Wrapper>
   );

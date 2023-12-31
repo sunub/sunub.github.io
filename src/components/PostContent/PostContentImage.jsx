@@ -21,6 +21,7 @@ const Container = styled.div`
 
 const ImageWrapper = styled.div`
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 16px;
   margin: 0px auto 48px;

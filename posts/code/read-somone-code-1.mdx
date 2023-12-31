@@ -1,0 +1,62 @@
+---
+title: 남의 코드를 읽어보자!
+date: 2023-12-30
+tags: react, reading, react-focus-lock
+summary: 내가 사용하는 패키지의 코드를 단순히 사용만 하는 것이 아니라 내부의 코드를 읽어보고 어떠한 구조를 내가 활용할 수 있는지 생각하고 구조를 분석하여 지식을 넓혀보자!
+slug: read-somoneIs-code-reactFocusLock
+category: code
+completed: false
+---
+
+## React-focus-lock
+
+이 코드의 메인 기능을 하는 것은 Lock.js 파일이다. 이 파일 이전의 index.js의 경우 단순히 파일을 export 하기 위한 용도로 사용되며 이 패키지에서 가장 중요한 중재자 역할을 하는 것은 Lock.js 파일이다.
+
+이 코드를 읽어보면서 새롭게 알게된 사실은 전달해야할 prop이 많을 경우 어떻게 다루는지에 대해서 알 수 있었다.
+
+```javascript
+const {
+  children,
+  disabled = false,
+  noFocusGuards = false,
+  persistentFocus = false,
+  crossFrame = true,
+  autoFocus = true,
+  allowTextSelection,
+  group,
+  className,
+  whiteList,
+  hasPositiveIndices,
+  shards = emptyArray,
+  as: Container = "div",
+  lockProps: containerProps = {},
+  sideCar: SideCar,
+
+  returnFocus: shouldReturnFocus = false,
+  focusOptions,
+
+  onActivation: onActivationCallback,
+  onDeactivation: onDeactivationCallback,
+} = props;
+```
+
+위의 경우 js 파일로 작성이 되었다. 타입스크립트로 작성하지 않은 이유에 대해서 생각해보았습니다.
+
+위의 경우 타입 선언문을 작성할 경우 너무 타입 선언문이 필요하고 각각의 prop들은 각기 다른 구조를 갖고 있을것이기 때문에 구조가 너무 복잡해져 가독성이 떨어질 가능성이 있기 때문에 js 파일을 이용하여 코드를 작성했을 것이라고 추측해 보았습니다.
+
+```javascript
+const observed = React.useRef();
+const isActive = React.useRef(false);
+const originalFocusedElement = React.useRef(null);
+
+const onActivation = React.useCallback(() => {
+  originalFocusedElement.current =
+    originalFocusedElement.current || (document && document.activeElement);
+  if (observed.current && onActivationCallback) {
+    onActivationCallback(observed.current);
+  }
+  isActive.current = true;
+}, [onActivationCallback]);
+```
+
+isActive를 보면 useRef를 false로 설정하여 사용하고 있다. 이는 이전의 상태를 기억하기 위한 방법으로 사용할 것이라고 생각합니다. 이전의 상태가 활성화 되어 있을 경우에 특정 함수를 사용하기 위한 방법으로 사용했을 것이라고 추측됩니다.

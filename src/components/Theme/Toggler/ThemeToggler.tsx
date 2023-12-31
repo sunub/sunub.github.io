@@ -1,102 +1,44 @@
 "use client";
 
-import { HTMLAttributes, useContext } from "react";
-import styled from "styled-components";
-import { ThemeContext } from "../Provider/ThemeProvider";
+import * as Styled from "./ThemeToggler.style";
+import React, { HTMLAttributes, useContext } from "react";
+import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
+import { Theme } from "type";
+import handleChangeTheme from "./ThemeToggler.helper";
 
-type Theme = {
-  colorMode?: string | null;
-  setColorMode?: (value: string) => void;
-};
+export default function ThemeToggler({
+  initColorTheme,
+  maskId,
+  ...delegated
+}: {
+  initColorTheme: Theme | string;
+  maskId: string;
+}) {
+  const [theme, setTheme] = React.useState<Theme | string>(initColorTheme);
 
-const ToggleBtn = styled.button`
-  --toggle-size: var(--size-6);
-  position: relative;
+  async function handleClick() {
+    const nextTheme = await handleChangeTheme();
+    const nextColors = nextTheme === "light" ? LIGHT_COLORS : DARK_COLORS;
+    setTheme(() => nextTheme);
 
-  background: none;
-  border: none;
-  padding: 0;
-
-  inline-size: var(--toggle-size);
-  block-size: var(--toggle-size);
-  aspect-ratio: 1;
-  border-radius: 50%;
-
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  outline-offset: 5px;
-
-  & > svg {
-    inline-size: 100%;
-    block-size: 100%;
-    stroke-linecap: round;
+    const root = document.documentElement;
+    root.setAttribute("data-color-theme", nextTheme);
+    Object.entries(nextColors).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
   }
 
-  @media (hover: none) {
-    --toggle-size: 48px;
-  }
-`;
-
-const SunAndMoon = styled.svg<{ $colorTheme: string }>`
-  transform-origin: center center;
-  transition: fill 0.3s ease-in-out;
-  --icon-fill: ${(props) =>
-    props.$colorTheme === "light"
-      ? "oklch(45.88% 0.029 30.71)"
-      : "var(--color-bird)"};
-  --icon-hover-fill: ${(props) =>
-    props.$colorTheme === "light"
-      ? "oklch(21.08% 0.055 34.69)"
-      : "oklch(100% 0 31.08)"};
-`;
-
-const Sun = styled.circle<{ $colorTheme: string }>`
-  transform-origin: center center;
-  fill: var(--icon-fill);
-  transition: transform 0.5s ease-in-out;
-
-  transform: ${(props) =>
-    props.$colorTheme === "dark" ? "scale(1.75)" : "scale(1)"};
-
-  &:hover,
-  :focus-visible {
-    fill: var(--icon-hover-fill);
-  }
-`;
-
-const SunAndBeams = styled.g<{ $colorTheme: string }>`
-  transform-origin: center center;
-  stroke: var(--icon-fill);
-  transition:
-    transform 0.5s ease-in,
-    opacity 0.3s ease-in,
-    scale 0.4s ease-in;
-
-  opacity: ${(props) => (props.$colorTheme === "dark" ? "0" : "1")};
-  transform: ${(props) =>
-    props.$colorTheme === "dark" ? "rotate(-70deg)" : "rotate(70deg)"};
-  transform: ${(props) =>
-    props.$colorTheme === "dark" ? "scale(0)" : "scale(1)"};
-
-  &:hover,
-  :focus-visible {
-    fill: var(--icon-hover-fill);
-  }
-`;
-
-const Moon = styled.mask<{ $colorTheme: string }>`
-  transform-origin: center center;
-
-  & > circle {
-    transition: transform 0.4s ease-in-out;
-    transform: ${(props) =>
-      props.$colorTheme === "dark"
-        ? "translate(-7px, -16px)"
-        : "translate(0px, 0px)"};
-  }
-`;
-
+  return (
+    <Styled.ToggleBtn
+      {...delegated}
+      title="Toggles light & dark"
+      aria-label="auto"
+      onClick={async () => handleClick()}
+    >
+      <ThemeIcon colorTheme={theme} maskId={maskId} />
+    </Styled.ToggleBtn>
+  );
+}
 function ThemeIcon({
   colorTheme,
   maskId,
@@ -106,7 +48,7 @@ function ThemeIcon({
   maskId: string;
 }) {
   return (
-    <SunAndMoon
+    <Styled.SunAndMoon
       {...delegated}
       $colorTheme={colorTheme}
       width="24"
@@ -115,7 +57,7 @@ function ThemeIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <Sun
+      <Styled.Sun
         $colorTheme={colorTheme}
         cx="12"
         cy="12"
@@ -123,7 +65,7 @@ function ThemeIcon({
         fill="#2D0D06"
         mask={`url(#${maskId})`}
       />
-      <SunAndBeams $colorTheme={colorTheme}>
+      <Styled.SunAndBeams $colorTheme={colorTheme}>
         <path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
         <path
           d="M5.63604 5.63604L6.01039 6.01039"
@@ -148,38 +90,11 @@ function ThemeIcon({
           strokeWidth="3"
           strokeLinecap="round"
         />
-      </SunAndBeams>
-      <Moon $colorTheme={colorTheme} id={maskId}>
+      </Styled.SunAndBeams>
+      <Styled.Moon $colorTheme={colorTheme} id={maskId}>
         <rect x="0" y="0" width="100%" height="100%" fill="white" />
         <circle cx="24" cy="24" r="6" fill="black" />
-      </Moon>
-    </SunAndMoon>
-  );
-}
-
-export default function ThemeToggler({
-  maskId,
-  ...delegated
-}: {
-  maskId: string;
-  delegated: HTMLAttributes<HTMLButtonElement>;
-}) {
-  const theme: Theme = useContext(ThemeContext);
-
-  return (
-    <ToggleBtn
-      {...delegated}
-      title="Toggles light & dark"
-      aria-label="auto"
-      onClick={() => {
-        if (theme.setColorMode) {
-          const curTheme: string =
-            theme.colorMode === "light" ? "dark" : "light";
-          theme.setColorMode(curTheme);
-        }
-      }}
-    >
-      <ThemeIcon colorTheme={theme.colorMode ?? "light"} maskId={maskId} />
-    </ToggleBtn>
+      </Styled.Moon>
+    </Styled.SunAndMoon>
   );
 }

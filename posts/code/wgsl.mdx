@@ -1,8 +1,8 @@
 ---
 title: WGSL
 date: 2023-12-09
-tags: typescript
-summary: shader를 만들기 위해서 알아야할 것
+tags: webgpu, wgsl, shader
+summary: wgsl은 webgpu를 위해 c언어를 기반으로 만들어진 언어이다. webgpu에서 특히 shader의 기능을 사용하기 위해서는 wgsl을 이해하는 것이 중요하다. 나만의 쉐이더를 만들기 위해 wgsl을 이해해보자.
 slug: whatis-wgsl
 category: code
 completed: false
@@ -11,7 +11,8 @@ completed: false
 ## WGSL를 이해하기 위해 필요한 것들
 
 ### 1.type
-WGSL은 webgpu를 위해 c언어를 기반으로 만들어진 언어이다. wgsl을 사용하기 위해서는 wgsl내에서 사용되는 types of variable(변수에 대한 타입) 과 struct type(구조적 필드), 함수에 대한 매개 변수에 대한 타입과 반환 값에 대한 타입에 대해서 파악해야 한다. 
+
+WGSL은 webgpu를 위해 c언어를 기반으로 만들어진 언어이다. wgsl을 사용하기 위해서는 wgsl내에서 사용되는 types of variable(변수에 대한 타입) 과 struct type(구조적 필드), 함수에 대한 매개 변수에 대한 타입과 반환 값에 대한 타입에 대해서 파악해야 한다.
 
 - i32 : 32bit integar 타입
 - u32 : unsigned 32bit integar 타입
@@ -21,7 +22,7 @@ WGSL은 webgpu를 위해 c언어를 기반으로 만들어진 언어이다. wgsl
 
 signed, unsigned는 C,C++에서 사용되는 정수에 대한 타입 선언인데 signed integar의 경우 -2,147,483,648~ 2,147,483,647 사이의 정수를 사용이 가능하지만 unsigned의 경우 0 ~ 2,147,483,647 양의 정수만 사용이 가능하다.
 
-```Typescript
+```typescript
 var a: number = 1;
 var c: number = 3;
 function d(e: number): number { return e * 2 }
@@ -34,44 +35,50 @@ var c: f32 = 3;
 fn d(e: f32) -> f32 { return e * 2 }
 // 함수 이름 -> 함수 매개변수의 타입 선언 -> 함수 반환에 대한 타입 선언
 
-let a = 1; // 이 경우 a는 i32
-let b = 2.0; // 이 경우 b는 f32 타입이 된다.
-let c = a + b; // 이 경우 서로 다른 타입의 변수를 더했기 때문에 에러가 발생하게 된다.
+let a = 1;
+// 이 경우 a는 i32
+let b = 2.0;
+// 이 경우 b는 f32 타입이 된다.
+let c = a + b;
+// 이 경우 서로 다른 타입의 변수를 더했기 때문에 에러가 발생하게 된다.
 
-let c = f32(a) + b // 이렇게 하면 위의 타입에 대한 오류를 수정할 수 있다.
+let c = f32(a) + b
+// 이렇게 하면 위의 타입에 대한 오류를 수정할 수 있다.
 ```
-
 
 ### 2. 변수 Type
 
-wgsl에서는 javascript에서 사용하는 var, let, const의 의미가 다르게 사용된다. 
+wgsl에서는 javascript에서 사용하는 var, let, const의 의미가 다르게 사용된다.
 
-wgsl에서는 모든 변수가 전역 변수가 아닌 제한된 범위 내에서만 사용이 가능하다. 또한 var의 경우 js에서는 전역변수이지만 wgsl에서는 지역변수로 사용이 되며 변수 선언 이후에 값에 대한 변경이 가능하다. 
+wgsl에서는 모든 변수가 전역 변수가 아닌 제한된 범위 내에서만 사용이 가능하다. 또한 var의 경우 js에서는 전역변수이지만 wgsl에서는 지역변수로 사용이 되며 변수 선언 이후에 값에 대한 변경이 가능하다.
+
 ```javascript
 fn foo(){
 	let a = 1;
-	a = a + 1; // 이 경우 javascipr에서는 오류가 발생하지 않지만 wgsl에서는 오류가 발생한다. 
+	a = a + 1; // 이 경우 javascipr에서는 오류가 발생하지 않지만 wgsl에서는 오류가 발생한다.
 	var b = 2;
 	b = b + 1; //
 }
 
-var d = b + 1 // var은 지역변수이기 때문에 오류가 발생한다. 
+var d = b + 1 // var은 지역변수이기 때문에 오류가 발생한다.
 ```
 
-javascript와 또 다른 점은 const는 변수가 아니라는 것이다. wgsl에서 const는 컴파일 시에만 사용이 가능하고 런타임에 영향을 주는 변수에 대한 선언으로는 사용할 수 없다. 
+javascript와 또 다른 점은 const는 변수가 아니라는 것이다. wgsl에서 const는 컴파일 시에만 사용이 가능하고 런타임에 영향을 주는 변수에 대한 선언으로는 사용할 수 없다.
+
 ```javascript
-const one = 1; // 이 경우 런타임에 영향을 주지 않고 컴파일 시에만 사용되기 때문에 오류가 발생하지 않는다. 
+const one = 1; // 이 경우 런타임에 영향을 주지 않고 컴파일 시에만 사용되기 때문에 오류가 발생하지 않는다.
 const two = one * 2
 
 fn add(a: f32, b: f32) -> f32 {
-	const result = a + b; // const는 런타임에 영향을 주는 변수에 선언이 불가능하기 때문에 오류가 발생한다. 
+	const result = a + b; // const는 런타임에 영향을 주는 변수에 선언이 불가능하기 때문에 오류가 발생한다.
 	return result;
 }
 ```
 
 ## 3. Vector 타입
 
-기본적으로 vec?숫자 타입으로 vector를 선언할 수 있다. 
+기본적으로 vec?숫자 타입으로 vector를 선언할 수 있다.
+
 - vec2
 - vec3
 - vec4
@@ -83,64 +90,65 @@ Vector는 다양한 분야에서 사용되는 수학 단위이다. Vector가 사
 - Normal Vector
 - 텍스쳐에 대한 좌표 정보
 
-Vector가 담고 있는 정보는 vec(x, y, z, w)이다. w에 대한 값이 어떻게 쓰이느냐는 각각의 상황에 따라 유동적이지만 좌표계 내에서 사용이 되는 w는 x,y,z에 대한 좌표가 w=1 일 경우 공간에 위치하는 좌표, w = 0 일 경우 방향을 나타내는 좌표로 쓰인다. w는 이렇듯 공간인지 방향 인지를 구분하는 인덱스로 사용이 된다. 
+Vector가 담고 있는 정보는 vec(x, y, z, w)이다. w에 대한 값이 어떻게 쓰이느냐는 각각의 상황에 따라 유동적이지만 좌표계 내에서 사용이 되는 w는 x,y,z에 대한 좌표가 w=1 일 경우 공간에 위치하는 좌표, w = 0 일 경우 방향을 나타내는 좌표로 쓰인다. w는 이렇듯 공간인지 방향 인지를 구분하는 인덱스로 사용이 된다.
 
 ```javascript
 vec2<u32>
 vec3<f32>
 vec4<f32>
 
-// 기본적인 벡터에 대한 변수 선언은 위와 같지만 시스템내에서 단축키를 이용하여 위와 같이 vector 선언이 가능하다. 
+// 기본적인 벡터에 대한 변수 선언은 위와 같지만 시스템내에서 단축키를 이용하여 위와 같이 vector 선언이 가능하다.
 
 vec2i === vec2<i32>
 vec3f === vec3<f32>
 vec4u === vec4<u32>
 
 let a = vec4<f32>(1, 2, 3, 4)
-let b = a.zx  // 이 경우 x, y, z, w로 a를 사용하여 3번째 변수에 적용한 경우이다. 
-let c = a.br // 이 경우 rgba값으로 접근하여 3번째 변수에 접근한 경우이다. 
+let b = a.zx  // 이 경우 x, y, z, w로 a를 사용하여 3번째 변수에 적용한 경우이다.
+let c = a.br // 이 경우 rgba값으로 접근하여 3번째 변수에 접근한 경우이다.
 let d = vec2<f32>(a[2], a[0])
 
-// 위의 모든 변수가 접근하는 a의 값은 3번째 값으로 동일하다. 
+// 위의 모든 변수가 접근하는 a의 값은 3번째 값으로 동일하다.
 
 let a = vec4<f32>(1, 2, 3, 4);
 let b = vec3<f32>(a.z, a.z, a.y);
 let c = a.zzy;
 
-// 위의 b, c 모두 3, 3, 2 동일한 값을 지닌다. 
+// 위의 b, c 모두 3, 3, 2 동일한 값을 지닌다.
 
 let a = vec4f(1, 2, 3, 4)
 let b = vec2f(2, 3)
-let c = vec4f(1, b, 4) // => a와 동일한 값이다. 
+let c = vec4f(1, b, 4) // => a와 동일한 값이다.
 let d = vec2f(1, a.yz, 4)
 let e = vec2f(a.xyz, 4)
 let f = vec2(1, a.yzw)
 
-// 위의 모든 변수는 a와 동일한 값을 지닌다. 
+// 위의 모든 변수는 a와 동일한 값을 지닌다.
 
 let a = vec4f(1, 2, 3, 4)
 let b = vec4f(5, 6, 7, 8)
-let c = a + b; // c는 vec4f(6, 8, 10, 12)이다. 
-let d = a * b; // d는 vec4f(5, 12, 21, 32)이다. 
-let e = a - b; // e는 vec4f(-4, -4, -4, -4)이다. 
+let c = a + b; // c는 vec4f(6, 8, 10, 12)이다.
+let d = a * b; // d는 vec4f(5, 12, 21, 32)이다.
+let e = a - b; // e는 vec4f(-4, -4, -4, -4)이다.
 ```
 
 ## 4. matrices
 
-matrix type은 vector들을 array 타입으로 데이터를 저장한 matrix 타입을 이야기 한다. 
+matrix type은 vector들을 array 타입으로 데이터를 저장한 matrix 타입을 이야기 한다.
 
 ```javascript
 mat<numVectors(벡터의 갯수)>x<vectorSize(벡터의 크기)><<type>>
-// matrix의 기본 format이다. 
+// matrix의 기본 format이다.
 
 let a: mat4x4<f32>(...)
-// f32 타입인 크기가 4인 4개의 벡터를 저장한 matrix 
-let b = a[2] // matrix array의 2번째 벡터를 변수로 갖는다. 
+// f32 타입인 크기가 4인 4개의 벡터를 저장한 matrix
+let b = a[2] // matrix array의 2번째 벡터를 변수로 갖는다.
 let c = vec4f(1, 2, 3, 4)
 let d = a * c
 ```
 
 ## 5. arrays
+
 ```javascript
 arrayFormat = array<type, numElements>
 
@@ -150,19 +158,19 @@ let b = array<vec4f, 6>
 
 ## 6. entry points
 
-예를 들어 WebGPU를 이용해 삼각형을 그린다고 생각을 해보자. 이때 삼각형을 그리기 위해서는 WebGPU를 실행하는 함수 실행 시 반드시 함수 실행 내부에서 특정 타입을 반환하는 함수들이 실행되어야 한다. 그 타입들은 아래와 같다. 
+예를 들어 WebGPU를 이용해 삼각형을 그린다고 생각을 해보자. 이때 삼각형을 그리기 위해서는 WebGPU를 실행하는 함수 실행 시 반드시 함수 실행 내부에서 특정 타입을 반환하는 함수들이 실행되어야 한다. 그 타입들은 아래와 같다.
 
 1. Vertex Shaders
-기본적으로 WebGPU는 coordinate system의 context에서 실행이 된다. 그렇기 때문에 각각의 요소는 수많은 점으로 구성되어 있고 이러한 점들은 3개의 점으로 그룹지어져 있고 이렇게 그룹지어진 점들을 삼각형으로 만들어 반환되어야 하는데 이를 위해서는 Vertext Shader를 통해 각각의 점들이 렌더링 되어야 한다. 
+   기본적으로 WebGPU는 coordinate system의 context에서 실행이 된다. 그렇기 때문에 각각의 요소는 수많은 점으로 구성되어 있고 이러한 점들은 3개의 점으로 그룹지어져 있고 이렇게 그룹지어진 점들을 삼각형으로 만들어 반환되어야 하는데 이를 위해서는 Vertext Shader를 통해 각각의 점들이 렌더링 되어야 한다.
 
 2. Fragment Shaders
-vertex shader를 통해 렌더링 된 점들의 각각의 픽셀들은 fragment shader를 통하여 그리고 각각의 색상을 반환한다. 
+   vertex shader를 통해 렌더링 된 점들의 각각의 픽셀들은 fragment shader를 통하여 그리고 각각의 색상을 반환한다.
 
 3. Compute Shaders
-compute shader는 위에서 실행되어 만들어진 결과들을 몇 번이나 실행할 것이고 어떠한 작업을 할 것이고 어떻게 호출할 것인지를 결정하는 역할을 한다. 이러한 역할이 중요한 것은 Compute shader를 통하여 각각의 그룹들에 특정한 key가 주어지고 그 key에 맞춰서 실행되기 때문에 각각의 요소들이 독립적인 기능을 수행할 수 있게 된다. 
+   compute shader는 위에서 실행되어 만들어진 결과들을 몇 번이나 실행할 것이고 어떠한 작업을 할 것이고 어떻게 호출할 것인지를 결정하는 역할을 한다. 이러한 역할이 중요한 것은 Compute shader를 통하여 각각의 그룹들에 특정한 key가 주어지고 그 key에 맞춰서 실행되기 때문에 각각의 요소들이 독립적인 기능을 수행할 수 있게 된다.
 
+entry point를 통해서 pipeline에 특정 함수가 어떠한 역할로 전달되는지 표시해주는 역할을 합니다. @vertex, @fragment, @compute와 같이 선언하며 이러한 entry point는 중첩될 수 없다는 특징이 있다. 한 개의 @vertex가 있으면 또 다른 @vertex는 사용이 불가능 하다.
 
-entry point를 통해서 pipeline에 특정 함수가 어떠한 역할로 전달되는지 표시해주는 역할을 합니다. @vertex, @fragment, @compute와 같이 선언하며 이러한 entry point는 중첩될 수 없다는 특징이 있다. 한 개의 @vertex가 있으면 또 다른 @vertex는 사용이 불가능 하다. 
 ```javascript
 @vertex fn myFunc(a: f32, b: f32) -> @builtin(position): vec4f {
 	return vec4f(0, 0, 0, 0)
@@ -173,4 +181,4 @@ entry point를 통해서 pipeline에 특정 함수가 어떠한 역할로 전달
 
 4. @location
 
-셰이더의 입력 및 출력을 정의하는데 사용이 된다. vertex shader의 경우 입력(input)은 @location을 통해 속성이 정의가 된다. 
+셰이더의 입력 및 출력을 정의하는데 사용이 된다. vertex shader의 경우 입력(input)은 @location을 통해 속성이 정의가 된다.
