@@ -6,6 +6,8 @@ import { Category, Theme } from "type";
 import Hamburger from "../Hamburger";
 import NavigationList from "./NavigationList";
 import * as Styled from "./Navigation.style";
+import FocusLock from "react-focus-lock";
+import { RemoveScroll } from "react-remove-scroll";
 
 interface NavigationProps {
   categories: Category[];
@@ -20,12 +22,14 @@ function Navigation(props: NavigationProps) {
     <Styled.RootWrapper>
       <Hamburger isOpen={isOpen} toggleOpen={toggleOpen} />
       {isOpen && (
-        <>
-          <Styled.NavigationWrapper>
-            <NavigationList categories={categories} colorTheme={colorTheme} />
-          </Styled.NavigationWrapper>
-          <Styled.Backdrop onClick={toggleOpen} />
-        </>
+        <FocusLock>
+          <RemoveScroll>
+            <Styled.NavigationWrapper>
+              <NavigationList categories={categories} colorTheme={colorTheme} />
+            </Styled.NavigationWrapper>
+            <Styled.Backdrop onClick={toggleOpen} />
+          </RemoveScroll>
+        </FocusLock>
       )}
     </Styled.RootWrapper>
   );

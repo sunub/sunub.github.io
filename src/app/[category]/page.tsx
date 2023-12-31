@@ -8,6 +8,8 @@ import * as Styled from "./style";
 import Header from "@/components/v2/Header";
 import Wave from "@/components/v2/HeaderContents/Wave";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   const post = new Post();
   const frontmatters = post.frontMatters["all"];
@@ -22,7 +24,7 @@ export async function generateStaticParams() {
 
 async function Page({ params }: { params: { category: string } }) {
   const { category } = params;
-  const colorTheme = useColorTheme();
+  const colorTheme = await useColorTheme();
 
   return (
     <div id="side-ng__main-content">

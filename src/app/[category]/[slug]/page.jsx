@@ -6,6 +6,8 @@ import Header from "@/components/v2/Header";
 import Wave from "@/components/v2/HeaderContents/Wave";
 import Footer from "@/components/Footer";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   const post = new Post();
   const frontmatters = post.frontMatters["all"];
@@ -20,11 +22,11 @@ export async function generateStaticParams() {
   return params;
 }
 
-export default function Page({ params }) {
+export default async function Page({ params }) {
   const { slug } = params;
   const post = new Post();
   const postcontent = post.contents[slug];
-  const colorTheme = useColorTheme();
+  const colorTheme = await useColorTheme();
 
   return (
     <div id="side-ng__main-content">
