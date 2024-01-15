@@ -1,0 +1,122 @@
+.Wrapper {
+  grid-area: main-content;
+
+  font-family: "NanumSquareNeo", sans-serif;
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  @container root ( width > 768px ) {
+    width: calc(100dvw - 88px);
+  }
+}
+
+.Article {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  word-spacing: 0.2ch;
+  text-align: left;
+
+  background-color: var(--color-background);
+
+  text-align: left;
+}
+
+.Header {
+  font-family: "Bariol_serif", serif;
+  text-align: center;
+  padding: 128px 32px 96px 32px;
+}
+
+.Title {
+  font-size: clamp(3rem, 5vw, 5rem);
+  text-align: center;
+  color: color-mix(in oklch, var(--color-highlightColor) 90%, transparent);
+}
+
+.Time {
+  text-align: center;
+  color: color-mix(in oklch, var(--color-text) 50%, transparent);
+  font-size: var(--size-4);
+  margin-top: 16px;
+}
+
+.Main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+
+  row-gap: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+
+  font-weight: 500;
+
+  & > span {
+    color: oklch(90.75% 0.042 30.85);
+  }
+
+  & > h1 {
+    font-size: calc(2rem);
+  }
+
+  & > ol {
+    --counter-name: counts;
+    counter-reset: var(--counter-name);
+    position: relative;
+  }
+
+  & > ol > li {
+    counter-increment: var(--counter-name);
+    text-align: baseline;
+  }
+
+  & > ol > li::before {
+    position: absolute;
+    left: -1px;
+    content: counters(var(--counter-name), ".") ". ";
+    font-feature-settings: "tnum";
+    padding-right: 12px;
+    font-weight: 900;
+    font-family: "Wotfard", sans-serif;
+    font-size: calc(1.15rem);
+    color: var(--color-bird);
+  }
+
+  & > ul {
+    list-style: square;
+  }
+
+  & > ul > li::marker {
+    color: var(--color-bird);
+  }
+
+  & > h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 900;
+  }
+
+  & > h2,
+  h3,
+  h4,
+  h5 {
+    font-size: calc(1.5rem);
+    padding-top: 32px;
+  }
+}
+
+@counter-style stylized-num {
+  system: "numeric";
+}

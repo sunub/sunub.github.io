@@ -1,0 +1,94 @@
+---
+title: 2차원 배열 붙이기
+date: 2023-11-22
+tags: stack
+summary: 가로와 세로의 길이가 같은 2차원 배열의 크기 n이 주어졌을 때 1차원의 배열로 변환하여 배열 내의 모든 인덱스를 수로 채워 반환해보자.
+slug: problem-2dArray-slice
+category: algorithm
+completed: true
+---
+
+## 문제
+
+> [문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/87390#)
+
+가로와 세로의 길이가 같은 2차원 배열의 크기 n이 주어졌을 때 각각의 배열은 1행 1열 부터 시작해 i행 i열까지 영역 내의 모든 빈칸의 숫자를 i로 채운다.
+
+```javascript
+const array = [
+  [1, 2, 3],
+  [2, 2, 3],
+  [3, 3, 3],
+];
+```
+
+위와 같은 배열이 만들어 졌을 때 1차원의 배열로 변환하여 left ~ right 인덱스 사이의 모든 수를 배열로 반환해야 한다.
+
+## 문제 해결
+
+코딩 문제를 풀때 손코딩 또한 중요하다. 손 코딩으로 간단한 케이스를 적어보면 위의 left, right가 가지는 의미를 새롭게 정의 할 수 있다.
+
+2차원 배열의 값을 1차원으로 변환했을때 우리가 탐색해야 할 부분은 상당 부분 좁혀진다. 위의 문제를 인덱스 0부터 시작하여 탐색할 경우 탐색에 많은 시간이 필요하다. 이를 줄이기 위해서 특정 부분만 탐색할 수 있도록 시작 부분과 끝부분을 조정하자는 것이다.
+
+`start = Math.floor(left / n)`
+시작 부분은 전체 배열의 크기 길이가 정해져 있고 또한 1차원의 배열로 전환 했을 경우를 상정하여야 하기 때문에 성립된다. start는 탐색이 필요한 부분의 row 값을 의미한다.
+
+`end = Math.floor(right / n)`
+이 또한 위와 같은 이유로 성립이 되며 마지막으로 탐색해야 할 값이 있어야 할 row 값에 해당한다.
+
+이를 적용하여 해결하면 아래와 같다.
+
+```javascript
+function solution(n, left, right) {
+  let answer = [];
+  let start = Math.floor(left / n);
+  let end = Math.floor(right / n);
+
+  let count = start * n;
+  for (let i = start; i <= end; i += 1) {
+    let fillNum = i + 1;
+    for (let j = 0; j < n; j += 1) {
+      if (j > i) {
+        fillNum += 1;
+      }
+      count += 1;
+      if (left < count && count <= right + 1) {
+        answer.push(fillNum);
+      } else if (count > right + 1) {
+        break;
+      }
+    }
+  }
+  return answer;
+}
+```
+
+하지만 시작 부분과 끝 부분을 나누지 않고 문제를 해결도 가능하다. left와 right가 2차원 배열에 어디에 해당하는지 알기 위해서 필요한 정보는 가로열과 세로열의 좌표이다.
+
+`row = Math.floor(i / n)`
+만약 구하고자 하는 left가 2이고 n이 3이라고 가정하면 left가 2차원 배열에서 해당하는 row 값은 0이 될 것이다.
+
+`col = Math.floor(i % n)`
+구하고자 하는 right 값이 5이고 n이 3일 경우 right 값이 2차원 내에서 해당하는 col 값은 2가 될 것이다.
+
+이와 같은 방법을 이용하면 `right-left`의 값 만큼만 배열을 반복하여 순환하면 되기 때문에 실행 시간을 더 단축 시킬 수 있기 때문에 유용한 방법이다.
+
+`maxInRow = Math.max(row, col)`
+위의 조건일 경우 각 `(col, row)`의 값은 row와 col 중 최대값에 해당하는 값이다.
+
+```javascript
+function solution(n, left, right) {
+  let answer = [];
+  for (let i = left; i <= right; i++) {
+    const row = Math.floor(i / n);
+    const col = i % n;
+    const maxInRow = Math.max(row, col);
+    answer.push(maxInRow + 1);
+  }
+  return answer;
+}
+```
+
+## 이번 문제에서 얻은 것
+
+**손 코딩**이 중요하다! 손으로 내가 생각한 내용을 최대한 간단한 케이스로 전환하여 테스트 해보는 것을 잊지 말자.

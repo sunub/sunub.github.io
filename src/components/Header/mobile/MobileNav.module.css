@@ -1,0 +1,23 @@
+.MobileMenu {
+  position: fixed;
+  top: 0px;
+
+  display: none;
+  opacity: 0;
+
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 32px;
+  padding-right: 32px;
+  @media (max-width: 768px) {
+    & {
+      display: block;
+      opacity: 1;
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+}

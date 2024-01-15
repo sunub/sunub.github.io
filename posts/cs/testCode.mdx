@@ -1,0 +1,79 @@
+---
+title: 테스트 코드에 관하여!
+date: 2023-10-30
+tags: testCode
+summary: mocking은 뭐하는 걸까?
+slug: about-testing-code
+category: cs
+completed: false
+---
+# Mocking
+
+mock의 단어 뜻은 '흉내내다'입니다. mocking은 테스트시에 주로 사용되는 방법이다. 우선 기본적인 mocking 함수에 대해서 알아보자.
+
+mocking의 목표는 기존의 함수에는 영향을 주지 않고 테스트하고자 하는 대상의 함수를 mocking, 흉내내서 사용하는 것이다. 
+
+이러한 흉내내는 방법, mocking이 효율적인 것은 다양한 형태로 테스트 할 수 있다는 것이다. 자바스크립트에 여러 유명한 테스트 프레임 워크가 있다. 예를 들어 jest, mocha, cypress 등등이 있다. 테스트 프레임 워크에서는 mocking 함수를 간단하게 만들 수 있게끔 한다. 
+
+jets를 예시로 예시를 들어보겠다. 
+
+```javascript
+function sum(a, b) {
+	return a + b;
+}
+
+sum = jest.fn() // 방법1
+mock(./sum.js); // 방법2
+const sumSpy = jest.spyOn(sum); // 방법3
+```
+
+위의 세 가지 방법들 중 하나로 mocking을 하면 도대체 어떤 장점이 있는 걸까?
+
+mocking 함수는 mocking한 함수가 다시 한번 실행 되었을 경우의 반환 값이나 인수의 값을 테스트 코드 내의 임의의 값으로 지정하여 모듈이 적절하게 작동하는지 확인할 수 있다. 이러한 부분이 굉장한 장점인 것은 테스트를 신속하게 시도해볼 수 있게끔 도와준다는 것이다.
+
+```javascript
+async function sum() {
+	const responseNumber = await request();
+	return responseNumber + 3;
+}
+
+async function request() {
+	const res = await fetch('...');
+	const json = await res.json();
+	return json.number;
+}
+```
+
+request를 이용하여 요청 받은 함수의 값을 sum에 전달하고 전달된 데이터 값의 결과를 불러오는 것은 테스트 해보고 싶다면 어떻게 하면 좋을까?
+답은 **mocking**이다!
+
+```javascript
+async function requestTest() {
+	// fetch를 대신하여 Promise를 사용하였다.
+  const res = await new Promise((resolve) => resolve(3));
+  return res;
+}
+
+async function sum() {
+  const responseNumber = await requestTest();
+  return responseNumber + 3;
+}
+
+const mockRequest = (number) => {
+  requestTest = jest.fn();
+  requestTest.mockImplementationOnce(() => Promise.resolve(number));
+};
+
+describe('sum', () => {
+  test('sum', () => {
+    const number = 4;
+    mockRequest(number);
+    expect(sum()).resolves.toBe(7);
+  });
+});
+```
+
+위의 경우 기존의 `requestTest()` 반환 값은 3일 것이다. 하지만 우리는 `mocking` 함수를 이용하여 4를 반환하는 함수라고 흉내를 내었고 이를 통한 `sum` 의 결과 값이 동일한지를 테스트 해보았다.
+
+위의 경우는 정말 단적인 예시에 불과하다. 함수에 인수를 전달하여 우리가 만든 함수의 기능을 그대로 수행하며 임의의 변수값만 전달하여 사용자가 겪을 것을 테스트 과정을 통해 미리 시험해볼 수 있는등 방향성은 무궁무진하다.
+

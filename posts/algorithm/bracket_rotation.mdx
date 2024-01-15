@@ -1,0 +1,67 @@
+---
+title: 올바른 괄호 찾기
+date: 2023-11-20
+tags: stack
+summary:
+slug: problem-rotation-bracket
+category: algorithm
+---
+
+## 문제
+
+> [문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/76502#)
+
+## 문제 해결 과정
+
+1. 주어지는 문자열 s를 어떻게 회전시킬 것인가?
+2. 회전시킨 문자열 s가 올바른 괄호 문자열인지 어떻게 판단할 것인가?
+
+위의 두가지를 해결할 수 있는지 없는지가 이 문제를 해결하는데 있어서 핵심 내용이라 할 수 있다.
+
+```javascript
+function solution(s) {
+  let answer = 0;
+  const n = s.length;
+  s = s.split("");
+  for (let i = 0; i < n; i += 1) {
+    if (isValid(s)) {
+      answer += 1;
+    }
+    s.push(s.shift());
+  }
+  return answer;
+}
+
+function isValid(s) {
+  const stack = [];
+  const brackets = {
+    "}": "{",
+    "]": "[",
+    ")": "(",
+  };
+
+  for (let i = 0; i < s.length; i += 1) {
+    if (s[i] === "(" || s[i] === "{" || s[i] === "[") {
+      stack.push(s[i]);
+    } else {
+      const latElement = stack.pop();
+      if (brackets[s[i]] !== latElement) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+```
+
+위의 코드가 문제를 해결한 코드이다. 위에서 s의 배열을 전부 순환하는 것은 배열의 맨 뒤의 값을 앞으로 이동시키는 방법으로 문자열 내의 모든 값을 순환한다.
+그리고 순환하는 모든 배열을 대상으로 값의 유효성에 대해서 검사한다.
+
+유효성 검사에서 신경써야 할 부분은 닫히는 괄호 `]`,` }`, `)`들을 고려해야 한다. 왜냐하면 열린 괄호의 경우 성공할 수 있는 경우의 수가 존재하지만 닫힌 괄호가 먼저 나올 경우는 뒤에 뭐가 오든 실패하기 때문이다.
+순환을 진행하던 중 열린 괄호의 경우 stack에 보관한다. 그러다 닫힌 괄호를 만날 경우 stack에 저장하지 않고 잠시 멈춘다.
+
+괄효의 유효성은 서로 짝이 맞아야 한다는 것이다. `{` 가 나왔다면 `} `가 나와야 한다. 이전에 순환에서 닫힌 괄호를 만났다면 스택에서 꺼낸 열린 괄호와 짝이 맞아야만 유효하다고 할 수 있다는 것이다.
+이러한 유효성 검사를 모든 문자열에 진행하면 문제를 해결할 수 있다.
+
+> 여기서 stack을 사용한 이유는 무엇일까?
+> 여기서 stack이 적합했던 이유는 연속성이 중요하기 때문이다. 연속하여 모든 경우가 유효하지 않은 경우 그 값은 유효하지 않기 때문에 `선입 선출(LIFO, Last-In-First-Out)`의 방법인 스택을 사용한 것이다.
