@@ -1,63 +1,4 @@
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	"extends": "ts-node/node16/tsconfig.json",
-	"ts-node": {
-		"compilerOptions": {
-			"module": "ESNext"
-		},
-		"transpileOnly": true,
-		"files": true,
-		"esm": true
-	},
-	"compilerOptions": {
-		"target": "ES2022",
-		"lib": ["dom", "dom.iterable", "esnext"],
-		"baseUrl": ".",
-		"allowJs": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"noEmit": true,
-		"esModuleInterop": true,
-		"module": "esnext",
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"jsx": "preserve",
-		"incremental": true,
-		"allowImportingTsExtensions": true,
-		"plugins": [
-			{
-				"name": "next"
-			}
-		],
-		"paths": {
-			"@/*": ["./src/*"],
-			"@/icon": ["./src/components/icon"],
-			"@/utils/*": ["./src/utils/*"],
-			"@/lib/*": ["./src/lib/*"],
-			"@/components/*": ["./src/components/*"],
-			"@/hooks/*": ["./src/hooks/*"],
-			"@/posts/*": ["./src/app/posts/*"]
-		},
-		"sourceMap": true
-	},
-	"include": [
-		"./type.d.ts",
-		"next-env.d.ts",
-		"**/*.js",
-		"**/*.jsx",
-		"**/*.ts",
-		"**/*.tsx",
-		".next/types/**/*.ts",
-		"src/**/*",
-		"src/app/mdx/page.jsx"
-	],
-	"exclude": ["node_modules"]
-=======
-=======
->>>>>>> refs/remotes/origin/sunub
   "extends": "ts-node/node16/tsconfig.json",
   "ts-node": {
     "compilerOptions": {
@@ -96,8 +37,7 @@
       "@/lib/*": ["./src/lib/*"],
       "@/components/*": ["./src/components/*"],
       "@/hooks/*": ["./src/hooks/*"],
-      "@/posts/*": ["./src/app/posts/*"],
-      "@/public/*": ["./public/*"]
+      "@/posts/*": ["./src/app/posts/*"]
     },
     "sourceMap": true
   },
@@ -113,8 +53,4 @@
     "src/app/mdx/page.jsx"
   ],
   "exclude": ["node_modules"]
-<<<<<<< HEAD
->>>>>>> dev-v2
-=======
->>>>>>> refs/remotes/origin/sunub
 }
