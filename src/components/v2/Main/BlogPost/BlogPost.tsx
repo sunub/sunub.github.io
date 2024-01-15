@@ -27,27 +27,39 @@ function BlogPost({
           const { category, slug, title, summary, tags } = frontmatter;
 
           return (
+<<<<<<< HEAD
             <Styled.BlogPostWrapper
               key={`${frontmatter.slug}-${Math.floor(
                 Math.random() * 10000 + 1,
               )}`}
             >
+=======
+            <Styled.BlogPostWrapper key={frontmatter.slug}>
+>>>>>>> refs/remotes/origin/sunub
               <Link href={`/${category}/${slug}`}>
                 <Styled.BlogPostTitle>
                   <Styled.BlogPostIcons>{IconComponent}</Styled.BlogPostIcons>
                   <h2>{title}</h2>
+<<<<<<< HEAD
                   <UnderLineWaveSVG />
+=======
+>>>>>>> refs/remotes/origin/sunub
                 </Styled.BlogPostTitle>
                 <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
               </Link>
               <Styled.BlogTagsWrapper>
                 {tags.length > 0 &&
+<<<<<<< HEAD
                   tags.map((tag: any) => (
                     <Styled.BlogTag
                       key={`blog-post-${tag}-${Math.floor(
                         Math.random() * 10000,
                       )}`}
                     >
+=======
+                  tags.map((tag) => (
+                    <Styled.BlogTag key={`blog-post-${tag}`}>
+>>>>>>> refs/remotes/origin/sunub
                       {tag}
                     </Styled.BlogTag>
                   ))}
@@ -59,6 +71,7 @@ function BlogPost({
   );
 }
 
+<<<<<<< HEAD
 function UnderLineWaveSVG() {
   return (
     <Styled.UnderLineWaveSVG
@@ -76,4 +89,6 @@ function UnderLineWaveSVG() {
   );
 }
 
+=======
+>>>>>>> refs/remotes/origin/sunub
 export default BlogPost;

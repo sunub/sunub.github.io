@@ -1,39 +1,41 @@
 "use client";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { HTMLAttributes, useContext } from "react";
 import styled from "styled-components";
 import { ThemeContext } from "../Provider/ThemeProvider";
+=======
+import * as Styled from "./ThemeToggler.style";
+import React, { HTMLAttributes, useContext } from "react";
+import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
+import { Theme } from "type";
+import handleChangeTheme from "./ThemeToggler.helper";
+>>>>>>> refs/remotes/origin/sunub
 
-type Theme = {
-  colorMode?: string | null;
-  setColorMode?: (value: string) => void;
-};
+export default function ThemeToggler({
+  initColorTheme,
+  maskId,
+  ...delegated
+}: {
+  initColorTheme: Theme | string;
+  maskId: string;
+}) {
+  const [theme, setTheme] = React.useState<Theme | string>(initColorTheme);
 
-const ToggleBtn = styled.button`
-  --toggle-size: var(--size-6);
-  position: relative;
+  async function handleClick() {
+    const nextTheme = await handleChangeTheme();
+    const nextColors = nextTheme === "light" ? LIGHT_COLORS : DARK_COLORS;
+    setTheme(() => nextTheme);
 
-  background: none;
-  border: none;
-  padding: 0;
-
-  inline-size: var(--toggle-size);
-  block-size: var(--toggle-size);
-  aspect-ratio: 1;
-  border-radius: 50%;
-
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  outline-offset: 5px;
-
-  & > svg {
-    inline-size: 100%;
-    block-size: 100%;
-    stroke-linecap: round;
+    const root = document.documentElement;
+    root.setAttribute("data-color-theme", nextTheme);
+    Object.entries(nextColors).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
   }
 
+<<<<<<< HEAD
   @media (hover: none) {
     --toggle-size: 48px;
   }
@@ -150,6 +152,19 @@ export default function ThemeToggler({
   );
 }
 >>>>>>> dev-v2
+=======
+  return (
+    <Styled.ToggleBtn
+      {...delegated}
+      title="Toggles light & dark"
+      aria-label="auto"
+      onClick={async () => handleClick()}
+    >
+      <ThemeIcon colorTheme={theme} maskId={maskId} />
+    </Styled.ToggleBtn>
+  );
+}
+>>>>>>> refs/remotes/origin/sunub
 function ThemeIcon({
   colorTheme,
   maskId,
@@ -160,10 +175,14 @@ function ThemeIcon({
 }) {
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <SunAndMoon
 =======
     <Styled.SunAndMoon
 >>>>>>> dev-v2
+=======
+    <Styled.SunAndMoon
+>>>>>>> refs/remotes/origin/sunub
       {...delegated}
       $colorTheme={colorTheme}
       width="24"
@@ -173,10 +192,14 @@ function ThemeIcon({
       xmlns="http://www.w3.org/2000/svg"
     >
 <<<<<<< HEAD
+<<<<<<< HEAD
       <Sun
 =======
       <Styled.Sun
 >>>>>>> dev-v2
+=======
+      <Styled.Sun
+>>>>>>> refs/remotes/origin/sunub
         $colorTheme={colorTheme}
         cx="12"
         cy="12"
@@ -185,10 +208,14 @@ function ThemeIcon({
         mask={`url(#${maskId})`}
       />
 <<<<<<< HEAD
+<<<<<<< HEAD
       <SunAndBeams $colorTheme={colorTheme}>
 =======
       <Styled.SunAndBeams $colorTheme={colorTheme}>
 >>>>>>> dev-v2
+=======
+      <Styled.SunAndBeams $colorTheme={colorTheme}>
+>>>>>>> refs/remotes/origin/sunub
         <path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
         <path
           d="M5.63604 5.63604L6.01039 6.01039"
@@ -213,6 +240,7 @@ function ThemeIcon({
           strokeWidth="3"
           strokeLinecap="round"
         />
+<<<<<<< HEAD
 <<<<<<< HEAD
       </SunAndBeams>
       <Moon $colorTheme={colorTheme} id={maskId}>
@@ -255,5 +283,13 @@ export default function ThemeToggler({
       </Styled.Moon>
     </Styled.SunAndMoon>
 >>>>>>> dev-v2
+=======
+      </Styled.SunAndBeams>
+      <Styled.Moon $colorTheme={colorTheme} id={maskId}>
+        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+        <circle cx="24" cy="24" r="6" fill="black" />
+      </Styled.Moon>
+    </Styled.SunAndMoon>
+>>>>>>> refs/remotes/origin/sunub
   );
 }

@@ -4,6 +4,12 @@ import styles from "./PostContent.module.css";
 import CodeSnippet from "../CodeSnippet";
 import Blockquote from "../MdxStyling/Blockquote";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import PostContentImage from "./PostContentImage";
+import List from "./List";
+import ListItem from "./ListItem";
+>>>>>>> refs/remotes/origin/sunub
 
 async function PostContent({ postcontent }) {
   const { content, frontmatter } = await compileMDX({
@@ -22,6 +28,12 @@ async function PostContent({ postcontent }) {
       pre: CodeSnippet,
       blockquote: Blockquote,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+      PostContentImage: PostContentImage,
+      ul: List,
+      li: ListItem,
+>>>>>>> refs/remotes/origin/sunub
     },
   });
   const { title, date } = frontmatter;

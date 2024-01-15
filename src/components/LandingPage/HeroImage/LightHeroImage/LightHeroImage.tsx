@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Image from "next/image";
 import React from "react";
 import styles from "./LightHeroImage.module.css";
@@ -7,6 +8,12 @@ import styles from "./LightHeroImage.module.css";
 
 import Image from "next/image";
 import React from "react";
+=======
+"use client";
+
+import Image from "next/image";
+import React from "react";
+>>>>>>> refs/remotes/origin/sunub
 import styled from "styled-components";
 import LightBaseImage from "public/assets/hero_image--light-base-scene.avif";
 import LightCloudImage from "public/assets/hero_image--light-clouds.avif";
@@ -47,30 +54,41 @@ const Cars = styled(Image)`
   display: none;
   z-index: 2;
 `;
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
 
 function LightHeroImage({
   imageRef,
   cloudsRef,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   carsRef,
 >>>>>>> dev-v2
+=======
+  carsRef,
+>>>>>>> refs/remotes/origin/sunub
   theme,
 }: {
   imageRef: React.RefObject<HTMLImageElement>;
   cloudsRef: React.RefObject<HTMLImageElement>;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  carsRef: React.RefObject<HTMLImageElement>;
+>>>>>>> refs/remotes/origin/sunub
   theme: any;
 }): React.ReactNode {
   return (
-    <picture className={styles["light-image--picture"]}>
-      <Image
-        className={styles["light-image--base-image"]}
+    <Picture>
+      <BaseImage
         ref={imageRef}
-        src={"/assets/hero_image--light-base-scene.avif?format=avif"}
+        src={LightBaseImage}
         alt="base hero image"
         quality={75}
+<<<<<<< HEAD
         width={883}
         height={449}
 =======
@@ -85,20 +103,26 @@ function LightHeroImage({
         alt="base hero image"
         quality={75}
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
         sizes="100vw"
         style={{
           opacity: theme === "light" ? 1 : 0,
           objectFit: "cover",
         }}
 <<<<<<< HEAD
+<<<<<<< HEAD
         loading={"lazy"}
+=======
+        priority={true}
+>>>>>>> refs/remotes/origin/sunub
       />
-      <Image
-        className={styles["light-image--clouds"]}
+      <Clouds
         ref={cloudsRef}
-        src={"/assets/hero_image--light-clouds.avif?format=avif"}
+        src={LightCloudImage}
         alt="light cloud hero image"
         quality={75}
+<<<<<<< HEAD
         width={883}
         height={449}
 =======
@@ -110,11 +134,14 @@ function LightHeroImage({
         alt="light cloud hero image"
         quality={75}
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
         sizes="100vw"
         style={{
           opacity: `${theme === "light" ? 1 : 0}`,
           objectFit: "cover",
         }}
+<<<<<<< HEAD
 <<<<<<< HEAD
         loading={"lazy"}
       />
@@ -122,6 +149,10 @@ function LightHeroImage({
 =======
         priority={true}
       />
+=======
+        priority={true}
+      />
+>>>>>>> refs/remotes/origin/sunub
       <Cars
         ref={carsRef}
         src={LightCars}
@@ -135,7 +166,10 @@ function LightHeroImage({
         priority={true}
       />
     </Picture>
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
   );
 }
 

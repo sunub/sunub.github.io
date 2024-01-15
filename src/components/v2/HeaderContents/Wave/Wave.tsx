@@ -19,7 +19,10 @@ function Wave({ colorTheme }: { colorTheme: Theme }) {
         src={lightWaveBird}
         alt={"메인 히어로 이미지중 중간 새 아이콘"}
         fill
+<<<<<<< HEAD
         priority={true}
+=======
+>>>>>>> refs/remotes/origin/sunub
         style={{
           opacity: `${colorTheme === "light" ? 1 : 0}`,
           zIndex: 3,
@@ -30,7 +33,10 @@ function Wave({ colorTheme }: { colorTheme: Theme }) {
         src={darkWaveBird}
         alt={"메인 히어로 이미지중 중간 새 아이콘"}
         fill
+<<<<<<< HEAD
         priority={true}
+=======
+>>>>>>> refs/remotes/origin/sunub
         style={{
           opacity: `${colorTheme === "dark" ? 1 : 0}`,
           zIndex: 3,

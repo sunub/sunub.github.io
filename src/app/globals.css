@@ -135,14 +135,20 @@ strong {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
 .blog-main__landing-page {
   transition:
     color 350ms ease 0s,
     background 350ms ease 0s;
 }
 
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
 @media (orientation: landscape) {
   ::-webkit-scrollbar {
     width: var(--scrollbar-width, 12px);
@@ -166,6 +172,7 @@ strong {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 .mobile-menu__wrapper {
   display: flex;
@@ -259,6 +266,8 @@ code {
 
 =======
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
 @keyframes fadeIn {
   0% {
     transform: translateX(-500px);
@@ -287,6 +296,7 @@ code {
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /* Variables */
 
@@ -303,3 +313,5 @@ code {
 }
 =======
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub

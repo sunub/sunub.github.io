@@ -2,11 +2,17 @@ import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ThemeProvider from "@/components/Theme/Provider";
 import Header from "@/components/Header";
+=======
+>>>>>>> refs/remotes/origin/sunub
 import InitTheme from "@/components/Theme/InitTheme";
-import MobileNav from "@/components/Header/mobile/MobileNav";
-import Footer from "@/components/Footer";
+import { Analytics } from "@vercel/analytics/react";
+import { cookies } from "next/headers";
+import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
+import React from "react";
+import MobileNav from "@/components/MobileNav";
 
 export const metadata: Metadata = {
 =======
@@ -55,8 +61,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const savedTheme = cookies().get("color-theme");
+  const theme = savedTheme?.value || "light";
+  const preferColors = theme === "light" ? LIGHT_COLORS : DARK_COLORS;
+
   return (
-    <html lang="ko" suppressHydrationWarning={true}>
+    <html
+      lang="ko"
+      data-color-theme={theme}
+      style={preferColors}
+      suppressHydrationWarning={true}
+    >
       <head>
 <<<<<<< HEAD
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -103,7 +118,10 @@ export default function RootLayout({
             uniconde-range: U+0020-007E;
           }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
           @font-face {
             font-family: 'Bariol_serif';
             src: url('/fonts/bariol_serif_regular-webfont.woff2') format('woff2'),
@@ -111,7 +129,10 @@ export default function RootLayout({
             font-display: fallback;
             uniconde-range: U+0020-007E;
           }
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
         `,
           }}
         />
@@ -120,6 +141,7 @@ export default function RootLayout({
             html{
               --scrollbar-width: 12px;
               --scrollbar-height: 12px;
+<<<<<<< HEAD
 <<<<<<< HEAD
               --scrollbar-background-color: oklch(92.54% 0.01 32.52);
               --scrollbar-thumb-color: oklch(45.88% 0.029 30.71);
@@ -154,6 +176,8 @@ export default function RootLayout({
               --card-content-bg-color: oklch(98.8% 0 31.07);
 =======
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
             }
 
             * {
@@ -168,6 +192,7 @@ export default function RootLayout({
         }
 
         body {
+<<<<<<< HEAD
 <<<<<<< HEAD
           font-family: Wotfard, NanumSquareNeo, sans-serif;
           color: var(--color-text);
@@ -184,10 +209,17 @@ export default function RootLayout({
           min-height: 100vh;
           background: var(--color-background);
 >>>>>>> dev-v2
+=======
+          font-family: Bariol_serif, Wotfard, NanumSquareNeo, sans-serif;
+          color: var(--color-text);
+          min-height: 100vh;
+          background: var(--color-background);
+>>>>>>> refs/remotes/origin/sunub
         }
 
         #__next {
           isolation: isolate;
+<<<<<<< HEAD
 <<<<<<< HEAD
           container: root / inline-size;
         
@@ -203,6 +235,8 @@ export default function RootLayout({
           }
 =======
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
         }
 
             `}
@@ -211,6 +245,7 @@ export default function RootLayout({
       </head>
       <body>
         <StyledComponentsRegistry>
+<<<<<<< HEAD
           <ThemeProvider>
             <div id="__next">
 <<<<<<< HEAD
@@ -228,7 +263,14 @@ export default function RootLayout({
             <MobileNav />
 >>>>>>> dev-v2
           </ThemeProvider>
+=======
+          <div id="__next">
+            <div className="blog-main__landing-page">{children}</div>
+          </div>
+>>>>>>> refs/remotes/origin/sunub
         </StyledComponentsRegistry>
+        <Analytics />
+        <MobileNav />
       </body>
     </html>
   );

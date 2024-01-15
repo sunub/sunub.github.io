@@ -18,9 +18,13 @@ const AnimateIcon = styled(animated.span)`
 
   border: 1px solid var("--default-border-color");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   box-shadow: var(--short-shadow);
 >>>>>>> dev-v2
+=======
+  box-shadow: var(--short-shadow);
+>>>>>>> refs/remotes/origin/sunub
   border-radius: 16px;
   background: var(--color-elevation);
 

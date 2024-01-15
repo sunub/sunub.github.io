@@ -2,6 +2,7 @@ import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper";
 
 class Post {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	constructor() {
 		this._localPostFilesData = getLocalTagFiles();
 		this._categorizedFrontmatters = categorizePostByCategory(
@@ -9,50 +10,54 @@ class Post {
 		);
 		this._localPostContents = this.getLocalPostContents();
 	}
+=======
+  constructor() {
+    this._localPostFilesData = getLocalTagFiles();
+    this._categorizedFrontmatters = categorizePostByCategory(
+      this._localPostFilesData,
+    );
+    this._localPostContents = this.getLocalPostContents();
+  }
+>>>>>>> refs/remotes/origin/sunub
 
-	get allTagPost() {
-		return this._localPostFilesData;
-	}
+  get allTagPost() {
+    return this._localPostFilesData;
+  }
 
-	get contents() {
-		return this._localPostContents;
-	}
+  get contents() {
+    return this._localPostContents;
+  }
 
-	get categories() {
-		return Object.keys(this._localPostFilesData);
-	}
+  get categories() {
+    return Object.keys(this._localPostFilesData);
+  }
 
-	get frontMatters() {
-		return this._categorizedFrontmatters;
-	}
+  get frontMatters() {
+    return this._categorizedFrontmatters;
+  }
 
-	getSpecificFrontmatter(category, slug) {
-		const frontMatters = this.frontMatters[category] ?? [];
+  get tags() {
+    const allTags = new Map();
+    const allFrontMatters = this.frontMatters;
 
-		for (const frontMatter of frontMatters) {
-			if (frontMatter.slug === slug) {
-				return frontMatter;
-			}
-		}
-		throw new Error(
-			`FrontMatter에서 ${slug}와 관련된 slug를 발견할 수 없습니다.`
-		);
-	}
+    for (const frontmatter of allFrontMatters.all) {
+      let { tags } = frontmatter;
 
-	getLocalPostContents() {
-		const result = {};
-		const localPostData = Object.values(this._localPostFilesData);
+      for (const tag of tags) {
+        if (tag === "") continue;
+        allTags.has(tag)
+          ? allTags.set(tag, allTags.get(tag) + 1)
+          : allTags.set(tag, 1);
+      }
+    }
 
-		for (const data of localPostData) {
-			for (const info of data) {
-				const key = info.description.slug;
-				result[key] = info.content;
-			}
-		}
+    return new Map([...allTags.entries()].sort((a, b) => b[1] - a[1]));
+  }
 
-		return result;
-	}
+  getSpecificFrontmatter(category, slug) {
+    const frontMatters = this.frontMatters[category] ?? [];
 
+<<<<<<< HEAD
 	getCategorizedPost(key) {
 		return this._localPostFilesData[key];
 	}
@@ -102,6 +107,8 @@ class Post {
   getSpecificFrontmatter(category, slug) {
     const frontMatters = this.frontMatters[category] ?? [];
 
+=======
+>>>>>>> refs/remotes/origin/sunub
     for (const frontMatter of frontMatters) {
       if (frontMatter.slug === slug) {
         return frontMatter;
@@ -129,7 +136,10 @@ class Post {
   getCategorizedPost(key) {
     return this._localPostFilesData[key];
   }
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
 }
 
 export default Post;

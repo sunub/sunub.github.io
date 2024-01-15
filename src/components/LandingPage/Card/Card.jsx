@@ -10,12 +10,18 @@ const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
   transition: box-shadow 300ms ease;
   &:hover {
     box-shadow: var(--long-shadow);
   }
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
   @media screen and (max-width: 320px) {
     width: 120px;
   }

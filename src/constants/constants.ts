@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 const COLORS = {
   text: {
     light: `oklch(21.08% 0.055 34.69)`,
@@ -41,6 +42,8 @@ const COLORS = {
     dark: "oklch(45.42% 0.007 239.95)",
   },
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
 const LIGHT_COLORS: Record<string, string> = {
   "--color-navlink": `oklch(42.14% 0.08 29.36)`,
   "--color-text": `oklch(21.08% 0.055 34.69)`,
@@ -58,12 +61,15 @@ const LIGHT_COLORS: Record<string, string> = {
   "--color-midStop": `oklch(87.16% 0.067 29.88)`,
   "--color-endStart": `oklch(91.76% 0.034 31.16)`,
   "--color-endStop": `oklch(89.29% 0.054 18.22)`,
+<<<<<<< HEAD
   "--color-birdWing": "oklch(34% 0.019 229.64)",
   "--color-birdBody": "oklch(23.32% 0.011 216.94)",
   "--color-birdBeak": "oklch(58.39% 0.025 237.95)",
   "--color-birdEyeball": "oklch(88.53% 0 0)",
   "--color-landscape":
     "linear-gradient(1deg, oklch(97.14% 0.011 31.07) 21.41%, oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 55.11%)",
+=======
+>>>>>>> refs/remotes/origin/sunub
 };
 
 const DARK_COLORS: Record<string, string> = {
@@ -83,6 +89,7 @@ const DARK_COLORS: Record<string, string> = {
   "--color-midStop": `oklch(58.12% 0.155 287.19)`,
   "--color-endStart": `oklch(58.37% 0.154 286.76)`,
   "--color-endStop": `oklch(38.11% 0.111 286.59)`,
+<<<<<<< HEAD
   "--color-birdWing": "oklch(39.71% 0.054 232.07)",
   "--color-birdBody": "oklch(26.29% 0.026 216.39)",
   "--color-birdBeak": "oklch(72.63% 0.045 233.48)",
@@ -90,12 +97,18 @@ const DARK_COLORS: Record<string, string> = {
   "--color-landscape":
     "linear-gradient(1deg, oklch(76.95% 0.12588555394033804 289.2710106250223) 24.47%, oklch(43.6% 0.073 290.15) 55.11%)",
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
 };
 
 const COLOR_MODE_KEY = "theme-preference";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export { COLORS, COLOR_MODE_KEY };
 =======
 export { LIGHT_COLORS, DARK_COLORS, COLOR_MODE_KEY };
 >>>>>>> dev-v2
+=======
+export { LIGHT_COLORS, DARK_COLORS, COLOR_MODE_KEY };
+>>>>>>> refs/remotes/origin/sunub

@@ -41,7 +41,11 @@ export const Wrapper = styled.div`
 export const ListWrapper = styled.ul`
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   gap: clamp(1rem, 2.5dvh, 2rem);
+=======
+  gap: calc() 0.5;
+>>>>>>> refs/remotes/origin/sunub
 
   font-size: 32px;
   font-weight: 700;
@@ -55,9 +59,13 @@ export const List = styled.li`
 export const Item = styled(Link)``;
 
 export const ThemeWrapper = styled.div`
+<<<<<<< HEAD
   position: fixed;
   bottom: 56px;
   left: 56px;
+=======
+  padding-left: 3rem;
+>>>>>>> refs/remotes/origin/sunub
 `;
 
 export const Backdrop = styled.button`

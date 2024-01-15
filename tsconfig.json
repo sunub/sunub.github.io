@@ -1,5 +1,6 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	"extends": "ts-node/node16/tsconfig.json",
 	"ts-node": {
 		"compilerOptions": {
@@ -55,6 +56,8 @@
 	],
 	"exclude": ["node_modules"]
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
   "extends": "ts-node/node16/tsconfig.json",
   "ts-node": {
     "compilerOptions": {
@@ -110,5 +113,8 @@
     "src/app/mdx/page.jsx"
   ],
   "exclude": ["node_modules"]
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
 }

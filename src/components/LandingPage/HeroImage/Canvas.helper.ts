@@ -26,15 +26,21 @@ class Canvas extends CanvasImage {
     this.resizeCanvasSize();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     this.distance = this.stageWidth * 0.13;
     this.behindX = -(this.stageWidth + this.distance);
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
     this.cloudsDistnace = this.stageWidth * 0.13;
     this.carsDistance = this.stageWidth * 0.13;
 
     this.behindCloudsX = -(this.stageWidth + this.cloudsDistnace);
     this.behindCarsX = -(this.stageWidth + this.carsDistance);
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
   }
 
   resizeStageSize() {
@@ -57,6 +63,7 @@ class Canvas extends CanvasImage {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   draw(cloudDom: HTMLImageElement) {
     this.ctx?.clearRect(0, 0, this.stageWidth, this.stageHeight);
     this.drawFrontClouds(cloudDom);
@@ -69,25 +76,41 @@ class Canvas extends CanvasImage {
     this.drawForwardCars(carsDom);
     this.drawBehindCars(carsDom);
 >>>>>>> dev-v2
+=======
+  draw(cloudDom: HTMLImageElement, carsDom: HTMLImageElement) {
+    this.ctx?.clearRect(0, 0, this.stageWidth, this.stageHeight);
+    this.drawFrontClouds(cloudDom);
+    this.drawBehindClouds(cloudDom);
+    this.drawForwardCars(carsDom);
+    this.drawBehindCars(carsDom);
+>>>>>>> refs/remotes/origin/sunub
 
     this.increaseSpeed();
     this.updateImageLocation(this.stageWidth);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     requestAnimationFrame(this.draw.bind(this, cloudDom));
 =======
     requestAnimationFrame(this.draw.bind(this, cloudDom, carsDom));
 >>>>>>> dev-v2
+=======
+    requestAnimationFrame(this.draw.bind(this, cloudDom, carsDom));
+>>>>>>> refs/remotes/origin/sunub
   }
 
   drawFrontClouds(cloudDom: HTMLImageElement) {
     this.ctx?.drawImage(
       cloudDom,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.frontX,
 =======
       this.frontCloudsX,
 >>>>>>> dev-v2
+=======
+      this.frontCloudsX,
+>>>>>>> refs/remotes/origin/sunub
       0,
       this.stageWidth,
       this.stageHeight,
@@ -98,8 +121,11 @@ class Canvas extends CanvasImage {
     this.ctx?.drawImage(
       cloudDom,
 <<<<<<< HEAD
+<<<<<<< HEAD
       this.behindX,
 =======
+=======
+>>>>>>> refs/remotes/origin/sunub
       this.behindCloudsX,
       0,
       this.stageWidth,
@@ -119,7 +145,10 @@ class Canvas extends CanvasImage {
     this.ctx?.drawImage(
       carsDom,
       this.behindCarsX,
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
       0,
       this.stageWidth,
       this.stageHeight,

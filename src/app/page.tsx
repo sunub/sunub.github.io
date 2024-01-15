@@ -1,18 +1,28 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import LandingPage from "@/components/LandingPage";
 import HeroImage from "@/components/LandingPage/HeroImage";
 import Main from "@/components/Main";
+=======
+import Footer from "@/components/Footer";
+import HeaderContents from "@/components/v2/HeaderContents";
+import Main from "@/components/v2/Main";
+>>>>>>> refs/remotes/origin/sunub
 
-export const fetchCache = "default-no-store";
+export const dynamic = "force-dynamic";
 
-export default function Page() {
+function Page() {
   return (
-    <Main>
-      <HeroImage />
-      <LandingPage />
-    </Main>
+    <>
+      <HeaderContents heroImageVisible={true} />
+      <div id="side-ng__main-content">
+        <Main />
+        <Footer />
+      </div>
+    </>
   );
 }
+<<<<<<< HEAD
 =======
 import Footer from "@/components/Footer";
 import HeaderContents from "@/components/v2/HeaderContents";
@@ -34,3 +44,7 @@ function Page() {
 
 export default Page;
 >>>>>>> dev-v2
+=======
+
+export default Page;
+>>>>>>> refs/remotes/origin/sunub

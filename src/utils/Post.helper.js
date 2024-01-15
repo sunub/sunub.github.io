@@ -3,81 +3,102 @@ import { POST_ROOT_PATH } from "./Post.constant";
 
 export function categorizePostByCategory(files) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	const all = [];
 	const descriptions = {};
 	const categorizedPost = Object.entries(files);
+=======
+  const all = [];
+  const descriptions = {};
+  const categorizedPost = Object.entries(files);
+>>>>>>> refs/remotes/origin/sunub
 
-	for (const [category, post] of categorizedPost) {
-		const description = [];
-		for (const data of post) {
-			all.push(data.description);
-			description.push(data.description);
-		}
-		descriptions[category] = description;
-	}
-	all.sort((file1, file2) => {
-		return new Date(file2.date).getTime() - new Date(file1.date).getTime();
-	});
-	descriptions["all"] = all;
+  for (const [category, post] of categorizedPost) {
+    const description = [];
+    for (const data of post) {
+      all.push(data.description);
+      data.description.tags = classifyingTagTypes(data.description.tags);
+      description.push(data.description);
+    }
+    descriptions[category] = description;
+  }
+  all.sort((file1, file2) => {
+    return new Date(file2.date).getTime() - new Date(file1.date).getTime();
+  });
+  descriptions["all"] = all;
 
-	return descriptions;
+  return descriptions;
 }
+
+function classifyingTagTypes(tags) {
+  const result = [];
+  const splitedTags = tags.split(",").map((tag) => tag.trim());
+
+  for (const tag of splitedTags) {
+    if (tag === "") continue;
+    result.push(tag);
+  }
+
+  return result;
+}
+
 export function getLocalTagFiles() {
-	const root = POST_ROOT_PATH;
-	const folders = fs.readdirSync(root, "utf-8");
-	const files = {};
+  const root = POST_ROOT_PATH;
+  const folders = fs.readdirSync(root, "utf-8");
+  const files = {};
 
-	for (const name of folders) {
-		const path = `${root}/${name}`;
-		const fileData = readFiles(path, []);
-		files[name] = fileData;
-	}
+  for (const name of folders) {
+    const path = `${root}/${name}`;
+    const fileData = readFiles(path, []);
+    files[name] = fileData;
+  }
 
-	return files;
+  return files;
 }
 
 function readFiles(path, structure) {
-	const currPaths = fs.readdirSync(path, "utf-8");
+  const currPaths = fs.readdirSync(path, "utf-8");
 
-	for (const currPath of currPaths) {
-		const nextPath = `${path}/${currPath}`;
-		const stat = fs.statSync(nextPath);
+  for (const currPath of currPaths) {
+    const nextPath = `${path}/${currPath}`;
+    const stat = fs.statSync(nextPath);
 
-		if (stat.isFile() && nextPath.match(/\.md|mdx$/i)?.length) {
-			structure.push(
-				divideDescriptionAndContent(fs.readFileSync(nextPath, "utf-8"))
-			);
-		} else if (stat.isDirectory()) {
-			readFiles(nextPath, structure);
-		}
-	}
+    if (stat.isFile() && nextPath.match(/\.md|mdx$/i)?.length) {
+      structure.push(
+        divideDescriptionAndContent(fs.readFileSync(nextPath, "utf-8")),
+      );
+    } else if (stat.isDirectory()) {
+      readFiles(nextPath, structure);
+    }
+  }
 
-	structure.sort((file1, file2) => {
-		return (
-			new Date(file2.description.date).getTime() -
-			new Date(file1.description.date).getTime()
-		);
-	});
+  structure.sort((file1, file2) => {
+    return (
+      new Date(file2.description.date).getTime() -
+      new Date(file1.description.date).getTime()
+    );
+  });
 
-	return structure;
+  return structure;
 }
 
 function divideDescriptionAndContent(text) {
-	const pattern = /---\n([\s\S]*?)\n---/;
-	const match = text.match(pattern);
+  const pattern = /---\n([\s\S]*?)\n---/;
+  const match = text.match(pattern);
 
-	const description = {};
+  const description = {};
 
-	if (match) {
-		const extractedText = match[1];
-		const lines = extractedText.split("\n");
-		for (const line of lines) {
-			const [key, value] = line.split(":").map((text) => text.trim());
-			description[key] = value;
-		}
-	}
-	// const content = text.split("---").slice(2).join("").trim();
+  if (match) {
+    const extractedText = match[1];
+    const lines = extractedText.split("\n");
+    for (const line of lines) {
+      const [key, value] = line.split(":").map((text) => text.trim());
+      description[key] = value;
+    }
+  }
+  // const content = text.split("---").slice(2).join("").trim();
 
+<<<<<<< HEAD
 	return {
 		description: description,
 		content: text,
@@ -173,9 +194,14 @@ function divideDescriptionAndContent(text) {
   }
   // const content = text.split("---").slice(2).join("").trim();
 
+=======
+>>>>>>> refs/remotes/origin/sunub
   return {
     description: description,
     content: text,
   };
 }
+<<<<<<< HEAD
 >>>>>>> dev-v2
+=======
+>>>>>>> refs/remotes/origin/sunub
