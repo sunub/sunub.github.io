@@ -3,9 +3,8 @@ import Spacer from "@/components/Spacer";
 import ThemeToggler from "@/components/Theme/Toggler/ThemeToggler";
 import Logo from "./Logo";
 import Navigation from "./Navigation";
-import { Theme } from "type";
 
-function Header({ initColorTheme }: { initColorTheme: Theme | string }) {
+function Header() {
   return (
     <>
       <Spacer size={60} axis={"vertical"} />
@@ -16,10 +15,7 @@ function Header({ initColorTheme }: { initColorTheme: Theme | string }) {
             <Navigation />
           </Styled.LogoAndNavWrapper>
           <Styled.ThemeWrapper>
-            <ThemeToggler
-              initColorTheme={initColorTheme}
-              maskId="desktop-header-theme-toggler"
-            />
+            <ThemeToggler maskId="desktop-header-theme-toggler" />
           </Styled.ThemeWrapper>
         </Styled.Header>
       </Styled.RootWrapper>

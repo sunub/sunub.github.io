@@ -32,10 +32,7 @@ function NavigationList(props: NavigationListProps) {
       </Styled.ListWrapper>
 
       <Styled.ThemeWrapper>
-        <ThemeToggler
-          initColorTheme={colorTheme}
-          maskId="mobile-nav__theme-toggler"
-        />
+        <ThemeToggler maskId="mobile-nav__theme-toggler" />
       </Styled.ThemeWrapper>
     </Styled.Wrapper>
   );

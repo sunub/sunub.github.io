@@ -8,8 +8,8 @@ import List from "./List";
 import ListItem from "./ListItem";
 
 async function PostContent({ postcontent }) {
-  const { content, frontmatter } = await compileMDX({
-    source: postcontent,
+  const { content } = await compileMDX({
+    source: postcontent.content,
     options: { parseFrontmatter: true },
     components: {
       pre: CodeSnippet,
@@ -19,8 +19,9 @@ async function PostContent({ postcontent }) {
       li: ListItem,
     },
   });
-  const { title, date } = frontmatter;
-  const time = new Intl.DateTimeFormat("ko-KR").format(date);
+
+  const { title, date } = postcontent.metadata;
+  const time = new Intl.DateTimeFormat("ko-KR").format(new Date(date));
   return (
     <div className={styles.Wrapper}>
       <article className={styles.Article}>

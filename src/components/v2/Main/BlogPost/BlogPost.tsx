@@ -42,7 +42,7 @@ function BlogPost({
               </Link>
               <Styled.BlogTagsWrapper>
                 {tags.length > 0 &&
-                  tags.map((tag) => (
+                  tags.map((tag: any) => (
                     <Styled.BlogTag
                       key={`blog-post-${tag}-${Math.floor(
                         Math.random() * 10000,
