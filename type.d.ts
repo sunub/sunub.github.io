@@ -20,10 +20,9 @@ type Categories = "web" | "algorithm" | "cs" | "code";
 type Tag = (typeof POST_CATEGORY)[number];
 
 interface FrontMatter {
-  [key: string]: string;
   title: string;
   date: string;
-  tags: string[];
+  tags: any;
   summary: string;
   category: string;
   slug: string;

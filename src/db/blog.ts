@@ -4,19 +4,26 @@ const fs = require("fs");
 const path = require("path");
 
 type MDXFile = {
-  metadata: Partial<FrontMatter>;
+  metadata: FrontMatter;
   content: string;
 };
 
 type BlogContent = Map<Categories, MDXFile[]>;
 
-function parseFrontmatter(fileContent: string) {
+function parseFrontmatter(fileContent: string): MDXFile {
   let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
   let match = frontmatterRegex.exec(fileContent);
   let frontMatterBlock = match![1];
   let content = fileContent.replace(frontmatterRegex, "").trim();
   let frontMatterLines = frontMatterBlock.split("\n");
-  let metadata: Partial<FrontMatter> = {};
+  let metadata: FrontMatter = {
+    title: "",
+    date: "",
+    tags: [],
+    summary: "",
+    category: "",
+    slug: "",
+  };
 
   frontMatterLines.forEach((line) => {
     let [key, ...valueArr] = line.split(":");
