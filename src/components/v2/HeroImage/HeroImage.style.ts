@@ -18,19 +18,15 @@ export const BackgroundWrapper = styled.div`
   height: 550px;
 `;
 
-<<<<<<< HEAD
 export const Picture = styled.picture`
   display: contents;
 `;
 
-=======
->>>>>>> refs/remotes/origin/sunub
 export const HeroImageWrapper = styled.div`
   display: grid;
   grid-template: [hero-image] 1fr / [hero-image] 1fr;
 `;
 
-<<<<<<< HEAD
 export const DarkHeroImage = styled(Image).attrs({
   priority: true,
   quality: 70,
@@ -65,8 +61,6 @@ export const LightHeroImage = styled(Image).attrs({
   filter: ${({ $mirrored }) => $mirrored && "blur(10px)"};
 `;
 
-=======
->>>>>>> refs/remotes/origin/sunub
 export const HeroImage = styled(Image).attrs({
   priority: true,
   quality: 70,

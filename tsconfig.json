@@ -37,7 +37,8 @@
       "@/lib/*": ["./src/lib/*"],
       "@/components/*": ["./src/components/*"],
       "@/hooks/*": ["./src/hooks/*"],
-      "@/posts/*": ["./src/app/posts/*"]
+      "@/posts/*": ["./src/app/posts/*"],
+      "@/public/*": ["./public/*"]
     },
     "sourceMap": true
   },

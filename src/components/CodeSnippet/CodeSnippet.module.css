@@ -1,33 +1,4 @@
 .wrapper {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	border-radius: 0px !important;
-	margin: 0px 24px 48px !important;
-	border: 1px solid transparent;
-	border-radius: 8px !important;
-=======
-  border-radius: 0px !important;
-  margin: 0px 24px 48px !important;
-  border: 1px solid transparent;
-  border-radius: 8px !important;
->>>>>>> refs/remotes/origin/sunub
-}
-.wrapper pre {
-  padding: 24px !important;
-  max-width: calc(100% + 64px);
-}
-
-.wrapper code {
-  display: flex;
-  font-family: "Wotfard", sans-serif;
-}
-
-@media (min-width: 56rem) {
-<<<<<<< HEAD
-	.wrapper {
-		border-radius: 8px !important;
-	}
-=======
   border-radius: 0px !important;
   margin: 0px 24px 48px !important;
   border: 1px solid transparent;
@@ -44,8 +15,6 @@
 }
 
 @media (min-width: 56rem) {
-=======
->>>>>>> refs/remotes/origin/sunub
   .wrapper {
     border-radius: 8px !important;
   }
@@ -70,8 +39,4 @@
 .wrapper code > div > span {
   word-wrap: break-word;
   white-space: pre-wrap;
-<<<<<<< HEAD
->>>>>>> dev-v2
-=======
->>>>>>> refs/remotes/origin/sunub
 }

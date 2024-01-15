@@ -1,18 +1,11 @@
 "use client";
 
-<<<<<<< HEAD
-=======
-import Link from "next/link";
->>>>>>> refs/remotes/origin/sunub
 import styled from "styled-components";
 
 export const Wrapper = styled.div``;
 
 export const BlogPostTitle = styled.div`
-<<<<<<< HEAD
   position: relative;
-=======
->>>>>>> refs/remotes/origin/sunub
   display: flex;
   justify-content: flex-start;
   gap: 16px;
@@ -45,7 +38,6 @@ export const BlogTag = styled.span`
   user-select: none;
 `;
 
-<<<<<<< HEAD
 export const UnderLineWaveSVG = styled.svg`
   position: absolute;
   top: 93%;
@@ -62,13 +54,10 @@ export const UnderLineWavePath = styled.path`
   transition: stroke-dashoffset 0.4s cubic-bezier(0.7, 0, 0.3, 1);
 `;
 
-=======
->>>>>>> refs/remotes/origin/sunub
 export const BlogPostWrapper = styled.article`
   display: flex;
   flex-direction: column;
   text-decoration: none;
-<<<<<<< HEAD
   transition: transform 200ms cubic-bezier(0.5, 1.25, 0.75, 1.25);
 
   &:not(:first-of-type) {
@@ -83,9 +72,5 @@ export const BlogPostWrapper = styled.article`
       transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
       transition-duration: 300ms;
     }
-=======
-  &:not(:first-of-type) {
-    padding-top: 48px;
->>>>>>> refs/remotes/origin/sunub
   }
 `;

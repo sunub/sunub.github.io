@@ -24,21 +24,12 @@ const Content = styled.div`
   border-radius: 50%;
   aspect-ratio: 1 / 1;
   background: var(--color-elevation);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> refs/remotes/origin/sunub
   box-shadow: var(--short-shadow);
 
   transition: box-shadow 300ms ease;
   &:hover {
     box-shadow: var(--mid-shadow);
   }
-<<<<<<< HEAD
->>>>>>> dev-v2
-=======
->>>>>>> refs/remotes/origin/sunub
 `;
 
 export default function HeaderRight() {

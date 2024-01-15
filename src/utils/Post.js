@@ -1,67 +1,6 @@
 import { getLocalTagFiles, categorizePostByCategory } from "./Post.helper";
 
 class Post {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	constructor() {
-		this._localPostFilesData = getLocalTagFiles();
-		this._categorizedFrontmatters = categorizePostByCategory(
-			this._localPostFilesData
-		);
-		this._localPostContents = this.getLocalPostContents();
-	}
-=======
-  constructor() {
-    this._localPostFilesData = getLocalTagFiles();
-    this._categorizedFrontmatters = categorizePostByCategory(
-      this._localPostFilesData,
-    );
-    this._localPostContents = this.getLocalPostContents();
-  }
->>>>>>> refs/remotes/origin/sunub
-
-  get allTagPost() {
-    return this._localPostFilesData;
-  }
-
-  get contents() {
-    return this._localPostContents;
-  }
-
-  get categories() {
-    return Object.keys(this._localPostFilesData);
-  }
-
-  get frontMatters() {
-    return this._categorizedFrontmatters;
-  }
-
-  get tags() {
-    const allTags = new Map();
-    const allFrontMatters = this.frontMatters;
-
-    for (const frontmatter of allFrontMatters.all) {
-      let { tags } = frontmatter;
-
-      for (const tag of tags) {
-        if (tag === "") continue;
-        allTags.has(tag)
-          ? allTags.set(tag, allTags.get(tag) + 1)
-          : allTags.set(tag, 1);
-      }
-    }
-
-    return new Map([...allTags.entries()].sort((a, b) => b[1] - a[1]));
-  }
-
-  getSpecificFrontmatter(category, slug) {
-    const frontMatters = this.frontMatters[category] ?? [];
-
-<<<<<<< HEAD
-	getCategorizedPost(key) {
-		return this._localPostFilesData[key];
-	}
-=======
   constructor() {
     this._localPostFilesData = getLocalTagFiles();
     this._categorizedFrontmatters = categorizePostByCategory(
@@ -107,8 +46,6 @@ class Post {
   getSpecificFrontmatter(category, slug) {
     const frontMatters = this.frontMatters[category] ?? [];
 
-=======
->>>>>>> refs/remotes/origin/sunub
     for (const frontMatter of frontMatters) {
       if (frontMatter.slug === slug) {
         return frontMatter;
@@ -136,10 +73,6 @@ class Post {
   getCategorizedPost(key) {
     return this._localPostFilesData[key];
   }
-<<<<<<< HEAD
->>>>>>> dev-v2
-=======
->>>>>>> refs/remotes/origin/sunub
 }
 
 export default Post;

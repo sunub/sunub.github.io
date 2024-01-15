@@ -19,32 +19,16 @@ const LogoLink = styled(Link)`
   border: 2px solid var(--color-bird);
   border-radius: 16px;
   background: var(--color-elevation);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
   box-shadow: var(--short-shadow);
->>>>>>> dev-v2
-=======
-  box-shadow: var(--short-shadow);
->>>>>>> refs/remotes/origin/sunub
 
   display: flex;
   justify-content: center;
   align-items: center;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> refs/remotes/origin/sunub
 
   transition: box-shadow 300ms ease;
   &:hover {
     box-shadow: var(--long-shadow);
   }
-<<<<<<< HEAD
->>>>>>> dev-v2
-=======
->>>>>>> refs/remotes/origin/sunub
 `;
 
 function Logo({ ...delegated }) {

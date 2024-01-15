@@ -1,8 +1,5 @@
 import * as Styled from "../Wave.style";
-<<<<<<< HEAD
 import WaveBird from "../WaveBird";
-=======
->>>>>>> refs/remotes/origin/sunub
 
 function WaveSvg({ ...delegated }) {
   return (

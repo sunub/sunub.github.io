@@ -27,15 +27,7 @@ export const WaveWrapper = styled.div`
   pointer-events: none;
 `;
 
-<<<<<<< HEAD
 export const WaveImage = styled(Image)`
-=======
-export const WaveImage = styled(Image).attrs({
-  priority: true,
-  quality: 70,
-  sizes: "100vw",
-})`
->>>>>>> refs/remotes/origin/sunub
   width: 100%;
   height: auto;
   object-fit: cover;

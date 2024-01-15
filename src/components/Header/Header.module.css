@@ -19,13 +19,6 @@
 
   opacity: 1;
   visibility: visible;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  background-color: var(--color-header);
-=======
->>>>>>> dev-v2
-=======
->>>>>>> refs/remotes/origin/sunub
   @container root ( width <= 768px ) {
     opacity: 0;
     visibility: hidden;
