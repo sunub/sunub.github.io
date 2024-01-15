@@ -8,12 +8,32 @@ import InitTheme from "@/components/Theme/InitTheme";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://sunub.vercel.app"),
   title: {
     default: "sun_ub",
     template: "%s | sun_ub",
   },
   keywords: ["sunub", "sun_ub"],
-  description: "This site is sunub's personal blog ",
+  description: "디자인과 개발을 좋아합니다.",
+  openGraph: {
+    title: "sun_ub",
+    description: "디자인과 개발을 좋아합니다.",
+    url: "https://sunub.vercel.app",
+    siteName: "sun_ub",
+    type: "website",
+    locale: "ko_KR",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -24,7 +44,16 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning={true}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charSet="utf-8" />
+        <meta
+          httpEquiv="content-security-policy"
+          content="default-src https:"
+        />
+        <meta content="text/html" charSet="<characterset>" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=1"
+        />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet preload"
