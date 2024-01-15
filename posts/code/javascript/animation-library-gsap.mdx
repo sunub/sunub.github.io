@@ -1,0 +1,37 @@
+---
+title: gsap를 이용하여 컴포넌트에 활력을 더 해보자.
+date: 2024-01-09
+tags: javascript, animation
+summary: 많은 애니메이션 라이브러리 중에서 gsap를 어떻게 사용해야 하는지 잘 다루기 위해서는 어떠한 것들을 알아야 할지에 대해서 다루어 보겠습니다.
+slug: animation-library-gsap
+category: code
+---
+
+GSAP는 프레임워크에 구애 받지 않는 자바스크립트 애니메이션 라이브러리입니다. GSAP는 CSS,SVG,Canvas, React, Vue, WebGL, Color, Object등 웹 상에서 사용되는 모든 오브젝트에 고성능 애니메이션을 구축할 수 있는 라이브러리 입니다.
+
+GSAP를 제외하고도 많은 애니메이션 라이브러리가 존재합니다. 예를 들어[ react-spring](https://www.react-spring.dev/) , [framer-motion](https://www.framer.com/motion/) 가 있습니다. 이러한 라이브러리 중에서 GSAP를 공부하기로 결정한 이유는 범용성이 높다는 이유가 있습니다. 앞서 설명했던 애니메이션 라이브러리는 React를 대상으로 하지만 gsap는 react를 대상으로 만들어진 프레임워크가 아니고 범용성 또한 실력이 높아질 수록 더 많은 애니메이션을 추가하고 애니메이션에 드는 비용을 최소화하기에 더 좋다고 생각했기 때문입니다.
+
+## 애니메이션을 위해 알아야 할 것들을
+
+gsap는 애니메이션을 추가하는 것이기 때문에 애니메이션과 관련된 용어에 대해서 어느 정도 알 필요가 있습니다. 예를들어 gsap에서 중요하게 여겨지는 것은 `timeline`과 `duration` 입니다.
+
+`timeline`은 뜻 그대로 애니메이션이 실행됨에 있어 어느정도의 시간 안에서 실행될 것인지에 대한 것입니다. 그리고 정해진 timeline내에서 어느정도의 `duration`간 애니메이션을 실행할 것인지에 대해서 설정해주어야 합니다. `duration`은 애니메이션에 있어서 몇 프레임 동안 실행 될 것인지에 대한 선언입니다.
+
+```javascript
+import { gsap } from "gsap";
+
+gsap.to(element, {
+  duration: 1,
+  x: 100,
+  y: 100,
+  scale: 2,
+  ease: "power4",
+  repeat: -1,
+  onComplete: () => {
+    console.log("done");
+  },
+  onUpdate: () => {
+    console.log("update");
+  },
+});
+```

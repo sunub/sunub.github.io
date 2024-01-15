@@ -25,8 +25,16 @@ class Canvas extends CanvasImage {
     this.resizeStageSize();
     this.resizeCanvasSize();
 
+<<<<<<< HEAD
     this.distance = this.stageWidth * 0.13;
     this.behindX = -(this.stageWidth + this.distance);
+=======
+    this.cloudsDistnace = this.stageWidth * 0.13;
+    this.carsDistance = this.stageWidth * 0.13;
+
+    this.behindCloudsX = -(this.stageWidth + this.cloudsDistnace);
+    this.behindCarsX = -(this.stageWidth + this.carsDistance);
+>>>>>>> dev-v2
   }
 
   resizeStageSize() {
@@ -48,21 +56,38 @@ class Canvas extends CanvasImage {
     this.image.height = imageHeight;
   }
 
+<<<<<<< HEAD
   draw(cloudDom: HTMLImageElement) {
     this.ctx?.clearRect(0, 0, this.stageWidth, this.stageHeight);
     this.drawFrontClouds(cloudDom);
     this.drawBehindClouds(cloudDom);
+=======
+  draw(cloudDom: HTMLImageElement, carsDom: HTMLImageElement) {
+    this.ctx?.clearRect(0, 0, this.stageWidth, this.stageHeight);
+    this.drawFrontClouds(cloudDom);
+    this.drawBehindClouds(cloudDom);
+    this.drawForwardCars(carsDom);
+    this.drawBehindCars(carsDom);
+>>>>>>> dev-v2
 
     this.increaseSpeed();
     this.updateImageLocation(this.stageWidth);
 
+<<<<<<< HEAD
     requestAnimationFrame(this.draw.bind(this, cloudDom));
+=======
+    requestAnimationFrame(this.draw.bind(this, cloudDom, carsDom));
+>>>>>>> dev-v2
   }
 
   drawFrontClouds(cloudDom: HTMLImageElement) {
     this.ctx?.drawImage(
       cloudDom,
+<<<<<<< HEAD
       this.frontX,
+=======
+      this.frontCloudsX,
+>>>>>>> dev-v2
       0,
       this.stageWidth,
       this.stageHeight,
@@ -72,7 +97,29 @@ class Canvas extends CanvasImage {
   drawBehindClouds(cloudDom: HTMLImageElement) {
     this.ctx?.drawImage(
       cloudDom,
+<<<<<<< HEAD
       this.behindX,
+=======
+      this.behindCloudsX,
+      0,
+      this.stageWidth,
+      this.stageHeight,
+    );
+  }
+  drawForwardCars(carsDom: HTMLImageElement) {
+    this.ctx?.drawImage(
+      carsDom,
+      this.frontCarsX,
+      0,
+      this.stageWidth,
+      this.stageHeight,
+    );
+  }
+  drawBehindCars(carsDom: HTMLImageElement) {
+    this.ctx?.drawImage(
+      carsDom,
+      this.behindCarsX,
+>>>>>>> dev-v2
       0,
       this.stageWidth,
       this.stageHeight,

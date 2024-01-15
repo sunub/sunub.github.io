@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
+<<<<<<< HEAD
 import ThemeProvider from "@/components/Theme/Provider";
 import Header from "@/components/Header";
 import InitTheme from "@/components/Theme/InitTheme";
@@ -8,12 +9,45 @@ import MobileNav from "@/components/Header/mobile/MobileNav";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
+=======
+import { Analytics } from "@vercel/analytics/react";
+import React from "react";
+import MobileNav from "@/components/MobileNav";
+import InitTheme from "@/components/Theme/InitTheme";
+import ThemeProvider from "@/components/Theme/ThemeProvider";
+
+export const metadata: Metadata = {
+  metadataBase: new URL("https://sunub.vercel.app"),
+>>>>>>> dev-v2
   title: {
     default: "sun_ub",
     template: "%s | sun_ub",
   },
   keywords: ["sunub", "sun_ub"],
+<<<<<<< HEAD
   description: "This site is sunub's personal blog ",
+=======
+  description: "디자인과 개발을 좋아합니다.",
+  openGraph: {
+    title: "sun_ub",
+    description: "디자인과 개발을 좋아합니다.",
+    url: "https://sunub.vercel.app",
+    siteName: "sun_ub",
+    type: "website",
+    locale: "ko_KR",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+>>>>>>> dev-v2
 };
 
 export default function RootLayout({
@@ -24,7 +58,20 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning={true}>
       <head>
+<<<<<<< HEAD
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+=======
+        <meta charSet="utf-8" />
+        <meta
+          httpEquiv="content-security-policy"
+          content="default-src https:"
+        />
+        <meta content="text/html" charSet="<characterset>" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, user-scalable=1"
+        />
+>>>>>>> dev-v2
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet preload"
@@ -55,6 +102,16 @@ export default function RootLayout({
             font-display: fallback;
             uniconde-range: U+0020-007E;
           }
+<<<<<<< HEAD
+=======
+          @font-face {
+            font-family: 'Bariol_serif';
+            src: url('/fonts/bariol_serif_regular-webfont.woff2') format('woff2'),
+            font-style: normal;
+            font-display: fallback;
+            uniconde-range: U+0020-007E;
+          }
+>>>>>>> dev-v2
         `,
           }}
         />
@@ -63,6 +120,7 @@ export default function RootLayout({
             html{
               --scrollbar-width: 12px;
               --scrollbar-height: 12px;
+<<<<<<< HEAD
               --scrollbar-background-color: oklch(92.54% 0.01 32.52);
               --scrollbar-thumb-color: oklch(45.88% 0.029 30.71);
               --pink-0: #fdeeeb;
@@ -94,6 +152,8 @@ export default function RootLayout({
           
               --default-bg-color: oklch(97.14% 0.011 31.07);
               --card-content-bg-color: oklch(98.8% 0 31.07);
+=======
+>>>>>>> dev-v2
             }
 
             * {
@@ -108,6 +168,7 @@ export default function RootLayout({
         }
 
         body {
+<<<<<<< HEAD
           font-family: Wotfard, NanumSquareNeo, sans-serif;
           color: var(--color-text);
           min-height: 100vh;
@@ -117,10 +178,17 @@ export default function RootLayout({
             background 350ms ease 0s;
         
             overflow-y: scroll;
+=======
+          font-family: Bariol_serif, Wotfard, NanumSquareNeo, sans-serif;
+          color: var(--color-text);
+          min-height: 100vh;
+          background: var(--color-background);
+>>>>>>> dev-v2
         }
 
         #__next {
           isolation: isolate;
+<<<<<<< HEAD
           container: root / inline-size;
         
           display: grid;
@@ -133,6 +201,8 @@ export default function RootLayout({
             grid-template-columns: [main-content] 1fr;
             grid-template-rows: 1fr;
           }
+=======
+>>>>>>> dev-v2
         }
 
             `}
@@ -143,6 +213,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
+<<<<<<< HEAD
               <MobileNav />
               <Header />
               <div id="side-ng__main-content">
@@ -150,6 +221,12 @@ export default function RootLayout({
                 <Footer />
               </div>
             </div>
+=======
+              <div className="blog-main__landing-page">{children}</div>
+            </div>
+            <Analytics />
+            <MobileNav />
+>>>>>>> dev-v2
           </ThemeProvider>
         </StyledComponentsRegistry>
       </body>

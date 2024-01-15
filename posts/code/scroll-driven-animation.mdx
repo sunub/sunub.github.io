@@ -1,0 +1,40 @@
+---
+title: 스크롤을 이용한 애니메이션 만들기
+date: 2024-01-01
+tags: css, animation
+slug: scroll-driven-animation-using-css
+summary: 웹에서 스크롤을 이용한 애니메이션은 특정 요소를 강조 시킬 수 있고 축소 시킬 수 있는 장점이 있습니다. 이번 포스팅에서는 스크롤을 이용한 애니메이션을 만드는 방법에 대해서 알아보겠습니다.
+category: code
+completed: false
+---
+
+## Scroll Driven Animation
+
+> `flex: flex-basic | flex-shrink | flex-grow`
+
+`flex-grow` : 이 값은 flex 디스플레이 내부의 공간을 얼마나 차지할 것인지에 대한 값입니다. 기본 값은 0으로 사용이되고 flex 내부의 아이템들이 서로 같은 값일 경우 디스플레이 내부의 균등한 크기로 나누어지게 됩니다.
+
+`flex-shrink` : 이 값은 flex인 디스플레이의 크기를 초과하는 아이템이 있을 경우 아이템의 크기를 디스플레이 내부로 들어올 수 있게끔 줄이는 값이다. 기본 값은 1이다. 만약 shrink 값이 0일 경우 내부의 아이템의 크기를 조절하지 않고 아이템의 크기를 유지하게 된다.
+
+`flex-basic` : 이 값은 flex 내부의 컨텐츠들의 기본적인 크기를 정합니다. 이 값의 크기는 `width`와 `content` 값만 설정이 가능하며 설정된 basic 크기에 따라 flex 내부의 아이템들이 어떠한 크기로 구성이 될지 결정이 됩니다.
+
+```css
+@keyframes fad-in-fade-out {
+  enter 0% {
+    opacity: 0;
+    transform: translateY(0%) scale(0.8);
+  }
+  enter 100% {
+    opacity: 1;
+    transform: translateY(100%) scale(1);
+  }
+  exit 0% {
+    opacity: 1;
+    transform: translateY(100%) scale(1);
+  }
+  enter 100% {
+    opacity: 0;
+    transform: translateY(0%) scale(0.8);
+  }
+}
+```

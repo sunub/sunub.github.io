@@ -6,6 +6,11 @@
 }
 
 .Title {
+<<<<<<< HEAD
+=======
+  grid-area: cateogry-hero;
+
+>>>>>>> dev-v2
   position: relative;
   padding: 98px 32px 66px 88px;
 

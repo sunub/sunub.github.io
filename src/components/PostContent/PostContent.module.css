@@ -1,8 +1,14 @@
 .Wrapper {
   grid-area: main-content;
 
+<<<<<<< HEAD
   position: relative;
   width: 100dvw;
+=======
+  font-family: "NanumSquareNeo", sans-serif;
+  position: relative;
+  width: 100%;
+>>>>>>> dev-v2
   max-width: 1100px;
 
   margin-left: auto;
@@ -27,12 +33,20 @@
 }
 
 .Header {
+<<<<<<< HEAD
+=======
+  font-family: "Bariol_serif", serif;
+>>>>>>> dev-v2
   text-align: center;
   padding: 128px 32px 96px 32px;
 }
 
 .Title {
+<<<<<<< HEAD
   font-size: calc(2.76rem);
+=======
+  font-size: clamp(3rem, 5vw, 5rem);
+>>>>>>> dev-v2
   text-align: center;
   color: color-mix(in oklch, var(--color-highlightColor) 90%, transparent);
 }
@@ -41,6 +55,10 @@
   text-align: center;
   color: color-mix(in oklch, var(--color-text) 50%, transparent);
   font-size: var(--size-4);
+<<<<<<< HEAD
+=======
+  margin-top: 16px;
+>>>>>>> dev-v2
 }
 
 .Main {
@@ -69,6 +87,7 @@
   & > ol {
     --counter-name: counts;
     counter-reset: var(--counter-name);
+<<<<<<< HEAD
   }
 
   & > ol > li {
@@ -79,6 +98,19 @@
   }
 
   & > ol > li::before {
+=======
+    position: relative;
+  }
+
+  & > ol > li {
+    counter-increment: var(--counter-name);
+    text-align: baseline;
+  }
+
+  & > ol > li::before {
+    position: absolute;
+    left: -1px;
+>>>>>>> dev-v2
     content: counters(var(--counter-name), ".") ". ";
     font-feature-settings: "tnum";
     padding-right: 12px;
@@ -89,6 +121,7 @@
   }
 
   & > ul {
+<<<<<<< HEAD
     padding-left: 24px;
   }
 
@@ -96,6 +129,9 @@
     list-style: disc !important;
     padding-top: 4px;
     padding-bottom: 4px;
+=======
+    list-style: square;
+>>>>>>> dev-v2
   }
 
   & > ul > li::marker {

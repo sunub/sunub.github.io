@@ -134,6 +134,15 @@ strong {
   overflow-wrap: break-word;
 }
 
+<<<<<<< HEAD
+=======
+.blog-main__landing-page {
+  transition:
+    color 350ms ease 0s,
+    background 350ms ease 0s;
+}
+
+>>>>>>> dev-v2
 @media (orientation: landscape) {
   ::-webkit-scrollbar {
     width: var(--scrollbar-width, 12px);
@@ -157,6 +166,7 @@ strong {
   }
 }
 
+<<<<<<< HEAD
 .mobile-menu__wrapper {
   display: flex;
   flex-direction: column;
@@ -247,6 +257,8 @@ code {
   justify-content: space-between;
 }
 
+=======
+>>>>>>> dev-v2
 @keyframes fadeIn {
   0% {
     transform: translateX(-500px);
@@ -274,6 +286,7 @@ code {
     visibility: hidden;
   }
 }
+<<<<<<< HEAD
 
 /* Variables */
 
@@ -288,3 +301,5 @@ code {
     --size-8: 2rem;
   }
 }
+=======
+>>>>>>> dev-v2

@@ -1,4 +1,5 @@
 .wrapper {
+<<<<<<< HEAD
 	border-radius: 0px !important;
 	margin: 0px 24px 48px !important;
 	border: 1px solid transparent;
@@ -21,4 +22,46 @@
 	.wrapper {
 		border-radius: 8px !important;
 	}
+=======
+  border-radius: 0px !important;
+  margin: 0px 24px 48px !important;
+  border: 1px solid transparent;
+  border-radius: 8px !important;
+}
+.wrapper pre {
+  padding: 24px !important;
+  max-width: calc(100% + 64px);
+}
+
+.wrapper code {
+  display: flex;
+  font-family: "Wotfard", sans-serif;
+}
+
+@media (min-width: 56rem) {
+  .wrapper {
+    border-radius: 8px !important;
+  }
+}
+
+.wrapper pre {
+  padding: 24px !important;
+  max-width: calc(100% + 64px);
+  word-wrap: break-word;
+  display: flex;
+  overflow: hidden;
+}
+
+.wrapper code > div {
+  display: flex;
+  word-wrap: break-word;
+  font-size: 1.125rem;
+  padding: 0px !important;
+  font-family: "Wotfard", sans-serif;
+}
+
+.wrapper code > div > span {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+>>>>>>> dev-v2
 }

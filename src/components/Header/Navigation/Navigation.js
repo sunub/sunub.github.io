@@ -17,6 +17,10 @@ const AnimateIcon = styled(animated.span)`
   height: 64px;
 
   border: 1px solid var("--default-border-color");
+<<<<<<< HEAD
+=======
+  box-shadow: var(--short-shadow);
+>>>>>>> dev-v2
   border-radius: 16px;
   background: var(--color-elevation);
 

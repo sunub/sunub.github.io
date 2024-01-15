@@ -3,6 +3,7 @@ import { POST_CATEGORY } from "@/utils/post/Post.constant";
 type Category = (typeof POST_CATEGORY)[number];
 
 type Files = {
+<<<<<<< HEAD
 	[k in Tag]: FileData[];
 };
 
@@ -16,10 +17,26 @@ type PostData = {
 };
 
 type Folders = ["web", "algorithm", "javascript", "typescript"] | string[];
+=======
+  [k in Tag]: FileData[];
+};
+
+type Contents = {
+  [k in FrontMatter.slug]: string;
+};
+
+type PostData = {
+  description: FrontMatter;
+  content: string;
+};
+
+type Categories = "web" | "algorithm" | "cs" | "code";
+>>>>>>> dev-v2
 
 type Tag = (typeof POST_CATEGORY)[number];
 
 interface FrontMatter {
+<<<<<<< HEAD
 	[key: string]: string;
 	title: string;
 	date: string;
@@ -33,3 +50,19 @@ type CTX = {
 	isOpen: boolean;
 	setOpen: (value: boolean) => void;
 };
+=======
+  title: string;
+  date: string;
+  tags: any;
+  summary: string;
+  category: string;
+  slug: string;
+}
+
+type CTX = {
+  isOpen: boolean;
+  setOpen: (value: boolean) => void;
+};
+
+type Theme = "light" | "dark";
+>>>>>>> dev-v2

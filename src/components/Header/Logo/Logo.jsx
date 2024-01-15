@@ -19,10 +19,22 @@ const LogoLink = styled(Link)`
   border: 2px solid var(--color-bird);
   border-radius: 16px;
   background: var(--color-elevation);
+<<<<<<< HEAD
+=======
+  box-shadow: var(--short-shadow);
+>>>>>>> dev-v2
 
   display: flex;
   justify-content: center;
   align-items: center;
+<<<<<<< HEAD
+=======
+
+  transition: box-shadow 300ms ease;
+  &:hover {
+    box-shadow: var(--long-shadow);
+  }
+>>>>>>> dev-v2
 `;
 
 function Logo({ ...delegated }) {
