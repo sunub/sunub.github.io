@@ -45,10 +45,6 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning={true}>
       <head>
         <meta charSet="utf-8" />
-        <meta
-          httpEquiv="content-security-policy"
-          content="default-src https:"
-        />
         <meta content="text/html" charSet="<characterset>" />
         <meta
           name="viewport"
