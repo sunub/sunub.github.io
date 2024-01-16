@@ -1,10 +1,10 @@
 import React from "react";
 import * as Styled from "../HeroImage.style";
 
-import bridge from "@/public/image/hero-image__light-bridge.avif";
-import clouds from "@/public/image/hero-image__light-clouds.avif";
-import baseImage from "@/public/image/hero-image__light-base-scene.avif";
-import softClouds from "@/public/image/hero-image__light-clouds-soft.avif";
+import bridge from "@/public/assets/hero-image__light-bridge.avif";
+import clouds from "@/public/assets/hero-image__light-clouds.avif";
+import baseImage from "@/public/assets/hero-image__light-base-scene.avif";
+import softClouds from "@/public/assets/hero-image__light-soft-clouds.avif";
 import { Theme } from "type";
 
 function LightMode({ colorTheme }: { colorTheme: Theme }) {

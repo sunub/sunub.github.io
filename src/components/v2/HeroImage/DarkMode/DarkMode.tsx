@@ -1,9 +1,9 @@
 import * as Styled from "../HeroImage.style";
 
-import bridge from "@/public/image/hero-image__dark-bridge.avif";
-import clouds from "@/public/image/hero-image__dark-clouds.avif";
-import softClouds from "@/public/image/hero-image__dark-clouds-soft.avif";
-import baseImage from "@/public/image/hero-image__dark-base-scene.avif";
+import bridge from "@/public/assets/hero-image__dark-bridge.avif";
+import clouds from "@/public/assets/hero-image__dark-clouds.avif";
+import baseImage from "@/public/assets/hero-image__dark-base-scene.avif";
+import softClouds from "@/public/assets/hero-image__dark-soft-clouds.avif";
 import { Theme } from "type";
 
 function DarkMode({ colorTheme }: { colorTheme: Theme }) {

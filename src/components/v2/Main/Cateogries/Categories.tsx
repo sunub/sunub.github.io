@@ -1,3 +1,4 @@
+import Link from "next/link";
 import * as Styled from "./Categories.style";
 
 function Categories({ categories }: { categories: string[] }) {
@@ -9,9 +10,13 @@ function Categories({ categories }: { categories: string[] }) {
       </Styled.TitleWrapper>
       <Styled.CategoryListWrapper>
         {categories.map((category) => (
-          <Styled.Item href={`/${category}`} key={category}>
+          <Link
+            className="blog-main__landing-page-link"
+            href={`/${category}`}
+            key={category}
+          >
             {category}
-          </Styled.Item>
+          </Link>
         ))}
       </Styled.CategoryListWrapper>
     </Styled.RootWrapper>

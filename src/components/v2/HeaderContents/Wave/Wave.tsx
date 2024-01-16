@@ -1,6 +1,6 @@
 import React from "react";
-import lightWaveBird from "@/public/image/hero-image__light-wave-bird.avif";
-import darkWaveBird from "@/public/image/hero-image__dark-wave-bird.avif";
+import lightWaveBird from "@/public/assets/hero-image_light-wave-bird.avif";
+import darkWaveBird from "@/public/assets/hero-image_dark-wave-bird.avif";
 import * as Styled from "./Wave.style";
 import WaveSvg from "./WaveSvg";
 import { Theme } from "type";
