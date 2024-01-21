@@ -5,12 +5,6 @@ import Image from "next/image";
 
 export const RootWrapper = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const BackgroundWrapper = styled.div`
@@ -22,7 +16,6 @@ export const BackgroundWrapper = styled.div`
 
 export const Picture = styled.picture`
   display: contents;
-  max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
 `;
@@ -31,12 +24,11 @@ export const HeroImageWrapper = styled.div`
   display: grid;
   grid-template: [hero-image] 1fr / [hero-image] 1fr;
   justify-items: center;
-  max-width: 1600px;
 `;
 
 export const DarkHeroImage = styled(Image).attrs({
   quality: 70,
-  sizes: "50vw",
+  sizes: "100vw",
 })<{ $colorTheme: "light" | "dark"; $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;

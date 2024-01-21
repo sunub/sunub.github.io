@@ -32,10 +32,15 @@ export const WaveImage = styled(Image)`
   height: auto;
   object-fit: cover;
   transform: translateY(20px);
-  max-width: 1600px;
 `;
 
 export const WaveSvgWrapper = styled.div`
+  grid-area: wave-image;
+  display: grid;
+  align-items: flex-end;
+`;
+
+export const WaveBirdSvgWrapper = styled.div`
   grid-area: wave-image;
   display: grid;
   align-items: flex-end;
@@ -49,6 +54,31 @@ export const WaveSvg = styled.svg`
   min-width: 600px;
   max-width: unset;
   width: 106%;
+`;
+
+export const WaveBirdSvg = styled.svg`
+  grid-area: wave-image;
+  position: absolute;
+  left: -3%;
+  right: -3%;
+  bottom: 3em;
+  min-width: 600px;
+  max-width: unset;
+  width: 106%;
+`;
+
+export const WaveBirdMirroredSvg = styled.svg`
+  grid-area: wave-image;
+  position: absolute;
+  left: -3%;
+  right: -3%;
+  bottom: 4em;
+  min-width: 600px;
+  max-width: unset;
+  width: 106%;
+  opacity: 0.4;
+  filter: blur(3.75px);
+  transform: scaleY(-1) translateY(-80%) scaleY(0.3);
 `;
 
 export const WaveBirdWrapper = styled.div``;
