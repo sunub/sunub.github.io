@@ -1,5 +1,0 @@
-.menu-content__container {
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-8);
-}

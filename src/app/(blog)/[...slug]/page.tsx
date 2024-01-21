@@ -24,17 +24,24 @@ export async function generateMetadata({
   };
 }
 
-function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
-  const [cateogry, slug] = params.slug;
+async function getBlogPostBySlug(cateogry: string, slug: string) {
   const blog = new Blog();
   const categorizedPost = blog.getPostByCategory(cateogry as Categories);
 
   if (categorizedPost === undefined) return notFound();
-
   const post = categorizedPost.find(({ metadata }) => metadata.slug === slug);
+
+  return {
+    postcontent: post,
+  };
+}
+
+async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
+  const [cateogry, slug] = params.slug;
+  const { postcontent } = await getBlogPostBySlug(cateogry, slug);
   return (
     <main>
-      <PostContent postcontent={post} />
+      <PostContent postcontent={postcontent} />
     </main>
   );
 }

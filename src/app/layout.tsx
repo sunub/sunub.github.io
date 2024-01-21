@@ -95,6 +95,11 @@ export default function RootLayout({
             html{
               --scrollbar-width: 12px;
               --scrollbar-height: 12px;
+              --color-birdWing: oklch(50.89% 0.054 232.07);
+              --color-birdBody: oklch(26.29% 0.026 216.39);
+              --color-birdBeak: oklch(72.63% 0.045 233.48);
+              --color-birdEyeball: oklch(88.53% 0 0);
+              --color-birdShadow: oklch(33.71% 0.06084120684331697 236.3806640420637 / 82.55%);
             }
 
             * {
