@@ -7,12 +7,9 @@ import Header from "../Header";
 import Wave from "../HeaderContents/Wave";
 
 function MinimalHeader() {
-  const { colorTheme } = React.useContext(ThemeContext);
-
   return (
     <Styled.Header>
       <Header />
-      <Wave colorTheme={colorTheme} />
     </Styled.Header>
   );
 }

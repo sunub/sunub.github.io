@@ -138,7 +138,6 @@ export default function RootLayout({
             <div id="__next">
               <div id="blog-header__root-wrapper">
                 <Header />
-                <div id="blog-header__hero-image-portal" />
                 <Wave />
               </div>
               <div className="blog-main__landing-page">{children}</div>
