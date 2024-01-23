@@ -5,7 +5,7 @@ import * as Styled from "./Wave.style";
 import WaveSvg from "./WaveSvg";
 import { Theme } from "type";
 
-function Wave({ colorTheme }: { colorTheme: Theme }) {
+function Wave() {
   return (
     <Styled.WaveWrapper>
       <Styled.BackgroundColor />
@@ -15,31 +15,6 @@ function Wave({ colorTheme }: { colorTheme: Theme }) {
           zIndex: 3,
         }}
       />
-      {/* <WaveBird /> */}
-      {/* <React.Fragment>
-        <Styled.WaveImage
-          src={lightWaveBird}
-          alt={"메인 히어로 이미지중 중간 새 아이콘"}
-          fill
-          priority
-          style={{
-            opacity: `${colorTheme === "light" ? 1 : 0}`,
-            zIndex: 3,
-            filter: "brightness(1.2)",
-          }}
-        />
-        <Styled.WaveImage
-          src={darkWaveBird}
-          alt={"메인 히어로 이미지중 중간 새 아이콘"}
-          fill
-          priority
-          style={{
-            opacity: `${colorTheme === "dark" ? 1 : 0}`,
-            zIndex: 3,
-            filter: "brightness(1.2)",
-          }}
-        />
-      </React.Fragment> */}
     </Styled.WaveWrapper>
   );
 }

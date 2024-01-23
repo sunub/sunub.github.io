@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import { Theme } from "type";
 
-export const Wrapper = styled.div<{ $colorTheme: Theme }>`
+export const Wrapper = styled.div`
   width: 100%;
   position: relative;
   display: flex;
