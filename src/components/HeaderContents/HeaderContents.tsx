@@ -21,6 +21,7 @@ function HeaderContents() {
   }, []);
 
   return (
+<<<<<<< HEAD
     <>
       {portalRef
         ? createPortal(
@@ -31,6 +32,13 @@ function HeaderContents() {
           )
         : null}
     </>
+=======
+    <Styled.Wrapper $colorTheme={colorTheme}>
+      <Header />
+      <HeroImage colorTheme={colorTheme} />
+      <Wave />
+    </Styled.Wrapper>
+>>>>>>> sunub
   );
 }
 

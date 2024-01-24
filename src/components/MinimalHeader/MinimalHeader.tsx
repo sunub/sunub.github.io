@@ -10,6 +10,10 @@ function MinimalHeader() {
   return (
     <Styled.Header>
       <Header />
+<<<<<<< HEAD
+=======
+      <Wave />
+>>>>>>> sunub
     </Styled.Header>
   );
 }

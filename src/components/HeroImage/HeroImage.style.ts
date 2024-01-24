@@ -32,7 +32,6 @@ export const DarkHeroImage = styled(Image).attrs({
 })<{ $colorTheme: "light" | "dark"; $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;
-  width: 100%;
   height: auto;
   object-fit: cover;
   opacity: ${({ $colorTheme }) => ($colorTheme === "dark" ? 1 : 0)};
@@ -48,7 +47,6 @@ export const LightHeroImage = styled(Image).attrs({
 })<{ $colorTheme: "light" | "dark"; $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;
-  width: 100%;
   height: auto;
   object-fit: cover;
   opacity: ${({ $colorTheme }) => ($colorTheme === "light" ? 1 : 0)};
