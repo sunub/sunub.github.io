@@ -4,14 +4,14 @@ import * as Styled from "../HeroImage.style";
 import bridge from "@/public/assets/hero-image__light-bridge.avif";
 import clouds from "@/public/assets/hero-image__light-clouds.avif";
 import softClouds from "@/public/assets/hero-image__soft-light-clouds.avif";
-import baseImage from "@/public/assets/hero-image__light-base-scene.avif";
+import baseImage from "@/public/assets/hero-image__light-image.avif";
 import { Theme } from "type";
 
 function LightMode({ colorTheme }: { colorTheme: Theme }) {
   return (
     <React.Fragment>
       <Styled.Picture>
-        <Styled.LightHeroImage
+        {/* <Styled.LightHeroImage
           $colorTheme={colorTheme}
           priority
           src={clouds}
@@ -30,7 +30,7 @@ function LightMode({ colorTheme }: { colorTheme: Theme }) {
             mixBlendMode: "soft-light",
             zIndex: 1,
           }}
-        />
+        /> */}
         <Styled.LightHeroImage
           $colorTheme={colorTheme}
           src={baseImage}

@@ -2,14 +2,14 @@ import * as Styled from "../HeroImage.style";
 
 import bridge from "@/public/assets/hero-image__dark-bridge.avif";
 import clouds from "@/public/assets/hero-image__dark-clouds.avif";
-import baseImage from "@/public/assets/hero-image__dark-base-scene.avif";
+import baseImage from "@/public/assets/hero-image__dark-image.avif";
 import softClouds from "@/public/assets/hero-image__soft-dark-clouds.avif";
 import { Theme } from "type";
 
 function DarkMode({ colorTheme }: { colorTheme: Theme }) {
   return (
     <Styled.Picture>
-      <Styled.DarkHeroImage
+      {/* <Styled.DarkHeroImage
         $colorTheme={colorTheme}
         priority
         src={clouds}
@@ -32,7 +32,7 @@ function DarkMode({ colorTheme }: { colorTheme: Theme }) {
           mixBlendMode: "soft-light",
           zIndex: 1,
         }}
-      />
+      /> */}
       <Styled.DarkHeroImage
         $colorTheme={colorTheme}
         priority
