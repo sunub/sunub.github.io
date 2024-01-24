@@ -14,7 +14,7 @@ function HeaderContents() {
     <Styled.Wrapper $colorTheme={colorTheme}>
       <Header />
       <HeroImage colorTheme={colorTheme} />
-      <Wave colorTheme={colorTheme} />
+      <Wave />
     </Styled.Wrapper>
   );
 }

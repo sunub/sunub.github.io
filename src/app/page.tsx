@@ -1,18 +1,18 @@
 import Footer from "@/components/Footer";
 import HeaderContents from "@/components/HeaderContents";
 import Main from "@/components/Main";
+import Client from "@/components/client";
+import React from "react";
 
 export const dynamic = "force-dynamic";
 
 function Page() {
   return (
-    <>
-      <HeaderContents />
+    <React.Fragment>
       <div id="side-ng__main-content">
         <Main />
-        <Footer />
       </div>
-    </>
+    </React.Fragment>
   );
 }
 
