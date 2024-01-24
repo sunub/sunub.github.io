@@ -12,7 +12,7 @@ function MinimalHeader() {
   return (
     <Styled.Header>
       <Header />
-      <Wave colorTheme={colorTheme} />
+      <Wave />
     </Styled.Header>
   );
 }
