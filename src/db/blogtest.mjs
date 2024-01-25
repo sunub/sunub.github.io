@@ -1,24 +1,13 @@
-import { Categories, FrontMatter } from "type";
+import fs from "fs";
+import path from "path";
 
-const fs = require("fs");
-const path = require("path");
-
-type MDXFile = {
-  metadata: FrontMatter;
-  content: string;
-  slug?: string;
-  category?: string;
-};
-
-type BlogContent = Map<Categories, MDXFile[]>;
-
-function parseFrontmatter(fileContent: string): MDXFile {
+function parseFrontmatter(fileContent) {
   let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
   let match = frontmatterRegex.exec(fileContent);
-  let frontMatterBlock = match![1];
+  let frontMatterBlock = match[1];
   let content = fileContent.replace(frontmatterRegex, "").trim();
   let frontMatterLines = frontMatterBlock.split("\n");
-  let metadata: FrontMatter = {
+  let metadata = {
     title: "",
     date: "",
     tags: [],
@@ -31,21 +20,21 @@ function parseFrontmatter(fileContent: string): MDXFile {
     let [key, ...valueArr] = line.split(":");
     let value = valueArr.join(": ").trim();
     value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    metadata[key.trim() as keyof FrontMatter] = value;
+    metadata[key.trim()] = value;
   });
 
   return { metadata, content };
 }
 
-function readMDXFile(filePath: string) {
+function readMDXFile(filePath) {
   let rawContent = fs.readFileSync(filePath, "utf8");
   return parseFrontmatter(rawContent);
 }
 
-function browseMDXFiles(dir: string, fileList: string[] = []): string[] {
+function browseMDXFiles(dir, fileList = []) {
   const files = fs.readdirSync(dir);
 
-  files.forEach((file: string) => {
+  files.forEach((file) => {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
 
@@ -59,11 +48,11 @@ function browseMDXFiles(dir: string, fileList: string[] = []): string[] {
   return fileList;
 }
 
-function getMDXFiles(dir: string) {
+function getMDXFiles(dir) {
   const files = fs.readdirSync(dir);
 
   const MDXFilePaths = new Map();
-  files.forEach((file: string) => {
+  files.forEach((file) => {
     const mdxFiles = browseMDXFiles(path.join(dir, file));
     MDXFilePaths.set(file, mdxFiles);
   });
@@ -71,12 +60,12 @@ function getMDXFiles(dir: string) {
   return MDXFilePaths;
 }
 
-function getMDXData(dir: string) {
+function getMDXData(dir) {
   let mdxFilesPath = getMDXFiles(dir);
 
-  const MDXFileList: Partial<MDXFile[]> = [];
-  mdxFilesPath.forEach((files: string[], category: string) => {
-    let mdxFiles: Partial<MDXFile> = {};
+  const MDXFileList = [];
+  mdxFilesPath.forEach((files, _) => {
+    let mdxFiles = {};
     files.forEach((file) => {
       let { metadata, content } = readMDXFile(file);
       const { slug } = metadata;
@@ -84,22 +73,18 @@ function getMDXData(dir: string) {
         metadata,
         content,
         slug,
-        category,
       };
-      MDXFileList.push(mdxFiles as MDXFile);
+      MDXFileList.push(mdxFiles);
     });
   });
-
   return MDXFileList;
 }
 
-function getBlogPost(): MDXFile[] {
-  return getMDXData(path.join(process.cwd(), "posts")) as MDXFile[];
+function getBlogPost() {
+  return getMDXData(path.join(process.cwd(), "posts"));
 }
 
 class Blog {
-  posts: MDXFile[];
-
   constructor() {
     this.posts = this.sortByDate();
   }
@@ -115,16 +100,12 @@ class Blog {
     return sortedPosts;
   }
 
-  findCategory(category: string) {
-    return this.posts.filter((post) => post.category === category);
-  }
-
   get allPosts() {
-    return [...this.posts.values()];
+    return [...this.posts];
   }
 
-  getPostByslug(slug: string) {
-    return this.posts.find((post) => post.slug === slug);
+  getPostBySlug(slug) {
+    return this.posts.get(slug);
   }
 }
 
