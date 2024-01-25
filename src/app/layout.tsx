@@ -6,17 +6,9 @@ import React from "react";
 import MobileNav from "@/components/MobileNav";
 import InitTheme from "@/components/Theme/InitTheme";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
-<<<<<<< HEAD
-import Wave from "@/components/HeaderContents/Wave";
-import Header from "@/components/Header";
-import HeroImage from "@/components/HeroImage";
-import Footer from "@/components/Footer";
-=======
 import Header from "@/components/Header";
 import Wave from "@/components/HeaderContents/Wave";
 import Footer from "@/components/Footer";
-import HeroImage from "@/components/HeroImage";
->>>>>>> sunub
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -143,11 +135,7 @@ export default function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
-<<<<<<< HEAD
-              <div id="blog-header__root-wrapper">
-=======
               <div id="blog-main__header-wrapper">
->>>>>>> sunub
                 <Header />
                 <Wave />
               </div>

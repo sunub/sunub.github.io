@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 function WebKnowledgePage() {
   const blog = new Blog();
-  const allBlogs = blog.getPostByCategory("web");
+  const allBlogs = blog.findCategory("web");
 
   return (
     <section>

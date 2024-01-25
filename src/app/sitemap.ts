@@ -7,7 +7,7 @@ export default async function sitemap() {
   const categories: Categories[] = ["web", "code", "cs", "algorithm"];
 
   let blogs = categories.map((category) => {
-    const categorizedPost = blog.getPostByCategory(category)!;
+    const categorizedPost = blog.findCategory(category)!;
     return categorizedPost.map(({ metadata }) => ({
       url: `https://sunub.vercel.app/${category}/${metadata.slug}`,
       lastModified: metadata.date,

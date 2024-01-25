@@ -134,11 +134,7 @@ strong {
   overflow-wrap: break-word;
 }
 
-<<<<<<< HEAD
-#blog-header__root-wrapper {
-=======
 #blog-main__header-wrapper {
->>>>>>> sunub
   width: 100%;
   position: relative;
   display: flex;
