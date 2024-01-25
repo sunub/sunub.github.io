@@ -1,9 +1,8 @@
-"use client";
-
 import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import * as Icons from "./Icons/index";
 import Link from "next/link";
+import Blog from "@/db/blog";
 
 type PublishedPost = FrontMatter;
 
@@ -14,18 +13,24 @@ const ICONS_BY_VARIANT: { [key: string]: JSX.Element } = {
   cs: Icons.CS,
 };
 
-function BlogPost({
-  recentlyPublished,
-}: {
-  recentlyPublished: PublishedPost[];
-}) {
+async function getFrontMatterList() {
+  const blog = new Blog();
+  const posts = blog.allPosts;
+  const metatdatas = posts.map(({ metadata }) => metadata);
+  return metatdatas;
+}
+
+async function BlogPost() {
+  const metadatas = await getFrontMatterList();
+  const recentlyPublished = metadatas.slice(0, 15);
+
   return (
     <Styled.Wrapper>
       {recentlyPublished &&
         recentlyPublished.map((frontmatter) => {
           const IconComponent = ICONS_BY_VARIANT[frontmatter.category];
           const { category, slug, title, summary, tags } = frontmatter;
-
+          console.log(tags.split(","));
           return (
             <Styled.BlogPostWrapper
               key={`${frontmatter.slug}-${Math.floor(
@@ -39,19 +44,22 @@ function BlogPost({
                   <UnderLineWaveSVG />
                 </Styled.BlogPostTitle>
                 <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+                <Styled.BlogTagsWrapper>
+                  {tags.length > 0
+                    ? tags
+                        .split(",")
+                        .map((tag: any) => (
+                          <Styled.BlogTag
+                            key={`blog-post-${tag.trim()}-${Math.floor(
+                              Math.random() * 10000,
+                            )}`}
+                          >
+                            {tag.trim()}
+                          </Styled.BlogTag>
+                        ))
+                    : null}
+                </Styled.BlogTagsWrapper>
               </Link>
-              <Styled.BlogTagsWrapper>
-                {tags.length > 0 &&
-                  tags.map((tag: any) => (
-                    <Styled.BlogTag
-                      key={`blog-post-${tag}-${Math.floor(
-                        Math.random() * 10000,
-                      )}`}
-                    >
-                      {tag}
-                    </Styled.BlogTag>
-                  ))}
-              </Styled.BlogTagsWrapper>
             </Styled.BlogPostWrapper>
           );
         })}

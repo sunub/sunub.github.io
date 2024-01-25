@@ -21,24 +21,11 @@ function HeaderContents() {
   }, []);
 
   return (
-<<<<<<< HEAD
-    <>
-      {portalRef
-        ? createPortal(
-            <HeroImage colorTheme={colorTheme} />,
-            document.getElementById(
-              "blog-header__hero-image-portal",
-            ) as HTMLDivElement,
-          )
-        : null}
-    </>
-=======
-    <Styled.Wrapper $colorTheme={colorTheme}>
+    <Styled.Wrapper>
       <Header />
       <HeroImage colorTheme={colorTheme} />
       <Wave />
     </Styled.Wrapper>
->>>>>>> sunub
   );
 }
 

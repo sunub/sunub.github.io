@@ -1,13 +1,8 @@
 import * as Styled from "./NewestPost.style";
 import Spacer from "@/components/Spacer";
 import BlogPost from "../BlogPost";
-import { FrontMatter } from "type";
 
-function NewestPost({
-  recentlyPublished,
-}: {
-  recentlyPublished: FrontMatter[];
-}) {
+function NewestPost() {
   return (
     <Styled.RootWrapper>
       <Styled.TitleWrapper>
@@ -15,7 +10,7 @@ function NewestPost({
         <Styled.Title>Recently Published</Styled.Title>
       </Styled.TitleWrapper>
       <Spacer axis={"vertical"} size={64} />
-      <BlogPost recentlyPublished={recentlyPublished} />
+      <BlogPost />
     </Styled.RootWrapper>
   );
 }

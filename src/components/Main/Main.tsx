@@ -3,26 +3,18 @@ import * as Styled from "./Main.style";
 import Post from "@/utils/Post";
 import NewestPost from "./NewestPost";
 import Tags from "./Tags/Tags";
+import Blog from "@/db/blog";
 
-async function getFrontMatterList() {
-  const post = new Post();
-  const tags = post.tags;
-  const categories = post.categories;
-  const frontMatterList = await post.frontMatters["all"];
-  return { frontMatterList, tags, categories };
-}
-
-async function Main() {
-  const { frontMatterList, tags, categories } = await getFrontMatterList();
-  const mostMetionedTags = [...tags.keys()].slice(0, 6);
-  const recentlyPublished = frontMatterList.slice(0, 15);
+function Main() {
+  // const mostMetionedTags = [...tags.keys()].slice(0, 6);
+  const categories = ["web", "algorithm", "code", "cs"];
 
   return (
     <Styled.Wrapper>
-      <NewestPost recentlyPublished={recentlyPublished} />
+      <NewestPost />
       <Styled.RightSideWrapper>
         <Categories categories={categories} />
-        <Tags tags={mostMetionedTags} />
+        {/* <Tags tags={mostMetionedTags} /> */}
       </Styled.RightSideWrapper>
     </Styled.Wrapper>
   );
