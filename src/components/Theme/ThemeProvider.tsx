@@ -35,7 +35,7 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
 
       root.setAttribute("data-color-theme", nextColorTheme);
       Object.entries(nextColor).forEach(([key, value]) => {
-        root.style.setProperty(key, value);
+        root.style.setProperty(key, value as any);
       });
       rawSetColorTheme(nextColorTheme);
     }
@@ -61,7 +61,7 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
 
       const nextColor = nextValue === "light" ? LIGHT_COLORS : DARK_COLORS;
       Object.entries(nextColor).forEach(([key, value]) => {
-        root.style.setProperty(key, value);
+        root.style.setProperty(key, value as any);
       });
 
       window.localStorage.setItem("color-theme", nextValue);

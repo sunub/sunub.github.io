@@ -30,7 +30,6 @@ async function BlogPost() {
         recentlyPublished.map((frontmatter) => {
           const IconComponent = ICONS_BY_VARIANT[frontmatter.category];
           const { category, slug, title, summary, tags } = frontmatter;
-          console.log(tags.split(","));
           return (
             <Styled.BlogPostWrapper
               key={`${frontmatter.slug}-${Math.floor(

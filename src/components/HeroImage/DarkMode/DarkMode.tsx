@@ -2,13 +2,11 @@ import * as Styled from "../HeroImage.style";
 
 import bridge from "@/public/assets/hero-image__dark-bridge.avif";
 import baseImage from "@/public/assets/hero-image__dark-image.avif";
-import { Theme } from "type";
 
-function DarkMode({ colorTheme }: { colorTheme: Theme }) {
+function DarkMode() {
   return (
     <Styled.Picture>
       <Styled.DarkHeroImage
-        $colorTheme={colorTheme}
         loading="lazy"
         src={baseImage}
         width={1600}
@@ -19,7 +17,6 @@ function DarkMode({ colorTheme }: { colorTheme: Theme }) {
         }}
       />
       <Styled.DarkHeroImage
-        $colorTheme={colorTheme}
         width={1600}
         height={546}
         loading="lazy"

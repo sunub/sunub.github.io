@@ -2,14 +2,13 @@ import React from "react";
 import * as Styled from "./HeroImage.style";
 import LightMode from "./LightMode";
 import DarkMode from "./DarkMode";
-import { Theme } from "type";
 
-function HeroImage({ colorTheme }: { colorTheme: Theme }) {
+function HeroImage() {
   return (
     <Styled.RootWrapper>
       <Styled.HeroImageWrapper>
-        <LightMode colorTheme={colorTheme} />
-        <DarkMode colorTheme={colorTheme} />
+        <LightMode />
+        <DarkMode />
       </Styled.HeroImageWrapper>
     </Styled.RootWrapper>
   );

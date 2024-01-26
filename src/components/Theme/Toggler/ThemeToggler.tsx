@@ -32,7 +32,7 @@ export default function ThemeToggler({
     rawSetColorTheme(nextTheme);
     root.setAttribute("data-color-theme", nextTheme);
     Object.entries(nextColor).forEach(([key, value]) => {
-      root.style.setProperty(key, value);
+      root.style.setProperty(key, value as any);
     });
     setColorTheme(nextTheme);
   }

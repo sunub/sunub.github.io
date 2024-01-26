@@ -1,4 +1,4 @@
-const LIGHT_COLORS: Record<string, string> = {
+const LIGHT_COLORS: Record<string, string | number> = {
   "--color-navlink": `oklch(42.14% 0.08 29.36)`,
   "--color-text": `oklch(21.08% 0.055 34.69)`,
   "--color-background": `oklch(97.14% 0.011 31.07)`,
@@ -17,9 +17,11 @@ const LIGHT_COLORS: Record<string, string> = {
   "--color-endStop": `oklch(89.29% 0.054 18.22)`,
   "--color-landscape":
     "linear-gradient(1deg, oklch(97.14% 0.011 31.07) 21.41%, oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 55.11%)",
+  "--color-light-heroimage": 1,
+  "--color-dark-heroimage": 0,
 };
 
-const DARK_COLORS: Record<string, string> = {
+const DARK_COLORS: Record<string, string | number> = {
   "--color-navlink": `oklch(90.21% 0.055771670330652126 300.11937740281473)`,
   "--color-text": `oklch(100% 0 31.08)`,
   "--color-background": `oklch(23.93% 0 0)`,
@@ -38,6 +40,8 @@ const DARK_COLORS: Record<string, string> = {
   "--color-endStop": `oklch(38.11% 0.111 286.59)`,
   "--color-landscape":
     "linear-gradient(1deg, oklch(76.95% 0.12588555394033804 289.2710106250223) 24.47%, oklch(43.6% 0.073 290.15) 55.11%)",
+  "--color-light-heroimage": 0,
+  "--color-dark-heroimage": 1,
 };
 
 const COLOR_MODE_KEY = "theme-preference";

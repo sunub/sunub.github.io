@@ -5,6 +5,10 @@ import Image from "next/image";
 
 export const RootWrapper = styled.div`
   position: relative;
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const BackgroundWrapper = styled.div`
@@ -29,12 +33,12 @@ export const HeroImageWrapper = styled.div`
 export const DarkHeroImage = styled(Image).attrs({
   quality: 70,
   sizes: "100vw",
-})<{ $colorTheme: "light" | "dark"; $mirrored?: boolean }>`
+})<{ $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;
   height: auto;
   object-fit: cover;
-  opacity: ${({ $colorTheme }) => ($colorTheme === "dark" ? 1 : 0)};
+  opacity: var(--color-dark-heroimage);
   transition: opacity 350ms ease 0s;
   transform: ${({ $mirrored }) =>
     $mirrored && "scaleY(-1) translateY(-141%) scaleY(0.5)"};
@@ -44,12 +48,12 @@ export const DarkHeroImage = styled(Image).attrs({
 export const LightHeroImage = styled(Image).attrs({
   quality: 70,
   sizes: "100vw",
-})<{ $colorTheme: "light" | "dark"; $mirrored?: boolean }>`
+})<{ $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;
   height: auto;
   object-fit: cover;
-  opacity: ${({ $colorTheme }) => ($colorTheme === "light" ? 1 : 0)};
+  opacity: var(--color-light-heroimage);
   transition: opacity 350ms ease 0s;
   transform: ${({ $mirrored }) =>
     $mirrored && "scaleY(-1) translateY(-141%) scaleY(0.5)"};
