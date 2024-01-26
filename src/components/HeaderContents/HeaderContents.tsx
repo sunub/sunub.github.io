@@ -23,7 +23,7 @@ function HeaderContents() {
   return (
     <Styled.Wrapper>
       <Header />
-      <HeroImage colorTheme={colorTheme} />
+      <HeroImage />
       <Wave />
     </Styled.Wrapper>
   );
