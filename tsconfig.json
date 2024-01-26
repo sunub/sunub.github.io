@@ -2,11 +2,11 @@
   "extends": "ts-node/node16/tsconfig.json",
   "ts-node": {
     "compilerOptions": {
-      "module": "ESNext"
+      "module": "ESNext",
     },
     "transpileOnly": true,
     "files": true,
-    "esm": true
+    "esm": true,
   },
   "compilerOptions": {
     "target": "ES2022",
@@ -27,8 +27,8 @@
     "allowImportingTsExtensions": true,
     "plugins": [
       {
-        "name": "next"
-      }
+        "name": "next",
+      },
     ],
     "paths": {
       "@/*": ["./src/*"],
@@ -38,20 +38,20 @@
       "@/components/*": ["./src/components/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/posts/*": ["./src/app/posts/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
     },
-    "sourceMap": true
+    "sourceMap": true,
   },
   "include": [
     "./type.d.ts",
-    "next-env.d.ts",
+    "recover/next-env.d.ts",
     "**/*.js",
     "**/*.jsx",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/**/*",
-    "src/app/mdx/page.jsx"
+    "src/app/mdx/page.jsx",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

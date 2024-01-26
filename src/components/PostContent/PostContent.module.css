@@ -30,7 +30,11 @@
 .Header {
   font-family: "Bariol_serif", serif;
   text-align: center;
-  padding: 128px 32px 96px 32px;
+  padding: 82px 32px 96px 32px;
+
+  @media screen and (max-width: 320px) {
+    padding: 32px 32px 96px 32px;
+  }
 }
 
 .Title {

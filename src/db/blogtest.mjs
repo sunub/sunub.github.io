@@ -110,3 +110,7 @@ class Blog {
 }
 
 export default Blog;
+
+const foo = Bun.file("./foo.txt");
+
+console.log(foo);
