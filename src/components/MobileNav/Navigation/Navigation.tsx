@@ -15,8 +15,6 @@ interface NavigationProps {
 }
 
 function Navigation(props: NavigationProps) {
-  const { colorTheme } = React.useContext(ThemeContext);
-  const { categories } = props;
   const [isOpen, toggleOpen] = useToggle(false);
 
   return (
@@ -26,11 +24,7 @@ function Navigation(props: NavigationProps) {
         <FocusLock>
           <RemoveScroll>
             <Styled.NavigationWrapper>
-              <NavigationList
-                categories={categories}
-                colorTheme={colorTheme}
-                toggleOpen={toggleOpen}
-              />
+              <NavigationList toggleOpen={toggleOpen} />
             </Styled.NavigationWrapper>
             <Styled.Backdrop onClick={toggleOpen} />
           </RemoveScroll>

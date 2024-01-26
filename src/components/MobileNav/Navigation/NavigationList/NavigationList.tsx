@@ -3,14 +3,14 @@ import { Category, Theme } from "type";
 import * as Styled from "../Navigation.style";
 import Spacer from "@/components/Spacer";
 
+const CATEGORIES = ["algorithm", "code", "cs", "web"];
+
 interface NavigationListProps {
-  categories: Category[];
-  colorTheme: Theme;
   toggleOpen: () => void;
 }
 
 function NavigationList(props: NavigationListProps) {
-  const { categories, colorTheme, toggleOpen } = props;
+  const { toggleOpen } = props;
   return (
     <Styled.Wrapper>
       <Styled.ListWrapper>
@@ -19,7 +19,7 @@ function NavigationList(props: NavigationListProps) {
           posts
           <Styled.ListWrapper>
             <Spacer size={4} axis={"vertical"} />
-            {categories.map((category: Category) => (
+            {CATEGORIES.map((category: Category) => (
               <Item
                 name={category}
                 key={`${category}-page`}
