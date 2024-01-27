@@ -29,14 +29,14 @@ async function BlogPost() {
       {recentlyPublished &&
         recentlyPublished.map((frontmatter) => {
           const IconComponent = ICONS_BY_VARIANT[frontmatter.category];
-          const { category, slug, title, summary, tags } = frontmatter;
+          const { slug, title, summary, tags } = frontmatter;
           return (
             <Styled.BlogPostWrapper
               key={`${frontmatter.slug}-${Math.floor(
                 Math.random() * 10000 + 1,
               )}`}
             >
-              <Link href={`/${category}/${slug}`}>
+              <Link href={`/${slug}`}>
                 <Styled.BlogPostTitle>
                   <Styled.BlogPostIcons>{IconComponent}</Styled.BlogPostIcons>
                   <h2>{title}</h2>

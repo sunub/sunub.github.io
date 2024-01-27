@@ -41,8 +41,6 @@ function BlogPostSlugPage({ params }: { params: { slug: string } }) {
   const blog = new Blog();
   const post = blog.getPostByslug(params.slug);
 
-  if (post === undefined) return notFound();
-
   return (
     <main>
       <script
@@ -56,11 +54,6 @@ function BlogPostSlugPage({ params }: { params: { slug: string } }) {
             datePublised: post?.metadata.date,
             dateModified: post?.metadata.date,
             description: post?.metadata.summary,
-            url: `https://sunub.vercel.app/algorithms/${post?.metadata.slug}`,
-            author: {
-              "@type": "Person",
-              name: "sun_ub",
-            },
           }),
         }}
       />
