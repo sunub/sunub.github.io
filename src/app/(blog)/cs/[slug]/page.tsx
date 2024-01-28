@@ -25,18 +25,6 @@ export async function generateMetadata({
   };
 }
 
-// async function getBlogPostBySlug(slug: string) {
-//   const blog = new Blog();
-//   const categorizedPost = blog.getPostByslug(slug);
-
-//   if (categorizedPost === undefined) return notFound();
-//   const post = categorizedPost.find(({ metadata }) => metadata.slug === slug);
-
-//   return {
-//     postcontent: post,
-//   };
-// }
-
 function BlogPostSlugPage({ params }: { params: { slug: string } }) {
   const blog = new Blog();
   const post = blog.getPostByslug(params.slug);

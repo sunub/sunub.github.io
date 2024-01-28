@@ -3,13 +3,6 @@ import { sql } from "@vercel/postgres";
 
 dotenv.config();
 
-console.log(
-  await sql`
-  SELECT source, destination, permanent
-  FROM redirects;
-`,
-);
-
 // (async () => {
 //   const redirectsTable = await sql`
 //     SELECT * FROM redirects;
@@ -59,5 +52,22 @@ console.log(
 //       console.log("Views의 데이터베이스 테이블 생성에 실패했습니다.");
 //       console.error(error);
 //     }
+//   }
+// })();
+
+// (async () => {
+//   try {
+//     await sql`
+//       CREATE TABLE IF NOT EXISTS blog (
+//         id SERIAL PRIMARY KEY,
+//         metdata JSONB NOT NULL,
+//         slug VARCHAR(255) NOT NULL,
+//         content TEXT NOT NULL
+//       );
+//     `;
+//     console.log("Blog의 데이터베이스 테이블이 성공적으로 생성되었습니다.");
+//   } catch (error) {
+//     console.log("Blog의 데이터베이스 테이블 생성에 실패했습니다.");
+//     console.error(error);
 //   }
 // })();

@@ -2,6 +2,8 @@ import Blog from "@/db/blog";
 import { Categories, FrontMatter } from "type";
 import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
+import { unstable_noStore as noStore } from "next/cache";
+import { Suspense } from "react";
 
 export async function generateMetadata({
   params,
@@ -25,21 +27,47 @@ export async function generateMetadata({
   };
 }
 
-// async function getBlogPostBySlug(slug: string) {
-//   const blog = new Blog();
-//   const categorizedPost = blog.getPostByslug(slug);
+function formatDate(date: string) {
+  noStore();
+  let currentDate = new Date();
+  if (!date.includes("T")) {
+    date = `${date}T00:00:00`;
+  }
+  let targetDate = new Date(date);
 
-//   if (categorizedPost === undefined) return notFound();
-//   const post = categorizedPost.find(({ metadata }) => metadata.slug === slug);
+  let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  let monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  let daysAgo = currentDate.getDate() - targetDate.getDate();
 
-//   return {
-//     postcontent: post,
-//   };
-// }
+  let formattedDate = "";
+
+  if (yearsAgo > 0) {
+    formattedDate = `${yearsAgo}y ago`;
+  } else if (monthsAgo > 0) {
+    formattedDate = `${monthsAgo}mo ago`;
+  } else if (daysAgo > 0) {
+    formattedDate = `${daysAgo}d ago`;
+  } else {
+    formattedDate = "Today";
+  }
+
+  let fullDate = targetDate.toLocaleString("en-us", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  return `${fullDate} (${formattedDate})`;
+}
 
 function BlogPostSlugPage({ params }: { params: { slug: string } }) {
   const blog = new Blog();
   const post = blog.getPostByslug(params.slug);
+  const metadata = post?.metadata as FrontMatter;
+
+  if (!post) {
+    notFound();
+  }
 
   return (
     <main>
@@ -57,7 +85,15 @@ function BlogPostSlugPage({ params }: { params: { slug: string } }) {
           }),
         }}
       />
-      <PostContent postcontent={post} />
+      <div>
+        <h1>{metadata.title}</h1>
+        <Suspense fallback={<div>Loading...</div>}>
+          <p>{formatDate(metadata.date)}</p>
+        </Suspense>
+      </div>
+      <article>
+        <PostContent source={post.content} />
+      </article>
     </main>
   );
 }
