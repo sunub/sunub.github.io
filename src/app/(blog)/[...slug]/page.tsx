@@ -77,13 +77,24 @@ export async function generateStaticParams() {
 
 async function getBlogPostData(params: { slug: string[] }) {
   const [_, slug] = params.slug;
-  const post = Blog.getPostByslug(slug);
-  const content = post.content;
-  const metadata = post.metadata;
-  return {
-    content,
-    metadata,
-  };
+  const docRef = doc(db, "posts", slug);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) {
+    return {
+      content: "",
+      metadata: undefined,
+    };
+  }
+
+  return docSnap.data();
+  // const post = Blog.getPostByslug(slug);
+  // const content = post.content;
+  // const metadata = post.metadata;
+  // return {
+  //   content,
+  //   metadata,
+  // };
 }
 
 async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
