@@ -7,8 +7,8 @@ import PostContentImage from "./PostContentImage";
 import List from "./List";
 import ListItem from "./ListItem";
 
-function PostContent({ source }) {
-  return <MDXRemote {...props} />;
+function PostContent({ source, ...props }) {
+  return <MDXRemote source={source} {...props} />;
 }
 
 export default PostContent;

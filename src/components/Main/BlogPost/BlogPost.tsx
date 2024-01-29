@@ -13,15 +13,8 @@ const ICONS_BY_VARIANT: { [key: string]: JSX.Element } = {
   cs: Icons.CS,
 };
 
-async function getFrontMatterList() {
-  const blog = new Blog();
-  const posts = blog.allPosts;
-  const metatdatas = posts.map(({ metadata }) => metadata);
-  return metatdatas;
-}
-
-async function BlogPost() {
-  const metadatas = await getFrontMatterList();
+function BlogPost() {
+  const metadatas = Blog.getMetadata();
   const recentlyPublished = metadatas.slice(0, 15);
 
   return (
