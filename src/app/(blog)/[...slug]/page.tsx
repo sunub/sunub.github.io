@@ -89,15 +89,15 @@ async function getBlogPostData(params: { slug: string[] }) {
 }
 
 async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
-  const { content, metadata } = (await getBlogPostData(params)) as DocData;
+  // const { content, metadata } = (await getBlogPostData(params)) as DocData;
 
-  if (!content || !metadata) {
-    notFound();
-  }
+  // if (!content || !metadata) {
+  //   notFound();
+  // }
 
   return (
     <main>
-      <script
+      {/* <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
@@ -119,7 +119,7 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
       </div>
       <article>
         <PostContent source={content} />
-      </article>
+      </article> */}
     </main>
   );
 }
