@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import "./env.mjs";
 import {
   getFirestore,
+  initializeFirestore,
   doc,
   setDoc,
   addDoc,
@@ -23,6 +24,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = initializeFirestore(app, { useFetchStreams: false });
 
 export default db;
