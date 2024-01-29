@@ -94,37 +94,32 @@ function getMDXData(dir: string) {
 }
 
 function getBlogPost(): MDXFile[] {
-  return getMDXData(path.join(process.cwd(), "posts")) as MDXFile[];
+  const blogpost = getMDXData(path.join(process.cwd(), "posts")) as MDXFile[];
+  return blogpost.sort((a, b) => {
+    return (
+      new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
+    );
+  });
 }
 
 class Blog {
-  posts: MDXFile[];
+  static posts = getBlogPost();
 
-  constructor() {
-    this.posts = this.sortByDate();
+  static getMetadata() {
+    const metadata = Blog.posts.map((post) => post.metadata);
+    return [...metadata];
   }
 
-  sortByDate() {
-    const posts = getBlogPost();
-    const sortedPosts = posts.sort((a, b) => {
-      return (
-        new Date(b.metadata.date).getTime() -
-        new Date(a.metadata.date).getTime()
-      );
-    });
-    return sortedPosts;
+  static findByCategory(category: string) {
+    const postsByCategory = Blog.posts.filter(
+      (post) => post.category === category,
+    );
+    return [...postsByCategory];
   }
 
-  findCategory(category: string) {
-    return this.posts.filter((post) => post.category === category);
-  }
-
-  get allPosts() {
-    return [...this.posts.values()];
-  }
-
-  getPostByslug(slug: string) {
-    return this.posts.find((post) => post.slug === slug);
+  static getPostByslug(slug: string) {
+    const postsBySlug = Blog.posts.find((posts) => posts.slug === slug);
+    return Object.assign({}, postsBySlug);
   }
 }
 
