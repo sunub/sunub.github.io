@@ -148,7 +148,6 @@ export default async function RootLayout({
             <div id="__next">
               <div id="blog-main__header-wrapper">
                 <Header />
-                <HeroImage />
                 <Wave />
               </div>
               <div className="blog-main__landing-page">{children}</div>
