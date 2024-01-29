@@ -10,7 +10,6 @@ function Main() {
 
   return (
     <Styled.Wrapper>
-      <NewestPost />
       <Styled.RightSideWrapper>
         <Categories categories={categories} />
         {/* <Tags tags={mostMetionedTags} /> */}
