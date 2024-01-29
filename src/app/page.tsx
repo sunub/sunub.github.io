@@ -1,17 +1,31 @@
-import HeroImage from "@/components/HeroImage";
-import Footer from "@/components/Footer";
-import HeaderContents from "@/components/HeaderContents";
-import Main from "@/components/Main";
-import Client from "@/components/client";
 import React from "react";
+import Blog from "@/db/blog";
+import * as Styled from "@/components/Main/Main.style";
+import NewestPost from "@/components/Main/NewestPost";
+import Categories from "@/components/Main/Cateogries/Categories";
 
-export const dynamic = "force-dynamic";
+async function getRecentlyPublished() {
+  const categories = ["cs", "web", "code", "algorithm"];
+  const recentlyPublished = Blog.getMetadata().slice(0, 15);
+  return {
+    categories,
+    recentlyPublished,
+  };
+}
 
-function Page() {
+async function Page() {
+  const { categories, recentlyPublished } = await getRecentlyPublished();
+
   return (
     <React.Fragment>
       <div id="side-ng__main-content">
-        <Main />
+        <Styled.Wrapper>
+          <NewestPost recentlyPublished={recentlyPublished} />
+          <Styled.RightSideWrapper>
+            <Categories categories={categories} />
+            {/* <Tags tags={mostMetionedTags} /> */}
+          </Styled.RightSideWrapper>
+        </Styled.Wrapper>
       </div>
     </React.Fragment>
   );

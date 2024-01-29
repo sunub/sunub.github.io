@@ -2,7 +2,6 @@ import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import * as Icons from "./Icons/index";
 import Link from "next/link";
-import Blog from "@/db/blog";
 
 type PublishedPost = FrontMatter;
 
@@ -13,10 +12,11 @@ const ICONS_BY_VARIANT: { [key: string]: JSX.Element } = {
   cs: Icons.CS,
 };
 
-function BlogPost() {
-  const metadatas = Blog.getMetadata();
-  const recentlyPublished = metadatas.slice(0, 15);
-
+function BlogPost({
+  recentlyPublished,
+}: {
+  recentlyPublished: PublishedPost[];
+}) {
   return (
     <Styled.Wrapper>
       {recentlyPublished &&

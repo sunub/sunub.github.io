@@ -6,7 +6,6 @@ import Tags from "./Tags/Tags";
 import Blog from "@/db/blog";
 
 function Main() {
-  // const mostMetionedTags = [...tags.keys()].slice(0, 6);
   const categories = ["web", "algorithm", "code", "cs"];
 
   return (

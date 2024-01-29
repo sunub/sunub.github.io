@@ -10,6 +10,7 @@ import Header from "@/components/Header";
 import Wave from "@/components/HeaderContents/Wave";
 import Footer from "@/components/Footer";
 import HeroImage from "@/components/HeroImage";
+import Blog from "@/db/blog";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -138,7 +139,6 @@ export default function RootLayout({
             <div id="__next">
               <div id="blog-main__header-wrapper">
                 <Header />
-                <HeroImage />
                 <Wave />
               </div>
               <div className="blog-main__landing-page">{children}</div>
