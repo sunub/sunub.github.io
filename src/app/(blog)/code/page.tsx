@@ -7,8 +7,7 @@ export const metadata = {
 };
 
 function CodePage() {
-  const blog = new Blog();
-  const allBlogs = blog.findCategory("code");
+  const allBlogs = Blog.findByCategory("code");
 
   return (
     <section>

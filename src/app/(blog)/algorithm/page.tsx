@@ -7,8 +7,7 @@ export const metadata = {
 };
 
 function AlgorithmPage() {
-  const blog = new Blog();
-  const allBlogs = blog.findCategory("algorithm");
+  const allBlogs = Blog.findByCategory("algorithm");
 
   return (
     <section>

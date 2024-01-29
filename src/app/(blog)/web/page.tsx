@@ -10,8 +10,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 function WebKnowledgePage() {
-  const blog = new Blog();
-  const allBlogs = blog.findCategory("web");
+  const allBlogs = Blog.findByCategory("web");
 
   return (
     <section>

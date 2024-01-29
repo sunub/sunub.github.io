@@ -4,20 +4,35 @@ import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
 import { Suspense } from "react";
+import db from "@/db/firebase.mjs";
+import { doc, getDoc } from "firebase/firestore";
+
+type DocData = {
+  content: string;
+  metadata: FrontMatter;
+};
+
+export async function generateStaticParams() {
+  const metadata = Blog.getMetadata();
+  return metadata.map((frontmatter) => ({
+    slug: [frontmatter.category.toLowerCase() as Categories, frontmatter.slug],
+    fallback: false,
+  }));
+}
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: { slug: string[] };
 }): Promise<Partial<FrontMatter> | undefined> {
-  const blog = new Blog();
-  const post = blog.getPostByslug(params.slug);
+  const [category, slug] = params.slug;
+  const post = Blog.getPostByslug(slug);
 
   if (!post) {
     return;
   }
 
-  let { title, summary, date, category } = post.metadata;
+  let { title, summary, date } = post.metadata;
 
   return {
     title,
@@ -60,12 +75,23 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-function BlogPostSlugPage({ params }: { params: { slug: string } }) {
-  const blog = new Blog();
-  const post = blog.getPostByslug(params.slug);
-  const metadata = post?.metadata as FrontMatter;
+async function getBlogPostData(params: { slug: string[] }) {
+  const [category, slug] = params.slug;
+  const post = Blog.getPostByslug(slug);
 
-  if (!post) {
+  const docRef = doc(db, "posts", `${slug}`);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data();
+  }
+  return null;
+}
+
+async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
+  const { content, metadata } = (await getBlogPostData(params)) as DocData;
+
+  if (!content || !metadata) {
     notFound();
   }
 
@@ -78,10 +104,10 @@ function BlogPostSlugPage({ params }: { params: { slug: string } }) {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            headline: post?.metadata.title,
-            datePublised: post?.metadata.date,
-            dateModified: post?.metadata.date,
-            description: post?.metadata.summary,
+            headline: metadata.title,
+            datePublised: metadata.date,
+            dateModified: metadata.date,
+            description: metadata.summary,
           }),
         }}
       />
@@ -92,7 +118,7 @@ function BlogPostSlugPage({ params }: { params: { slug: string } }) {
         </Suspense>
       </div>
       <article>
-        <PostContent source={post.content} />
+        <PostContent source={content} />
       </article>
     </main>
   );
