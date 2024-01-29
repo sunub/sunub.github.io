@@ -12,14 +12,6 @@ type DocData = {
   metadata: FrontMatter;
 };
 
-export async function generateStaticParams() {
-  const metadata = Blog.getMetadata();
-  return metadata.map((frontmatter) => ({
-    slug: [frontmatter.category.toLowerCase() as Categories, frontmatter.slug],
-    fallback: false,
-  }));
-}
-
 export async function generateMetadata({
   params,
 }: {
@@ -75,9 +67,16 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
+export async function generateStaticParams() {
+  const metadata = Blog.getMetadata();
+  return metadata.map((frontmatter) => ({
+    slug: [frontmatter.category.toLowerCase() as Categories, frontmatter.slug],
+    fallback: false,
+  }));
+}
+
 async function getBlogPostData(params: { slug: string[] }) {
   const [category, slug] = params.slug;
-  const post = Blog.getPostByslug(slug);
 
   const docRef = doc(db, "posts", `${slug}`);
   const docSnap = await getDoc(docRef);
@@ -89,15 +88,15 @@ async function getBlogPostData(params: { slug: string[] }) {
 }
 
 async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
-  // const { content, metadata } = (await getBlogPostData(params)) as DocData;
+  const { content, metadata } = (await getBlogPostData(params)) as DocData;
 
-  // if (!content || !metadata) {
-  //   notFound();
-  // }
+  if (!content || !metadata) {
+    notFound();
+  }
 
   return (
     <main>
-      {/* <script
+      <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
@@ -119,7 +118,7 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
       </div>
       <article>
         <PostContent source={content} />
-      </article> */}
+      </article>
     </main>
   );
 }
