@@ -4,6 +4,25 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div``;
 
+export const TitleDot = styled.span`
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: calc(-1rem - 8px);
+  top: calc(1rem - 5px);
+  background: var(--color-text);
+  width: 2px;
+  height: 16px;
+  border-radius: 4px;
+
+  transition: all 250ms cubic-bezier(0.19, -0.49, 0.64, 1.48);
+`;
+
+export const Title = styled.span`
+  font-size: 1.5rem;
+  font-weight: 600;
+`;
+
 export const BlogPostTitle = styled.div`
   position: relative;
   display: flex;
@@ -40,11 +59,10 @@ export const BlogTag = styled.span`
 
 export const UnderLineWaveSVG = styled.svg`
   position: absolute;
-  top: 93%;
-  left: 7%;
+  top: 100%;
   transform: rotate(-1deg);
-  stroke: var(--color-highlight);
-  stroke-width: 4;
+  stroke: var(--color-text);
+  stroke-width: 2.5;
   stroke-linecap: round;
 `;
 
@@ -58,7 +76,7 @@ export const BlogPostWrapper = styled.article`
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  transition: transform 200ms cubic-bezier(0.5, 1.25, 0.75, 1.25);
+  transition: transform 250ms cubic-bezier(0.5, 1.25, 0.75, 1.25);
 
   &:not(:first-of-type) {
     padding-top: 64px;
@@ -70,7 +88,20 @@ export const BlogPostWrapper = styled.article`
     ${UnderLineWavePath} {
       stroke-dashoffset: 0;
       transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
-      transition-duration: 300ms;
+      transition-duration: 200ms;
+      stroke: var(--color-highlight);
+    }
+
+    ${TitleDot} {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      left: calc(-1rem - 12px);
+      top: calc(1rem - 5px);
+      background: var(--color-highlight);
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
     }
   }
 `;
