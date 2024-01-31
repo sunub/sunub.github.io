@@ -6,10 +6,11 @@ import { Github, Mail } from "./Icons/Icons";
 import Link from "next/link";
 
 const Container = styled.footer`
-  grid-area: main-content;
-
   display: flex;
   flex-direction: row;
+
+  background: var(--color-frontWave);
+  transition: background 350ms ease 0s;
 
   align-items: flex-end;
   justify-content: flex-end;
@@ -17,7 +18,7 @@ const Container = styled.footer`
   padding-left: 32px;
   padding-right: 32px;
 
-  margin-top: 64px;
+  padding-top: 64px;
 `;
 
 const Wrapper = styled.div`

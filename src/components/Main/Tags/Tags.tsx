@@ -1,4 +1,4 @@
-import { FeatherIcon } from "../Main";
+import { FeatherIcon } from "../NewestPost";
 import * as Styled from "./Tags.style";
 
 function Tags({ tags }: { tags: string[] }) {

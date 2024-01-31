@@ -2,8 +2,6 @@
 
 import styled from "styled-components";
 
-export const Wrapper = styled.div``;
-
 export const TitleDot = styled.span`
   content: "";
   display: inline-block;
@@ -42,7 +40,7 @@ export const BlogPostContent = styled.p`
 export const BlogTagsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 8px;
   gap: 8px;
 `;
 

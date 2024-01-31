@@ -3,6 +3,21 @@
 import styled from "styled-components";
 
 export const RootWrapper = styled.div`
+  /* background: var(--color-header);
+  transition: background 350ms ease 0s; */
+`;
+
+export const DemoWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 812px;
+  background: var(--color-landscape);
+  z-index: -1;
+`;
+
+export const HeaderWrapper = styled.div`
   width: 100%;
   height: 60px;
   max-width: 1100px;

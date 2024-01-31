@@ -6,9 +6,10 @@ import Navigation from "./Navigation";
 
 function Header() {
   return (
-    <>
+    <Styled.RootWrapper>
+      <Styled.DemoWrapper />
       <Spacer size={60} axis={"vertical"} />
-      <Styled.RootWrapper>
+      <Styled.HeaderWrapper>
         <Styled.Header>
           <Styled.LogoAndNavWrapper>
             <Logo />
@@ -18,8 +19,8 @@ function Header() {
             <ThemeToggler maskId="desktop-header-theme-toggler" />
           </Styled.ThemeWrapper>
         </Styled.Header>
-      </Styled.RootWrapper>
-    </>
+      </Styled.HeaderWrapper>
+    </Styled.RootWrapper>
   );
 }
 

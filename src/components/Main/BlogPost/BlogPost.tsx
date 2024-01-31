@@ -10,7 +10,7 @@ function BlogPost({
   recentlyPublished: PublishedPost[];
 }) {
   return (
-    <Styled.Wrapper>
+    <div>
       {recentlyPublished &&
         recentlyPublished.map((frontmatter) => {
           const { slug, title, summary, tags } = frontmatter;
@@ -31,7 +31,7 @@ function BlogPost({
             </Styled.BlogPostWrapper>
           );
         })}
-    </Styled.Wrapper>
+    </div>
   );
 }
 

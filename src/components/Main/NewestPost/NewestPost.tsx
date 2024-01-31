@@ -20,7 +20,7 @@ function NewestPost({
   );
 }
 
-function FeatherIcon() {
+export function FeatherIcon() {
   return (
     <svg
       width="24"

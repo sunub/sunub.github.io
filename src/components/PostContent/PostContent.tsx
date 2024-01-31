@@ -6,16 +6,15 @@ import Blockquote from "../MdxStyling/Blockquote";
 import PostContentImage from "./PostContentImage";
 import List from "./List";
 import ListItem from "./ListItem";
+import * as Styled from "./PostContent.style";
 
-function CustomLink() {}
-
-function slugify(str) {
+function slugify(str: string) {
   return str.toString().trim().replace(/\ /g, "-");
 }
 
-function LinkSVG() {
+function LinkIcon() {
   return (
-    <svg
+    <Styled.LinkSVG
       width="24"
       height="24"
       viewBox="0 0 24 24"
@@ -36,35 +35,35 @@ function LinkSVG() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
+    </Styled.LinkSVG>
   );
 }
 
-function createHeading(level) {
-  return ({ children }) => {
+function createHeading(level: number) {
+  return ({ children }: { children: string }) => {
     let slug = slugify(children);
     return React.createElement(`h${level}`, { id: slug }, [
-      React.createElement(LinkSVG, { key: `link-svg__${slug}` }),
       React.createElement(
-        "a",
+        Styled.LinkAnchor,
         {
           href: `#${slug}`,
           key: `${slug}`,
         },
-        children,
+        [React.createElement(LinkIcon, { key: `${slug}-icon` }), children],
       ),
     ]);
   };
 }
 
-let components = {
+let components: any = {
   h1: createHeading(1),
   h2: createHeading(2),
   h3: createHeading(3),
   h4: createHeading(4),
+  pre: CodeSnippet,
 };
 
-function PostContent({ ...props }) {
+function PostContent(props: any) {
   return <MDXRemote components={{ ...components }} {...props} />;
 }
 
