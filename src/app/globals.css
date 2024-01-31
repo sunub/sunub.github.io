@@ -7,6 +7,11 @@ body {
   height: 100%;
 }
 
+#__next {
+  isolation: isolate;
+  container: root / inline-size;
+}
+
 li {
   list-style: none;
 }
@@ -134,13 +139,13 @@ strong {
   overflow-wrap: break-word;
 }
 
-#blog-main__header-wrapper {
+#blog-main__header-content-wrapper {
   width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
   transition: background 350ms ease 0s;
-  background: var(--color-landscape);
+  /* background: var(--color-landscape); */
 }
 
 .blog-main__landing-page {
@@ -166,6 +171,7 @@ strong {
 .blog-main__landing-page-link:hover {
   transform: scale(1.25) translateX(-2px) translateZ(16px);
 }
+
 @media (orientation: landscape) {
   ::-webkit-scrollbar {
     width: var(--scrollbar-width, 12px);

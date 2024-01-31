@@ -118,7 +118,7 @@ export default async function RootLayout({
 
             * {
             margin: 0px;
-            line-height: calc(1em + 0.8rem);
+            line-height: calc(1em + .9rem);
             -webkit-font-smoothing: antialiased;
           }
           *,
@@ -134,10 +134,6 @@ export default async function RootLayout({
           background: var(--color-background);
         }
 
-        #__next {
-          isolation: isolate;
-        }
-
             `}
         </style>
         <InitTheme />
@@ -148,8 +144,6 @@ export default async function RootLayout({
             <div id="__next">
               <div id="blog-main__header-wrapper">
                 <Header />
-                <HeroImage />
-                <Wave />
               </div>
               <div className="blog-main__landing-page">{children}</div>
               <Footer />

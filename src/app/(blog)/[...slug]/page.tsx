@@ -3,9 +3,11 @@ import { Categories, FrontMatter } from "type";
 import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
-import { Suspense } from "react";
+import React, { Suspense } from "react";
 import db from "@/db/firebase.mjs";
 import { doc, getDoc } from "firebase/firestore";
+import * as Styled from "./page.style";
+import Wave from "@/components/HeaderContents/Wave";
 
 type DocData = {
   content: string;
@@ -94,31 +96,34 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
   }
 
   return (
-    <main>
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: metadata.title,
-            datePublised: metadata.date,
-            dateModified: metadata.date,
-            description: metadata.summary,
-          }),
-        }}
-      />
-      <div>
-        <h1>{metadata.title}</h1>
-        <Suspense fallback={<div>Loading...</div>}>
-          <p>{formatDate(metadata.date)}</p>
-        </Suspense>
-      </div>
-      <article>
-        <PostContent source={content} />
-      </article>
-    </main>
+    <React.Fragment>
+      <Wave />
+      <Styled.Main>
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BlogPosting",
+              headline: metadata.title,
+              datePublised: metadata.date,
+              dateModified: metadata.date,
+              description: metadata.summary,
+            }),
+          }}
+        />
+        <Styled.Header>
+          <h1>{metadata.title}</h1>
+          <Suspense fallback={<div>Loading...</div>}>
+            <p>{formatDate(metadata.date)}</p>
+          </Suspense>
+        </Styled.Header>
+        <Styled.Article>
+          <PostContent source={content} />
+        </Styled.Article>
+      </Styled.Main>
+    </React.Fragment>
   );
 }
 
