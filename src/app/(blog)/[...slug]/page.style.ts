@@ -11,10 +11,10 @@ export const Header = styled.div`
   flex-direction: column;
   justify-items: center;
   align-items: center;
-  width: 50cqw;
+  width: 100%;
 
   text-align: center;
-  word-break: keep-all;
+  word-break: break-all;
 
   padding-top: 5rem;
   padding-bottom: 5rem;
@@ -26,12 +26,11 @@ export const Header = styled.div`
     font-weight: 700;
     line-height: 1.5;
     margin-bottom: 2rem;
+    text-wrap: pretty;
   }
 `;
 
 export const Article = styled.article`
-  margin-left: auto;
-  margin-right: auto;
   max-width: 800px;
 
   line-height: calc(1.5rem + 0.8rem);

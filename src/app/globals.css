@@ -172,6 +172,25 @@ strong {
   transform: scale(1.25) translateX(-2px) translateZ(16px);
 }
 
+@container root (width <= 768px) {
+  #blog-post__article {
+    margin-left: 10cqw;
+    margin-right: 10cqw;
+  }
+
+  #blog-post__header {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+@container root (width > 768px) {
+  #blog-post__article {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 @media (orientation: landscape) {
   ::-webkit-scrollbar {
     width: var(--scrollbar-width, 12px);

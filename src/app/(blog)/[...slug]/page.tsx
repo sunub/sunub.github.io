@@ -113,13 +113,13 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
             }),
           }}
         />
-        <Styled.Header>
+        <Styled.Header id="blog-post__header">
           <h1>{metadata.title}</h1>
           <Suspense fallback={<div>Loading...</div>}>
             <p>{formatDate(metadata.date)}</p>
           </Suspense>
         </Styled.Header>
-        <Styled.Article>
+        <Styled.Article id="blog-post__article">
           <PostContent source={content} />
         </Styled.Article>
       </Styled.Main>
