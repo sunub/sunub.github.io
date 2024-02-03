@@ -24,7 +24,7 @@ async function Page() {
         <HeroImage />
         <Wave />
       </Styled.HeaderContentsWrapper>
-      <div id="side-ng__main-content">
+      <div id="blog-main__recently-post-list">
         <Styled.MainWrapper>
           <NewestPost recentlyPublished={recentlyPublished} />
           <Styled.RightSideWrapper>
