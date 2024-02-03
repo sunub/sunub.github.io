@@ -3,14 +3,6 @@
 import Link from "next/link";
 import styled from "styled-components";
 
-export const RootWrapper = styled.div`
-  display: none;
-
-  @media screen and (max-width: 768px) {
-    display: block;
-  }
-`;
-
 export const NavigationWrapper = styled.nav`
   position: absolute;
   top: 0;

@@ -1,36 +1,26 @@
-"use client";
-
 import useToggle from "@/hooks/use-toggle";
 import React from "react";
 import { Category, Theme } from "type";
-import Hamburger from "../Hamburger";
 import NavigationList from "./NavigationList";
 import * as Styled from "./Navigation.style";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
-import { ThemeContext } from "@/components/Theme/ThemeProvider";
 
 interface NavigationProps {
-  categories: Category[];
+  toggleOpen: () => void;
 }
 
 function Navigation(props: NavigationProps) {
-  const [isOpen, toggleOpen] = useToggle(false);
-
+  const { toggleOpen } = props;
   return (
-    <Styled.RootWrapper>
-      <Hamburger isOpen={isOpen} toggleOpen={toggleOpen} />
-      {isOpen && (
-        <FocusLock>
-          <RemoveScroll>
-            <Styled.NavigationWrapper>
-              <NavigationList toggleOpen={toggleOpen} />
-            </Styled.NavigationWrapper>
-            <Styled.Backdrop onClick={toggleOpen} />
-          </RemoveScroll>
-        </FocusLock>
-      )}
-    </Styled.RootWrapper>
+    <FocusLock>
+      <RemoveScroll>
+        <Styled.NavigationWrapper>
+          <NavigationList toggleOpen={toggleOpen} />
+        </Styled.NavigationWrapper>
+        <Styled.Backdrop onClick={toggleOpen} />
+      </RemoveScroll>
+    </FocusLock>
   );
 }
 

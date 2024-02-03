@@ -4,18 +4,18 @@ import React from "react";
 import * as Styled from "./Hamburger.style";
 
 interface HamburgerProps {
-  isOpen: boolean;
-  toggleOpen: () => void;
+  isButtonClick: boolean;
+  toggleButtonClick: () => void;
 }
 
 function Hamburger(props: HamburgerProps) {
-  const { isOpen, toggleOpen } = props;
+  const { isButtonClick, toggleButtonClick } = props;
 
   return (
     <Styled.Btn
       id="hamburger-btn"
-      aria-label={isOpen ? "Close menu" : "Open menu"}
-      onClick={toggleOpen}
+      aria-label={isButtonClick ? "Close menu" : "Open menu"}
+      onClick={toggleButtonClick}
     >
       <Icon />
     </Styled.Btn>
