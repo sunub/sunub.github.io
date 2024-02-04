@@ -7,7 +7,6 @@ function DarkMode() {
   return (
     <Styled.Picture>
       <Styled.DarkHeroImage
-        loading="lazy"
         src={baseImage}
         width={1600}
         height={546}
@@ -17,10 +16,9 @@ function DarkMode() {
         }}
       />
       <Styled.DarkHeroImage
+        src={bridge}
         width={1600}
         height={546}
-        loading="lazy"
-        src={bridge}
         alt={"메인 히어로 이미지중 메인"}
         $mirrored={true}
       />

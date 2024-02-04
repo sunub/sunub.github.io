@@ -48,6 +48,10 @@ const ContentSecurityPolicy = `
     connect-src *;
     font-src 'self' data:;
 `;
+// {
+//   key: "Content-Security-Policy",
+//   value: ContentSecurityPolicy.replace(/\n/g, ""),
+// },
 
 const securityHeaders = [
   {

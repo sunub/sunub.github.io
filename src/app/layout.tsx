@@ -130,7 +130,7 @@ export default async function RootLayout({
         body {
           font-family: Bariol_serif, Wotfard, NanumSquareNeo, sans-serif;
           color: var(--color-text);
-          min-height: 100vh;
+          min-height: 100%;
           background: var(--color-background);
         }
 
@@ -148,7 +148,6 @@ export default async function RootLayout({
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
             </div>
-            <Analytics />
             <MobileNav />
           </ThemeProvider>
         </StyledComponentsRegistry>

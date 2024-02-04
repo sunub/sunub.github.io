@@ -33,6 +33,7 @@ export const HeroImageWrapper = styled.div`
 export const DarkHeroImage = styled(Image).attrs({
   quality: 70,
   sizes: "100vw",
+  priority: true,
 })<{ $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;
@@ -48,6 +49,7 @@ export const DarkHeroImage = styled(Image).attrs({
 export const LightHeroImage = styled(Image).attrs({
   quality: 70,
   sizes: "100vw",
+  priority: true,
 })<{ $mirrored?: boolean }>`
   pointer-events: none;
   grid-area: hero-image;

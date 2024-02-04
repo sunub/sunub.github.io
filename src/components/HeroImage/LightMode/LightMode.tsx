@@ -10,7 +10,6 @@ function LightMode() {
       <Styled.Picture>
         <Styled.LightHeroImage
           src={baseImage}
-          priority
           alt={"메인 히어로 이미지중 메인"}
           style={{
             zIndex: 2,
@@ -18,7 +17,6 @@ function LightMode() {
         />
         <Styled.LightHeroImage
           src={bridge}
-          priority
           alt={"메인 히어로 이미지중 물에 비친 다리"}
           $mirrored={true}
           style={{

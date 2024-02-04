@@ -200,6 +200,12 @@ strong {
   }
 }
 
+@container root (width > 768px) {
+  #moblie-nav-portal {
+    display: none;
+  }
+}
+
 @media (orientation: landscape) {
   ::-webkit-scrollbar {
     width: var(--scrollbar-width, 12px);
