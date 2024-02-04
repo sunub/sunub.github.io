@@ -1,20 +1,26 @@
 import ThemeToggler from "@/components/Theme/Toggler/ThemeToggler";
 import { Category, Theme } from "type";
-import * as Styled from "../Navigation.style";
+import * as Styled from "./NavigationList.style";
 import Spacer from "@/components/Spacer";
+import { getMoblieCloseAnimationTimeline } from "../MoblieNav.helper";
+import { RefObjects } from "../MobileNav";
 
 const CATEGORIES = ["algorithm", "code", "cs", "web"];
 
 interface NavigationListProps {
-  toggleOpen: () => void;
+  isOpen: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  refObjects: RefObjects;
 }
 
 function NavigationList(props: NavigationListProps) {
-  const { toggleOpen } = props;
+  const { isOpen, setOpen, refObjects } = props;
+  const closeTimeline = getMoblieCloseAnimationTimeline(refObjects, setOpen);
+
   return (
-    <Styled.Wrapper>
+    <Styled.Wrapper $isOpen={isOpen}>
       <Styled.ListWrapper>
-        <Item name="latest" onClick={toggleOpen} />
+        <Item name="latest" onClick={() => closeTimeline.play()} />
         <Styled.List>
           posts
           <Styled.ListWrapper>
@@ -23,12 +29,12 @@ function NavigationList(props: NavigationListProps) {
               <Item
                 name={category}
                 key={`${category}-page`}
-                onClick={toggleOpen}
+                onClick={() => closeTimeline.play()}
               />
             ))}
           </Styled.ListWrapper>
         </Styled.List>
-        <Item name="about" onClick={toggleOpen} />
+        <Item name="about" onClick={() => closeTimeline.play()} />
       </Styled.ListWrapper>
 
       <Styled.ThemeWrapper>

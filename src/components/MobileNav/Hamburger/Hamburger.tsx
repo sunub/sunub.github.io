@@ -2,20 +2,49 @@
 
 import React from "react";
 import * as Styled from "./Hamburger.style";
+import {
+  getMoblieOpenAnimationTimeline,
+  getMoblieCloseAnimationTimeline,
+} from "../MoblieNav.helper";
+import useToggle from "@/hooks/use-toggle";
+
+interface RefObjects {
+  pathStartRef: React.RefObject<SVGPathElement>;
+  pathMidRef: React.RefObject<SVGPathElement>;
+  pathEndRef: React.RefObject<SVGPathElement>;
+  gradientRef: React.RefObject<SVGLinearGradientElement>;
+}
 
 interface HamburgerProps {
-  isButtonClick: boolean;
-  toggleButtonClick: () => void;
+  isOpen: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  refObjects: RefObjects;
 }
 
 function Hamburger(props: HamburgerProps) {
-  const { isButtonClick, toggleButtonClick } = props;
+  const { isOpen, setOpen } = props;
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef } =
+    props.refObjects;
 
   return (
     <Styled.Btn
       id="hamburger-btn"
-      aria-label={isButtonClick ? "Close menu" : "Open menu"}
-      onClick={toggleButtonClick}
+      aria-label={isOpen ? "Close menu" : "Open menu"}
+      onClick={() => {
+        const openTimeline = getMoblieOpenAnimationTimeline(
+          props.refObjects,
+          setOpen,
+        );
+        const closeTimeline = getMoblieCloseAnimationTimeline(
+          props.refObjects,
+          setOpen,
+        );
+        if (isOpen) {
+          closeTimeline.play();
+        } else {
+          openTimeline.play();
+        }
+      }}
     >
       <Icon />
     </Styled.Btn>

@@ -12,6 +12,8 @@ export const RootWrapper = styled.div`
 
 export const UnfilledSVG = styled.svg`
   position: absolute;
+  height: 100%;
   top: 0px;
   left: 0px;
+  transform: translateX(-100%);
 `;
