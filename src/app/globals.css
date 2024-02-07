@@ -176,6 +176,13 @@ strong {
   transform: scale(1.25) translateX(-2px) translateZ(16px);
 }
 
+#moblie-nav__link-wrapper li:nth-child(3),
+#moblie-nav__link-wrapper li:nth-child(4),
+#moblie-nav__link-wrapper li:nth-child(5),
+#moblie-nav__link-wrapper li:nth-child(6) {
+  padding-left: 2rem;
+}
+
 @container root (width <= 768px) {
   #blog-post__article {
     margin-left: 10cqw;

@@ -2,11 +2,11 @@
 import { sql } from "@vercel/postgres";
 
 const nextConfig = {
+  basePath: "",
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
     formats: ["image/avif", "image/webp"],
   },
-  reactStrictMode: false,
   compiler: {
     styledComponents: true,
   },
@@ -42,18 +42,18 @@ const nextConfig = {
 const ContentSecurityPolicy = `
     default-src 'self' vercel.live;
     script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com;
-    style-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src * blob: data:;
     media-src 'none';
     connect-src *;
-    font-src 'self' data:;
+    font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com;;
 `;
-// {
-//   key: "Content-Security-Policy",
-//   value: ContentSecurityPolicy.replace(/\n/g, ""),
-// },
 
 const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: ContentSecurityPolicy.replace(/\n/g, ""),
+  },
   {
     key: "Referrer-Policy",
     value: "origin-when-cross-origin",
