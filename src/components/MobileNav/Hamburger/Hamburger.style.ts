@@ -197,3 +197,20 @@ export const Svg = styled.svg`
     }
   }
 `;
+
+export const FloodSVG = styled.svg`
+  z-index: 1000;
+  position: absolute;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  transform: translateX(-100%);
+`;
+
+export const RootWrapper = styled.div`
+  display: none;
+
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+`;

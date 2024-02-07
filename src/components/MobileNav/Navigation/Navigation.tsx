@@ -23,7 +23,14 @@ interface NavigationProps {
 
 function Navigation(props: NavigationProps) {
   const { isOpen, setOpen, refObjects } = props;
-  const closeTimeline = getMoblieCloseAnimationTimeline(refObjects, setOpen);
+
+  function handleClick() {
+    if (!refObjects.pathStartRef.current) return;
+
+    const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
+    setOpen(!isOpen);
+    closeTimeline.play();
+  }
 
   return (
     <React.Fragment>
@@ -31,22 +38,17 @@ function Navigation(props: NavigationProps) {
         <RemoveScroll>
           <Styled.NavigationWrapper>
             <Styled.Wrapper $isOpen={isOpen}>
-              <Styled.ListWrapper>
-                <Item name="latest" onClick={() => closeTimeline.play()} />
-                <Styled.List>
-                  posts
-                  <Styled.ListWrapper>
-                    <Spacer size={4} axis={"vertical"} />
-                    {CATEGORIES.map((category: string) => (
-                      <Item
-                        name={category}
-                        key={`${category}-page`}
-                        onClick={() => closeTimeline.play()}
-                      />
-                    ))}
-                  </Styled.ListWrapper>
-                </Styled.List>
-                <Item name="about" onClick={() => closeTimeline.play()} />
+              <Styled.ListWrapper id="moblie-nav__link-wrapper">
+                <Item name="latest" onClick={handleClick} />
+                <Item name="posts" onClick={handleClick} />
+                {CATEGORIES.map((category: string) => (
+                  <Item
+                    name={category}
+                    key={`${category}-page`}
+                    onClick={handleClick}
+                  />
+                ))}
+                <Item name="about" onClick={handleClick} />
               </Styled.ListWrapper>
 
               <Styled.ThemeWrapper>
@@ -54,23 +56,16 @@ function Navigation(props: NavigationProps) {
               </Styled.ThemeWrapper>
             </Styled.Wrapper>
           </Styled.NavigationWrapper>
-          <Styled.Backdrop onClick={() => closeTimeline.play()} />
+          <Styled.Backdrop $isOpen={isOpen} onClick={handleClick} />
         </RemoveScroll>
       </FocusLock>
     </React.Fragment>
   );
 }
 
-function Item({
-  name,
-  onClick,
-  ...delegated
-}: {
-  name: string;
-  onClick: () => void;
-}) {
+function Item({ name, onClick }: { name: string; onClick: () => void }) {
   return (
-    <Styled.List {...delegated}>
+    <Styled.List className="mobile-nav__link-items">
       <Styled.Item href={`${name}`} onClick={onClick}>
         {name}
       </Styled.Item>

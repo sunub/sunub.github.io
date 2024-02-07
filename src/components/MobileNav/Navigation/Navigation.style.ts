@@ -20,7 +20,7 @@ export const NavigationWrapper = styled.nav`
   }
 `;
 
-export const Backdrop = styled.button`
+export const Backdrop = styled.button<{ $isOpen: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -28,6 +28,11 @@ export const Backdrop = styled.button`
   width: 100%;
   height: calc(100% + 0px);
   padding-left: 3rem;
+
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
+  user-select: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
+  z-index: ${({ $isOpen }) => ($isOpen ? 999 : -1)};
 
   background: color-mix(in oklch, var(--color-bakcgruond) 30%, transparent);
   backdrop-filter: blur(8px);
@@ -41,11 +46,10 @@ export const Wrapper = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
-  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
-  visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
-
-  transition: all 0.3s ease;
+  transform: ${({ $isOpen }) =>
+    $isOpen ? "translateX(0)" : "translateX(-100%)"};
+  transition: transform ${({ $isOpen }) => ($isOpen ? "600ms" : "100ms")}
+    ease-in-out;
 `;
 
 export const ListWrapper = styled.ul`

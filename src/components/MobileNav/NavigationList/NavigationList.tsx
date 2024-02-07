@@ -55,7 +55,7 @@ function Item({
   onClick: () => void;
 }) {
   return (
-    <Styled.List {...delegated}>
+    <Styled.List className="mobile-nav__link-items" {...delegated}>
       <Styled.Item href={`${name}`} onClick={onClick}>
         {name}
       </Styled.Item>

@@ -6,6 +6,7 @@ interface RefObjects {
   pathMidRef: React.RefObject<SVGPathElement>;
   pathEndRef: React.RefObject<SVGPathElement>;
   gradientRef: React.RefObject<SVGLinearGradientElement>;
+  svgRef: React.RefObject<SVGSVGElement>;
 }
 
 const paths = {
@@ -44,17 +45,15 @@ const paths = {
   },
 };
 
-export const getMoblieOpenAnimationTimeline = (
-  refObjects: RefObjects,
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-) => {
-  const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
+export const getMoblieOpenAnimationTimeline = (refObjects: RefObjects) => {
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+    refObjects;
 
   const filledTimeline = gsap
     .timeline({
       paused: true,
-      onComplete: () => setOpen(() => true),
     })
+    .set(svgRef.current, { transform: "translateX(-100%)" })
     .set(pathStartRef.current, { attr: { d: paths.step1.unfilled } })
     .set(pathMidRef.current, { attr: { d: paths.step2.unfilled } })
     .set(pathEndRef.current, { attr: { d: paths.step3.unfilled } })
@@ -72,13 +71,14 @@ const openInBetweenAnimation = (
   refObjects: RefObjects,
   timeline: GSAPTimeline,
 ) => {
-  const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+    refObjects;
 
   timeline
     .to(
       pathStartRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { d: paths.step1.inBetween },
       },
@@ -87,7 +87,7 @@ const openInBetweenAnimation = (
     .to(
       pathMidRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { d: paths.step2.inBetween },
       },
@@ -96,7 +96,7 @@ const openInBetweenAnimation = (
     .to(
       pathEndRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { d: paths.step3.inBetween },
       },
@@ -105,25 +105,29 @@ const openInBetweenAnimation = (
     .to(
       gradientRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
       },
       0,
-    );
+    )
+    .to(svgRef.current, {
+      transform: "translateX(0)",
+    });
 };
 
 const openFilledAnimation = (
   refObjects: RefObjects,
   timeline: GSAPTimeline,
 ) => {
-  const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+    refObjects;
 
   timeline
     .to(
       pathStartRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { d: paths.step1.filled },
       },
@@ -132,7 +136,7 @@ const openFilledAnimation = (
     .to(
       pathMidRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { d: paths.step2.filled },
       },
@@ -141,7 +145,7 @@ const openFilledAnimation = (
     .to(
       pathEndRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { d: paths.step3.filled },
       },
@@ -150,7 +154,7 @@ const openFilledAnimation = (
     .to(
       gradientRef.current,
       {
-        duration: 0.3,
+        duration: 0.01,
         ease: "sine.in",
         attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
       },
@@ -158,17 +162,15 @@ const openFilledAnimation = (
     );
 };
 
-export const getMoblieCloseAnimationTimeline = (
-  refObjects: RefObjects,
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-) => {
-  const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
+export const getMoblieCloseAnimationTimeline = (refObjects: RefObjects) => {
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+    refObjects;
 
   const closeMenuTimeline = gsap
     .timeline({
       paused: true,
-      onComplete: () => setOpen(false),
     })
+    .set(svgRef.current, { transform: "translateX(0)" })
     .set(pathStartRef.current, { attr: { d: paths.step1.filled } })
     .set(pathMidRef.current, { attr: { d: paths.step2.filled } })
     .set(pathEndRef.current, { attr: { d: paths.step3.filled } })
@@ -202,7 +204,7 @@ const closeInBetweenAnimation = (
       pathMidRef.current,
       {
         duration: 0.1,
-        ease: "sine.in",
+        ease: "power1",
         attr: { d: paths.step2.inBetween },
       },
       0,
@@ -231,7 +233,8 @@ const closeUnfilledAnimation = (
   refObjects: RefObjects,
   timeline: GSAPTimeline,
 ) => {
-  const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+    refObjects;
 
   timeline
     .to(
@@ -244,24 +247,6 @@ const closeUnfilledAnimation = (
       "<",
     )
     .to(
-      pathMidRef.current,
-      {
-        duration: 0.1,
-        ease: "sine.in",
-        attr: { d: paths.step2.unfilled },
-      },
-      "<",
-    )
-    .to(
-      pathEndRef.current,
-      {
-        duration: 0.1,
-        ease: "sine.in",
-        attr: { d: paths.step3.unfilled },
-      },
-      "<",
-    )
-    .to(
       gradientRef.current,
       {
         duration: 0.1,
@@ -269,5 +254,8 @@ const closeUnfilledAnimation = (
         attr: { x1: paths.step1.x1, x2: paths.step1.x2 },
       },
       "<",
-    );
+    )
+    .to(svgRef.current, {
+      transform: "translateX(-100%)",
+    });
 };
