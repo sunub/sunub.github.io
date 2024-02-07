@@ -147,8 +147,8 @@ export default async function RootLayout({
               </div>
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
+              <div id="mobile-nav-portal" />
             </div>
-            <MobileNav />
           </ThemeProvider>
         </StyledComponentsRegistry>
       </body>
