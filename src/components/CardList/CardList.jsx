@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 
   display: grid;
   flex-direction: row;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(30cqw, 1fr));
   justify-items: center;
 
   gap: 3rem 1rem;

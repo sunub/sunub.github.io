@@ -1,35 +1,39 @@
 import React from "react";
 import Blog from "@/db/blog";
+import Card from "@/components/Card";
+import * as Styled from "./page.style";
+import Spacer from "@/components/Spacer";
 
 export const metadata = {
-  title: "CS Category Page",
-  description: "cs에 관한 주제를 다룬 포스트를 모아놓은 페이지입니다.",
+  title: "Code Category Page",
+  description: "code에 관한 주제를 다룬 포스트를 모아놓은 페이지입니다.",
 };
 
-function CSPage() {
-  const allBlogs = Blog.findByCategory("cs");
+function CodePage() {
+  const allBlogs = Blog.findByCategory("code");
 
   return (
     <section>
-      <h1>Computer Science</h1>
-      {allBlogs
-        ?.sort((a, b) => {
-          if (
-            new Date(a.metadata.date ?? "") > new Date(b.metadata.date ?? "")
-          ) {
-            return -1;
-          }
-          return 1;
-        })
-        .map(({ metadata }) => (
-          <div key={metadata.slug}>
-            <h2>{metadata.title}</h2>
-            <p>{metadata.summary}</p>
-            <p>{metadata.date}</p>
-          </div>
-        ))}
+      <Styled.Title>
+        <h1>Computre Science</h1>
+      </Styled.Title>
+      <Spacer size={48} axis={"vertical"} />
+      <Styled.Wrapper>
+        {allBlogs
+          ?.sort((a, b) => {
+            if (
+              new Date(a.metadata.date ?? "") > new Date(b.metadata.date ?? "")
+            ) {
+              return -1;
+            }
+            return 1;
+          })
+          .map(({ metadata }) => (
+            <Card key={metadata.slug} frontMatter={metadata} />
+          ))}
+      </Styled.Wrapper>
     </section>
   );
 }
 
-export default CSPage;
+export default CodePage;

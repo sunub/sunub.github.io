@@ -4,7 +4,6 @@ import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import Elevation from "@/constants/Elevation";
-import * as Icons from "@/components/LandingPage/Icons/Icons";
 
 const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
@@ -71,20 +70,11 @@ const IconWrapper = styled.div`
   display: flex;
 `;
 
-const ICONS_BY_VARIANT = {
-  web: Icons.WEB,
-  algorithm: Icons.ALGORITHM,
-  code: Icons.CODE,
-  cs: Icons.CS,
-};
-
 export default function Card({ frontMatter }) {
-  const { category, date, slug, title } = frontMatter;
-  const IconComponent = ICONS_BY_VARIANT[category];
+  const { title, date, slug } = frontMatter;
   return (
     <Wrapper>
-      <LinkWrapper href={`/${category}/${slug}`} tabIndex={0}>
-        <IconWrapper>{IconComponent}</IconWrapper>
+      <LinkWrapper href={`/${slug}`} tabIndex={0}>
         <Header>{title}</Header>
         <Footer>{date.slice(2)}</Footer>
       </LinkWrapper>

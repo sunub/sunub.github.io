@@ -15,7 +15,7 @@ interface NavigationListProps {
 
 function NavigationList(props: NavigationListProps) {
   const { isOpen, setOpen, refObjects } = props;
-  const closeTimeline = getMoblieCloseAnimationTimeline(refObjects, setOpen);
+  const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
 
   return (
     <Styled.Wrapper $isOpen={isOpen}>

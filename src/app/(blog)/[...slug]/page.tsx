@@ -97,7 +97,6 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
 
   return (
     <React.Fragment>
-      <Wave />
       <Styled.Main>
         <script
           type="application/ld+json"
