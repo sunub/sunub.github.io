@@ -10,7 +10,10 @@ type MDXFile = {
   category?: string;
 };
 
-type BlogContent = Map<Categories, MDXFile[]>;
+interface BlogContent {
+  blogpost: MDXFile[];
+  mostUsedTags: any[];
+}
 
 function parseFrontmatter(fileContent: string): MDXFile {
   let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
@@ -71,8 +74,9 @@ function getMDXFiles(dir: string) {
   return MDXFilePaths;
 }
 
-function getMDXData(dir: string) {
+function getMDXData(dir: string): BlogContent {
   let mdxFilesPath = getMDXFiles(dir);
+  const tags = new Map();
 
   const MDXFileList: Partial<MDXFile[]> = [];
   mdxFilesPath.forEach((files: string[], category: string) => {
@@ -86,39 +90,62 @@ function getMDXData(dir: string) {
         slug,
         category,
       };
+      const usedTags = mdxFiles.metadata?.tags.split(", ") as string[];
+      for (const tag of usedTags) {
+        tags.has(tag) ? tags.set(tag, tags.get(tag) + 1) : tags.set(tag, 1);
+      }
       MDXFileList.push(mdxFiles as MDXFile);
     });
   });
 
-  return MDXFileList;
+  const mostUsedTags = Array.from(tags)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5);
+
+  return {
+    blogpost: MDXFileList as MDXFile[],
+    mostUsedTags,
+  };
 }
 
-function getBlogPost(): MDXFile[] {
-  const blogpost = getMDXData(path.join(process.cwd(), "posts")) as MDXFile[];
-  return blogpost.sort((a, b) => {
+function getBlogPost(): BlogContent {
+  const { blogpost, mostUsedTags } = getMDXData(
+    path.join(process.cwd(), "posts"),
+  );
+
+  blogpost.sort((a, b) => {
     return (
       new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
     );
   });
+
+  return {
+    blogpost,
+    mostUsedTags,
+  };
 }
 
 class Blog {
-  static posts = getBlogPost();
+  static data = getBlogPost();
+
+  static getMostUsedTags() {
+    return Blog.data.mostUsedTags;
+  }
 
   static getMetadata() {
-    const metadata = Blog.posts.map((post) => post.metadata);
+    const metadata = Blog.data.blogpost.map((post) => post.metadata);
     return [...metadata];
   }
 
   static findByCategory(category: string) {
-    const postsByCategory = Blog.posts.filter(
+    const postsByCategory = Blog.data.blogpost.filter(
       (post) => post.category === category,
     );
     return [...postsByCategory];
   }
 
   static getPostByslug(slug: string) {
-    const postsBySlug = Blog.posts.find((posts) => posts.slug === slug);
+    const postsBySlug = Blog.data.blogpost.find((posts) => posts.slug === slug);
     return Object.assign({}, postsBySlug);
   }
 }

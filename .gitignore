@@ -25,7 +25,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env.local
+.env
 
 # vercel
 .vercel
@@ -39,3 +40,4 @@ firebase.json
 firestore.indexes.json
 firestore.rules
 .firebaserc
+.env*.local

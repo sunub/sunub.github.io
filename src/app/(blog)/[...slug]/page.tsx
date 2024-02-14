@@ -4,10 +4,7 @@ import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
 import React, { Suspense } from "react";
-import db from "@/db/firebase.mjs";
-import { doc, getDoc } from "firebase/firestore";
 import * as Styled from "./page.style";
-import Wave from "@/components/HeaderContents/Wave";
 
 type DocData = {
   content: string;
@@ -22,7 +19,7 @@ export async function generateMetadata({
   const [category, slug] = params.slug;
   const post = Blog.getPostByslug(slug);
 
-  if (!post) {
+  if (!post.metadata) {
     return;
   }
 

@@ -1,26 +1,33 @@
 import * as Styled from "../HeroImage.style";
+import { getDarkHeroImageURL } from "@/db/firebase.mjs";
 
-import bridge from "@/public/assets/hero-image__dark-bridge.avif";
-import baseImage from "@/public/assets/hero-image__dark-image.avif";
+async function DarkMode() {
+  const { darkHeroImage, darkBridge } = await getDarkHeroImageURL();
 
-function DarkMode() {
   return (
     <Styled.Picture>
       <Styled.DarkHeroImage
-        src={baseImage}
+        src={`${darkHeroImage}?format=image/avif&width=1600&height=546&quality=70`}
         width={1600}
         height={546}
         alt={"메인 히어로 이미지중 메인"}
         style={{
           zIndex: 2,
+          width: "100%",
+          height: "auto",
         }}
       />
       <Styled.DarkHeroImage
-        src={bridge}
+        src={`${darkBridge}?format=image/avif&width=1600&height=546&quality=70`}
         width={1600}
         height={546}
         alt={"메인 히어로 이미지중 메인"}
         $mirrored={true}
+        style={{
+          zIndex: 2,
+          width: "100%",
+          height: "auto",
+        }}
       />
     </Styled.Picture>
   );

@@ -5,6 +5,13 @@ const nextConfig = {
   basePath: "",
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        port: "",
+      },
+    ],
     formats: ["image/avif", "image/webp"],
   },
   compiler: {
