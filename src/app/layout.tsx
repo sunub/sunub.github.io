@@ -55,6 +55,7 @@ export default async function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, user-scalable=1"
         />
+        <meta name="theme-color" content="" />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet preload"

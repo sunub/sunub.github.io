@@ -81,6 +81,12 @@ function setColorsByTheme() {
   Object.entries(COLORS).forEach(([key, value]) => {
     root.style.setProperty(key, value);
   });
+  document
+    .querySelector("meta[name=theme-color]")
+    .setAttribute(
+      "content",
+      `${colorMode === "light" ? "oklch(87.44% 0.067 30.96)" : "oklch(43.81% 0.072 289.34)"}`,
+    );
 
   window
     .matchMedia("(prefers-color-scheme: dark)")
@@ -94,6 +100,13 @@ function setColorsByTheme() {
       Object.entries(nextColor).forEach(([key, value]) => {
         root.style.setProperty(key, value);
       });
+
+      document
+        .querySelector("meta[name=theme-color]")
+        .setAttribute(
+          "content",
+          `${colorMode === "light" ? "oklch(87.44% 0.067 30.96)" : "oklch(43.81% 0.072 289.34)"}`,
+        );
     });
 }
 

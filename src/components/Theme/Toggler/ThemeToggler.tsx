@@ -35,6 +35,7 @@ export default function ThemeToggler({
       root.style.setProperty(key, value as any);
     });
     setColorTheme(nextTheme);
+    return nextTheme;
   }
 
   return (
@@ -43,7 +44,17 @@ export default function ThemeToggler({
         {...delegated}
         title="Toggles light & dark"
         aria-label="auto"
-        onClick={handleClick}
+        onClick={() => {
+          const nextTheme = handleClick();
+          document
+            .querySelector("meta[name=theme-color]")
+            ?.setAttribute(
+              "content",
+              nextTheme === "light"
+                ? "oklch(87.44% 0.067 30.96)"
+                : "oklch(43.81% 0.072 289.34)",
+            );
+        }}
       >
         <ThemeIcon colorTheme={colorTheme} maskId={maskId} />
       </Styled.ToggleBtn>
