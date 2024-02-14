@@ -1,6 +1,6 @@
 import * as Styled from "../HeroImage.style";
-import * as DarkBridge from "@/public/assets/hero-image__dark-bridge.avif";
-import * as DarkHeroImage from "@/public/assets/hero-image__dark-image.avif";
+import DarkBridge from "@/public/assets/hero-image__dark-bridge.avif";
+import DarkHeroImage from "@/public/assets/hero-image__dark-image.avif";
 
 async function DarkMode() {
   return (

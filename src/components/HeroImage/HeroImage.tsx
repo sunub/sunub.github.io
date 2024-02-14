@@ -5,7 +5,7 @@ import DarkMode from "./DarkMode";
 
 function HeroImage() {
   return (
-    <Styled.RootWrapper>
+    <Styled.RootWrapper suppressHydrationWarning={true}>
       <Styled.HeroImageWrapper>
         <LightMode />
         <DarkMode />

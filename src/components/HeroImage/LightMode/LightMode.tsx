@@ -1,8 +1,7 @@
 import React from "react";
 import * as Styled from "../HeroImage.style";
-import { getLightHeroImageURL } from "@/db/firebase.mjs";
-import * as LightBridge from "@/public/assets/hero-image__light-bridge.avif";
-import * as LightHeroImage from "@/public/assets/hero-image__light-image.avif";
+import LightBridge from "@/public/assets/hero-image__light-bridge.avif";
+import LightHeroImage from "@/public/assets/hero-image__light-image.avif";
 
 // firebase url = `${lightHeroImage}?format=image/avif&width=1600&height=546&quality=70`
 // firebase url = `${lightBridge}?format=image/avif&width=1600&height=546&quality=70`

@@ -1,14 +1,19 @@
 import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
+import Blog from "@/db/blog";
 
 type PublishedPost = FrontMatter;
 
-function BlogPost({
-  recentlyPublished,
-}: {
-  recentlyPublished: PublishedPost[];
-}) {
+function getRecentlyPublished(): PublishedPost[] {
+  const recentlyPublished = Blog.getMetadata().slice(0, 10);
+
+  return recentlyPublished;
+}
+
+async function BlogPost() {
+  const recentlyPublished = await getRecentlyPublished();
+
   return (
     <div>
       {recentlyPublished &&
@@ -38,18 +43,16 @@ function BlogPost({
 function UnderLineWaveSVG() {
   return (
     <Styled.UnderLineWaveSVG
+      xmlns="http://www.w3.org/2000/svg"
       width="94"
       height="11"
-      viewBox="0 0 94 11"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
     >
       <Styled.UnderLineWavePath
-        d="M3 5.19021C7 3.50001 17 0.880417 19.5 5.19021C22 9.5 24.3334 8.9366 28 5.19021C30.6837 2.44819 34.4725 2.09696 37.5 5.19021C41.1667 8.9366 43.7607 8.50001 47 5.19021C49.633 2.50001 53 8.5 58 5.19021C61.4587 2.90068 63.3333 8.9366 67 5.19021C70.6666 1.44381 72.2917 11 80 5.19021C84.8961 1.50001 85.2477 9.75613 91.5 5.19021"
-        pathLength={0.9}
+        d="M3 5.19c4-1.69 14-4.31 16.5 0s4.833 3.747 8.5 0c2.684-2.742 6.472-3.093 9.5 0 3.667 3.747 6.26 3.31 9.5 0 2.633-2.69 6 3.31 11 0 3.459-2.29 5.333 3.747 9 0 3.667-3.746 5.292 5.81 13 0 4.896-3.69 5.248 4.566 11.5 0"
+        pathLength=".9"
       />
     </Styled.UnderLineWaveSVG>
   );
 }
-
 export default BlogPost;

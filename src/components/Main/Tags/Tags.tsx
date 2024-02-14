@@ -1,7 +1,15 @@
 import { FeatherIcon } from "../NewestPost";
 import * as Styled from "./Tags.style";
+import Blog from "@/db/blog";
 
-function Tags({ tags }: { tags: string[] }) {
+async function getRecentlyPublished() {
+  const mostUsedTags = Blog.getMostUsedTags();
+  return mostUsedTags;
+}
+
+async function Tags() {
+  const tags = await getRecentlyPublished();
+
   return (
     <Styled.Wrapper>
       <Styled.TitleWrapper>
