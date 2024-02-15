@@ -5,6 +5,7 @@ import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
 import React, { Suspense } from "react";
 import * as Styled from "./page.style";
+import Wave from "@/components/HeaderContents/Wave";
 
 type DocData = {
   content: string;
@@ -94,6 +95,7 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
 
   return (
     <React.Fragment>
+      <Wave />
       <Styled.Main>
         <script
           type="application/ld+json"

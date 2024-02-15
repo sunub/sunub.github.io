@@ -14,16 +14,7 @@ async function DarkMode() {
           height: "auto",
         }}
       />
-      <Styled.DarkHeroImage
-        src={DarkBridge}
-        alt={"메인 히어로 이미지중 메인"}
-        $mirrored={true}
-        style={{
-          zIndex: 2,
-          width: "100%",
-          height: "auto",
-        }}
-      />
+      <Styled.Shadow />
     </Styled.Picture>
   );
 }

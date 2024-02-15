@@ -19,16 +19,7 @@ function LightMode() {
             height: "auto",
           }}
         />
-        <Styled.LightHeroImage
-          src={LightBridge}
-          alt={"메인 히어로 이미지중 물에 비친 다리"}
-          $mirrored={true}
-          style={{
-            zIndex: 2,
-            width: "100%",
-            height: "auto",
-          }}
-        />
+        <Styled.Shadow />
       </Styled.Picture>
     </React.Fragment>
   );

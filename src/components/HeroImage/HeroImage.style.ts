@@ -30,6 +30,14 @@ export const HeroImageWrapper = styled.div`
   justify-items: center;
 `;
 
+export const Shadow = styled.div`
+  width: 100cqw;
+  height: 8px;
+  background-color: var(--color-endStop);
+  filter: blur(9px);
+  mix-blend-mode: multiply;
+`;
+
 export const DarkHeroImage = styled(Image).attrs({
   quality: 70,
   sizes: "100vw",

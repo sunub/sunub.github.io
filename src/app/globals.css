@@ -217,14 +217,14 @@ strong {
   ::-webkit-scrollbar {
     width: var(--scrollbar-width, 12px);
     height: var(--scrollbar-height, 12px);
-    background-color: var(--color-thumbBackground);
+    background-color: var(--color-thumb-background);
   }
 }
 
 @media (orientation: landscape) {
   ::-webkit-scrollbar-thumb {
     border-radius: 5px;
-    border: 2px solid var(--color-thumbBackground);
+    border: 2px solid var(--color-thumb-background);
     background-color: var(--color-thumb);
   }
 }

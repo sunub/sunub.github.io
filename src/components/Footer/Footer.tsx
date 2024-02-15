@@ -4,6 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { Github, Mail } from "./Icons/Icons";
 import Link from "next/link";
+import Spacer from "../Spacer";
 
 const Container = styled.footer`
   display: flex;
@@ -45,29 +46,33 @@ const IconsWrapper = styled.div`
 
 function Footer() {
   return (
-    <Container role="contentinfo">
-      <Wrapper>
-        <IconsWrapper>
-          <Link
-            aria-label={"Link to sunub github page"}
-            href={"https://github.com/sunub"}
-          >
-            <Github />
-          </Link>
-          <Link
-            aria-label={"Send email to sunub email"}
-            href={"mailto:bsc5672@gmail.com"}
-          >
-            <Mail />
-          </Link>
-        </IconsWrapper>
-        <CopyRightWrapper>
-          <CopyRight>
-            © 2023-present sunub blog. Powered by Next.js, Vercel
-          </CopyRight>
-        </CopyRightWrapper>
-      </Wrapper>
-    </Container>
+    <React.Fragment>
+      <Spacer size={126} axis={"vertical"} />
+      <Container role="contentinfo">
+        <Wrapper>
+          <IconsWrapper>
+            <Link
+              aria-label={"Link to sunub github page"}
+              href={"https://github.com/sunub"}
+            >
+              <Github />
+            </Link>
+            <Link
+              aria-label={"Send email to sunub email"}
+              href={"mailto:bsc5672@gmail.com"}
+            >
+              <Mail />
+            </Link>
+          </IconsWrapper>
+          <CopyRightWrapper>
+            <CopyRight>
+              © 2023-present sunub blog. Powered by Next.js, Vercel
+            </CopyRight>
+          </CopyRightWrapper>
+        </Wrapper>
+      </Container>
+      <Spacer size={32} axis={"vertical"} />
+    </React.Fragment>
   );
 }
 
