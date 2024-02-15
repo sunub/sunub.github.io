@@ -108,6 +108,22 @@ function setColorsByTheme() {
           `${colorMode === "light" ? "oklch(87.44% 0.067 30.96)" : "oklch(43.81% 0.072 289.34)"}`,
         );
     });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      console.log("This page was restored from the bfcache.");
+    } else {
+      console.log("This page was loaded normally.");
+    }
+  });
+
+  window.addEventListener("pagehide", (event) => {
+    if (event.persisted) {
+      console.log("This page *might* be entering the bfcache.");
+    } else {
+      console.log("This page will unload normally and be discarded.");
+    }
+  });
 }
 
 export default function InitTheme() {

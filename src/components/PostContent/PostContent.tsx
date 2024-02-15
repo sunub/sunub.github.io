@@ -1,10 +1,10 @@
 import React from "react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import CodeSnippet from "../CodeSnippet";
-import Blockquote from "../MdxStyling/Blockquote";
-import PostContentImage from "./PostContentImage";
-import List from "./List";
-import ListItem from "./ListItem";
+// import Blockquote from "../MdxStyling/Blockquote";
+// import PostContentImage from "./PostContentImage";
+// import List from "./List";
+// import ListItem from "./ListItem";
 import * as Styled from "./PostContent.style";
 
 function slugify(str: string) {

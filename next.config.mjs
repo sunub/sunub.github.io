@@ -58,6 +58,10 @@ const ContentSecurityPolicy = `
 
 const securityHeaders = [
   {
+    key: "Cache-Control",
+    value: "no-cache",
+  },
+  {
     key: "Content-Security-Policy",
     value: ContentSecurityPolicy.replace(/\n/g, ""),
   },
