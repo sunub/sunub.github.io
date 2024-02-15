@@ -1,7 +1,7 @@
 .Wrapper {
   grid-area: main-content;
 
-  font-family: "NanumSquareNeo", sans-serif;
+  font-family: var(--nanum-square-neo), sans-serif;
   position: relative;
   width: 100%;
   max-width: 1100px;
@@ -28,7 +28,7 @@
 }
 
 .Header {
-  font-family: "Bariol_serif", serif;
+  font-family: var(--bariol-serif), serif;
   text-align: center;
   padding: 82px 32px 96px 32px;
 
@@ -91,7 +91,7 @@
     font-feature-settings: "tnum";
     padding-right: 12px;
     font-weight: 900;
-    font-family: "Wotfard", sans-serif;
+    font-family: var(--bariol-serif), sans-serif;
     font-size: calc(1.15rem);
     color: var(--color-bird);
   }

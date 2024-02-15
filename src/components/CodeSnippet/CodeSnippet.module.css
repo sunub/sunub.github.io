@@ -11,7 +11,7 @@
 
 .wrapper code {
   display: flex;
-  font-family: "Wotfard", sans-serif;
+  font-family: var(--bariol-serif), sans-serif;
 }
 
 @media (min-width: 56rem) {
@@ -33,7 +33,7 @@
   word-wrap: break-word;
   font-size: 1.125rem;
   padding: 0px !important;
-  font-family: "Wotfard", sans-serif;
+  font-family: var(--bariol-serif), sans-serif;
 }
 
 .wrapper code > div > span {

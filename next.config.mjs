@@ -53,13 +53,16 @@ const ContentSecurityPolicy = `
     img-src * blob: data:;
     media-src 'none';
     connect-src *;
-    font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com;;
 `;
 
 const securityHeaders = [
   {
     key: "Cache-Control",
     value: "no-cache",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "unload=()",
   },
   {
     key: "Content-Security-Policy",
@@ -84,6 +87,10 @@ const securityHeaders = [
   {
     key: "Strict-Transport-Security",
     value: "max-age=31536000; includeSubDomains; preload",
+  },
+  {
+    key: "Access-Control-Allow-Headers",
+    value: "Cache-Control",
   },
 ];
 export default nextConfig;

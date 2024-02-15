@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 export const RootWrapper = styled.div`
   grid-area: newest;
-  font-family: "Wotfard", "NanumSquareNeo", serif;
+  font-family: var(--bariol-serif), var(--nanum-square-neo), serif;
 `;
 
 export const TitleWrapper = styled.div`

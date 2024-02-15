@@ -1,16 +1,31 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
-import { Analytics } from "@vercel/analytics/react";
 import React from "react";
-import MobileNav from "@/components/MobileNav";
 import InitTheme from "@/components/Theme/InitTheme";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import Header from "@/components/Header";
-import Wave from "@/components/HeaderContents/Wave";
 import Footer from "@/components/Footer";
+import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import clsx from "clsx";
+import Wave from "@/components/HeaderContents/Wave";
 import HeroImage from "@/components/HeroImage";
-import Blog from "@/db/blog";
+
+const nanumFont = localFont({
+  src: "../../public/fonts/NanumSquareNeo-Variable.woff2",
+  display: "swap",
+  variable: "--nanum-square-neo",
+  preload: true,
+});
+
+const barialFont = localFont({
+  src: "../../public/fonts/bariol_serif_regular-webfont.woff2",
+  display: "swap",
+  variable: "--bariol-serif",
+  preload: true,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -47,7 +62,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" suppressHydrationWarning={true}>
+    <html
+      lang="ko"
+      suppressHydrationWarning={true}
+      className={clsx([nanumFont.className, barialFont.className])}
+    >
       <head>
         <meta charSet="utf-8" />
         <meta content="text/html" charSet="<characterset>" />
@@ -67,34 +86,6 @@ export default async function RootLayout({
           sizes="32x32"
           href="/assets/favicon.ico"
           as="icon"
-        />
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-          @font-face {
-            font-family: 'NanumSquareNeo';
-            src: url('/fonts/NanumSquareNeo-Variable.woff2') format('woff2'),
-            font-style: normal;
-            font-display: fallback;
-            unicode-range: U+AC00-D7AF;
-          }
-          @font-face {
-            font-family: 'Wotfard';
-            src: url('/fonts/wotfard-regular-webfont.woff2') format('woff2'),
-            font-weight: 900;
-            font-style: normal;
-            font-display: fallback;
-            uniconde-range: U+0020-007E;
-          }
-          @font-face {
-            font-family: 'Bariol_serif';
-            src: url('/fonts/bariol_serif_regular-webfont.woff2') format('woff2'),
-            font-style: normal;
-            font-display: fallback;
-            uniconde-range: U+0020-007E;
-          }
-        `,
-          }}
         />
         <style>
           {`
@@ -129,7 +120,7 @@ export default async function RootLayout({
         }
 
         body {
-          font-family: Bariol_serif, Wotfard, NanumSquareNeo, sans-serif;
+          font-family: var(--nanum-square-neo), var(--bariol-serif), sans-serif;
           color: var(--color-text);
           min-height: 100%;
           background: var(--color-background);
@@ -152,6 +143,8 @@ export default async function RootLayout({
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

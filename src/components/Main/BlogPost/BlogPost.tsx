@@ -16,26 +16,23 @@ async function BlogPost() {
 
   return (
     <div>
-      {recentlyPublished &&
-        recentlyPublished.map((frontmatter) => {
-          const { slug, title, summary, tags } = frontmatter;
-          return (
-            <Styled.BlogPostWrapper
-              key={`${frontmatter.slug}-${Math.floor(
-                Math.random() * 10000 + 1,
-              )}`}
-            >
-              <Link href={`/${slug}`}>
-                <Styled.BlogPostTitle>
-                  <Styled.Title>{title}</Styled.Title>
-                  <Styled.TitleDot />
-                  <UnderLineWaveSVG />
-                </Styled.BlogPostTitle>
-                <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
-              </Link>
-            </Styled.BlogPostWrapper>
-          );
-        })}
+      {recentlyPublished.map((frontmatter) => {
+        const { slug, title, summary, tags } = frontmatter;
+        return (
+          <Styled.BlogPostWrapper
+            key={`${frontmatter.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
+          >
+            <Link href={`/${slug}`}>
+              <Styled.BlogPostTitle>
+                <Styled.Title>{title}</Styled.Title>
+                <Styled.TitleDot />
+                <UnderLineWaveSVG />
+              </Styled.BlogPostTitle>
+              <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+            </Link>
+          </Styled.BlogPostWrapper>
+        );
+      })}
     </div>
   );
 }

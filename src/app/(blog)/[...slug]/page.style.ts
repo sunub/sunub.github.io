@@ -54,7 +54,7 @@ export const Article = styled.article`
     margin-bottom: 1.5rem;
 
     & > code {
-      font-family: Wotfard !important;
+      font-family: var(--bariol-serif) !important;
       font-weight: 700;
       background-color: color-mix(
         in oklch,

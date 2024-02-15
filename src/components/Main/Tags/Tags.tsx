@@ -17,8 +17,8 @@ async function Tags() {
         <h1>Most used Tags</h1>
       </Styled.TitleWrapper>
       <Styled.TagsWrapper>
-        {tags.map((tag) => (
-          <Styled.Tag key={tag}>{tag}</Styled.Tag>
+        {tags.map((tag: string) => (
+          <Styled.Tag key={tag}>{tag.slice(0, -1)}</Styled.Tag>
         ))}
       </Styled.TagsWrapper>
     </Styled.Wrapper>
