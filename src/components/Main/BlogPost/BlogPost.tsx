@@ -22,7 +22,7 @@ async function BlogPost() {
           <Styled.BlogPostWrapper
             key={`${frontmatter.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
           >
-            <Link href={`/${slug}`}>
+            <Link href={`/${slug}`} scroll={true}>
               <Styled.BlogPostTitle>
                 <Styled.Title>{title}</Styled.Title>
                 <Styled.TitleDot />

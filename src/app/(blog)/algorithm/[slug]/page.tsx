@@ -4,27 +4,20 @@ import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
 import React, { Suspense } from "react";
-import * as Styled from "./page.style";
+import * as Styled from "@/app/(blog)/page.style";
 import Wave from "@/components/HeaderContents/Wave";
-
-type DocData = {
-  content: string;
-  metadata: FrontMatter;
-};
 
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string[] };
+  params: { slug: string };
 }): Promise<Partial<FrontMatter> | undefined> {
-  const [category, slug] = params.slug;
+  const { slug } = params;
   const post = Blog.getPostByslug(slug);
 
-  if (!post.metadata) {
-    return;
-  }
+  if (!post.metadata) return;
 
-  let { title, summary, date } = post.metadata;
+  let { title, summary, date, category } = post.metadata;
 
   return {
     title,
@@ -67,31 +60,10 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-export async function generateStaticParams() {
-  const metadata = Blog.getMetadata();
-  return metadata.map((frontmatter) => ({
-    slug: [frontmatter.category.toLowerCase() as Categories, frontmatter.slug],
-    fallback: false,
-  }));
-}
+function CodeSlugPage({ params }: { params: { slug: string } }) {
+  const { metadata, content } = Blog.getPostByslug(params.slug);
 
-async function getBlogPostData(params: { slug: string[] }) {
-  const [_, slug] = params.slug;
-  const post = Blog.getPostByslug(slug);
-  const content = post.content;
-  const metadata = post.metadata;
-  return {
-    content,
-    metadata,
-  };
-}
-
-async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
-  const { content, metadata } = (await getBlogPostData(params)) as DocData;
-
-  if (!content || !metadata) {
-    notFound();
-  }
+  if (!content || !metadata) notFound();
 
   return (
     <React.Fragment>
@@ -125,4 +97,4 @@ async function BlogPostSlugPage({ params }: { params: { slug: string[] } }) {
   );
 }
 
-export default BlogPostSlugPage;
+export default CodeSlugPage;
