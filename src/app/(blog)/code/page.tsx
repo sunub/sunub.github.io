@@ -1,8 +1,9 @@
 import React from "react";
 import Blog from "@/db/blog";
 import Card from "@/components/Card";
-import * as Styled from "./page.style";
+import * as Styled from "../page.style";
 import Spacer from "@/components/Spacer";
+import Wave from "@/components/HeaderContents/Wave";
 
 export const metadata = {
   title: "Code Category Page",
@@ -17,21 +18,25 @@ function CodePage() {
       <Styled.Title>
         <h1>Code</h1>
       </Styled.Title>
-      <Spacer size={48} axis={"vertical"} />
-      <Styled.Wrapper>
-        {allBlogs
-          ?.sort((a, b) => {
-            if (
-              new Date(a.metadata.date ?? "") > new Date(b.metadata.date ?? "")
-            ) {
-              return -1;
-            }
-            return 1;
-          })
-          .map(({ metadata }) => (
-            <Card key={metadata.slug} frontMatter={metadata} />
-          ))}
-      </Styled.Wrapper>
+      <Wave />
+      <Styled.Background>
+        <Spacer size={48} axis={"vertical"} />
+        <Styled.Wrapper>
+          {allBlogs
+            ?.sort((a, b) => {
+              if (
+                new Date(a.metadata.date ?? "") >
+                new Date(b.metadata.date ?? "")
+              ) {
+                return -1;
+              }
+              return 1;
+            })
+            .map(({ metadata }) => (
+              <Card key={metadata.slug} frontMatter={metadata} />
+            ))}
+        </Styled.Wrapper>
+      </Styled.Background>
     </section>
   );
 }
