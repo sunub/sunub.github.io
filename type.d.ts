@@ -34,3 +34,9 @@ type CTX = {
 };
 
 type Theme = "light" | "dark";
+
+interface BlogContent {
+  category: Categories;
+  content: string;
+  metadata: FrontMatter;
+}

@@ -63,7 +63,11 @@ let components: any = {
 };
 
 function PostContent(props: any) {
-  return <MDXRemote components={{ ...components }} {...props} />;
+  return (
+    <div>
+      <p>{props.source}</p>
+    </div>
+  );
 }
 
 export default PostContent;

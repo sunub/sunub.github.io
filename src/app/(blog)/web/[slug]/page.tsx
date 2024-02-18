@@ -1,5 +1,5 @@
 import Blog from "@/db/blog";
-import { Categories, FrontMatter } from "type";
+import { BlogContent, Categories, FrontMatter } from "type";
 import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
@@ -60,16 +60,31 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-export async function generateStaticParams() {
-  return Blog.findByCategory("web").map((post) => {
-    return {
-      slug: post.metadata.slug,
-    };
+async function getBlogPosts(slug: string) {
+  const baseUrl =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://sunub.vercel.app";
+
+  const req = await fetch(`${baseUrl}/api/blog`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "Cache-Control": "public, max-age=3600",
+    },
+    body: JSON.stringify({ slug }),
   });
+  const post = (await req.json()) as BlogContent;
+  return {
+    category: post.category,
+    content: post.content,
+    metadata: post.metadata,
+  };
 }
 
-function CodeSlugPage({ params }: { params: { slug: string } }) {
-  const { metadata, content } = Blog.getPostByslug(params.slug);
+async function WebSlugPage({ params }: { params: { slug: string } }) {
+  const { metadata, content, category } = await getBlogPosts(params.slug);
 
   if (!content || !metadata) notFound();
 
@@ -105,4 +120,4 @@ function CodeSlugPage({ params }: { params: { slug: string } }) {
   );
 }
 
-export default CodeSlugPage;
+export default WebSlugPage;

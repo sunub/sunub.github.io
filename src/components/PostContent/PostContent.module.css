@@ -64,7 +64,7 @@
   padding-right: 32px;
 
   font-weight: 500;
-
+  /* 
   & > span {
     color: oklch(90.75% 0.042 30.85);
   }
@@ -118,7 +118,7 @@
   h5 {
     font-size: calc(1.5rem);
     padding-top: 32px;
-  }
+  } */
 }
 
 @counter-style stylized-num {

@@ -78,7 +78,7 @@ export const Article = styled.article`
 
   line-height: calc(1.5rem + 0.8rem);
 
-  & > :is(:first-child) {
+  /* & > :is(:first-child) {
     margin-top: 3rem;
   }
 
@@ -108,5 +108,5 @@ export const Article = styled.article`
       margin: 0 0.3rem;
       border-radius: 0.25rem;
     }
-  }
+  } */
 `;

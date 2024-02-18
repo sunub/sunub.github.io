@@ -52,21 +52,21 @@ const BlogSchema = v.object({
 //   }
 // })();
 
-(async () => {
-  const blog = new Blog();
-  const post = blog.allPosts.shift();
+// (async () => {
+//   const blog = new Blog();
+//   const post = blog.allPosts.shift();
 
-  const vertifyBlog = v.safeParse(BlogSchema, post);
+//   const vertifyBlog = v.safeParse(BlogSchema, post);
 
-  if (vertifyBlog.success) {
-    try {
-      await sql`
-        INSERT INTO blog (metadata, slug, content)
-        VALUES (${JSON.stringify(post.metadata)}, ${post.slug}, ${post.content});
-      `;
-      console.log("Blog 데이터가 성공적으로 추가되었습니다.");
-    } catch (error) {
-      console.error("Blog 데이터를 추가하는데 실패했습니다.");
-    }
-  }
-})();
+//   if (vertifyBlog.success) {
+//     try {
+//       await sql`
+//         INSERT INTO blog (metadata, slug, content)
+//         VALUES (${JSON.stringify(post.metadata)}, ${post.slug}, ${post.content});
+//       `;
+//       console.log("Blog 데이터가 성공적으로 추가되었습니다.");
+//     } catch (error) {
+//       console.error("Blog 데이터를 추가하는데 실패했습니다.");
+//     }
+//   }
+// })();
