@@ -151,19 +151,19 @@ function UnfilledSVG({ refObjects }: { refObjects: RefObjects }) {
           y2="566.5"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0.173412" stopColor="#FCE5E0" />
-          <stop offset="0.371085" stopColor="#FEC5BB" />
+          <stop offset="0.173412" stopColor="var(--color-endStart)" />
+          <stop offset="0.371085" stopColor="var(--color-endStop)" />
         </linearGradient>
       </defs>
       <path
         ref={pathMidRef}
         d="M155.759 147.71C198.369 79.996 101.375 11.0644 101.375 -2.92178e-06L0.000106812 -7.30652e-06L5.67612e-05 1133L86.2376 1133C86.2376 1075.46 168.927 1069.95 168.927 969.799C168.927 910.051 116.225 793.874 144.258 761.787C181.384 719.293 66.3265 760.128 89.0409 611.864C107.754 489.721 89.0409 430.407 140.621 383.383C208.443 321.553 102.497 232.353 155.759 147.71Z"
-        fill="#FADCD6"
+        fill="var(--color-midStop)"
       />
       <path
         ref={pathStartRef}
         d="M103.142 147.71C145.772 79.996 48.7316 11.0644 48.7316 -3.40841e-06L-3.05176e-05 -5.51618e-06L-8.05679e-05 1133L33.5865 1133C33.5865 1075.46 103.141 993.034 124.457 895.114C145.772 797.194 49.8534 734.679 36.3912 611.864C22.9289 489.049 126.14 466.367 87.9965 383.383C49.8534 300.4 49.8534 232.353 103.142 147.71Z"
-        fill="#FDF3F1"
+        fill="var(--color-frontWave)"
       />
     </Styled.FloodSVG>
   );

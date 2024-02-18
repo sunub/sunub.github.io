@@ -205,6 +205,9 @@ export const FloodSVG = styled.svg`
   top: 0px;
   left: 0px;
   transform: translateX(-100%);
+  & > path {
+    transition: all 300ms ease;
+  }
 `;
 
 export const RootWrapper = styled.div`
