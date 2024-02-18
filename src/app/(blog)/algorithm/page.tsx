@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 function CodePage() {
-  const allBlogs = Blog.findByCategory("code");
+  const allBlogs = Blog.findByCategory("algorithm");
 
   return (
     <section>

@@ -139,7 +139,7 @@ class Blog {
 
   static findByCategory(category: string) {
     const postsByCategory = Blog.data.blogpost.filter(
-      (post) => post.category === category,
+      (post) => post.metadata.category === category,
     );
     return [...postsByCategory];
   }

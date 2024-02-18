@@ -108,3 +108,14 @@ class Blog {
     return this.posts.find((post) => post.slug === "animation-library-gsap");
   }
 }
+
+const blog = new Blog();
+const a = blog.posts.filter((post) => post.metadata.category === "code");
+
+console.log(
+  a.map((post) => {
+    return {
+      slug: post.metadata.slug,
+    };
+  }),
+);

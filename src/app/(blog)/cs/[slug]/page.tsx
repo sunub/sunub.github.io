@@ -60,6 +60,14 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
+export async function generateStaticParams() {
+  return Blog.findByCategory("cs").map((post) => {
+    return {
+      slug: post.metadata.slug,
+    };
+  });
+}
+
 function CodeSlugPage({ params }: { params: { slug: string } }) {
   const { metadata, content } = Blog.getPostByslug(params.slug);
 

@@ -10,8 +10,8 @@ export const metadata = {
   description: "code에 관한 주제를 다룬 포스트를 모아놓은 페이지입니다.",
 };
 
-function CodePage() {
-  const allBlogs = Blog.findByCategory("code");
+function WebCategoryPage() {
+  const allBlogs = Blog.findByCategory("web");
 
   return (
     <section>
@@ -41,4 +41,4 @@ function CodePage() {
   );
 }
 
-export default CodePage;
+export default WebCategoryPage;
