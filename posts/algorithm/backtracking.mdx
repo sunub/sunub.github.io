@@ -5,6 +5,7 @@ tags: algorithm
 summary: 모든 배열을 순환하여 탐색할 수 있는 방법
 slug: whatis-backtracking
 category: algorithm
+completed: false
 ---
 
 ## Backtracking
@@ -13,25 +14,25 @@ category: algorithm
 
 ```javascript
 function backtracking(input, target) {
-	const answer = [];
-	dfs(0, []);
-	return answer;
+  const answer = [];
+  dfs(0, []);
+  return answer;
 
-	function dfs(start, curr) {
-		if (start >= input.length) {
-			return;
-		}
+  function dfs(start, curr) {
+    if (start >= input.length) {
+      return;
+    }
 
-		if (curr.length === target) {
-			answer.push([...curr]);
-			return;
-		}
+    if (curr.length === target) {
+      answer.push([...curr]);
+      return;
+    }
 
-		for (let i = start; i < input.length; i++) {
-			curr.push(input[i]);
-			curr.pop();
-		}
-	}
+    for (let i = start; i < input.length; i++) {
+      curr.push(input[i]);
+      curr.pop();
+    }
+  }
 }
 
 backtracking([1, 2, 3, 4, 5], 2);
@@ -53,19 +54,19 @@ const input = [1, 2, 3, 4, 5];
 const answer: number[][] = [];
 
 function backtracking(curr: number[], visit: boolean[]) {
-	if (curr.length === input.length) {
-		answer.push([...curr]);
-		return;
-	}
+  if (curr.length === input.length) {
+    answer.push([...curr]);
+    return;
+  }
 
-	for (let i = 0; i < input.length; i++) {
-		if (visit[i]) continue;
-		curr.push(input[i]);
-		visit[i] = true;
-		backtracking(curr, visit);
-		curr.pop();
-		visit[i] = false;
-	}
+  for (let i = 0; i < input.length; i++) {
+    if (visit[i]) continue;
+    curr.push(input[i]);
+    visit[i] = true;
+    backtracking(curr, visit);
+    curr.pop();
+    visit[i] = false;
+  }
 }
 ```
 

@@ -24,6 +24,16 @@ function setColorsByTheme() {
     "--color-dark-heroimage": 0,
     "--color-thumb": `oklch(92.54% 0.01 32.52)`,
     "--color-thumb-background": `oklch(53.74% 0.029 30.1)`,
+
+    "--sh-class": "#2d5e9d",
+    "--sh-identifier": "#354150",
+    "--sh-sign": "#8996a3",
+    "--sh-property": "#0550ae",
+    "--sh-entity": "#249a97",
+    "--sh-jsxliterals": "#6266d1",
+    "--sh-string": "#00a99a",
+    "--sh-keyword": "#f47067",
+    "--sh-comment": "#a19595",
   };
 
   const DARK_COLORS = {
@@ -49,6 +59,16 @@ function setColorsByTheme() {
     "--color-dark-heroimage": 1,
     "--color-thumb": `oklch(92.17% 0.039 291.94)`,
     "--color-thumb-background": `oklch(45.42% 0.007 239.95)`,
+
+    "--sh-class": "#4c97f8",
+    "--sh-identifier": "#fff",
+    "--sh-sign": "#8996a3",
+    "--sh-property": "#0550ae",
+    "--sh-entity": "#249a97",
+    "--sh-jsxliterals": "#6266d1",
+    "--sh-keyword": "#f47067",
+    "--sh-string": "#0fa295",
+    "--sh-comment": "#a19595",
   };
 
   function getInitialColorMode() {

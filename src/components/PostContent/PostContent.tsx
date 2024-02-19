@@ -1,11 +1,7 @@
 import React from "react";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import CodeSnippet from "../CodeSnippet";
-// import Blockquote from "../MdxStyling/Blockquote";
-// import PostContentImage from "./PostContentImage";
-// import List from "./List";
-// import ListItem from "./ListItem";
+import { highlight } from "sugar-high";
 import * as Styled from "./PostContent.style";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
 function slugify(str: string) {
   return str.toString().trim().replace(/\ /g, "-");
@@ -38,6 +34,11 @@ function LinkIcon() {
   );
 }
 
+function Code({ children, ...props }: { children: string }) {
+  let codeHTML = highlight(children);
+  return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+}
+
 function createHeading(level: number) {
   return ({ children }: { children: string }) => {
     let slug = slugify(children);
@@ -59,15 +60,5 @@ let components: any = {
   h2: createHeading(2),
   h3: createHeading(3),
   h4: createHeading(4),
-  pre: CodeSnippet,
+  code: Code,
 };
-
-function PostContent(props: any) {
-  return (
-    <div>
-      <p>{props.source}</p>
-    </div>
-  );
-}
-
-export default PostContent;

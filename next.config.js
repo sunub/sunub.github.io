@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
-import { sql } from "@vercel/postgres";
+const { sql } = require("@vercel/postgres");
+const { withContentlayer } = require("next-contentlayer");
 
 const nextConfig = {
   basePath: "",
+  reactStrictMode: true,
+  swcMinify: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
     remotePatterns: [
@@ -92,4 +95,4 @@ const securityHeaders = [
     value: "Cache-Control",
   },
 ];
-export default nextConfig;
+module.exports = withContentlayer(nextConfig);

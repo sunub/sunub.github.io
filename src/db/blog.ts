@@ -1,7 +1,8 @@
-import { Categories, FrontMatter } from "type";
+"use server";
 
-const fs = require("fs");
-const path = require("path");
+import { FrontMatter } from "type";
+import fs from "fs";
+import path from "path";
 
 type MDXFile = {
   metadata: FrontMatter;

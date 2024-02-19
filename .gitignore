@@ -41,3 +41,6 @@ firestore.indexes.json
 firestore.rules
 .firebaserc
 .env*.local
+
+# contentlayer
+.contentlayer

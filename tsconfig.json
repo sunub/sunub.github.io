@@ -39,6 +39,7 @@
       "@/hooks/*": ["./src/hooks/*"],
       "@/posts/*": ["./src/app/posts/*"],
       "@/public/*": ["./public/*"],
+      "contentlayer/generated": ["./.contentlayer/generated"],
     },
     "sourceMap": true,
   },
@@ -52,6 +53,7 @@
     ".next/types/**/*.ts",
     "src/**/*",
     "src/app/mdx/page.jsx",
+    ".contentlayer/generated",
   ],
   "exclude": ["node_modules"],
 }

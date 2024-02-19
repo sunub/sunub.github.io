@@ -19,6 +19,16 @@ const LIGHT_COLORS: Record<string, string | number> = {
     "linear-gradient(1deg, oklch(97.14% 0.011 31.07) 21.41%, oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 55.11%)",
   "--color-light-heroimage": 1,
   "--color-dark-heroimage": 0,
+
+  "--sh-class": "#2d5e9d",
+  "--sh-identifier": "#354150",
+  "--sh-sign": "#8996a3",
+  "--sh-property": "#0550ae",
+  "--sh-entity": "#249a97",
+  "--sh-jsxliterals": "#6266d1",
+  "--sh-string": "#00a99a",
+  "--sh-keyword": "#f47067",
+  "--sh-comment": "#a19595",
 };
 
 const DARK_COLORS: Record<string, string | number> = {
@@ -42,6 +52,16 @@ const DARK_COLORS: Record<string, string | number> = {
     "linear-gradient(1deg, oklch(76.95% 0.12588555394033804 289.2710106250223) 24.47%, oklch(43.6% 0.073 290.15) 55.11%)",
   "--color-light-heroimage": 0,
   "--color-dark-heroimage": 1,
+
+  "--sh-class": "#4c97f8",
+  "--sh-identifier": "#fff",
+  "--sh-sign": "#8996a3",
+  "--sh-property": "#0550ae",
+  "--sh-entity": "#249a97",
+  "--sh-jsxliterals": "#6266d1",
+  "--sh-keyword": "#f47067",
+  "--sh-string": "#0fa295",
+  "--sh-comment": "#a19595",
 };
 
 const COLOR_MODE_KEY = "theme-preference";
