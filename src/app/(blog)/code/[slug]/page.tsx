@@ -1,15 +1,14 @@
 import React from "react";
-import { BlogContent, FrontMatter } from "type";
+import { FrontMatter } from "type";
 import { notFound } from "next/navigation";
-import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
 import * as Styled from "@/app/(blog)/page.style";
 import Wave from "@/components/HeaderContents/Wave";
-import { allCodes } from ".contentlayer/generated";
+import { allCodePosts } from ".contentlayer/generated";
 
-import type { MDXComponents } from "mdx/types";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { components } from "@/app/(blog)/page.helper";
+import Blog from "@/db/blog";
 
 interface Post {
   title: string;
@@ -21,25 +20,25 @@ interface Post {
   [key: string]: any;
 }
 
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { slug: string };
-// }): Promise<Partial<FrontMatter> | undefined> {
-//   const { slug } = params;
-//   const post = Blog.getPostByslug(slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Partial<FrontMatter> | undefined> {
+  const { slug } = params;
+  const post = Blog.getPostByslug(slug);
 
-//   if (!post.metadata) return;
+  if (!post.metadata) return;
 
-//   let { title, summary, date, category } = post.metadata;
+  let { title, summary, date, category } = post.metadata;
 
-//   return {
-//     title,
-//     summary,
-//     date,
-//     category,
-//   };
-// }
+  return {
+    title,
+    summary,
+    date,
+    category,
+  };
+}
 
 function formatDate(date: string) {
   noStore();
@@ -74,37 +73,13 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-// async function getBlogPosts(slug: string) {
-//   const baseUrl =
-//     process.env.NODE_ENV === "development"
-//       ? "http://localhost:3000"
-//       : "https://sunub.vercel.app";
-
-//   const req = await fetch(`${baseUrl}/api/blog`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Accept: "application/json",
-//       "Cache-Control": "public, max-age=3600",
-//     },
-//     body: JSON.stringify({ slug }),
-//   });
-//   const post = (await req.json()) as BlogContent;
-//   return {
-//     category: post.category,
-//     content: post.content,
-//     metadata: post.metadata,
-//   };
-// }
-
-async function CodeSlugPage({ params }: { params: { slug: string } }) {
-  const post: Partial<Post> = allCodes.find(
+function CodeSlugPage({ params }: { params: { slug: string } }) {
+  const post: Partial<Post> = allCodePosts.find(
     (post) => post.slug === params.slug,
   ) as Post;
+
   const { title, date, summary } = post;
   const contentCode = post.body.code;
-  // const post = allPosts.find((post))
-  // const { metadata, content, category } = await getBlogPosts(params.slug);
 
   if (!contentCode) notFound();
 

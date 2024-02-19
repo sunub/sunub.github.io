@@ -1,11 +1,24 @@
-import Blog from "@/db/blog";
-import { BlogContent, Categories, FrontMatter } from "type";
+import React from "react";
+import { FrontMatter } from "type";
 import { notFound } from "next/navigation";
-import PostContent from "@/components/PostContent";
 import { unstable_noStore as noStore } from "next/cache";
-import React, { Suspense } from "react";
 import * as Styled from "@/app/(blog)/page.style";
 import Wave from "@/components/HeaderContents/Wave";
+import { allWebPosts } from ".contentlayer/generated";
+
+import { useMDXComponent } from "next-contentlayer/hooks";
+import { components } from "@/app/(blog)/page.helper";
+import Blog from "@/db/blog";
+
+interface Post {
+  title: string;
+  date: string;
+  tags: string;
+  summary: string;
+  category: string;
+  slug: string;
+  [key: string]: any;
+}
 
 export async function generateMetadata({
   params,
@@ -60,33 +73,17 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-async function getBlogPosts(slug: string) {
-  const baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://sunub.vercel.app";
+function AlgorithmSlugPage({ params }: { params: { slug: string } }) {
+  const post: Partial<Post> = allWebPosts.find(
+    (post) => post.slug === params.slug,
+  ) as Post;
 
-  const req = await fetch(`${baseUrl}/api/blog`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      "Cache-Control": "public, max-age=3600",
-    },
-    body: JSON.stringify({ slug }),
-  });
-  const post = (await req.json()) as BlogContent;
-  return {
-    category: post.category,
-    content: post.content,
-    metadata: post.metadata,
-  };
-}
+  const { title, date, summary } = post;
+  const contentCode = post.body.code;
 
-async function WebSlugPage({ params }: { params: { slug: string } }) {
-  const { metadata, content, category } = await getBlogPosts(params.slug);
+  if (!contentCode) notFound();
 
-  if (!content || !metadata) notFound();
+  const MDXContent = useMDXComponent(contentCode);
 
   return (
     <React.Fragment>
@@ -99,25 +96,25 @@ async function WebSlugPage({ params }: { params: { slug: string } }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "BlogPosting",
-              headline: metadata.title,
-              datePublised: metadata.date,
-              dateModified: metadata.date,
-              description: metadata.summary,
+              headline: title,
+              datePublised: date,
+              dateModified: date,
+              description: summary,
             }),
           }}
         />
         <Styled.Header id="blog-post__header">
-          <h1>{metadata.title}</h1>
-          <Suspense fallback={<div>Loading...</div>}>
-            <p>{formatDate(metadata.date)}</p>
-          </Suspense>
+          <h1>{title}</h1>
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <p>{formatDate(date!)}</p>
+          </React.Suspense>
         </Styled.Header>
         <Styled.Article id="blog-post__article">
-          <PostContent source={content} />
+          <MDXContent components={components} />
         </Styled.Article>
       </Styled.Main>
     </React.Fragment>
   );
 }
 
-export default WebSlugPage;
+export default AlgorithmSlugPage;
