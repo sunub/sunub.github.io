@@ -1,33 +1,48 @@
-import Blog from "@/db/blog";
-import { BlogContent, Categories, FrontMatter } from "type";
+import React from "react";
+import { BlogContent, FrontMatter } from "type";
 import { notFound } from "next/navigation";
 import PostContent from "@/components/PostContent";
-import React, { Suspense } from "react";
+import { unstable_noStore as noStore } from "next/cache";
 import * as Styled from "@/app/(blog)/page.style";
 import Wave from "@/components/HeaderContents/Wave";
-import { sql } from "@vercel/postgres";
+import { allCodes } from ".contentlayer/generated";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Partial<FrontMatter> | undefined> {
-  const { slug } = params;
-  const post = Blog.getPostByslug(slug);
+import type { MDXComponents } from "mdx/types";
+import { useMDXComponent } from "next-contentlayer/hooks";
+import { components } from "@/app/(blog)/page.helper";
 
-  if (!post.metadata) return;
-
-  let { title, summary, date, category } = post.metadata;
-
-  return {
-    title,
-    summary,
-    date,
-    category,
-  };
+interface Post {
+  title: string;
+  date: string;
+  tags: string;
+  summary: string;
+  category: string;
+  slug: string;
+  [key: string]: any;
 }
 
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: { slug: string };
+// }): Promise<Partial<FrontMatter> | undefined> {
+//   const { slug } = params;
+//   const post = Blog.getPostByslug(slug);
+
+//   if (!post.metadata) return;
+
+//   let { title, summary, date, category } = post.metadata;
+
+//   return {
+//     title,
+//     summary,
+//     date,
+//     category,
+//   };
+// }
+
 function formatDate(date: string) {
+  noStore();
   let currentDate = new Date();
   if (!date.includes("T")) {
     date = `${date}T00:00:00`;
@@ -59,41 +74,41 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-async function getBlogPosts(slug: string) {
-  const baseUrl =
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://sunub.vercel.app";
+// async function getBlogPosts(slug: string) {
+//   const baseUrl =
+//     process.env.NODE_ENV === "development"
+//       ? "http://localhost:3000"
+//       : "https://sunub.vercel.app";
 
-  const req = await fetch(`${baseUrl}/api/blog`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "public, max-age=3600",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ slug }),
-  });
-  const post = (await req.json()) as BlogContent;
-  return {
-    category: post.category,
-    content: post.content,
-    metadata: post.metadata,
-  };
-}
-
-// export async function generateStaticParams() {
-//   return Blog.findByCategory("cs").map((post) => {
-//     return {
-//       slug: post.metadata.slug,
-//     };
+//   const req = await fetch(`${baseUrl}/api/blog`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Accept: "application/json",
+//       "Cache-Control": "public, max-age=3600",
+//     },
+//     body: JSON.stringify({ slug }),
 //   });
+//   const post = (await req.json()) as BlogContent;
+//   return {
+//     category: post.category,
+//     content: post.content,
+//     metadata: post.metadata,
+//   };
 // }
 
 async function CodeSlugPage({ params }: { params: { slug: string } }) {
-  const { content, metadata, category } = await getBlogPosts(params.slug);
+  const post: Partial<Post> = allCodes.find(
+    (post) => post.slug === params.slug,
+  ) as Post;
+  const { title, date, summary } = post;
+  const contentCode = post.body.code;
+  // const post = allPosts.find((post))
+  // const { metadata, content, category } = await getBlogPosts(params.slug);
 
-  if (!content || !metadata) notFound();
+  if (!contentCode) notFound();
+
+  const MDXContent = useMDXComponent(contentCode);
 
   return (
     <React.Fragment>
@@ -106,21 +121,21 @@ async function CodeSlugPage({ params }: { params: { slug: string } }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "BlogPosting",
-              headline: metadata.title,
-              datePublised: metadata.date,
-              dateModified: metadata.date,
-              description: metadata.summary,
+              headline: title,
+              datePublised: date,
+              dateModified: date,
+              description: summary,
             }),
           }}
         />
         <Styled.Header id="blog-post__header">
-          <h1>{metadata.title}</h1>
-          <Suspense fallback={<div>Loading...</div>}>
-            <p>{formatDate(metadata.date)}</p>
-          </Suspense>
+          <h1>{title}</h1>
+          <React.Suspense fallback={<div>Loading...</div>}>
+            <p>{formatDate(date!)}</p>
+          </React.Suspense>
         </Styled.Header>
         <Styled.Article id="blog-post__article">
-          <PostContent source={content} />
+          <MDXContent components={components} />
         </Styled.Article>
       </Styled.Main>
     </React.Fragment>
