@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
 import styled from "styled-components";
-import Link from "next/link";
 import Elevation from "@/constants/Elevation";
+import Link from "next/link";
 
-const Wrapper = styled.article`
+export const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
 
   transition: box-shadow 300ms ease;
@@ -17,7 +16,7 @@ const Wrapper = styled.article`
   }
 `;
 
-const Header = styled.h3`
+export const Header = styled.h3`
   grid-area: card-header;
 
   display: flex;
@@ -40,7 +39,7 @@ const Header = styled.h3`
   }
 `;
 
-const Footer = styled.time`
+export const Footer = styled.time`
   grid-area: card-footer;
 
   font-size: 10px;
@@ -48,7 +47,7 @@ const Footer = styled.time`
   justify-self: center;
 `;
 
-const LinkWrapper = styled(Link)`
+export const LinkWrapper = styled(Link)`
   display: grid;
   align-items: center;
 
@@ -65,19 +64,7 @@ const LinkWrapper = styled(Link)`
   touch-action: manipulation;
 `;
 
-const IconWrapper = styled.div`
+export const IconWrapper = styled.div`
   grid-area: card-icon;
   display: flex;
 `;
-
-export default function Card({ frontMatter }) {
-  const { title, date, slug } = frontMatter;
-  return (
-    <Wrapper>
-      <LinkWrapper href={`/${slug}`} tabIndex={0}>
-        <Header>{title}</Header>
-        <Footer>{date.slice(2)}</Footer>
-      </LinkWrapper>
-    </Wrapper>
-  );
-}

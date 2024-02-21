@@ -24,7 +24,8 @@ function setColorsByTheme() {
     "--color-dark-heroimage": 0,
     "--color-thumb": `oklch(92.54% 0.01 32.52)`,
     "--color-thumb-background": `oklch(53.74% 0.029 30.1)`,
-
+    "--color-codeBlock":
+      "color-mix(in oklch, oklch(91.48% 0.0473 45.97 / 73.11%), var(--color-primary) 52.5%)",
     "--sh-class": "#2d5e9d",
     "--sh-identifier": "#354150",
     "--sh-sign": "#8996a3",
@@ -38,7 +39,7 @@ function setColorsByTheme() {
 
   const DARK_COLORS = {
     "--color-navlink": `oklch(90.21% 0.055771670330652126 300.11937740281473)`,
-    "--color-text": `oklch(100% 0 31.08)`,
+    "--color-text": `oklch(95.98% 0 31.08)`,
     "--color-background": `oklch(23.93% 0 0)`,
     "--color-primary": `oklch(34% 0.019 229.64)`,
     "--color-highlight": `oklch(64.86% 0.181 249.54)`,
@@ -59,11 +60,12 @@ function setColorsByTheme() {
     "--color-dark-heroimage": 1,
     "--color-thumb": `oklch(92.17% 0.039 291.94)`,
     "--color-thumb-background": `oklch(45.42% 0.007 239.95)`,
+    "--color-codeBlock": "oklch(53.48% 0.133 287.36)",
 
     "--sh-class": "#4c97f8",
     "--sh-identifier": "#fff",
-    "--sh-sign": "#8996a3",
-    "--sh-property": "#0550ae",
+    "--sh-sign": "oklch(76.57% 0.127 286.59)",
+    "--sh-property": "oklch(80.69% 0.118 62.82)",
     "--sh-entity": "#249a97",
     "--sh-jsxliterals": "#6266d1",
     "--sh-keyword": "#f47067",
