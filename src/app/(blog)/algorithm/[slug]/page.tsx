@@ -73,6 +73,14 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
+export async function generateStaticParams() {
+  return allAlgorithmPosts.map((post) => ({
+    params: {
+      slug: post.slug,
+    },
+  }));
+}
+
 function AlgorithmSlugPage({ params }: { params: { slug: string } }) {
   const post: Partial<Post> = allAlgorithmPosts.find(
     (post) => post.slug === params.slug,

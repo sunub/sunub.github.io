@@ -73,15 +73,23 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
+export async function generateStaticParams() {
+  return allCodePosts.map((post) => ({
+    params: {
+      slug: post.slug,
+    },
+  }));
+}
+
 function CodeSlugPage({ params }: { params: { slug: string } }) {
   const post: Partial<Post> = allCodePosts.find(
     (post) => post.slug === params.slug,
   ) as Post;
 
+  if (!post) notFound();
+
   const { title, date, summary } = post;
   const contentCode = post.body.code;
-
-  if (!contentCode) notFound();
 
   const MDXContent = useMDXComponent(contentCode);
 
