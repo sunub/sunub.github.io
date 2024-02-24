@@ -77,13 +77,12 @@ export const Article = styled.article`
   max-width: 700px;
 
   line-height: calc(1.7rem + 0.8rem);
-
   & > pre {
     background: var(--color-codeBlock);
-    backdrop-filter: blur(10px);
     font-size: calc(0.9rem + 0.025rem);
-    border: 1px solid var(--color-endStop);
     border-radius: 0.75rem;
+    border: 1px solid
+      color-mix(in oklch, var(--color-text), var(--color-primary) 90%);
 
     padding-top: 1.75rem;
     padding-bottom: 1.75rem;
@@ -109,12 +108,12 @@ export const Article = styled.article`
   }
 
   & > :is(h2, h3, h4, h5, h6) {
-    color: var(--color-bird);
-    font-weight: 900;
+    color: var(--color-title);
+    font-weight: 800;
     margin-top: 3.5rem;
     margin-bottom: 1.5rem;
     & > span {
-      color: var(--color-bird);
+      color: var(--color-title);
     }
   }
 
@@ -132,10 +131,11 @@ export const Article = styled.article`
       font-family: var(--nanum-square-neo) !important;
       font-weight: 700;
       background-color: var(--color-codeBlock);
-      border: 1px solid var(--border-color);
       padding: 0.15rem 0.35rem;
       margin: 0 0.25rem;
       border-radius: 0.25rem;
+      border: 1px solid
+        color-mix(in oklch, var(--color-text), var(--color-primary) 90%);
     }
   }
 `;

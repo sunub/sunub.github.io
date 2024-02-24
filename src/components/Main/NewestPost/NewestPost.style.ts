@@ -10,7 +10,7 @@ export const RootWrapper = styled.div`
 export const TitleWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: center;
   gap: 1rem;
 `;
 

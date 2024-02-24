@@ -25,7 +25,9 @@ function setColorsByTheme() {
     "--color-thumb": `oklch(92.54% 0.01 32.52)`,
     "--color-thumb-background": `oklch(53.74% 0.029 30.1)`,
     "--color-codeBlock":
-      "color-mix(in oklch, oklch(91.48% 0.0473 45.97 / 73.11%), var(--color-primary) 52.5%)",
+      "color-mix(in oklch, oklch(87.48% 0.113 75.97 / 73.11%), var(--color-primary) 52.5%)",
+    "--color-title": "oklch(20.8% 0.165 32.85)",
+
     "--sh-class": "#2d5e9d",
     "--sh-identifier": "#354150",
     "--sh-sign": "#8996a3",
@@ -60,7 +62,8 @@ function setColorsByTheme() {
     "--color-dark-heroimage": 1,
     "--color-thumb": `oklch(92.17% 0.039 291.94)`,
     "--color-thumb-background": `oklch(45.42% 0.007 239.95)`,
-    "--color-codeBlock": "oklch(53.48% 0.133 287.36)",
+    "--color-codeBlock": "oklch(20.68% 0.0283 299.76 / 0.5)",
+    "--color-title": "oklch(76.86% 0.101 250.54)",
 
     "--sh-class": "#4c97f8",
     "--sh-identifier": "#fff",

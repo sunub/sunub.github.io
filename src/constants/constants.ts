@@ -20,7 +20,8 @@ const LIGHT_COLORS: Record<string, string | number> = {
   "--color-light-heroimage": 1,
   "--color-dark-heroimage": 0,
   "--color-codeBlock":
-    "color-mix(in oklch, oklch(91.48% 0.0473 45.97 / 73.11%), var(--color-primary) 52.5%)",
+    "color-mix(in oklch, oklch(87.48% 0.113 75.97 / 73.11%), var(--color-primary) 52.5%)",
+  "--color-title": "oklch(20.8% 0.165 32.85)",
 
   "--sh-class": "#2d5e9d",
   "--sh-identifier": "#354150",
@@ -55,6 +56,7 @@ const DARK_COLORS: Record<string, string | number> = {
   "--color-light-heroimage": 0,
   "--color-dark-heroimage": 1,
   "--color-codeBlock": "oklch(20.68% 0.0283 299.76 / 0.5)",
+  "--color-title": "oklch(76.86% 0.101 250.54)",
 
   "--sh-class": "#4c97f8",
   "--sh-identifier": "#fff",

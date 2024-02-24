@@ -7,7 +7,9 @@ function NewestPost() {
     <Styled.RootWrapper>
       <Styled.TitleWrapper>
         <FeatherIcon />
-        <Styled.Title>Recently Published</Styled.Title>
+        <Styled.Title id="blog-main__recently-post">
+          Recently Published
+        </Styled.Title>
       </Styled.TitleWrapper>
       <Spacer axis={"vertical"} size={64} />
       <BlogPost />
