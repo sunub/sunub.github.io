@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next build && next start -p 4004",
     "lint": "next lint",
@@ -22,6 +22,8 @@
     "@react-three/drei": "^9.83.9",
     "@react-three/fiber": "^8.14.1",
     "@react-three/postprocessing": "^2.15.1",
+    "@trpc/client": "next",
+    "@trpc/server": "next",
     "@types/jest": "^29.5.5",
     "@types/marked": "^5.0.0",
     "@types/mdx": "^2.0.11",

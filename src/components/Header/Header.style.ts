@@ -52,6 +52,7 @@ export const NavigationWrapper = styled.ul`
 `;
 
 export const NavigationItem = styled.li`
+  position: relative;
   font-size: 24px;
   font-weight: 400;
   line-height: normal;
