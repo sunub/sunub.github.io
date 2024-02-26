@@ -24,11 +24,15 @@ async function BlogPost() {
           >
             <Link href={`/${slug}`} scroll={true}>
               <Styled.BlogPostTitle>
-                <Styled.Title>{title}</Styled.Title>
+                <Styled.Title className="blog-main__blogpost-content-title">
+                  {title}
+                </Styled.Title>
                 <Styled.TitleDot />
                 <UnderLineWaveSVG />
               </Styled.BlogPostTitle>
-              <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+              <Styled.BlogPostContent className="blog-main__blogpost-content-summary">
+                {summary}
+              </Styled.BlogPostContent>
             </Link>
           </Styled.BlogPostWrapper>
         );

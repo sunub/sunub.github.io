@@ -36,7 +36,7 @@ export const MainWrapper = styled.main`
 
 export const RightSideWrapper = styled.div`
   position: sticky;
-  top: 4rem;
+  top: 6rem;
   left: 0;
 
   @media screen and (max-width: 786px) {

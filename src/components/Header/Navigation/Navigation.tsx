@@ -40,7 +40,11 @@ function Navigation() {
                 </svg>
               </button>
               <PortalRef id="post-dropdown-portal" ref={portalRef} />
-              {isOpen && createPortal(<DropDownMenu />, portalRef.current!)}
+              {isOpen &&
+                createPortal(
+                  <DropDownMenu toggleOpen={toggleOpen} />,
+                  portalRef.current!,
+                )}
             </Styled.PostNaviation>
           </Styled.NavigationItem>
           <Styled.NavigationItem>
@@ -52,16 +56,24 @@ function Navigation() {
   );
 }
 
-function DropDownMenu() {
+function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
   return (
     <DropDownMenuWrapper>
       <Menu>
-        <Link href={"/cs"}>cs</Link>
-        <Link href={"/web"}>web</Link>
+        <Link href={"/cs"} onClick={toggleOpen}>
+          cs
+        </Link>
+        <Link href={"/web"} onClick={toggleOpen}>
+          web
+        </Link>
       </Menu>
       <Menu>
-        <Link href={"/code"}>code</Link>
-        <Link href={"/algorithm"}>algorithm</Link>
+        <Link href={"/code"} onClick={toggleOpen}>
+          code
+        </Link>
+        <Link href={"/algorithm"} onClick={toggleOpen}>
+          algorithm
+        </Link>
       </Menu>
     </DropDownMenuWrapper>
   );
@@ -76,9 +88,39 @@ const PortalRef = styled.div`
 const DropDownMenuWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  background-color: red;
-  padding: 1rem;
-  gap: 1rem;
+  background-color: var(--color-frontWave);
+  border-radius: 1rem;
+  padding-left: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  padding-right: 2rem;
+  gap: 2rem;
+  filter: drop-shadow(
+      0 -5.9px 2.7px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.025)
+    )
+    drop-shadow(
+      0 -1.2px 6.9px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.025)
+    )
+    drop-shadow(
+      0 8px 14.2px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.05)
+    )
+    drop-shadow(
+      0 21.9px 29.2px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.05)
+    )
+    drop-shadow(
+      0 49px 80px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.07)
+    );
+
+  ::before {
+    width: 32px;
+    height: 14px;
+    background-color: var(--color-frontWave);
+    content: "";
+    position: absolute;
+    top: -14px;
+    left: 49px;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
 `;
 
 const Menu = styled.div`

@@ -130,6 +130,7 @@ export default async function RootLayout({
               <div id="blog-main__header-wrapper">
                 <Header />
               </div>
+              <div id="blog-main__gradient-background" />
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
               <div id="mobile-nav-portal" />

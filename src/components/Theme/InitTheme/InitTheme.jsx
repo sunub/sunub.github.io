@@ -106,6 +106,16 @@ function setColorsByTheme() {
   const root = document.documentElement;
   const COLORS = colorMode === "light" ? LIGHT_COLORS : DARK_COLORS;
 
+  const options = {
+    root: document.getElementById("blog-main__header-wrapper"),
+    rootMargin: "0px",
+    threshold: 1.0,
+  };
+  const observer = new IntersectionObserver(
+    () => console.log("Intersection"),
+    options,
+  );
+
   root.setAttribute("data-color-theme", colorMode);
   Object.entries(COLORS).forEach(([key, value]) => {
     root.style.setProperty(key, value);
@@ -138,19 +148,11 @@ function setColorsByTheme() {
         );
     });
 
-  window.addEventListener("pageshow", (event) => {
-    if (event.persisted) {
-      console.log("This page was restored from the bfcache.");
-    } else {
-      console.log("This page was loaded normally.");
-    }
-  });
+  window.addEventListener("load", (e) => {
+    const boxElement = document.querySelector("#blog-main__recently-post-list");
 
-  window.addEventListener("pagehide", (event) => {
-    if (event.persisted) {
-      console.log("This page *might* be entering the bfcache.");
-    } else {
-      console.log("This page will unload normally and be discarded.");
+    if (boxElement) {
+      observer.observe(boxElement);
     }
   });
 }
