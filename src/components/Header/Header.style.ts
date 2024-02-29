@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const RootWrapper = styled.div`
-  /* background: var(--color-header);
-  transition: background 350ms ease 0s; */
+export const RootWrapper = styled.div<{ $isBlur: boolean }>`
+  transition: all 350ms ease 0s;
+  background: var(--color-headerBackground);
 `;
 
 export const DemoWrapper = styled.div`
@@ -54,10 +54,7 @@ export const NavigationWrapper = styled.ul`
 export const NavigationItem = styled.li`
   position: relative;
   font-size: 24px;
-  font-weight: 400;
-  line-height: normal;
   color: var(--color-navlink);
-  cursor: pointer;
 `;
 
 export const PostNaviation = styled.div`

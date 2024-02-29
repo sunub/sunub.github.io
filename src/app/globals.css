@@ -41,9 +41,9 @@ select {
 }
 
 input:not([type]),
-input[type="text"],
-input[type="email"],
-input[type="password"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
 textarea,
 select {
   max-width: 40rem;
@@ -55,9 +55,9 @@ a {
 }
 
 input:not([type]),
-input[type="text"],
-input[type="email"],
-input[type="password"],
+input[type='text'],
+input[type='email'],
+input[type='password'],
 textarea {
   display: block;
   width: 100%;
@@ -78,7 +78,7 @@ iframe {
 }
 
 .material-icons {
-  font-family: "Material Icons";
+  font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -93,7 +93,7 @@ iframe {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "liga";
+  font-feature-settings: 'liga';
 }
 
 button {
@@ -188,7 +188,6 @@ strong {
   top: -40px;
   left: 0;
   z-index: 1000;
-  backdrop-filter: blur(20px);
 }
 
 #blog-main__gradient-background {
@@ -264,27 +263,21 @@ strong {
   }
 }
 
-@media (orientation: landscape) {
-  ::-webkit-scrollbar {
-    width: var(--scrollbar-width, 12px);
-    height: var(--scrollbar-height, 12px);
-    background-color: var(--color-thumb-background);
-  }
+::-webkit-scrollbar {
+  width: var(--scrollbar-width, 12px);
+  height: var(--scrollbar-height, 12px);
+  background-color: var(--color-thumb-background);
 }
 
-@media (orientation: landscape) {
-  ::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    border: 2px solid var(--color-thumb-background);
-    background-color: var(--color-thumb);
-  }
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  border: 2px solid var(--color-thumb-background);
+  background-color: var(--color-thumb);
 }
 
-@media (orientation: landscape) {
-  ::-webkit-scrollbar-track {
-    border-radius: 3px;
-    background: var(--color-thumb) transparent;
-  }
+::-webkit-scrollbar-track {
+  border-radius: 3px;
+  background: var(--color-thumb) transparent;
 }
 
 @keyframes fadeIn {

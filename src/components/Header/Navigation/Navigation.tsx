@@ -9,8 +9,30 @@ import styled from "styled-components";
 import { createPortal } from "react-dom";
 
 function Navigation() {
-  const portalRef = React.useRef(null);
+  const buttonRef = React.useRef<HTMLButtonElement | null>(null);
+  const portalRef = React.useRef<HTMLDivElement | null>(null);
   const [isOpen, toggleOpen] = useToggle(false);
+
+  React.useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      const currTarget = e.target as Node;
+      if (
+        portalRef.current &&
+        !portalRef.current.contains(currTarget) &&
+        !buttonRef.current?.contains(currTarget)
+      ) {
+        toggleOpen();
+      }
+    }
+
+    if (isOpen) {
+      window.addEventListener("click", handleClick);
+    } else {
+      window.removeEventListener("click", handleClick);
+    }
+
+    return () => window.removeEventListener("click", handleClick);
+  }, [isOpen]);
 
   return (
     <React.Fragment>
@@ -23,7 +45,7 @@ function Navigation() {
             <Styled.PostNaviation>
               <Link href={"/post"}>post</Link>
               <Spacer axis={"horizonal"} size={8} />
-              <button onClick={toggleOpen}>
+              <button onClick={toggleOpen} ref={buttonRef}>
                 <svg
                   width="15"
                   height="9"
@@ -59,22 +81,18 @@ function Navigation() {
 function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
   return (
     <DropDownMenuWrapper>
-      <Menu>
-        <Link href={"/cs"} onClick={toggleOpen}>
-          cs
-        </Link>
-        <Link href={"/web"} onClick={toggleOpen}>
-          web
-        </Link>
-      </Menu>
-      <Menu>
-        <Link href={"/code"} onClick={toggleOpen}>
-          code
-        </Link>
-        <Link href={"/algorithm"} onClick={toggleOpen}>
-          algorithm
-        </Link>
-      </Menu>
+      <LinkTag href={"/cs"} onClick={toggleOpen}>
+        cs
+      </LinkTag>
+      <LinkTag href={"/web"} onClick={toggleOpen}>
+        web
+      </LinkTag>
+      <LinkTag href={"/code"} onClick={toggleOpen}>
+        code
+      </LinkTag>
+      <LinkTag href={"/algorithm"} onClick={toggleOpen}>
+        algorithm
+      </LinkTag>
     </DropDownMenuWrapper>
   );
 }
@@ -86,30 +104,20 @@ const PortalRef = styled.div`
 `;
 
 const DropDownMenuWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 32px;
+  border-radius: 12px;
+  will-change: transform;
   background-color: var(--color-frontWave);
   border-radius: 1rem;
-  padding-left: 2rem;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-  padding-right: 2rem;
-  gap: 2rem;
-  filter: drop-shadow(
-      0 -5.9px 2.7px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.025)
-    )
-    drop-shadow(
-      0 -1.2px 6.9px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.025)
-    )
-    drop-shadow(
-      0 8px 14.2px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.05)
-    )
-    drop-shadow(
-      0 21.9px 29.2px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.05)
-    )
-    drop-shadow(
-      0 49px 80px hsl(var(--dropdown-shadow-color, 0deg 0% 0%) / 0.07)
-    );
+  padding: 1rem 1.5rem;
+  filter: drop-shadow(0 -5.9px 2.7px oklch(21.18% 0 12 / 0.025))
+    drop-shadow(0 -1.2px 6.9px oklch(21.18% 0 12 / 0.025))
+    drop-shadow(0 8px 14.2px oklch(21.18% 0 12 / 0.05))
+    drop-shadow(0 21.9px 29.2px oklch(21.18% 0 12 / 0.05))
+    drop-shadow(0 49px 80px oklch(21.18% 0 12 / 0.07));
 
   ::before {
     width: 32px;
@@ -123,8 +131,11 @@ const DropDownMenuWrapper = styled.div`
   }
 `;
 
-const Menu = styled.div`
-  display: flex;
-  flex-direction: column;
+const LinkTag = styled(Link)`
+  &:hover {
+    font-weight: 700;
+    color: var(--color-highlight);
+  }
 `;
+
 export default Navigation;

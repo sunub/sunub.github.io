@@ -1,47 +1,47 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import StyledComponentsRegistry from "@/components/Resgistry/";
-import React from "react";
-import InitTheme from "@/components/Theme/InitTheme";
-import ThemeProvider from "@/components/Theme/ThemeProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import localFont from "next/font/local";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import clsx from "clsx";
-import Wave from "@/components/HeaderContents/Wave";
-import HeroImage from "@/components/HeroImage";
+import './globals.css';
+import type { Metadata } from 'next';
+import StyledComponentsRegistry from '@/components/Resgistry/';
+import React from 'react';
+import InitTheme from '@/components/Theme/InitTheme';
+import ThemeProvider from '@/components/Theme/ThemeProvider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import localFont from 'next/font/local';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import clsx from 'clsx';
+import Wave from '@/components/HeaderContents/Wave';
+import HeroImage from '@/components/HeroImage';
 
 const nanumFont = localFont({
-  src: "../../public/fonts/NanumSquareNeo-Variable.woff2",
-  display: "swap",
-  variable: "--nanum-square-neo",
+  src: '../../public/fonts/NanumSquareNeo-Variable.woff2',
+  display: 'swap',
+  variable: '--nanum-square-neo',
   preload: true,
 });
 
 const barialFont = localFont({
-  src: "../../public/fonts/bariol_serif_regular-webfont.woff2",
-  display: "swap",
-  variable: "--bariol-serif",
+  src: '../../public/fonts/bariol_serif_regular-webfont.woff2',
+  display: 'swap',
+  variable: '--bariol-serif',
   preload: true,
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sunub.vercel.app"),
+  metadataBase: new URL('https://sunub.vercel.app'),
   title: {
-    default: "sun_ub",
-    template: "%s | sun_ub",
+    default: 'sun_ub',
+    template: '%s | sun_ub',
   },
-  keywords: ["sunub", "sun_ub"],
-  description: "디자인과 개발을 좋아합니다.",
+  keywords: ['sunub', 'sun_ub'],
+  description: '디자인과 개발을 좋아합니다.',
   openGraph: {
-    title: "sun_ub",
-    description: "디자인과 개발을 좋아합니다.",
-    url: "https://sunub.vercel.app",
-    siteName: "sun_ub",
-    type: "website",
-    locale: "ko_KR",
+    title: 'sun_ub',
+    description: '디자인과 개발을 좋아합니다.',
+    url: 'https://sunub.vercel.app',
+    siteName: 'sun_ub',
+    type: 'website',
+    locale: 'ko_KR',
   },
   robots: {
     index: true,
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
 };
