@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Open = styled.g`
   transform-origin: center;
@@ -95,7 +95,7 @@ export const Circle = styled.rect`
 `;
 
 export const Btn = styled.button.attrs({
-  className: "hamburger-btn",
+  className: 'hamburger-btn',
 })`
   position: absolute;
   z-index: 10001;
@@ -107,12 +107,12 @@ export const Btn = styled.button.attrs({
 
   padding: 0;
   cursor: pointer;
-  &[aria-label="Open menu"] ${Open} {
+  &[aria-label='Open menu'] ${Open} {
     #center {
       transform: scaleX(1);
     }
   }
-  &[aria-label="Open menu"] ${Close} {
+  &[aria-label='Open menu'] ${Close} {
     & > ${Circle} {
       stroke: none;
     }
@@ -131,7 +131,7 @@ export const Btn = styled.button.attrs({
     }
   }
 
-  &[aria-label="Close menu"] ${Open} {
+  &[aria-label='Close menu'] ${Open} {
     transform: scale(0.1);
     #center {
       transform: scaleX(0.5);
@@ -145,7 +145,7 @@ export const Btn = styled.button.attrs({
       transform: translateY(-6.75px);
     }
   }
-  &[aria-label="Close menu"] ${Close} {
+  &[aria-label='Close menu'] ${Close} {
     & > ${Circle} {
       animation: circle-pop 600ms;
       animation-iteration-count: 1;
@@ -201,7 +201,6 @@ export const Svg = styled.svg`
 export const FloodSVG = styled.svg`
   z-index: 1000;
   position: absolute;
-  height: 100%;
   top: 0px;
   left: 0px;
   transform: translateX(-100%);
