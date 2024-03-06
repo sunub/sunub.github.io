@@ -3,115 +3,101 @@
 import React from 'react';
 import * as Styled from '../Wave.style';
 import WaveBird from '../WaveBird';
-import gsap from 'gsap';
+import gsap, { Linear } from 'gsap';
 
 const path = {
   step1: {
-    end: 'M0 32.5V208H938L937.5 30C933.833 28.1667 922.7 24.5 907.5 24.5C822 24.5 847.5 79 700 79C552.5 79 418 3.99984 353.5 4C306.746 4.00011 245 25.5002 188.5 25.5002C132 25.5002 37 -4.5 0 32.5Z',
-    mid: 'M0 112V208H938V73C925.833 90.6667 892.1 126 854.5 126C816.9 126 756.833 120.667 731.5 118C685.833 113.667 585.2 105 548 105C501.5 105 481.5 52.5 428 52.5C374.5 52.5 284.5 76 243 76C201.5 76 190.5 50 133 50C87 50 25.1667 91.3333 0 112Z',
+    end: 'M 0 32.5 V 208 H 938 L 937.5 30 C 933.833 28.1667 922.7 24.5 907.5 24.5 C 822 24.5 847.5 79 700 79 C 552.5 79 418 3.9998 353.5 4 C 306.746 4.0001 215.533 36.74 188.5 25.5002 Q 90.502 -0.459 30.914 21.241 Z',
+    mid: 'M 0 112 V 208 H 938 V 73 C 925.833 90.6667 892.1 126 854.5 126 C 816.9 126 756.833 120.667 731.5 118 C 685.833 113.667 585.2 105 548 105 C 501.5 105 481.5 52.5 428 52.5 C 374.5 52.5 284.5 76 243 76 C 201.5 76 190.5 50 133 50 C 87 50 25.1667 91.3333 0 82 Z',
     front:
       'M0 134V208.5H938V130.5C907.833 144 803 171 746.5 171C651.5 171 583 116.5 531 116.5C498 116.5 473.5 135.5 416 135.5C358.5 135.5 268.5 93 195.5 93C122.5 93 32.5 138 19 138C8.2 138 1.83333 135.333 0 134Z',
   },
   step2: {
-    end: 'M0 33.0731V206.944H938V29.5155C846.5 72.5 810.916 10.812 662.344 -2.08616e-05C506.25 -11.3595 426.797 33.0143 302.344 51C177.891 68.9857 73.125 33.0731 0 33.0731Z',
-    mid: 'M749.5 98C835.562 58.0514 923.938 111.901 938 111.901V206.944H-502V126.093C-428.88 126.093 -421.87 48.5684 -294.58 48.5684C-218.64 48.5684 -70.98 97.9785 -30.203 71.6965C23.806 36.8897 -28.094 92.9917 160.344 71.6965C315.583 54.1516 390.969 189.859 450.734 141.5C529.318 77.9149 641.922 147.935 749.5 98Z',
+    end: 'M 0 32.5 V 208 H 938 L 937.5 30 C 933.833 28.1667 927.454 15.151 901.131 15.648 C 822 24.5 819.185 52.401 706.942 62.83 C 573.84 71.273 400.01 19.126 354.318 12.173 C 306.746 4.0001 220.53 6.355 187.742 16.571 Q 92.913 47.073 33.782 37.48 Z',
+    mid: 'M 0 112 V 208 H 938 V 91.111 C 906.925 65.584 898.763 91.236 851.844 85.278 C 801.985 74.912 769.893 113.321 727.908 126.15 C 689.505 137.466 585.2 105 546.603 80.789 C 505.82 62.086 480.168 83.074 425.404 80.789 C 381.057 83.074 297.105 52.758 254.829 47.871 C 209.655 46.928 177.007 73.746 127.645 74.804 C 88.39 76.078 37.086 113.39 1.468 92.011 Z',
     front:
-      'M0 134V208.5H938V130.5C907.833 144 803 116.5 746.5 116.5C651.5 116.5 583 134 531 134C498 134 473.5 93 416 93C358.5 93 268.5 155 195.5 155C122.5 155 32.5 138 19 138C8.2 138 1.83333 135.333 0 134Z',
+      'M 0 134 V 208.5 H 938 V 130.5 C 907.833 144 784 93 747 114 C 651 173 583 116.5 533 135 C 500 151 458 95 414 95 C 347 99 235 160 197 137 C 122.5 93 38 126 20 126 C 7 128 1.8333 135.333 0 134 Z',
   },
   step3: {
-    end: 'M0 33.0733V206.944H938V29.5157C844.192 9.34089 810.916 87.7181 662.344 76.9062C506.25 65.5467 426.797 -15.389 302.344 2.59669C177.891 20.5824 73.125 33.0733 0 33.0733Z',
-    mid: 'M187.734 157.5C96.5 157.5 37.5 152.041 0 133.563V208H1440V171.018C1366.88 171.018 1262.11 123.247 1137.66 99.7766C1013.2 76.3066 933.75 153.107 777.656 167.93C621.562 182.753 593 41.2688 491 73.9998C383.15 108.608 308.818 157.5 187.734 157.5Z',
+    end: 'M 0 32.5 V 208 H 938 L 937.5 30 C 933.833 28.1667 927.454 15.151 904.618 28.511 C 886.507 39.949 794.997 -5.806 711.113 18.978 C 628.183 45.668 412.753 11.351 353.653 26.603 C 302.179 40.901 224.015 45.667 192.559 32.322 Q 96.283 -10.574 38.136 14.21 Z',
+    mid: 'M 0 112 V 208 H 938 V 73 C 925.833 90.6667 892.401 129.8 852.695 136.466 C 816.538 139.841 756.833 120.667 731.5 118 C 685.833 113.667 591.736 114.18 562.298 111.973 C 501.5 105 486.308 40.549 441.008 31.502 C 394.827 28.835 305.572 76.963 260.237 78.258 C 220.083 76.963 191.223 28.278 133.117 30.336 C 94.631 32.668 25.1667 91.3333 0 152 Z',
     front:
-      'M0 134V208.5H938V130.5C907.833 144 803 171 746.5 171C651.5 171 583 93 531 93C498 93 473.5 134 416 134C358.5 134 268.5 93 195.5 93C122.5 93 32.5 138 19 138C8.2 138 1.83333 135.333 0 134Z',
+      'M 0 134 V 208.5 H 938 V 130.5 C 907.833 144 813 154 751 154 C 676 158 586 102 542 100 C 495 103 478 149 422 150 C 359 148 271 76 207 76 C 122 78 36 142 21 142 C 8 143 1.8333 135.333 0 134 Z',
   },
 };
-
-const frontWavePath = `
-'M0 134V208.5H938V130.5C907.833 144 803 ${116 - 171} 746.5 ${116 - 171}C651.5 171 583 93 531 93C498 93 473.5 134 416 134C358.5 134 268.5 93 195.5 93C122.5 93 32.5 138 19 138C8.2 138 1.83333 135.333 0 134Z'
-`;
 
 function WaveSvg({ ...delegated }) {
   const frontWaveRef = React.useRef(null);
   const midWaveRef = React.useRef(null);
   const endWaveRef = React.useRef(null);
 
-  // React.useEffect(() => {
-  //   if (
-  //     frontWaveRef.current === null ||
-  //     midWaveRef.current === null ||
-  //     endWaveRef.current === null
-  //   )
-  //     return;
-
-  //   const tl = gsap
-  //     .timeline({
-  //       paused: true,
-  //       repeat: -1,
-  //       ease: 'linear',
-  //       yoyo: true,
-  //     })
-  //     .set(frontWaveRef.current, {
-  //       attr: { d: path.step1.front },
-  //     })
-  //     .set(midWaveRef.current, {
-  //       attr: { d: path.step1.mid },
-  //     })
-  //     .set(endWaveRef.current, {
-  //       attr: { d: path.step1.end },
-  //     });
-
-  //   tl.to(frontWaveRef.current, {
-  //     attr: { d: path.step2.front },
-  //     duration: 3,
-  //   })
-  //     .to(midWaveRef.current, {
-  //       attr: { d: path.step2.mid },
-  //       duration: 1.5,
-  //     })
-  //     .to(endWaveRef.current, {
-  //       attr: { d: path.step2.end },
-  //       duration: 3,
-  //     });
-
-  //   tl.to(frontWaveRef.current, {
-  //     attr: { d: path.step3.front },
-  //     duration: 3,
-  //   })
-  //     .to(midWaveRef.current, {
-  //       attr: { d: path.step3.mid },
-  //       duration: 1.5,
-  //       delay: 0.5,
-  //     })
-  //     .to(endWaveRef.current, {
-  //       attr: { d: path.step3.end },
-  //       duration: 3,
-  //       delay: 0.5,
-  //     });
-
-  //   tl.play();
-  // }, []);
-
   React.useEffect(() => {
-    if (frontWaveRef.current === null) return;
-
-    const tl = gsap.timeline({
-      paused: true,
+    if (frontWaveRef.current == null) return;
+    const waveTimeline = gsap.timeline({
       repeat: -1,
+      repeatDelay: 0,
       yoyo: true,
-      repeatDelay: 0.15,
     });
 
-    tl.to(frontWaveRef.current, {
+    const midWaveTimeline = gsap.timeline({
+      repeat: -1,
+      repeatDelay: 0,
+      yoyo: true,
+    });
+    midWaveTimeline.timeScale(1.5);
+
+    const endWaveTimeline = gsap.timeline({
+      repeat: -1,
+      repeatDelay: 0,
+      yoyo: true,
+    });
+    endWaveTimeline.timeScale(1.25);
+
+    waveTimeline.set(frontWaveRef.current, {
+      attr: { d: path.step1.front },
+    });
+    waveTimeline.to(frontWaveRef.current, {
+      duration: 5,
       attr: { d: path.step2.front },
-      ease: 'linear',
-      duration: 3,
-    }).to(frontWaveRef.current, {
+      ease: Linear.easeIn,
+    });
+    waveTimeline.to(frontWaveRef.current, {
+      duration: 6,
       attr: { d: path.step3.front },
-      ease: 'linear',
-      duration: 3,
+      ease: Linear.easeIn,
     });
 
-    tl.play();
+    midWaveTimeline.set(midWaveRef.current, {
+      attr: { d: path.step1.mid },
+    });
+    midWaveTimeline.to(midWaveRef.current, {
+      duration: 5,
+      attr: { d: path.step2.mid },
+      ease: Linear.easeIn,
+    });
+    midWaveTimeline.to(midWaveRef.current, {
+      duration: 6,
+      attr: { d: path.step3.mid },
+      ease: Linear.easeIn,
+    });
+
+    endWaveTimeline.set(endWaveRef.current, {
+      attr: { d: path.step1.end },
+    });
+    endWaveTimeline.to(endWaveRef.current, {
+      duration: 6,
+      attr: { d: path.step2.end },
+      ease: Linear.easeIn,
+    });
+    endWaveTimeline.to(endWaveRef.current, {
+      duration: 6,
+      attr: { d: path.step3.end },
+      ease: Linear.easeIn,
+    });
+
+    waveTimeline.play();
+    midWaveTimeline.play();
+    endWaveTimeline.play();
   }, []);
 
   return (
@@ -125,18 +111,18 @@ function WaveSvg({ ...delegated }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M0 32.5V208H938L937.5 30C933.833 28.1667 922.7 24.5 907.5 24.5C822 24.5 847.5 79 700 79C552.5 79 418 3.99984 353.5 4C306.746 4.00011 245 25.5002 188.5 25.5002C132 25.5002 37 -4.5 0 32.5Z"
+          d={path.step1.end}
           fill="url(#paint0_linear_103_748)"
           fillOpacity="0.85"
           ref={endWaveRef}
         />
         <path
-          d="M0 112V208H938V73C925.833 90.6667 892.1 126 854.5 126C816.9 126 756.833 120.667 731.5 118C685.833 113.667 585.2 105 548 105C501.5 105 481.5 52.5 428 52.5C374.5 52.5 284.5 76 243 76C201.5 76 190.5 50 133 50C87 50 25.1667 91.3333 0 112Z"
+          d={path.step1.mid}
           fill="url(#paint1_linear_103_748)"
           ref={midWaveRef}
         />
         <path
-          d="M0 134V208.5H938V130.5C907.833 144 803 171 746.5 171C651.5 171 583 116.5 531 116.5C498 116.5 473.5 135.5 416 135.5C358.5 135.5 268.5 93 195.5 93C122.5 93 32.5 138 19 138C8.2 138 1.83333 135.333 0 134Z"
+          d={path.step1.front}
           fill="var(--color-frontWave)"
           ref={frontWaveRef}
         />
