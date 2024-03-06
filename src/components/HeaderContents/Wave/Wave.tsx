@@ -1,6 +1,6 @@
-import React from "react";
-import * as Styled from "./Wave.style";
-import WaveSvg from "./WaveSvg";
+import React from 'react';
+import * as Styled from './Wave.style';
+import WaveSvg from './WaveSvg';
 
 function Wave() {
   return (
@@ -8,7 +8,7 @@ function Wave() {
       <Styled.BackgroundColor />
       <WaveSvg
         style={{
-          transition: "all 350ms ease 0s",
+          transition: 'all 350ms ease 0s',
           zIndex: 3,
         }}
       />
