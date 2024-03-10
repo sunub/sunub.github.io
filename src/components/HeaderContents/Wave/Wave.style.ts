@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
-import Image from "next/image";
+import styled from 'styled-components';
+import Image from 'next/image';
 
 export const BackgroundColor = styled.div`
   position: fixed;
@@ -36,6 +36,8 @@ export const WaveImage = styled(Image)`
 
 export const WaveSvgWrapper = styled.div`
   grid-area: wave-image;
+
+  position: sticky;
   display: grid;
   align-items: flex-end;
 `;

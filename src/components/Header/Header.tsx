@@ -14,41 +14,11 @@ import { useGSAP } from '@gsap/react';
 import useToggle from '@/hooks/use-toggle';
 
 function Header() {
-  const container = React.useRef<HTMLDivElement>(null);
   const [isBlur, toggleBlur] = useToggle();
-  const [a, b] = React.useState();
 
-  let animating: boolean | null;
-  React.useEffect(() => {
-    gsap.registerPlugin(Observer);
-
-    function scrollAnimation(dir: 'up' | 'down') {
-      animating = true;
-      const tl = gsap.timeline({
-        defaults: { ease: 'power1.inOut' },
-        onComplete: () => {
-          animating = false;
-        },
-      });
-
-      if (dir === 'up') {
-      } else if (dir === 'down') {
-      }
-    }
-
-    Observer.create({
-      target: window,
-      type: 'scroll',
-      onUp: () => !animating && scrollAnimation('up'),
-      onDown: () => !animating && scrollAnimation('down'),
-    });
-  }, []);
-
-  // useGSAP(() => {
-  // });
   return (
     <React.Fragment>
-      <Styled.RootWrapper $isBlur={isBlur} ref={container}>
+      <Styled.RootWrapper $isBlur={isBlur}>
         <Spacer size={60} axis={'vertical'} />
         <Styled.HeaderWrapper id="blog-main__header-contents">
           <Styled.Header>
