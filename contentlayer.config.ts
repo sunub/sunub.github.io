@@ -40,7 +40,7 @@ const fieldTypes: any = {
 
 export const AlgorithmPost = defineDocumentType(() => ({
   name: "AlgorithmPost",
-  filePathPattern: `algorithm/**/*.mdx`,
+  filePathPattern: "./algorithm/**/*.mdx",
   contentType: "mdx",
   fields: {
     ...fieldTypes,
@@ -48,14 +48,14 @@ export const AlgorithmPost = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/posts/algorithm/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `./algorithm/${doc._raw.flattenedPath}`,
     },
   },
 }));
 
 export const CodePost = defineDocumentType(() => ({
   name: "CodePost",
-  filePathPattern: `code/**/*.mdx`,
+  filePathPattern: "./code/**/*.mdx",
   contentType: "mdx",
   fields: {
     ...fieldTypes,
@@ -63,14 +63,14 @@ export const CodePost = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/posts/code/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `./code/${doc._raw.flattenedPath}`,
     },
   },
 }));
 
 export const WebPost = defineDocumentType(() => ({
   name: "WebPost",
-  filePathPattern: `web/**/*.mdx`,
+  filePathPattern: "./web/**/*.mdx",
   contentType: "mdx",
   fields: {
     ...fieldTypes,
@@ -78,14 +78,14 @@ export const WebPost = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/posts/web/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `./web/${doc._raw.flattenedPath}`,
     },
   },
 }));
 
 export const CSPost = defineDocumentType(() => ({
   name: "CSPost",
-  filePathPattern: `cs/**/*.mdx`,
+  filePathPattern: "./cs/**/*.mdx",
   contentType: "mdx",
   fields: {
     ...fieldTypes,
@@ -93,7 +93,7 @@ export const CSPost = defineDocumentType(() => ({
   computedFields: {
     url: {
       type: "string",
-      resolve: (doc) => `/posts/cs/${doc._raw.flattenedPath}`,
+      resolve: (doc) => `./cs/${doc._raw.flattenedPath}`,
     },
   },
 }));
