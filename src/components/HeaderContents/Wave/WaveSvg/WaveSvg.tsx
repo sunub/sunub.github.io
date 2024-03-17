@@ -2,7 +2,8 @@
 
 import React from 'react';
 import * as Styled from '../Wave.style';
-import gsap, { Linear } from 'gsap';
+import gsap from 'gsap';
+import { CustomEase, Linear } from 'gsap/all';
 
 const path = {
   step1: {
@@ -32,18 +33,17 @@ function WaveSvg({ ...delegated }) {
 
   React.useEffect(() => {
     if (frontWaveRef.current == null) return;
+    gsap.registerPlugin(CustomEase);
+
     const waveTimeline = gsap.timeline({
       repeat: -1,
-      repeatDelay: 0,
       yoyo: true,
     });
-
-    const midWaveTimeline = gsap.timeline({
+    const midTimeline = gsap.timeline({
       repeat: -1,
-      repeatDelay: 0,
       yoyo: true,
     });
-    midWaveTimeline.timeScale(1.5);
+    midTimeline.timeScale(1.25);
 
     const endWaveTimeline = gsap.timeline({
       repeat: -1,
@@ -54,30 +54,31 @@ function WaveSvg({ ...delegated }) {
 
     waveTimeline.set(frontWaveRef.current, {
       attr: { d: path.step1.front },
+      ease: 'sine.inOut',
     });
     waveTimeline.to(frontWaveRef.current, {
-      duration: 5,
+      duration: 3,
       attr: { d: path.step2.front },
-      ease: Linear.easeIn,
+      ease: CustomEase.create('custom', 'M0,0 C0,0 1,0.4 1,0.4 '),
     });
     waveTimeline.to(frontWaveRef.current, {
-      duration: 6,
+      duration: 3,
       attr: { d: path.step3.front },
-      ease: Linear.easeIn,
+      ease: 'none',
     });
 
-    midWaveTimeline.set(midWaveRef.current, {
+    midTimeline.set(midWaveRef.current, {
       attr: { d: path.step1.mid },
     });
-    midWaveTimeline.to(midWaveRef.current, {
+    midTimeline.to(midWaveRef.current, {
       duration: 5,
-      attr: { d: path.step2.mid },
-      ease: Linear.easeIn,
-    });
-    midWaveTimeline.to(midWaveRef.current, {
-      duration: 6,
       attr: { d: path.step3.mid },
-      ease: Linear.easeIn,
+      ease: 'none',
+    });
+    midTimeline.to(midWaveRef.current, {
+      duration: 3,
+      attr: { d: path.step2.mid },
+      ease: CustomEase.create('custom', 'M0,0 C0,0 1,0.4 1,0.4 '),
     });
 
     endWaveTimeline.set(endWaveRef.current, {
@@ -85,18 +86,14 @@ function WaveSvg({ ...delegated }) {
     });
     endWaveTimeline.to(endWaveRef.current, {
       duration: 6,
-      attr: { d: path.step2.end },
-      ease: Linear.easeIn,
+      attr: { d: path.step3.end },
+      ease: 'none',
     });
     endWaveTimeline.to(endWaveRef.current, {
-      duration: 6,
-      attr: { d: path.step3.end },
-      ease: Linear.easeIn,
+      duration: 3,
+      attr: { d: path.step1.end },
+      ease: CustomEase.create('custom', 'M0,0 C0,0 1,0.4 1,0.4 '),
     });
-
-    waveTimeline.play();
-    midWaveTimeline.play();
-    endWaveTimeline.play();
   }, []);
 
   return (

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
-import Image from "next/image";
+import styled from 'styled-components';
+import Image from 'next/image';
 
 export const RootWrapper = styled.div`
   position: relative;
@@ -40,7 +40,7 @@ export const Shadow = styled.div`
 
 export const DarkHeroImage = styled(Image).attrs({
   quality: 70,
-  sizes: "100vw",
+  sizes: '100vw',
   priority: true,
 })<{ $mirrored?: boolean }>`
   pointer-events: none;
@@ -49,14 +49,14 @@ export const DarkHeroImage = styled(Image).attrs({
   opacity: var(--color-dark-heroimage);
   transition: opacity 350ms ease 0s;
   transform: ${({ $mirrored }) =>
-    $mirrored && "scaleY(-1) translateY(-141%) scaleY(0.5)"};
-  filter: ${({ $mirrored }) => $mirrored && "blur(10px)"};
+    $mirrored && 'scaleY(-1) translateY(-141%) scaleY(0.5)'};
+  filter: ${({ $mirrored }) => $mirrored && 'blur(10px)'};
   max-width: 1600px;
 `;
 
 export const LightHeroImage = styled(Image).attrs({
   quality: 70,
-  sizes: "100vw",
+  sizes: '100vw',
   priority: true,
 })<{ $mirrored?: boolean }>`
   pointer-events: none;
@@ -65,7 +65,7 @@ export const LightHeroImage = styled(Image).attrs({
   opacity: var(--color-light-heroimage);
   transition: opacity 350ms ease 0s;
   transform: ${({ $mirrored }) =>
-    $mirrored && "scaleY(-1) translateY(-141%) scaleY(0.5)"};
-  filter: ${({ $mirrored }) => $mirrored && "blur(10px)"};
+    $mirrored && 'scaleY(-1) translateY(-141%) scaleY(0.5)'};
+  filter: ${({ $mirrored }) => $mirrored && 'blur(10px)'};
   max-width: 1600px;
 `;

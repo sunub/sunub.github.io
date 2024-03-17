@@ -3,26 +3,8 @@
 import React from 'react';
 import * as Styled from '../HeroImage.style';
 import LightHeroImage from '@/public/assets/hero-image__light-image.avif';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/all';
 
 function LightMode() {
-  React.useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    gsap.to('#blog-main__hero-image', {
-      scrollTrigger: {
-        trigger: '#blog-main__wave-svg-img',
-        toggleActions: 'restart none reverse pause',
-        start: 'top 50%',
-        end: 'bottom 50%',
-        scrub: true,
-        markers: true,
-      },
-      y: 100,
-      duration: 1,
-    });
-  }, []);
   return (
     <React.Fragment>
       <Styled.Picture>
