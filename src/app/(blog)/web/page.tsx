@@ -21,7 +21,6 @@ function WebCategoryPage() {
     completed: post.completed,
   }));
 
-  console.log(frontmatters);
   return (
     <section>
       <Styled.Title>
