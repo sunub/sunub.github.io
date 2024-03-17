@@ -1,7 +1,7 @@
-import { FrontMatter } from "type";
-import * as Styled from "./BlogPost.style";
-import Link from "next/link";
-import Blog from "@/db/blog";
+import { FrontMatter } from 'type';
+import * as Styled from './BlogPost.style';
+import Link from 'next/link';
+import Blog from '@/db/blog';
 
 type PublishedPost = FrontMatter;
 
@@ -15,7 +15,7 @@ async function BlogPost() {
   const recentlyPublished = await getRecentlyPublished();
 
   return (
-    <div>
+    <div id="blog-post__link-list">
       {recentlyPublished.map((frontmatter) => {
         const { slug, title, summary, tags } = frontmatter;
         return (

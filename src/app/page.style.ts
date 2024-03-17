@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const HeaderContentsWrapper = styled.div`
   width: 100%;
@@ -13,8 +13,8 @@ export const MainWrapper = styled.main`
   display: grid;
   position: relative;
   grid-template:
-    "newest categories"
-    "newest tags" 1fr / 2fr 1fr;
+    'newest categories'
+    'newest tags' 1fr / 2fr 1fr;
 
   max-width: 1100px;
   margin-left: auto;
@@ -26,8 +26,8 @@ export const MainWrapper = styled.main`
 
   @media screen and (max-width: 786px) {
     grid-template:
-      "newest"
-      "newset" 1fr / 1fr;
+      'newest'
+      'newset' 1fr / 1fr;
 
     padding-left: 32px;
     padding-right: 32px;

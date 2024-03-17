@@ -1,17 +1,15 @@
-import * as Styled from "./NewestPost.style";
-import Spacer from "@/components/Spacer";
-import BlogPost from "../BlogPost";
+import * as Styled from './NewestPost.style';
+import Spacer from '@/components/Spacer';
+import BlogPost from '../BlogPost';
 
 function NewestPost() {
   return (
-    <Styled.RootWrapper>
+    <Styled.RootWrapper id="blog-main__recently-post">
       <Styled.TitleWrapper>
         <FeatherIcon />
-        <Styled.Title id="blog-main__recently-post">
-          Recently Published
-        </Styled.Title>
+        <Styled.Title>Recently Published</Styled.Title>
       </Styled.TitleWrapper>
-      <Spacer axis={"vertical"} size={64} />
+      <Spacer axis={'vertical'} size={64} />
       <BlogPost />
     </Styled.RootWrapper>
   );
