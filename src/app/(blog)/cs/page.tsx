@@ -1,9 +1,9 @@
 import React from "react";
-import Blog from "@/db/blog";
 import Card from "@/components/Card";
 import * as Styled from "../page.style";
 import Spacer from "@/components/Spacer";
 import Wave from "@/components/HeaderContents/Wave";
+import { allCSPosts } from "contentlayer/generated";
 
 export const metadata = {
   title: "Code Category Page",
@@ -11,7 +11,15 @@ export const metadata = {
 };
 
 function CodePage() {
-  const allBlogs = Blog.findByCategory("cs");
+  const frontmatters = allCSPosts.map((post) => ({
+    title: post.title,
+    date: post.date,
+    tags: post.tags,
+    summary: post.summary,
+    category: post.category,
+    slug: post.slug,
+    completed: post.completed,
+  }));
 
   return (
     <section>
@@ -20,21 +28,11 @@ function CodePage() {
       </Styled.Title>
       <Wave />
       <Styled.Background>
+        <Spacer size={48} axis={"vertical"} />
         <Styled.Wrapper>
-          <Spacer size={48} axis={"vertical"} />
-          {allBlogs
-            ?.sort((a, b) => {
-              if (
-                new Date(a.metadata.date ?? "") >
-                new Date(b.metadata.date ?? "")
-              ) {
-                return -1;
-              }
-              return 1;
-            })
-            .map(({ metadata }) => (
-              <Card key={metadata.slug} frontMatter={metadata} />
-            ))}
+          {frontmatters.map((frontmatter) => (
+            <Card key={frontmatter.slug} frontMatter={frontmatter} />
+          ))}
         </Styled.Wrapper>
       </Styled.Background>
     </section>

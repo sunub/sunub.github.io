@@ -1,9 +1,9 @@
 import React from "react";
-import Blog from "@/db/blog";
 import Card from "@/components/Card";
 import Spacer from "@/components/Spacer";
 import Wave from "@/components/HeaderContents/Wave";
 import * as Styled from "../page.style";
+import { allWebPosts } from "contentlayer/generated";
 
 export const metadata = {
   title: "Code Category Page",
@@ -11,8 +11,17 @@ export const metadata = {
 };
 
 function WebCategoryPage() {
-  const allBlogs = Blog.findByCategory("web");
+  const frontmatters = allWebPosts.map((post) => ({
+    title: post.title,
+    date: post.date,
+    tags: post.tags,
+    summary: post.summary,
+    category: post.category,
+    slug: post.slug,
+    completed: post.completed,
+  }));
 
+  console.log(frontmatters);
   return (
     <section>
       <Styled.Title>
@@ -22,19 +31,9 @@ function WebCategoryPage() {
       <Styled.Background>
         <Spacer size={48} axis={"vertical"} />
         <Styled.Wrapper>
-          {allBlogs
-            ?.sort((a, b) => {
-              if (
-                new Date(a.metadata.date ?? "") >
-                new Date(b.metadata.date ?? "")
-              ) {
-                return -1;
-              }
-              return 1;
-            })
-            .map(({ metadata }) => (
-              <Card key={metadata.slug} frontMatter={metadata} />
-            ))}
+          {frontmatters.map((frontmatter) => (
+            <Card key={frontmatter.slug} frontMatter={frontmatter} />
+          ))}
         </Styled.Wrapper>
       </Styled.Background>
     </section>
