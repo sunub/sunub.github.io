@@ -1,17 +1,15 @@
+"use client";
+
 import React from "react";
 import * as Styled from "./Wave.style";
 import WaveSvg from "./WaveSvg";
+import WaveBird from "./WaveBird";
 
 function Wave() {
   return (
     <Styled.WaveWrapper>
-      <Styled.BackgroundColor />
-      <WaveSvg
-        style={{
-          transition: "all 350ms ease 0s",
-          zIndex: 3,
-        }}
-      />
+      <WaveSvg id="blog-main__wave-svg-img" />
+      <WaveBird />
     </Styled.WaveWrapper>
   );
 }

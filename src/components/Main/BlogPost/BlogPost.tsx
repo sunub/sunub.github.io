@@ -15,7 +15,7 @@ async function BlogPost() {
   const recentlyPublished = await getRecentlyPublished();
 
   return (
-    <div>
+    <div style={{ paddingLeft: "16px" }}>
       {recentlyPublished.map((frontmatter) => {
         const { slug, title, summary, tags } = frontmatter;
         return (

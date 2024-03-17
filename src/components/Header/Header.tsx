@@ -12,7 +12,7 @@ function Header() {
       <Styled.RootWrapper>
         <Styled.DemoWrapper />
         <Spacer size={60} axis={"vertical"} />
-        <Styled.HeaderWrapper>
+        <Styled.HeaderWrapper id="blog-main__header-contents">
           <Styled.Header>
             <Styled.LogoAndNavWrapper>
               <Logo />

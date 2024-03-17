@@ -36,6 +36,8 @@ export const WaveImage = styled(Image)`
 
 export const WaveSvgWrapper = styled.div`
   grid-area: wave-image;
+
+  position: sticky;
   display: grid;
   align-items: flex-end;
 `;
