@@ -38,9 +38,9 @@ function Navigation() {
     <React.Fragment>
       <nav>
         <Styled.NavigationWrapper>
-          <Styled.NavigationItem>
+          {/* <Styled.NavigationItem>
             <Link href={"/latest"}>latest</Link>
-          </Styled.NavigationItem>
+          </Styled.NavigationItem> */}
           <Styled.NavigationItem>
             <Styled.PostNaviation>
               <Link href={"/post"}>post</Link>
@@ -69,9 +69,9 @@ function Navigation() {
                 )}
             </Styled.PostNaviation>
           </Styled.NavigationItem>
-          <Styled.NavigationItem>
+          {/* <Styled.NavigationItem>
             <Link href={"/about"}>about</Link>
-          </Styled.NavigationItem>
+          </Styled.NavigationItem> */}
         </Styled.NavigationWrapper>
       </nav>
     </React.Fragment>
