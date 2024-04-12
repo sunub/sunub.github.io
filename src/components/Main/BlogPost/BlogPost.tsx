@@ -17,7 +17,7 @@ async function BlogPost() {
   return (
     <div style={{ paddingLeft: "16px" }}>
       {recentlyPublished.map((frontmatter) => {
-        const { slug, title, summary, tags } = frontmatter;
+        const { slug, title, summary, category } = frontmatter;
         return (
           <Styled.BlogPostWrapper
             key={`${frontmatter.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
