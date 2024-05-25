@@ -137,7 +137,7 @@ export const Article = styled.article`
     & > code {
       --border-color: color-mix(
         in oklch,
-        var(--color-bird),
+        var(--color-frontWave),
         var(--color-codeBlock)
       );
       font-family: var(--nanum-square-neo) !important;
@@ -173,4 +173,14 @@ export const LinkAnchor = styled.a`
       opacity: 1;
     }
   }
+`;
+
+export const ImageWrapper = styled.span`
+  display: flex;
+  width: 100%;
+  place-content: left;
+`;
+
+export const Image = styled.img`
+  box-shadow: 0px 0px 27px rgba(0, 0, 0, 0.07);
 `;

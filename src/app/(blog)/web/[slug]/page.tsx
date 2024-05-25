@@ -77,10 +77,7 @@ function AlgorithmSlugPage({ params }: { params: { slug: string } }) {
   const post: Partial<Post> = allWebPosts.find(
     (post) => post.slug === params.slug,
   ) as Post;
-
-  const { title, date, summary } = post;
   const contentCode = post.body.code;
-
   if (!contentCode) notFound();
 
   const MDXContent = useMDXComponent(contentCode);
@@ -96,17 +93,17 @@ function AlgorithmSlugPage({ params }: { params: { slug: string } }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "BlogPosting",
-              headline: title,
-              datePublised: date,
-              dateModified: date,
-              description: summary,
+              headline: post.title,
+              datePublised: post.date,
+              dateModified: post.date,
+              description: post.summary,
             }),
           }}
         />
         <Styled.Header id="blog-post__header">
-          <h1>{title}</h1>
+          <h1>{post.title}</h1>
           <React.Suspense fallback={<div>Loading...</div>}>
-            <p>{formatDate(date!)}</p>
+            <p>{formatDate(post.date!)}</p>
           </React.Suspense>
         </Styled.Header>
         <Styled.Article id="blog-post__article">

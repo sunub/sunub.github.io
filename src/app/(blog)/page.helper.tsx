@@ -54,12 +54,21 @@ function createHeading(level: number) {
   };
 }
 
+function createImage({ ...props }) {
+  return (
+    <Styled.ImageWrapper>
+      <Styled.Image {...props} />
+    </Styled.ImageWrapper>
+  );
+}
+
 const components: any = {
   h1: createHeading(1),
   h2: createHeading(2),
   h3: createHeading(3),
   h4: createHeading(4),
   code: Code,
+  img: createImage,
 };
 
 export { components };
