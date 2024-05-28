@@ -169,11 +169,26 @@ td {
 }
 
 strong {
-  font-weight: 700;
+  font-weight: 900;
   font-size: 1.15rem;
-  color: var(--color-highlightColor);
+  color: var(--color-highlight);
   padding-left: 8px;
   padding-right: 8px;
+}
+
+.image_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0px 0px 27px rgba(0, 0, 0, 0.07);
+}
+
+.image_compo {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  max-width: 100%;
+  aspect-ratio: 5 / 3;
 }
 
 #blog-main__header-content-wrapper {
@@ -192,6 +207,7 @@ strong {
 }
 
 #blog-main__recently-post-list {
+  position: relative;
   background: var(--color-frontWave);
 }
 
