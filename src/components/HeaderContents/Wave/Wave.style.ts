@@ -19,7 +19,6 @@ export const WaveWrapper = styled.div`
   overflow: hidden;
   left: 0px;
   right: 0px;
-  bottom: 0px;
   width: 100%;
   transform: translateY(1px);
   z-index: 3;
