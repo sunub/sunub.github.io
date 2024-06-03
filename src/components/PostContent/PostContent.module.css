@@ -64,61 +64,6 @@
   padding-right: 32px;
 
   font-weight: 500;
-  /* 
-  & > span {
-    color: oklch(90.75% 0.042 30.85);
-  }
-
-  & > h1 {
-    font-size: calc(2rem);
-  }
-
-  & > ol {
-    --counter-name: counts;
-    counter-reset: var(--counter-name);
-    position: relative;
-  }
-
-  & > ol > li {
-    counter-increment: var(--counter-name);
-    text-align: baseline;
-  }
-
-  & > ol > li::before {
-    position: absolute;
-    left: -1px;
-    content: counters(var(--counter-name), ".") ". ";
-    font-feature-settings: "tnum";
-    padding-right: 12px;
-    font-weight: 900;
-    font-family: var(--bariol-serif), sans-serif;
-    font-size: calc(1.15rem);
-    color: var(--color-bird);
-  }
-
-  & > ul {
-    list-style: square;
-  }
-
-  & > ul > li::marker {
-    color: var(--color-bird);
-  }
-
-  & > h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    font-weight: 900;
-  }
-
-  & > h2,
-  h3,
-  h4,
-  h5 {
-    font-size: calc(1.5rem);
-    padding-top: 32px;
-  } */
 }
 
 @counter-style stylized-num {

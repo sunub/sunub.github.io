@@ -7,7 +7,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        base: "var(--color-frontWave)",
+      },
+      colors: {
+        base: "var(--color-text)",
+      },
+    },
   },
   plugins: [],
 };

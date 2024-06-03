@@ -35,6 +35,7 @@ html {
   --nanum-square-neo: "NanumSquareNeo";
 
   display: block;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -55,6 +56,12 @@ h4,
 h5,
 h6 {
   font-family: var(--nanum-round-bold), sans-serif;
+}
+
+ol,
+ul,
+menu {
+  padding-left: 1rem;
 }
 
 li {
@@ -115,7 +122,6 @@ textarea {
   border-radius: 8px;
 }
 
-img,
 iframe {
   max-inline-size: 100%;
   block-size: auto;
@@ -178,7 +184,6 @@ strong {
 
 .image_wrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
   border-radius: 8px;
   box-shadow: 0px 0px 27px rgba(0, 0, 0, 0.07);
@@ -187,8 +192,15 @@ strong {
 .image_compo {
   padding-top: 16px;
   padding-bottom: 16px;
-  max-width: 100%;
   aspect-ratio: 5 / 3;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+li.active > a {
+  color: var(--color-highlight);
+  font-weight: 700;
 }
 
 #blog-main__header-content-wrapper {
@@ -250,6 +262,12 @@ strong {
   #blog-main__recently-post-list {
     padding-left: 5cqw;
     padding-right: 5cqw;
+  }
+}
+
+@container root (width <= 1004px) {
+  #blog-post__page-nav {
+    display: none;
   }
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { highlight } from "sugar-high";
-import * as Styled from "./page.style";
+import { LinkSVG, LinkAnchor } from "./article.style";
 import ImageCompo from "@/components/ui/image";
 
 function slugify(str: string) {
@@ -9,7 +9,7 @@ function slugify(str: string) {
 
 function LinkIcon() {
   return (
-    <Styled.LinkSVG
+    <LinkSVG
       width="24"
       height="24"
       viewBox="0 0 24 24"
@@ -30,7 +30,7 @@ function LinkIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </Styled.LinkSVG>
+    </LinkSVG>
   );
 }
 
@@ -44,7 +44,7 @@ function createHeading(level: number) {
     let slug = slugify(children);
     return React.createElement(`h${level}`, { id: slug }, [
       React.createElement(
-        Styled.LinkAnchor,
+        LinkAnchor,
         {
           href: `#${slug}`,
           key: `${slug}`,
@@ -55,7 +55,7 @@ function createHeading(level: number) {
   };
 }
 
-const components: any = {
+const articleCompos: any = {
   h1: createHeading(1),
   h2: createHeading(2),
   h3: createHeading(3),
@@ -64,4 +64,4 @@ const components: any = {
   img: ImageCompo,
 };
 
-export { components };
+export { articleCompos };
