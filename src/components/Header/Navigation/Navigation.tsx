@@ -43,7 +43,7 @@ function Navigation() {
           </Styled.NavigationItem> */}
           <Styled.NavigationItem>
             <Styled.PostNaviation>
-              <Link href={"/post"}>post</Link>
+              <span className="select-none">post</span>
               <Spacer axis={"horizonal"} size={8} />
               <button onClick={toggleOpen} ref={buttonRef}>
                 <svg

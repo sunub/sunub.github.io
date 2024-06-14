@@ -26,8 +26,7 @@ const getAnchorTitleId = (title: string) => {
 };
 
 export default function ProgressNav({ headers }: Props) {
-  console.log(headers);
-  // const nav = buildNav(headers);
+  const nav = buildNav(headers);
 
   React.useEffect(() => {
     const options: IntersectionObserverInit = {
@@ -57,7 +56,7 @@ export default function ProgressNav({ headers }: Props) {
 
   return (
     <nav id="blog-post__page-nav">
-      {/* <ol className="sticky top-[3rem] self-start">
+      <ol className="sticky top-[3rem] self-start text-[14px]">
         {nav.map(([title, items]) => {
           return (
             <li key={`${title}`}>
@@ -78,7 +77,7 @@ export default function ProgressNav({ headers }: Props) {
             </li>
           );
         })}
-      </ol> */}
+      </ol>
     </nav>
   );
 }

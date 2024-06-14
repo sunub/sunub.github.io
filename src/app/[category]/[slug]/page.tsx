@@ -141,7 +141,7 @@ function Page({ params }: Props) {
         </div>
         <div
           id="blog-post__article"
-          className="relative flex flex-row justify-center gap-[4.25rem]"
+          className="relative flex flex-row justify-center gap-[2.25rem]"
         >
           <Article>
             <MDXContent components={articleCompos} />

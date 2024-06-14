@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export const Article = styled.article`
   max-width: 700px;
-
   line-height: calc(1.7rem + 0.8rem);
   & > pre {
     background: var(--color-codeBlock);
@@ -33,12 +32,17 @@ export const Article = styled.article`
   }
 
   & > h2 {
+    color: var(--color-title);
     font-size: calc(1rem + 0.8rem);
+    font-weight: 900;
+  }
+
+  & > h3 {
+    font-size: calc(1rem + 0.35rem);
+    font-weight: 400;
   }
 
   & > :is(h2, h3, h4, h5, h6) {
-    color: var(--color-title);
-    font-weight: 800;
     margin-top: 3.5rem;
     margin-bottom: 1.5rem;
     & > span {
@@ -47,7 +51,7 @@ export const Article = styled.article`
   }
 
   & > :is(p) {
-    font-size: calc(1rem + 0.1rem);
+    font-size: calc(0.8rem + 0.25rem);
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 
