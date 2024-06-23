@@ -1,3 +1,4 @@
 {
-  "ignore": ["**/*.mdx"]
+    "ignore": ["**/*.mdx"],
+    "tabWidth": 2
 }

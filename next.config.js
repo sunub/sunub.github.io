@@ -21,24 +21,24 @@ const nextConfig = {
     styledComponents: true,
   },
   output: "standalone",
-  redirects: async () => {
-    if (process.env.POSTGRES_URL === undefined) {
-      return [];
-    }
+  // redirects: async () => {
+  //   if (process.env.POSTGRES_URL === undefined) {
+  //     return [];
+  //   }
 
-    const tableData = await sql`
-      SELECT source, destination, permanent 
-      FROM redirects;
-    `;
+  //   const tableData = await sql`
+  //     SELECT source, destination, permanent
+  //     FROM redirects;
+  //   `;
 
-    const redirects = tableData.rows;
+  //   const redirects = tableData.rows;
 
-    return redirects.map(({ source, destination, permanent }) => ({
-      source,
-      destination,
-      permanent: !!permanent,
-    }));
-  },
+  //   return redirects.map(({ source, destination, permanent }) => ({
+  //     source,
+  //     destination,
+  //     permanent: !!permanent,
+  //   }));
+  // },
   headers() {
     return [
       {

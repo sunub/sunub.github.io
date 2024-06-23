@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Post {
+  id     String       @id @default(cuid())
+  slug   String       @unique
+  tags   Tags[]
+  images PostImages[]
+}
+
+model Tags {
+  id       String @id @default(cuid())
+  name     String
+  post     Post   @relation(fields: [postSlug], references: [slug])
+  postSlug String
+}
+
+model PostImages {
+  id          String  @id @default(cuid())
+  altText     String?
+  contentType String
+  blob        Bytes
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post     Post   @relation(fields: [postSlug], references: [slug])
+  postSlug String
+}
