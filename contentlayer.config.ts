@@ -12,7 +12,8 @@ const fieldTypes: any = {
     required: true,
   },
   tags: {
-    type: "string",
+    type: "list",
+    of: { type: "string" },
     description: "The tags of the post",
     required: true,
   },
@@ -34,6 +35,12 @@ const fieldTypes: any = {
   completed: {
     type: "boolean",
     description: "The status of the post",
+    required: true,
+  },
+  images: {
+    type: "list",
+    of: { type: "string" },
+    description: "The images of the post",
     required: true,
   },
 };
