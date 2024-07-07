@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const { sql } = require("@vercel/postgres");
 const { withContentlayer } = require("next-contentlayer");
+const { PrismaClient } = require("@prisma/client");
 
 const nextConfig = {
   basePath: "",
@@ -8,37 +9,31 @@ const nextConfig = {
   swcMinify: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "firebasestorage.googleapis.com",
-        port: "",
-      },
-    ],
     formats: ["image/avif", "image/webp"],
   },
   compiler: {
     styledComponents: true,
   },
   output: "standalone",
-  // redirects: async () => {
-  //   if (process.env.POSTGRES_URL === undefined) {
-  //     return [];
-  //   }
+  redirects: async () => {
+    if (process.env.POSTGRES_URL === undefined) {
+      return [];
+    }
 
-  //   const tableData = await sql`
-  //     SELECT source, destination, permanent
-  //     FROM redirects;
-  //   `;
+    const prisma = new PrismaClient();
+    const redirects = await prisma.redirects.findMany({
+      select: {
+        source: true,
+        destination: true,
+      },
+    });
 
-  //   const redirects = tableData.rows;
-
-  //   return redirects.map(({ source, destination, permanent }) => ({
-  //     source,
-  //     destination,
-  //     permanent: !!permanent,
-  //   }));
-  // },
+    return redirects.map(({ source, destination }) => ({
+      source,
+      destination,
+      permanent: true,
+    }));
+  },
   headers() {
     return [
       {
