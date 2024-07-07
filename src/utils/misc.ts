@@ -10,5 +10,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getImgSrc(imgId: string) {
-  return `/api/resources/${imgId}`;
+  return `/api/resources${imgId}`;
 }
