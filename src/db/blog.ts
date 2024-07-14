@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 
 type MDXFile = {
-  metadata: FrontMatter;
+  frontmatter: FrontMatter;
   content: string;
   slug?: string;
   category?: string;
@@ -22,23 +22,24 @@ function parseFrontmatter(fileContent: string): MDXFile {
   let frontMatterBlock = match![1];
   let content = fileContent.replace(frontmatterRegex, "").trim();
   let frontMatterLines = frontMatterBlock.split("\n");
-  let metadata: FrontMatter = {
-    title: "",
-    date: "",
-    tags: [],
-    summary: "",
-    category: "",
-    slug: "",
-  };
+  let frontmatter: any = {};
 
   frontMatterLines.forEach((line) => {
     let [key, ...valueArr] = line.split(":");
     let value = valueArr.join(": ").trim();
-    value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
-    metadata[key.trim() as keyof FrontMatter] = value;
+    if (value.startsWith("[") && value.endsWith("]")) {
+      const tags = value
+        .replace(/^\[(.*)\]$/, "$1")
+        .split(",")
+        .map((str) => str.trim());
+      frontmatter[key.trim() as keyof FrontMatter] = tags;
+    } else {
+      value = value.replace(/^['"](.*)['"]$/, "$1"); // Remove quotes
+      frontmatter[key.trim() as keyof FrontMatter] = value;
+    }
   });
 
-  return { metadata, content };
+  return { frontmatter, content };
 }
 
 function readMDXFile(filePath: string) {
@@ -83,15 +84,15 @@ function getMDXData(dir: string): BlogContent {
   mdxFilesPath.forEach((files: string[], category: string) => {
     let mdxFiles: Partial<MDXFile> = {};
     files.forEach((file) => {
-      let { metadata, content } = readMDXFile(file);
-      const { slug } = metadata;
+      let { frontmatter, content } = readMDXFile(file);
+      const { slug } = frontmatter;
       mdxFiles = {
-        metadata,
+        frontmatter,
         content,
         slug,
         category,
       };
-      const usedTags = mdxFiles.metadata?.tags.split(", ") as string[];
+      const usedTags = mdxFiles.frontmatter?.tags as string[];
       for (const tag of usedTags) {
         tags.has(tag) ? tags.set(tag, tags.get(tag) + 1) : tags.set(tag, 1);
       }
@@ -116,7 +117,8 @@ function getBlogPost(): BlogContent {
 
   blogpost.sort((a, b) => {
     return (
-      new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
+      new Date(b.frontmatter.date).getTime() -
+      new Date(a.frontmatter.date).getTime()
     );
   });
 
@@ -126,29 +128,52 @@ function getBlogPost(): BlogContent {
   };
 }
 
-class Blog {
-  static data = getBlogPost();
-
-  static getMostUsedTags() {
-    return Blog.data.mostUsedTags;
-  }
-
-  static getMetadata() {
-    const metadata = Blog.data.blogpost.map((post) => post.metadata);
-    return [...metadata];
-  }
-
-  static findByCategory(category: string) {
-    const postsByCategory = Blog.data.blogpost.filter(
-      (post) => post.metadata.category === category,
-    );
-    return [...postsByCategory];
-  }
-
-  static getPostByslug(slug: string) {
-    const postsBySlug = Blog.data.blogpost.find((posts) => posts.slug === slug);
-    return Object.assign({}, postsBySlug);
-  }
+async function getContentHeaders(content: string) {
+  let headers = content
+    .split("\n")
+    .filter((line) => line.startsWith("#"))
+    .map((str) => str.split(" "));
+  return headers;
 }
 
-export default Blog;
+async function allWebPost() {
+  return getBlogPost().blogpost.filter((post) => post.category === "web");
+}
+
+async function allAlgorithmPost() {
+  return getBlogPost().blogpost.filter((post) => post.category === "algorithm");
+}
+
+async function allCSPost() {
+  return getBlogPost().blogpost.filter((post) => post.category === "cs");
+}
+
+async function allCodePost() {
+  return getBlogPost().blogpost.filter((post) => post.category === "code");
+}
+
+async function allBlogPost() {
+  return getBlogPost().blogpost;
+}
+
+async function getRecentlyPublished() {
+  const recentlyPublished = getBlogPost().blogpost.slice(0, 10);
+  return recentlyPublished;
+}
+
+async function getMostUsedTags() {
+  return getBlogPost().mostUsedTags;
+}
+
+export type { MDXFile };
+
+export {
+  allWebPost,
+  allAlgorithmPost,
+  allCSPost,
+  allCodePost,
+  allBlogPost,
+  getContentHeaders,
+  getRecentlyPublished,
+  getMostUsedTags,
+};

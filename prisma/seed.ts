@@ -2,38 +2,14 @@ import fs from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
 import {
-  allWebPosts,
-  allCSPosts,
-  allCodePosts,
-  allAlgorithmPosts,
-} from ".contentlayer/generated/index.mjs";
+  allWebPost,
+  allCSPost,
+  allCodePost,
+  allAlgorithmPost,
+  MDXFile,
+} from "@/db/blog";
 import chalk from "chalk";
 import ora from "ora";
-
-type Post = {
-  title: string;
-  date: string;
-  tags: string[];
-  summary: string;
-  category: string;
-  slug: string;
-  completed: boolean;
-  images: string[];
-  body: {
-    raw: string;
-    code: string;
-  };
-  _id: string;
-  _raw: {
-    sourceFilePath: string;
-    sourceFileName: string;
-    sourceFileDir: string;
-    contentType: string;
-    flattenedPath: string;
-  };
-  type: string;
-  url: string;
-}[];
 
 const prisma = new PrismaClient();
 
@@ -76,14 +52,17 @@ async function seedImages() {
   }
 }
 
-async function seedPostFiles(postData: Post) {
+async function seedPostFiles(postData: MDXFile[]) {
   for (const post of postData) {
+    const frontmatter = post.frontmatter;
+    if (!frontmatter) continue;
+
     await prisma.post.create({
       select: { id: true },
       data: {
-        slug: post.slug,
+        slug: frontmatter.slug,
         tags: {
-          create: post.tags.map((tag) => ({ name: tag })),
+          create: frontmatter.tags.map((tag) => ({ name: tag })),
         },
       },
     });
@@ -91,26 +70,30 @@ async function seedPostFiles(postData: Post) {
   return;
 }
 
-function createRedirectPaths() {
+async function createRedirectPaths() {
   const result = [];
+  const allWebPosts = await allWebPost();
   for (const post of allWebPosts) {
     const source = `/${post.category}/${post.slug}`;
     const destination = `/post/${post.category}/${post.slug}`;
     result.push({ source, destination });
   }
 
+  const allCSPosts = await allCSPost();
   for (const post of allCSPosts) {
     const source = `/${post.category}/${post.slug}`;
     const destination = `/post/${post.category}/${post.slug}`;
     result.push({ source, destination });
   }
 
+  const allCodePosts = await allCodePost();
   for (const post of allCodePosts) {
     const source = `/${post.category}/${post.slug}`;
     const destination = `/post/${post.category}/${post.slug}`;
     result.push({ source, destination });
   }
 
+  const allAlgorithmPosts = await allAlgorithmPost();
   for (const post of allAlgorithmPosts) {
     const source = `/${post.category}/${post.slug}`;
     const destination = `/post/${post.category}/${post.slug}`;
@@ -121,7 +104,7 @@ function createRedirectPaths() {
 }
 
 async function seedRedirects() {
-  const redirects = createRedirectPaths();
+  const redirects = await createRedirectPaths();
   for (const redirect of redirects) {
     const { source, destination } = redirect;
     await prisma.redirects.create({
@@ -160,6 +143,7 @@ async function seedingWebPost() {
   ).start();
   try {
     console.time("📝 Created web posts...");
+    const allWebPosts = await allWebPost();
     await seedPostFiles(allWebPosts);
     webPostSpinner.succeed(chalk.green("Web Post has been seeded!!"));
     console.timeEnd("📝 Created web posts...");
@@ -174,6 +158,7 @@ async function seedingCsPost() {
   ).start();
   try {
     console.time("📝 Created cs posts...");
+    const allCSPosts = await allCSPost();
     await seedPostFiles(allCSPosts);
     csPostSpinner.succeed(chalk.green("CS Post has been seeded!!"));
     console.timeEnd("📝 Created cs posts...");
@@ -188,6 +173,7 @@ async function seedingCodePost() {
   ).start();
   try {
     console.time("📝 Created code posts...");
+    const allCodePosts = await allCodePost();
     await seedPostFiles(allCodePosts);
     codePostSpinner.succeed(chalk.green("Code Post has been seeded!!"));
     console.timeEnd("📝 Created code posts...");
@@ -202,6 +188,7 @@ async function seedingAlgoPost() {
   ).start();
   try {
     console.time("📝 Created algorithm posts...");
+    const allAlgorithmPosts = await allAlgorithmPost();
     await seedPostFiles(allAlgorithmPosts);
     algorithmPostSpinner.succeed(
       chalk.green("Algorithm Post has been seeded!!"),
