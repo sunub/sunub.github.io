@@ -22,7 +22,7 @@ type Tag = (typeof POST_CATEGORY)[number];
 interface FrontMatter {
   title: string;
   date: string;
-  tags: any;
+  tags: string[];
   summary: string;
   category: string;
   slug: string;

@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const { sql } = require("@vercel/postgres");
-const { withContentlayer } = require("next-contentlayer");
 const { PrismaClient } = require("@prisma/client");
 
 const nextConfig = {
@@ -90,4 +88,4 @@ const securityHeaders = [
     value: "Cache-Control",
   },
 ];
-module.exports = withContentlayer(nextConfig);
+module.exports = nextConfig;
