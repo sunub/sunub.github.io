@@ -1,26 +1,20 @@
 import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import Blog from "@/db/blog";
+import { getRecentlyPublished } from "@/db/blog";
 
 type PublishedPost = FrontMatter;
-
-function getRecentlyPublished(): PublishedPost[] {
-  const recentlyPublished = Blog.getMetadata().slice(0, 10);
-
-  return recentlyPublished;
-}
 
 async function BlogPost() {
   const recentlyPublished = await getRecentlyPublished();
 
   return (
     <div style={{ paddingLeft: "16px" }}>
-      {recentlyPublished.map((frontmatter) => {
-        const { slug, title, summary, category } = frontmatter;
+      {recentlyPublished.map((post) => {
+        const { slug, title, summary, category } = post.frontmatter;
         return (
           <Styled.BlogPostWrapper
-            key={`${frontmatter.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
+            key={`${post.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
           >
             <Link href={`/${category}/${slug}`} scroll={true}>
               <Styled.BlogPostTitle>

@@ -1,7 +1,7 @@
 import React from "react";
 import { highlight } from "sugar-high";
 import { LinkSVG, LinkAnchor } from "./article.style";
-import ImageCompo from "@/components/ui/image";
+import Img from "@/components/ui/image";
 
 function slugify(str: string) {
   return str.toString().trim().replace(/\ /g, "-");
@@ -61,7 +61,7 @@ const articleCompos: any = {
   h3: createHeading(3),
   h4: createHeading(4),
   code: Code,
-  img: ImageCompo,
+  Img: Img,
 };
 
 export { articleCompos };
