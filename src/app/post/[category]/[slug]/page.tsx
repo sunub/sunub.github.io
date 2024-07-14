@@ -1,18 +1,19 @@
 import {
-  allCSPosts,
-  allCodePosts,
-  allWebPosts,
-  allAlgorithmPosts,
-} from "contentlayer/generated";
+  allCSPost,
+  allCodePost,
+  allWebPost,
+  allAlgorithmPost,
+  getContentHeaders,
+} from "@/db/blog";
 import React from "react";
 import { Article } from "./page.style";
 import { FrontMatter } from "type";
 import { notFound } from "next/navigation";
-import { useMDXComponent } from "next-contentlayer/hooks";
 import { unstable_noStore as noStore } from "next/cache";
 import { articleCompos } from "@/components/ui/article";
 import ProgressNav from "@/components/ui/progressNav";
 import Wave from "./wave";
+import CustomMDXRemote from "@/components/ui/customMdxRemote";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
 interface Props {
@@ -23,16 +24,16 @@ interface Props {
 }
 
 const categoryHandlers = {
-  code: allCodePosts,
-  web: allWebPosts,
-  cs: allCSPosts,
-  algorithm: allAlgorithmPosts,
+  code: allCodePost,
+  web: allWebPost,
+  cs: allCSPost,
+  algorithm: allAlgorithmPost,
 };
 
-function handleCategory(cateogry: Cateogry) {
+async function handleCategory(cateogry: Cateogry) {
   const handler = categoryHandlers[cateogry];
   if (handler) {
-    return handler;
+    return await handler();
   } else {
     console.log("Unknown category");
     return [];
@@ -45,13 +46,13 @@ export async function generateMetadata({
   params: { category: Cateogry; slug: string };
 }): Promise<Partial<FrontMatter> | undefined> {
   const { category, slug } = params;
-  const postinfo = handleCategory(category);
+  const postinfo = await handleCategory(category);
   if (!postinfo.length) {
     throw new Error("없는 카테고리 입니다.");
   }
-  const frontmatters = postinfo.find((post) => post.slug == slug);
-  if (!frontmatters) throw new Error("없는 포스트 입니다.");
-  let { title, summary, date } = frontmatters;
+  const post = postinfo.find((post) => post.slug == slug);
+  if (!post) throw new Error("없는 포스트 입니다.");
+  let { title, summary, date } = post.frontmatter;
 
   return {
     title,
@@ -97,22 +98,18 @@ function formatDate(date: string) {
 async function Page({ params }: Props) {
   const { category, slug } = params;
 
-  const postinfo = handleCategory(category);
+  const postinfo = await handleCategory(category);
   if (!postinfo.length) {
     throw new Error("없는 카테고리 입니다.");
   }
-  const frontmatters = postinfo.find((post) => post.slug == slug);
-  if (!frontmatters) throw new Error("");
+  const post = postinfo.find((post) => post.slug == slug);
+  if (!post) throw new Error("");
 
-  const { title, date, summary } = frontmatters;
-  const contentCode = frontmatters.body.code;
+  const { title, date, summary } = post.frontmatter;
+  const contentCode = post.content;
   if (!contentCode) notFound();
 
-  const MDXContent = useMDXComponent(contentCode);
-  const splitedHeaders = frontmatters.body.raw.split("\n");
-  const headers = splitedHeaders
-    .filter((str) => str.startsWith("#"))
-    .map((str) => str.split(" "));
+  const headers = getContentHeaders(post.content);
 
   return (
     <React.Fragment>
@@ -145,9 +142,9 @@ async function Page({ params }: Props) {
           className="relative flex flex-row justify-center gap-[2.25rem]"
         >
           <Article>
-            <MDXContent components={articleCompos} />
+            <CustomMDXRemote source={post.content} />
           </Article>
-          <ProgressNav headers={headers} />
+          {/* <ProgressNav headers={headers} /> */}
         </div>
       </main>
     </React.Fragment>
