@@ -109,7 +109,7 @@ async function Page({ params }: Props) {
   const contentCode = post.content;
   if (!contentCode) notFound();
 
-  const headers = getContentHeaders(post.content);
+  const headers = await getContentHeaders(post.content);
 
   return (
     <React.Fragment>
@@ -144,7 +144,7 @@ async function Page({ params }: Props) {
           <Article>
             <CustomMDXRemote source={post.content} />
           </Article>
-          {/* <ProgressNav headers={headers} /> */}
+          {headers.length > 1 ?? <ProgressNav headers={headers} />}
         </div>
       </main>
     </React.Fragment>
