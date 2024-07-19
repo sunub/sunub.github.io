@@ -161,6 +161,16 @@ async function getRecentlyPublished() {
   return recentlyPublished;
 }
 
+async function findByCategory(category: string) {
+  const blogPost = await allBlogPost();
+  return blogPost.filter((post) => post.category === category);
+}
+// const categorizedPost = Blog.findByCategory(category)!;
+// return categorizedPost.map(({ metadata }) => ({
+//   url: `https://sunub.vercel.app/${category}/${metadata.slug}`,
+//   lastModified: metadata.date,
+// }));
+
 async function getMostUsedTags() {
   return getBlogPost().mostUsedTags;
 }
@@ -176,4 +186,5 @@ export {
   getContentHeaders,
   getRecentlyPublished,
   getMostUsedTags,
+  findByCategory,
 };
