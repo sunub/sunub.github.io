@@ -12,7 +12,7 @@ function Categories({ categories }: { categories: string[] }) {
         {categories.map((category) => (
           <Link
             className="blog-main__landing-page-link"
-            href={`/${category}`}
+            href={`/post/${category}`}
             key={category}
           >
             {category}
