@@ -3,6 +3,7 @@
 import { FrontMatter } from "type";
 import fs from "fs";
 import path from "path";
+import { singleton } from "@/utils/singleton";
 
 type MDXFile = {
   frontmatter: FrontMatter;
@@ -128,58 +129,57 @@ function getBlogPost(): BlogContent {
   };
 }
 
-async function getContentHeaders(content: string) {
-  let headers = content
-    .split("\n")
-    .filter((line) => line.startsWith("#"))
-    .map((str) => str.split(" "));
-  return headers;
+class BlogData {
+  #_allPost: BlogContent;
+  constructor() {
+    this.#_allPost = getBlogPost();
+  }
+
+  async getContentHeaders(content: string) {
+    let headers = content
+      .split("\n")
+      .filter((line) => line.startsWith("#"))
+      .map((str) => str.split(" "));
+    return headers;
+  }
+
+  async allWebPost() {
+    return this.#_allPost.blogpost.filter((post) => post.category === "web");
+  }
+
+  async allAlgorithmPost() {
+    return this.#_allPost.blogpost.filter(
+      (post) => post.category === "algorithm",
+    );
+  }
+
+  async allCSPost() {
+    return this.#_allPost.blogpost.filter((post) => post.category === "cs");
+    // return this.#_allPost.blogpost.filter((post) => post.category === "cs");
+  }
+
+  async allCodePost() {
+    return this.#_allPost.blogpost.filter((post) => post.category === "code");
+  }
+
+  async allBlogPost(): Promise<MDXFile[]> {
+    return this.#_allPost.blogpost;
+  }
+
+  async getRecentlyPublished() {
+    const recentlyPublished = this.#_allPost.blogpost.slice(0, 10);
+    return recentlyPublished;
+  }
+
+  async getMostUsedTags() {
+    return this.#_allPost.mostUsedTags;
+  }
 }
 
-async function allWebPost() {
-  return getBlogPost().blogpost.filter((post) => post.category === "web");
-}
-
-async function allAlgorithmPost() {
-  return getBlogPost().blogpost.filter((post) => post.category === "algorithm");
-}
-
-async function allCSPost() {
-  return getBlogPost().blogpost.filter((post) => post.category === "cs");
-}
-
-async function allCodePost() {
-  return getBlogPost().blogpost.filter((post) => post.category === "code");
-}
-
-async function allBlogPost() {
-  return getBlogPost().blogpost;
-}
-
-async function getRecentlyPublished() {
-  const recentlyPublished = getBlogPost().blogpost.slice(0, 10);
-  return recentlyPublished;
-}
-
-async function findByCategory(category: string) {
-  const blogPost = await allBlogPost();
-  return blogPost.filter((post) => post.category === category);
-}
-
-async function getMostUsedTags() {
-  return getBlogPost().mostUsedTags;
-}
-
-export type { MDXFile };
-
-export {
-  allWebPost,
-  allAlgorithmPost,
-  allCSPost,
-  allCodePost,
-  allBlogPost,
-  getContentHeaders,
-  getRecentlyPublished,
-  getMostUsedTags,
-  findByCategory,
+const getBlog = async () => {
+  return singleton("blogpost", () => new BlogData());
 };
+
+export type { MDXFile, BlogContent };
+
+export default getBlog;

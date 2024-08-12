@@ -25,6 +25,27 @@ const getAnchorTitleId = (title: string) => {
   return title.split(" ").join("-");
 };
 
+function NavigationItem({ title, items }: { title: string; items: string[] }) {
+  return (
+    <React.Fragment>
+      <li key={`${title}`}>
+        <Link href={`#${getAnchorTitleId(title)}`}>{title}</Link>
+        {items.length ? (
+          <ul>
+            {items.map((title) => {
+              return (
+                <li key={title}>
+                  <Link href={`#${getAnchorTitleId(title)}`}>{title}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+      </li>
+    </React.Fragment>
+  );
+}
+
 export default function ProgressNav({ headers }: Props) {
   const nav = buildNav(headers);
 
@@ -57,26 +78,9 @@ export default function ProgressNav({ headers }: Props) {
   return (
     <nav id="blog-post__page-nav">
       <ol className="sticky top-[3rem] self-start text-[14px]">
-        {nav.map(([title, items]) => {
-          return (
-            <li key={`${title}`}>
-              <Link href={`#${getAnchorTitleId(title)}`}>{title}</Link>
-              {items.length ? (
-                <ul>
-                  {items.map((title) => {
-                    return (
-                      <li key={title}>
-                        <Link href={`#${getAnchorTitleId(title)}`}>
-                          {title}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : null}
-            </li>
-          );
-        })}
+        {nav.map(([title, items]) => (
+          <NavigationItem title={title} items={items} />
+        ))}
       </ol>
     </nav>
   );

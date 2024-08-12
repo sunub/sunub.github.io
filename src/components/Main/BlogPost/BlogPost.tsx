@@ -1,12 +1,11 @@
 import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import { getRecentlyPublished } from "@/db/blog";
-
-type PublishedPost = FrontMatter;
+import getBlog from "@/db/blog";
 
 async function BlogPost() {
-  const recentlyPublished = await getRecentlyPublished();
+  const blog = await getBlog();
+  const recentlyPublished = await blog.getRecentlyPublished();
 
   return (
     <div style={{ paddingLeft: "16px" }}>

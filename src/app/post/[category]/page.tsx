@@ -1,15 +1,9 @@
-import {
-  MDXFile,
-  allAlgorithmPost,
-  allCSPost,
-  allCodePost,
-  allWebPost,
-} from "@/db/blog";
-
+import getBlog from "@/db/blog";
 import Wave from "@/components/HeaderContents/Wave";
 import Spacer from "@/components/Spacer";
 import { FrontmatterWrapper } from "./page.style";
 import Card from "@/components/Card";
+import { MDXFile } from "type";
 
 interface Props {
   params: {
@@ -17,16 +11,19 @@ interface Props {
   };
 }
 
-type Cateogry = "code" | "web" | "cs" | "algorithm";
-
-const categoryHandlers = {
-  code: allCodePost,
-  web: allWebPost,
-  cs: allCSPost,
-  algorithm: allAlgorithmPost,
+type CategoryHandlers = {
+  code: () => Promise<MDXFile[]>;
+  web: () => Promise<MDXFile[]>;
+  cs: () => Promise<MDXFile[]>;
+  algorithm: () => Promise<MDXFile[]>;
 };
 
-async function handleCategory(category: Cateogry): Promise<MDXFile[]> {
+type Cateogry = "code" | "web" | "cs" | "algorithm";
+
+async function handleCategory(
+  category: Cateogry,
+  categoryHandlers: CategoryHandlers,
+) {
   const handler = categoryHandlers[category];
   if (handler) {
     return await handler();
@@ -38,8 +35,15 @@ async function handleCategory(category: Cateogry): Promise<MDXFile[]> {
 
 export default async function Page({ params }: Props) {
   const { category } = params;
+  const blog = await getBlog();
+  const categoryHandlers = {
+    code: blog.allCodePost.bind(blog),
+    web: blog.allWebPost.bind(blog),
+    cs: blog.allCSPost.bind(blog),
+    algorithm: blog.allAlgorithmPost.bind(blog),
+  };
 
-  const postinfo = await handleCategory(category);
+  const postinfo = await handleCategory(category, categoryHandlers);
   if (!postinfo.length) {
     throw new Error("없는 카테고리 입니다.");
   }
@@ -59,7 +63,7 @@ export default async function Page({ params }: Props) {
         <h1 className="text-5xl">{`${title[category]}`}</h1>
       </div>
       <Wave />
-      <div className="bg-base relative top-[-65px]">
+      <div className="bg-base relative top-[-64px]">
         <Spacer size={48} axis={"vertical"} />
         <FrontmatterWrapper>
           {frontmatters.map((frontmatter) => (

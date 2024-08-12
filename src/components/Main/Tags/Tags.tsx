@@ -1,9 +1,10 @@
+import getBlog from "@/db/blog";
 import { FeatherIcon } from "../NewestPost";
 import * as Styled from "./Tags.style";
-import { getMostUsedTags } from "@/db/blog";
 
 async function Tags() {
-  const tags = await getMostUsedTags();
+  const blog = await getBlog();
+  const tags = await blog.getMostUsedTags();
 
   return (
     <Styled.Wrapper>
