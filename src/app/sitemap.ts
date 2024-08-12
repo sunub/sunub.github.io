@@ -1,11 +1,20 @@
 import { Categories } from "type";
-import { findByCategory } from "@/db/blog";
+import getBlog from "@/db/blog";
 
 export default async function sitemap() {
   const categories: Categories[] = ["web", "code", "cs", "algorithm"];
 
   let blogs = categories.map(async (category) => {
-    const categorizedPost = await findByCategory(category);
+    const blog = await getBlog();
+    const categoryHandlers = {
+      code: blog.allCodePost.bind(blog),
+      web: blog.allWebPost.bind(blog),
+      cs: blog.allCSPost.bind(blog),
+      algorithm: blog.allAlgorithmPost.bind(blog),
+    };
+    const handler = categoryHandlers[category];
+
+    const categorizedPost = await handler();
     return categorizedPost.map(({ frontmatter }) => ({
       url: `https://sunub.vercel.app/${category}/${frontmatter.slug}`,
       lastModified: frontmatter.date,
