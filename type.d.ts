@@ -28,6 +28,13 @@ interface FrontMatter {
   slug: string;
 }
 
+type MDXFile = {
+  frontmatter: FrontMatter;
+  content: string;
+  slug?: string;
+  category?: string;
+};
+
 type CTX = {
   isOpen: boolean;
   setOpen: (value: boolean) => void;

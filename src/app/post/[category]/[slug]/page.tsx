@@ -1,21 +1,22 @@
-import {
-  allCSPost,
-  allCodePost,
-  allWebPost,
-  allAlgorithmPost,
-  getContentHeaders,
-} from "@/db/blog";
+import getBlog, { MDXFile } from "@/db/blog";
 import React from "react";
 import { Article } from "./page.style";
 import { FrontMatter } from "type";
 import { notFound } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
-import { articleCompos } from "@/components/ui/article";
 import ProgressNav from "@/components/ui/progressNav";
 import Wave from "./wave";
 import CustomMDXRemote from "@/components/ui/customMdxRemote";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
+
+type CategoryHandlers = {
+  code: () => Promise<MDXFile[]>;
+  web: () => Promise<MDXFile[]>;
+  cs: () => Promise<MDXFile[]>;
+  algorithm: () => Promise<MDXFile[]>;
+};
+
 interface Props {
   params: {
     category: Cateogry;
@@ -23,11 +24,13 @@ interface Props {
   };
 }
 
+const blog = await getBlog();
+
 const categoryHandlers = {
-  code: allCodePost,
-  web: allWebPost,
-  cs: allCSPost,
-  algorithm: allAlgorithmPost,
+  code: blog.allCodePost.bind(blog),
+  web: blog.allWebPost.bind(blog),
+  cs: blog.allCSPost.bind(blog),
+  algorithm: blog.allAlgorithmPost.bind(blog),
 };
 
 async function handleCategory(cateogry: Cateogry) {
@@ -109,7 +112,7 @@ async function Page({ params }: Props) {
   const contentCode = post.content;
   if (!contentCode) notFound();
 
-  const headers = await getContentHeaders(post.content);
+  const headers = await blog.getContentHeaders(post.content);
 
   return (
     <React.Fragment>
@@ -144,7 +147,7 @@ async function Page({ params }: Props) {
           <Article>
             <CustomMDXRemote source={post.content} />
           </Article>
-          {headers.length > 1 ?? <ProgressNav headers={headers} />}
+          {headers.length >= 1 ? <ProgressNav headers={headers} /> : null}
         </div>
       </main>
     </React.Fragment>

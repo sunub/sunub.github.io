@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import localFont from "next/font/local";
 import clsx from "clsx";
+import getBlog from "@/db/blog";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -59,6 +60,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const blog = await getBlog();
+
   return (
     <html
       lang="ko"
