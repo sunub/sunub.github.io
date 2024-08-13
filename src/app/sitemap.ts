@@ -1,30 +1,32 @@
 import { Categories } from "type";
 import getBlog from "@/db/blog";
+import type { MetadataRoute } from "next";
 
 export default async function sitemap() {
   const categories: Categories[] = ["web", "code", "cs", "algorithm"];
+  const blog = await getBlog();
+  const allBlogPost = await blog.allBlogPost();
 
-  let blogs = categories.map(async (category) => {
-    const blog = await getBlog();
-    const categoryHandlers = {
-      code: blog.allCodePost.bind(blog),
-      web: blog.allWebPost.bind(blog),
-      cs: blog.allCSPost.bind(blog),
-      algorithm: blog.allAlgorithmPost.bind(blog),
-    };
-    const handler = categoryHandlers[category];
+  const blogXML: MetadataRoute.Sitemap = allBlogPost.map(
+    ({ category, frontmatter }, i) => ({
+      url: `https://sunub.vercel.app/post/${category}/${frontmatter.slug}`,
+      lastModified: new Date(frontmatter.date).toISOString().split("T")[0],
+      changeFrequency: "weekly",
+      priority: i < 10 ? 0.6 : 0.4,
+    }),
+  );
 
-    const categorizedPost = await handler();
-    return categorizedPost.map(({ frontmatter }) => ({
-      url: `https://sunub.vercel.app/${category}/${frontmatter.slug}`,
-      lastModified: frontmatter.date,
-    }));
-  });
-
-  let routes = ["", "/web", "/code", "/cs", "/algorithm"].map((route) => ({
-    url: `https://sunub.vercel.app${route}`,
+  let routes = [
+    { url: "", priority: 1 },
+    { url: "/post/web", priority: 0.8 },
+    { url: "/post/code", priority: 0.8 },
+    { url: "/post/cs", priority: 0.8 },
+    { url: "/post/algorithm", priority: 8 },
+  ].map(({ url, priority }) => ({
+    url: `https://sunub.vercel.app${url}`,
     lastModified: new Date().toISOString().split("T")[0],
+    priority,
   }));
 
-  return [...routes, ...blogs];
+  return [...routes, ...blogXML];
 }

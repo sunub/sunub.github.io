@@ -12,6 +12,8 @@ model Post {
   id   String @id @default(cuid())
   slug String @unique
   tags Tags[]
+
+  @@index([slug])
 }
 
 model Tags {
@@ -35,5 +37,6 @@ model Redirects {
   destination String
   createdAt   DateTime @default(now())
 
+  @@index([source])
   @@unique([source, destination])
 }

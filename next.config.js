@@ -4,6 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const nextConfig = {
   basePath: "",
   reactStrictMode: true,
+  skipTrailingSlashRedirect: true,
   swcMinify: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
@@ -32,11 +33,20 @@ const nextConfig = {
       permanent: true,
     }));
   },
-  headers() {
+  async headers() {
     return [
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+      {
+        source: "/:all*(svg|jpg|png|gif|mp4|webm|woff|woff2|ttf|eot)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
       },
     ];
   },

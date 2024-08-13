@@ -11,10 +11,12 @@ export function middleware(req: NextRequest) {
     });
   }
 
-  return NextResponse.next({
+  const response = NextResponse.next({
     status: 200,
     headers: {
       "Cache-Control": "no-cache",
     },
   });
+  response.headers.delete("x-powerd-by");
+  return response;
 }
