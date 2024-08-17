@@ -1,0 +1,155 @@
+---
+title: 다양한 상황에서 사용되는 싱글턴
+date: 2024-08-17
+tags: [code, design-pattern]
+summary: 싱글턴 디자인 패턴은 어떤 상황에서 사용되고 어떻게 사용해야 할까?
+slug: design-pattern-singleton
+category: code
+completed: false
+---
+
+## Singleton
+
+`싱글턴`은 클래스에 인스턴스가 하나만 있도록 하면서 이 인스턴스에 대한 전역 접근(엑세스) 지점을 제공하는 생성 디자인 패턴입니다. 이렇게 정의로만 설명하면 말이 어려워 보일 수 있지만 실제 사용 사례들을 들어보면 그렇게 어려운 개념이 아니라는 것을 알 수 있습니다.
+
+클래스를 예시로 싱글턴에 대한 자세한 예시를 이용하여 설명을 이어가 보겠습니다. 우리가 클래스를 사용하는 주된 이유는 무엇일까요? 일반적으로 클래스를 사용하는 경우는 인스턴스를 생성하여 해당 인스턴스를 활용하여 동일한 속성을 갖는 여러 객체들을 생성하는 경우로 많이 사용합니다.
+
+```js
+class Car {
+  constructor(make, model, year) {
+    this.make = make;
+    this.model = model;
+    this.year = year;
+    this.speed = 0;
+  }
+
+  accelerate(amount) {
+    this.speed += amount;
+  }
+
+  brake(amount) {
+    this.speed = Math.max(0, this.speed - amount);
+  }
+}
+
+const car1 = new Car("KIA", "K7", 2022);
+const car2 = new Car("HYNDAI", "Sonata", 2023);
+```
+
+위와 같이 `Car`라는 클래스를 이용하여 서로에게 영향을 미치지 않은 `독립적인 상태`를 갖는 여러 객체를 생성하였습니다. 하지만 만약 우리가 객체가 서로 `독립적인 상태` 가 아닌 `공유 리소스`를 갖는 여러 객체를 생성한다고 할 경우는 어떻게 해야 할까요? 또 다른 예시로 자세히 설명해보겠습니다.
+
+```js
+class DB {
+  constructor() {
+    this.table = {};
+  }
+
+  set(name, value) {
+    this.table[name] = value;
+  }
+
+  get(name) {
+    return this.table[name];
+  }
+}
+
+const db1 = new DB();
+db1.set("sunub", { country: "Korea" });
+
+const db2 = new DB();
+const { country } = db2.get("sunub");
+```
+
+위의 예시에서 `country`의 값은 뭐가 나올까요? 정답은 `undefined` 입니다! 왜냐하면 db2 에서는 DB에 대한 인스턴스가 새로 생성되었기 때문에 서로 공유된 자원이 아닌 독립된 상태를 지니기 때문에 db1에서 설정한 `sunub`에 대한 값은 공유가 되는 것이 아니기 때문에 db1 에서만 사용이 가능합니다.
+
+이렇듯 작업을 하다보면 Database를 사용하는 경우와 같이 새로운 인스턴스를 생성하는 것이 아니라 인스턴스의 수를 제한하여 공유 리소스를 사용가능하게끔 할 필요가 있는데 이 때 사용이 되는 것이 `싱글턴` 패턴입니다!!
+
+### 실제 사용 사례들
+
+```js
+class Singleton {
+  static #instance = null;
+  constructor() {}
+
+  getInstance() {
+    if (Singleton.#instance == null) {
+      Singleton.#instance = new Singleton();
+    }
+    return Singleton.#instance;
+  }
+}
+```
+
+클래스를 활용한다면 위와 같이 `static` 을 이용하여 `new` 연산자를 이용하여 새로운 인스턴스를 생성하지 않고 인스턴스의 수를 하나로 제한하여 공용 리소스를 사용할 수 있습니다. 하지만 위의 방법에는 진정한 싱글턴이 아니라는 문제가 존재합니다. 이 문제는 constructor 값이 private 값으로 설정되어 있지 않기 때문에 강제로 싱글턴 패턴을 이용하게끔 만들 수는 없다는 문제가 있습니다. 여기서 우리는 `typescript`의 위대함을 또 다시 느낄 수 있습니다. `javascript`에서는 이 문제를 해결하기 위해 다음과 같은 과정을 거쳐야 합니다.
+
+```js
+const Singleton = (() => {
+  const constructorKey = Symbol("constructor");
+  return class {
+    static #instance = null;
+
+    constructor(key) {
+      if (key !== constructorKey) {
+        throw new Error("Private constructor, use getInstance() method.");
+      }
+    }
+
+    static getInstance() {
+      if (!Singleton.#instance) {
+        Singleton.#instance = new Singleton(constructorKey);
+      }
+      return Singleton.#instance;
+    }
+  };
+})();
+```
+
+위와 같이 작성할 경우 Singleton 을 new 연산자를 이용하여 isntance를 생성하려고 하여도 Singleton 내부의 클로저로 생성되는 constructorKey에 접근할 수 없기 때문에 오로지 getInstance 를 이용하여 객체를 이용하게끔 강제할 수 있습니다. 하지만 여기서 `typescrip`t가 등장한다면 어떻게 될까요?
+
+```ts
+class Singleton {
+  private static instance: Singleton | null = null;
+  private constructor() {}
+
+  public static getInstance(): Singleton {
+    if (Singleton.instance === null) {
+      Singleton.instance = new Singleton();
+    }
+    return Singleton.instance;
+  }
+}
+```
+
+typescript를 이용할 경우 위와 같이 간단하게 작성이 가능합니다. javascript에서는 필드와 메서드 값들만 private로 설정이 가능하지만 typescript 의 경우 constructor 또한 private 로 설정이 가능하기 때문에 위의 Singleton을 new를 이용하여 인스턴스를 생성하려고 할 경우 컴파일 에러가 발생하게 됩니다!
+
+### 추가로 작성해야 할 내용들
+
+```typescript
+function singleton<Value>(name: string, value: () => Value): Value {
+  const yolo = global as any;
+  yolo.__singleton ??= {};
+  yolo.__singleton[name] ??= value();
+  return yolo.__singleton[name];
+}
+```
+
+```typescript
+declare global {
+  interface Global {
+    __singleton?: Map<string, unknown>;
+  }
+}
+
+interface Global {
+  __singleton?: Map<string, unknown>;
+}
+
+export function singleton<Value>(name: string, value: () => Value): Value {
+  const thusly = globalThis as Global;
+  thusly.__singleton ??= new Map();
+  if (!thusly.__singleton.has(name)) {
+    thusly.__singleton.set(name, value());
+  }
+  return thusly.__singleton.get(name) as Value;
+}
+```
