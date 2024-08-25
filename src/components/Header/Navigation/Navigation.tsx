@@ -36,7 +36,7 @@ function Navigation() {
 
   return (
     <React.Fragment>
-      <nav>
+      <nav className="pl-4">
         <Styled.NavigationWrapper>
           {/* <Styled.NavigationItem>
             <Link href={"/latest"}>latest</Link>

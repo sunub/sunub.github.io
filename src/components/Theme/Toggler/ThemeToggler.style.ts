@@ -44,9 +44,9 @@ export const SunAndBeams = styled.g<{ $colorTheme: string }>`
   transform-origin: center center;
   stroke: var(--icon-fill);
   transition:
-    transform 0.5s ease-in,
-    opacity 0.3s ease-in,
-    scale 0.4s ease-in;
+    transform 0.3s ease-in,
+    opacity 0.1s ease-in,
+    scale 0.2s ease-in;
 
   opacity: ${(props) => (props.$colorTheme === "dark" ? "0" : "1")};
   transform: ${(props) =>

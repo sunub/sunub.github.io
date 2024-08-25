@@ -71,10 +71,10 @@ const IconWrapper = styled.div`
 `;
 
 export default function Card({ frontMatter }) {
-  const { title, date, slug } = frontMatter;
+  const { title, date, slug, category } = frontMatter;
   return (
     <Wrapper>
-      <LinkWrapper href={`/${slug}`} tabIndex={0}>
+      <LinkWrapper href={`/post/${category}/${slug}`} tabIndex={0}>
         <Header>{title}</Header>
         <Footer>{date.slice(2)}</Footer>
       </LinkWrapper>

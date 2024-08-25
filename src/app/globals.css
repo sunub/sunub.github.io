@@ -106,6 +106,12 @@ a {
   touch-action: manipulation;
 }
 
+blockquote {
+  background-color: color-mix(in oklch, var(--color-navlink) 25%, transparent);
+  padding: 1rem;
+  border-radius: 15px;
+}
+
 input:not([type]),
 input[type="text"],
 input[type="email"],

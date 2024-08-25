@@ -11,6 +11,21 @@ export function middleware(req: NextRequest) {
     });
   }
 
+  if (
+    pathname.startsWith("/_next/image") &&
+    pathname.includes("/assets/hero-image__light-moon.avif")
+  ) {
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", "public, max-age=31536000");
+    return response;
+  }
+
+  if (pathname.startsWith("/assets") && pathname.endsWith(".avif")) {
+    const response = NextResponse.next();
+    response.headers.set("Cache-Control", "public, max-age=31536000");
+    return response;
+  }
+
   const response = NextResponse.next({
     status: 200,
     headers: {
