@@ -9,6 +9,7 @@ const nextConfig = {
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
     formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000,
   },
   compiler: {
     styledComponents: true,
@@ -40,7 +41,7 @@ const nextConfig = {
         headers: securityHeaders,
       },
       {
-        source: "/:all*(svg|jpg|png|gif|mp4|webm|woff|woff2|ttf|eot)",
+        source: "/_next/image",
         headers: [
           {
             key: "Cache-Control",
@@ -61,10 +62,6 @@ const ContentSecurityPolicy = `
 `;
 
 const securityHeaders = [
-  {
-    key: "Cache-Control",
-    value: "no-cache",
-  },
   {
     key: "Permissions-Policy",
     value: "unload=()",
