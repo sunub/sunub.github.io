@@ -77,7 +77,7 @@ export const BlogPostWrapper = styled.article`
   transition: transform 250ms cubic-bezier(0.5, 1.25, 0.75, 1.25);
 
   &:not(:first-of-type) {
-    padding-top: 64px;
+    margin-top: 64px;
   }
 
   &:hover {
