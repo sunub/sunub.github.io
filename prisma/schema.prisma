@@ -9,26 +9,23 @@ datasource db {
 }
 
 model Post {
-  id   String @id @default(cuid())
-  slug String @unique
-  tags Tags[]
+  id       String   @id @default(cuid())
+  slug     String   @unique
+  category String
+  title    String
+  summary  String
+  date     DateTime
+  tags     Tags[]
 
+  @@index([category, date])
   @@index([slug])
 }
 
 model Tags {
   id       String @id @default(cuid())
-  name     String
+  name     String @db.VarChar(30)
   post     Post   @relation(fields: [postSlug], references: [slug])
   postSlug String
-}
-
-model PostImages {
-  id          String  @id @default(cuid())
-  imageId     String  @unique
-  altText     String?
-  contentType String
-  blob        Bytes
 }
 
 model Redirects {
@@ -37,6 +34,36 @@ model Redirects {
   destination String
   createdAt   DateTime @default(now())
 
-  @@index([source])
   @@unique([source, destination])
+  @@index([source])
+}
+
+model Pattern {
+  id       String   @id
+  pattern  String[]
+  length   Int
+  username String   @unique
+  UserInfo UserInfo @relation(fields: [username], references: [username])
+}
+
+model PinHash {
+  id       String   @id
+  username String   @unique
+  hash     Json
+  UserInfo UserInfo @relation(fields: [username], references: [username])
+}
+
+model PinNumbers {
+  id       String
+  numbers  String[]
+  username String   @unique
+  UserInfo UserInfo @relation(fields: [username], references: [username])
+}
+
+model UserInfo {
+  id         String
+  username   String      @unique
+  Pattern    Pattern?
+  PinHash    PinHash?
+  PinNumbers PinNumbers?
 }

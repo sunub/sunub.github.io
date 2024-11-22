@@ -1,5 +1,5 @@
 import { Categories } from "type";
-import getBlog from "@/db/blog";
+import getBlog from "db/blog";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap() {

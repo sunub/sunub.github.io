@@ -1,16 +1,16 @@
 import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import getBlog from "@/db/blog";
+import getBlog from "db/blog";
+import { getRecentlyPosts } from "db/PostRepository";
 
 async function BlogPost() {
-  const blog = await getBlog();
-  const recentlyPublished = await blog.getRecentlyPublished();
+  const recentlyPublished = await getRecentlyPosts();
 
   return (
     <div style={{ paddingLeft: "16px" }}>
       {recentlyPublished.map((post) => {
-        const { slug, title, summary, category } = post.frontmatter;
+        const { slug, title, summary, category } = post;
         return (
           <Styled.BlogPostWrapper
             key={`${post.slug}-${Math.floor(Math.random() * 10000 + 1)}`}

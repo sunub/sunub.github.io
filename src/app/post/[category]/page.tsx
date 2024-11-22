@@ -1,4 +1,4 @@
-import getBlog from "@/db/blog";
+import getBlog from "db/blog";
 import Wave from "@/components/HeaderContents/Wave";
 import Spacer from "@/components/Spacer";
 import { FrontmatterWrapper } from "./page.style";
@@ -63,7 +63,7 @@ export default async function Page({ params }: Props) {
         <h1 className="text-5xl">{`${title[category]}`}</h1>
       </div>
       <Wave />
-      <div className="bg-base relative top-[-64px]">
+      <div className="bg-base relative top-[-64px] px-8">
         <Spacer size={48} axis={"vertical"} />
         <FrontmatterWrapper>
           {frontmatters.map((frontmatter) => (

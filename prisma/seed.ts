@@ -1,50 +1,9 @@
-import fs from "fs";
-import path from "path";
 import { PrismaClient } from "@prisma/client";
-import getBlog, { MDXFile } from "@/db/blog";
+import getBlog, { MDXFile } from "db/blog";
 import chalk from "chalk";
 import ora from "ora";
 
 const prisma = new PrismaClient();
-
-async function image({
-  altText,
-  filePath,
-}: {
-  altText?: string;
-  filePath: string;
-}) {
-  return {
-    altText,
-    contentType: filePath.endsWith(".png") ? "image/png" : "image/jpeg",
-    blob: await fs.promises.readFile(filePath),
-  };
-}
-
-async function seedImages() {
-  const imgPathSet = [];
-
-  const imgRootPath = path.join(process.cwd(), "public/images");
-  const imageRootDir = fs.readdirSync(imgRootPath);
-  for (const categoryDir of imageRootDir) {
-    const imgFiles = fs.readdirSync(path.join(imgRootPath, categoryDir));
-
-    for (const fileUrl of imgFiles) {
-      const imgPath = path.join(categoryDir, fileUrl);
-      imgPathSet.push(path.join("public/images", imgPath));
-    }
-  }
-
-  for (const path of imgPathSet) {
-    await prisma.postImages.create({
-      select: { id: true },
-      data: {
-        imageId: path,
-        ...(await image({ filePath: path })),
-      },
-    });
-  }
-}
 
 async function seedPostFiles(postData: MDXFile[]) {
   for (const post of postData) {
@@ -54,6 +13,10 @@ async function seedPostFiles(postData: MDXFile[]) {
     await prisma.post.create({
       select: { id: true },
       data: {
+        title: frontmatter.title,
+        category: frontmatter.category,
+        date: new Date(frontmatter.date),
+        summary: frontmatter.summary,
         slug: frontmatter.slug,
         tags: {
           create: frontmatter.tags.map((tag) => ({ name: tag })),
@@ -121,7 +84,6 @@ async function cleanUpDB() {
   try {
     console.time("🧹 Cleaned up the database...");
     await prisma.tags.deleteMany();
-    await prisma.postImages.deleteMany();
     await prisma.post.deleteMany();
     await prisma.redirects.deleteMany();
     cleanupSpinner.succeed(chalk.green("Database has been cleaned up!!"));
@@ -132,8 +94,7 @@ async function cleanUpDB() {
   log("\n");
 }
 
-async function seedingWebPost() {
-  const blog = await getBlog();
+async function seedingWebPost(blog: any) {
   const webPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`,
   ).start();
@@ -143,13 +104,13 @@ async function seedingWebPost() {
     await seedPostFiles(allWebPosts);
     webPostSpinner.succeed(chalk.green("Web Post has been seeded!!"));
     console.timeEnd("📝 Created web posts...");
-  } catch {
+  } catch (error) {
     webPostSpinner.fail(chalk.redBright("Failed to seed web posts"));
+    console.error(error); // 예외 메시지 출력
   }
 }
 
-async function seedingCsPost() {
-  const blog = await getBlog();
+async function seedingCsPost(blog: any) {
   const csPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`,
   ).start();
@@ -164,8 +125,7 @@ async function seedingCsPost() {
   }
 }
 
-async function seedingCodePost() {
-  const blog = await getBlog();
+async function seedingCodePost(blog: any) {
   const codePostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...`,
   ).start();
@@ -180,8 +140,7 @@ async function seedingCodePost() {
   }
 }
 
-async function seedingAlgoPost() {
-  const blog = await getBlog();
+async function seedingAlgoPost(blog: any) {
   const algorithmPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`,
   ).start();
@@ -216,36 +175,21 @@ async function seedingRedirectPath() {
   log("\n");
 }
 
-async function seedingPostImage() {
-  const postImageSpinner = ora(
-    `${chalk.bold(chalk.blueBright("loading"))}...\n`,
-  ).start();
-  try {
-    console.time("🎨 Created Post Images...");
-    await seedImages();
-    postImageSpinner.succeed("Post Image has been seeded!!");
-    console.timeEnd("🎨 Created Post Images...");
-  } catch {
-    postImageSpinner.fail(chalk.redBright("Failed to seed Post Images"));
-  }
-}
-
 async function seed() {
   log(chalk.bgGreen("\n Seeding..."));
   console.time(chalk.green(`🌱 Database has been seeded`));
   await cleanUpDB();
 
+  const blog = await getBlog();
+
   log(chalk.bgBlue(" Seed Post data..."));
-  await seedingWebPost();
-  await seedingCsPost();
-  await seedingCodePost();
-  await seedingAlgoPost();
+  await seedingWebPost(blog);
+  await seedingCsPost(blog);
+  await seedingCodePost(blog);
+  await seedingAlgoPost(blog);
 
   log(chalk.bgBlue(" Seed Post Redirects..."));
   await seedingRedirectPath();
-
-  log(chalk.bgBlue(" Seed Post Images..."));
-  await seedingPostImage();
 
   console.timeEnd(chalk.bold(chalk.green(`🌱 Database has been seeded`)));
   log("\n");

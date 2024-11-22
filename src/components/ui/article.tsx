@@ -1,7 +1,7 @@
 import React from "react";
 import { highlight } from "sugar-high";
 import { LinkSVG, LinkAnchor } from "./article.style";
-import Img from "@/components/ui/image";
+import Img from "@/components/ui/image_prev";
 
 function slugify(str: string) {
   return str.toString().trim().replace(/\ /g, "-");

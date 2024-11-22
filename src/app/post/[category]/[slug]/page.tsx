@@ -1,5 +1,6 @@
-import getBlog, { MDXFile } from "@/db/blog";
 import React from "react";
+import { baseUrl } from "@/utils/baseUrl";
+import getBlog from "db/blog";
 import { Article } from "./page.style";
 import { FrontMatter } from "type";
 import { notFound } from "next/navigation";
@@ -7,15 +8,9 @@ import { unstable_noStore as noStore } from "next/cache";
 import ProgressNav from "@/components/ui/progressNav";
 import Wave from "./wave";
 import CustomMDXRemote from "@/components/ui/customMdxRemote";
+import { getPostBySlug } from "db/PostRepository";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
-
-type CategoryHandlers = {
-  code: () => Promise<MDXFile[]>;
-  web: () => Promise<MDXFile[]>;
-  cs: () => Promise<MDXFile[]>;
-  algorithm: () => Promise<MDXFile[]>;
-};
 
 interface Props {
   params: {
@@ -33,34 +28,26 @@ const categoryHandlers = {
   algorithm: blog.allAlgorithmPost.bind(blog),
 };
 
-async function handleCategory(cateogry: Cateogry) {
-  const handler = categoryHandlers[cateogry];
-  if (handler) {
-    return await handler();
-  } else {
-    console.log("Unknown category");
-    return [];
-  }
-}
-
 export async function generateMetadata({
   params,
 }: {
   params: { category: Cateogry; slug: string };
 }): Promise<Partial<FrontMatter> | undefined> {
   const { category, slug } = params;
-  const postinfo = await handleCategory(category);
-  if (!postinfo.length) {
-    throw new Error("없는 카테고리 입니다.");
+  const frontmatter = await getPostBySlug(slug);
+  if (!frontmatter) {
+    throw new Error("찾을 수 없는 포스트 입니다.");
   }
-  const post = postinfo.find((post) => post.slug == slug);
-  if (!post) throw new Error("없는 포스트 입니다.");
-  let { title, summary, date } = post.frontmatter;
-
+  let { title, summary, date } = frontmatter;
+  const localeDateString = new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(date));
   return {
     title,
     summary,
-    date,
+    date: localeDateString,
     category,
   };
 }
@@ -101,18 +88,18 @@ function formatDate(date: string) {
 async function Page({ params }: Props) {
   const { category, slug } = params;
 
-  const postinfo = await handleCategory(category);
-  if (!postinfo.length) {
-    throw new Error("없는 카테고리 입니다.");
+  const frontmatter = await getPostBySlug(slug);
+  if (!frontmatter) {
+    throw new Error("찾을 수 없는 포스트 입니다.");
   }
-  const post = postinfo.find((post) => post.slug == slug);
-  if (!post) throw new Error("");
 
-  const { title, date, summary } = post.frontmatter;
-  const contentCode = post.content;
-  if (!contentCode) notFound();
-
-  const headers = await blog.getContentHeaders(post.content);
+  const { title, date, summary } = frontmatter;
+  const response = await fetch(`${baseUrl}/api/post/${category}/${slug}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const { content } = await response.json();
 
   return (
     <React.Fragment>
@@ -137,7 +124,15 @@ async function Page({ params }: Props) {
             {title}
           </h1>
           <React.Suspense fallback={<div>...</div>}>
-            <p>{formatDate(date)}</p>
+            <p>
+              {formatDate(
+                new Intl.DateTimeFormat("ko-KR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }).format(date),
+              )}
+            </p>
           </React.Suspense>
         </div>
         <div
@@ -145,9 +140,8 @@ async function Page({ params }: Props) {
           className="relative flex flex-row justify-center gap-[2.25rem]"
         >
           <Article>
-            <CustomMDXRemote source={post.content} />
+            <CustomMDXRemote source={content} />
           </Article>
-          {headers.length >= 1 ? <ProgressNav headers={headers} /> : null}
         </div>
       </main>
     </React.Fragment>

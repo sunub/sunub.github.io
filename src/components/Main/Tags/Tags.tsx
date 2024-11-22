@@ -1,4 +1,4 @@
-import getBlog from "@/db/blog";
+import getBlog from "db/blog";
 import { FeatherIcon } from "../NewestPost";
 import * as Styled from "./Tags.style";
 

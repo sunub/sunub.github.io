@@ -38,9 +38,6 @@ function Navigation() {
     <React.Fragment>
       <nav className="pl-4">
         <Styled.NavigationWrapper>
-          {/* <Styled.NavigationItem>
-            <Link href={"/latest"}>latest</Link>
-          </Styled.NavigationItem> */}
           <Styled.NavigationItem>
             <Styled.PostNaviation>
               <span className="select-none">post</span>
@@ -69,9 +66,6 @@ function Navigation() {
                 )}
             </Styled.PostNaviation>
           </Styled.NavigationItem>
-          {/* <Styled.NavigationItem>
-            <Link href={"/about"}>about</Link>
-          </Styled.NavigationItem> */}
         </Styled.NavigationWrapper>
       </nav>
     </React.Fragment>
@@ -81,16 +75,16 @@ function Navigation() {
 function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
   return (
     <DropDownMenuWrapper>
-      <LinkTag href={"/cs"} onClick={toggleOpen}>
+      <LinkTag href={"/post/cs"} onClick={toggleOpen}>
         cs
       </LinkTag>
-      <LinkTag href={"/web"} onClick={toggleOpen}>
+      <LinkTag href={"/post/web"} onClick={toggleOpen}>
         web
       </LinkTag>
-      <LinkTag href={"/code"} onClick={toggleOpen}>
+      <LinkTag href={"/post/code"} onClick={toggleOpen}>
         code
       </LinkTag>
-      <LinkTag href={"/algorithm"} onClick={toggleOpen}>
+      <LinkTag href={"/post/algorithm"} onClick={toggleOpen}>
         algorithm
       </LinkTag>
     </DropDownMenuWrapper>

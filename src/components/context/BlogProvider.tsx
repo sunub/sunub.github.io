@@ -1,6 +1,6 @@
 "use client";
 
-import Blog, { MDXFile } from "@/db/blog";
+import Blog, { MDXFile } from "db/blog";
 import React from "react";
 
 type BlogContext = {
