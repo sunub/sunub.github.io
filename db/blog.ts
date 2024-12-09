@@ -166,6 +166,13 @@ const getBlogInstance = () => {
   return blogInstance;
 };
 
+export const getBlogInstanceForSeed = async () => {
+  if (!blogInstance) {
+    blogInstance = Blog.initialize();
+  }
+  return blogInstance;
+};
+
 export const getRecentPosts = unstable_cache(
   async (count: number = 10) => {
     const blog = await getBlogInstance();

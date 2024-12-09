@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { getPostsByCategory } from "db/blog";
+import { getBlogInstanceForSeed } from "db/blog";
 import chalk from "chalk";
 import ora from "ora";
 import { z } from "zod";
@@ -9,10 +9,11 @@ const prisma = new PrismaClient();
 
 type MDXFile = z.infer<typeof CacheDataSchema>;
 
-const allWebPosts = await getPostsByCategory("web");
-const allCSPosts = await getPostsByCategory("cs");
-const allCodePosts = await getPostsByCategory("code");
-const allAlgorithmPosts = await getPostsByCategory("algorithm");
+const blog = await getBlogInstanceForSeed();
+const allWebPosts = await blog.getPostsByCategory("web");
+const allCSPosts = await blog.getPostsByCategory("cs");
+const allCodePosts = await blog.getPostsByCategory("code");
+const allAlgorithmPosts = await blog.getPostsByCategory("algorithm");
 
 async function seedPostFiles(postData: MDXFile[]) {
   for (const post of postData) {
