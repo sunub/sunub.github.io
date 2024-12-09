@@ -1,33 +1,40 @@
-import { FrontMatter } from "type";
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import getBlog from "db/blog";
-import { getRecentlyPosts } from "db/PostRepository";
+import { getRecentPosts } from "db/blog";
 
 async function BlogPost() {
-  const recentlyPublished = await getRecentlyPosts();
+  try {
+    const recentlyPublished = await getRecentPosts(10);
 
-  return (
-    <div style={{ paddingLeft: "16px" }}>
-      {recentlyPublished.map((post) => {
-        const { slug, title, summary, category } = post;
-        return (
-          <Styled.BlogPostWrapper
-            key={`${post.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
-          >
-            <Link href={`/${category}/${slug}`} scroll={true}>
-              <Styled.BlogPostTitle>
-                <Styled.Title>{title}</Styled.Title>
-                <Styled.TitleDot />
-                <UnderLineWaveSVG />
-              </Styled.BlogPostTitle>
-              <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
-            </Link>
-          </Styled.BlogPostWrapper>
-        );
-      })}
-    </div>
-  );
+    if (!recentlyPublished || recentlyPublished.length === 0) {
+      return <div>현재 표시할 포스트가 없습니다.</div>;
+    }
+
+    return (
+      <div style={{ paddingLeft: "16px" }}>
+        {recentlyPublished.map((post) => {
+          const { slug, title, summary, category } = post;
+          return (
+            <Styled.BlogPostWrapper
+              key={`${post.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
+            >
+              <Link href={`/${category}/${slug}`} scroll={true}>
+                <Styled.BlogPostTitle>
+                  <Styled.Title>{title}</Styled.Title>
+                  <Styled.TitleDot />
+                  <UnderLineWaveSVG />
+                </Styled.BlogPostTitle>
+                <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+              </Link>
+            </Styled.BlogPostWrapper>
+          );
+        })}
+      </div>
+    );
+  } catch (error) {
+    console.error(error);
+    return <div>포스트를 불러오는 중 오류가 발생했습니다.</div>;
+  }
 }
 
 function UnderLineWaveSVG() {

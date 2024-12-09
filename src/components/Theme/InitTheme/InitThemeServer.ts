@@ -3,11 +3,13 @@
 import { cookies } from "next/headers";
 import process from "process";
 
-function checkHasColorTheme() {
-  return cookies().get("color-theme");
+async function checkHasColorTheme() {
+  const cookieStore = await cookies();
+  return cookieStore.get("color-theme");
 }
 
-function setInitColorTheme(preferenceColorTheme: string) {
+async function setInitColorTheme(preferenceColorTheme: string) {
+  const cookieStore = await cookies();
   const nodeenv = process.env.NODE_ENV;
   let sameSite: "lax" | "none" | "static" = "lax";
   let secure: boolean = true;
@@ -16,7 +18,7 @@ function setInitColorTheme(preferenceColorTheme: string) {
     [sameSite, secure] = ["none", false];
   }
 
-  cookies().set("color-theme", preferenceColorTheme, {
+  cookieStore.set("color-theme", preferenceColorTheme, {
     path: "/",
     sameSite,
     secure,

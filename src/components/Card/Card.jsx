@@ -76,7 +76,13 @@ export default function Card({ frontMatter }) {
     <Wrapper>
       <LinkWrapper href={`/post/${category}/${slug}`} tabIndex={0}>
         <Header>{title}</Header>
-        <Footer>{date.slice(2)}</Footer>
+        <Footer>
+          {new Intl.DateTimeFormat("ko-kr", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(date))}
+        </Footer>
       </LinkWrapper>
     </Wrapper>
   );

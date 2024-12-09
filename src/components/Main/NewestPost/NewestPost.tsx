@@ -5,10 +5,8 @@ import BlogPost from "../BlogPost";
 function NewestPost() {
   return (
     <Styled.RootWrapper>
-      <Styled.TitleWrapper>
-        <FeatherIcon />
-        <Styled.Title>Recently Published</Styled.Title>
-      </Styled.TitleWrapper>
+      <FeatherIcon />
+      <Styled.Title>Recently Published</Styled.Title>
       <Spacer axis={"vertical"} size={64} />
       <BlogPost />
     </Styled.RootWrapper>
