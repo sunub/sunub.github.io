@@ -1,12 +1,21 @@
 import React from "react";
 import * as Styled from "./page.style";
-import NewestPost from "@/components/Main/NewestPost";
 import Categories from "@/components/Main/Cateogries/Categories";
 import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
 import Tags from "@/components/Main/Tags";
+import dynamic from "next/dynamic";
 
 const categories = ["cs", "web", "code", "algorithm"];
+
+const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
+  loading: () => (
+    <div className="flex flex-col items-center justify-center w-full">
+      <div>최근 게시물을 불러오는 중...</div>
+    </div>
+  ),
+  ssr: true,
+});
 
 function Page() {
   return (
@@ -20,7 +29,7 @@ function Page() {
           <NewestPost />
           <Styled.RightSideWrapper>
             <Categories categories={categories} />
-            <Tags />
+            {/* <Tags /> */}
           </Styled.RightSideWrapper>
         </Styled.MainWrapper>
       </div>

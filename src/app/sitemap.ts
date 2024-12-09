@@ -1,27 +1,23 @@
-import { Categories } from "type";
-import getBlog from "db/blog";
 import type { MetadataRoute } from "next";
+import { getAllPosts } from "db/blog";
 
-export default async function sitemap() {
-  const categories: Categories[] = ["web", "code", "cs", "algorithm"];
-  const blog = await getBlog();
-  const allBlogPost = await blog.allBlogPost();
+// default export를 async 함수로 변경
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const allBlogPost = await getAllPosts();
 
-  const blogXML: MetadataRoute.Sitemap = allBlogPost.map(
-    ({ category, frontmatter }, i) => ({
-      url: `https://sunub.vercel.app/post/${category}/${frontmatter.slug}`,
-      lastModified: new Date(frontmatter.date).toISOString().split("T")[0],
-      changeFrequency: "weekly",
-      priority: i < 10 ? 0.6 : 0.4,
-    }),
-  );
+  const blogXML = allBlogPost.map(({ data }, i) => ({
+    url: `https://sunub.vercel.app/post/${data.category}/${data.slug}`,
+    lastModified: new Date(data.date).toISOString().split("T")[0],
+    changeFrequency: "weekly" as const,
+    priority: i < 10 ? 0.6 : 0.4,
+  }));
 
-  let routes = [
+  const routes = [
     { url: "", priority: 1 },
     { url: "/post/web", priority: 0.8 },
     { url: "/post/code", priority: 0.8 },
     { url: "/post/cs", priority: 0.8 },
-    { url: "/post/algorithm", priority: 8 },
+    { url: "/post/algorithm", priority: 0.8 },
   ].map(({ url, priority }) => ({
     url: `https://sunub.vercel.app${url}`,
     lastModified: new Date().toISOString().split("T")[0],
