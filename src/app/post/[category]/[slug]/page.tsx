@@ -3,8 +3,7 @@ import { Article } from "./page.style";
 import { FrontMatter } from "type";
 import { unstable_noStore as noStore } from "next/cache";
 import Wave from "./wave";
-// import CustomMDXRemote from "@/components/ui/customMdxRemote";
-import { getPostBySlug } from "db/blog";
+import { getPostBySlug, getAllPosts } from "db/blog";
 
 type Category = "code" | "web" | "cs" | "algorithm";
 
@@ -12,6 +11,15 @@ type Params = Promise<{
   category: Category;
   slug: string;
 }>;
+
+export async function generateStaticParams() {
+  const allPosts = await getAllPosts();
+
+  return allPosts.map(({ data }) => ({
+    category: data.category,
+    slug: data.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
