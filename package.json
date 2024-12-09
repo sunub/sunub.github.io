@@ -54,6 +54,7 @@
     "npm": "^10.2.4",
     "ora": "^8.0.1",
     "postcss-preset-env": "^9.3.0",
+    "postcss-selector-parser": "^7.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-focus-lock": "^2.9.6",
@@ -123,5 +124,8 @@
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
+  },
+  "resolutions": {
+    "postcss-selector-parser": "^6.0.10"
   }
 }
