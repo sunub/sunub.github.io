@@ -1,185 +1,218 @@
 "use server";
 
-import { FrontMatter } from "type";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
+import { LRUCache } from "lru-cache";
+import matter from "gray-matter";
+import { z } from "zod";
+import { unstable_cache } from "next/cache";
 import { singleton } from "@/utils/singleton";
+import {
+  CacheDataSchema,
+  FrontMatterSchema,
+  PostCategorySchema,
+} from "@/types/schema";
 
-type MDXFile = {
-  frontmatter: FrontMatter;
-  content: string;
-  slug?: string;
-  category?: string;
-};
+const STATIC_DIR = path.join(process.cwd(), "posts");
 
-interface BlogContent {
-  blogpost: MDXFile[];
-  mostUsedTags: any[];
-}
+const STATIC_POST_CATEGORIES = ["web", "algorithm", "cs", "code"] as const;
 
-function parseFrontmatter(fileContent: string): MDXFile {
-  let frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
-  let match = frontmatterRegex.exec(fileContent);
-  let frontMatterBlock = match![1];
-  let content = fileContent.replace(frontmatterRegex, "").trim();
-  let frontMatterLines = frontMatterBlock.split("\n");
-  let frontmatter: any = {};
-
-  frontMatterLines.forEach((line) => {
-    let [key, ...valueArr] = line.split(":");
-    let value = valueArr.join(": ").trim();
-    if (value.startsWith("[") && value.endsWith("]")) {
-      const tags = value
-        .replace(/^\[(.*)\]$/, "$1")
-        .split(",")
-        .map((str) => str.trim());
-      frontmatter[key.trim() as keyof FrontMatter] = tags;
-    } else {
-      value = value.replace(/^['"](.*)['"]$/, "$1");
-      frontmatter[key.trim() as keyof FrontMatter] = value;
+const LRUCacheInstance = new LRUCache<string, any>({
+  maxSize: 50 * 1024 * 1024,
+  ttl: 1000 * 60 * 30,
+  updateAgeOnGet: true,
+  sizeCalculation: (value) => {
+    if (typeof value === "string") {
+      return value.length;
     }
-  });
+    return new TextEncoder().encode(JSON.stringify(value)).length;
+  },
+});
 
-  return { frontmatter, content };
-}
+class Blog {
+  #lruCache: LRUCache<string, any>;
+  #ALL_POSTS_CACHE_KEY = "all_posts";
 
-function readMDXFile(filePath: string) {
-  let rawContent = fs.readFileSync(filePath, "utf8");
-  return parseFrontmatter(rawContent);
-}
-
-function browseMDXFiles(dir: string, fileList: string[] = []): string[] {
-  const files = fs.readdirSync(dir);
-
-  files.forEach((file: string) => {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-
-    if (stat.isDirectory()) {
-      fileList = browseMDXFiles(filePath, fileList);
-    } else if (path.extname(file) === ".mdx") {
-      fileList.push(filePath);
-    }
-  });
-
-  return fileList;
-}
-
-function getMDXFiles(dir: string) {
-  const files = fs.readdirSync(dir);
-
-  const MDXFilePaths = new Map();
-  files.forEach((file: string) => {
-    const mdxFiles = browseMDXFiles(path.join(dir, file));
-    MDXFilePaths.set(file, mdxFiles);
-  });
-
-  return MDXFilePaths;
-}
-
-function getMDXData(dir: string): BlogContent {
-  let mdxFilesPath = getMDXFiles(dir);
-  const tags = new Map();
-
-  const MDXFileList: Partial<MDXFile[]> = [];
-  mdxFilesPath.forEach((files: string[], category: string) => {
-    let mdxFiles: Partial<MDXFile> = {};
-    files.forEach((file) => {
-      let { frontmatter, content } = readMDXFile(file);
-      const { slug } = frontmatter;
-      mdxFiles = {
-        frontmatter,
-        content,
-        slug,
-        category,
-      };
-      const usedTags = mdxFiles.frontmatter?.tags as string[];
-      for (const tag of usedTags) {
-        tags.has(tag) ? tags.set(tag, tags.get(tag) + 1) : tags.set(tag, 1);
-      }
-      MDXFileList.push(mdxFiles as MDXFile);
-    });
-  });
-
-  const mostUsedTags = Array.from(tags)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
-
-  return {
-    blogpost: MDXFileList as MDXFile[],
-    mostUsedTags,
-  };
-}
-
-function getBlogPost(): BlogContent {
-  const { blogpost, mostUsedTags } = getMDXData(
-    path.join(process.cwd(), "posts"),
-  );
-
-  blogpost.sort((a, b) => {
-    return (
-      new Date(b.frontmatter.date).getTime() -
-      new Date(a.frontmatter.date).getTime()
-    );
-  });
-
-  return {
-    blogpost,
-    mostUsedTags,
-  };
-}
-
-class BlogData {
-  #_allPost: BlogContent;
   constructor() {
-    this.#_allPost = getBlogPost();
+    this.#lruCache = LRUCacheInstance;
+    this.#initializeCache();
   }
 
-  async getContentHeaders(content: string) {
-    let headers = content
-      .split("\n")
-      .filter((line) => line.startsWith("#"))
-      .map((str) => str.split(" "));
-    return headers;
+  static async initialize() {
+    const blog = new Blog();
+    await blog.#initializeCache();
+    return blog;
   }
 
-  async allWebPost() {
-    return this.#_allPost.blogpost.filter((post) => post.category === "web");
+  #createCacheKey(category: string, slug: string) {
+    return `${category}/${slug}`;
   }
 
-  async allAlgorithmPost() {
-    return this.#_allPost.blogpost.filter(
-      (post) => post.category === "algorithm",
+  #createPostCategoryCacheKey(category: string) {
+    return `${category}`;
+  }
+
+  async readMDXFile(category: string, dir: string) {
+    const files = await fs.readdir(dir);
+
+    const categorizedPost: z.infer<typeof CacheDataSchema>[] = [];
+    await Promise.all(
+      files.map(async (filePath) => {
+        const fullPath = path.join(dir, filePath);
+        const stats = await fs.stat(fullPath);
+        if (stats.isDirectory()) {
+          this.readMDXFile(category, fullPath);
+        } else {
+          const fileData = await fs.readFile(fullPath, "utf-8");
+          const parsedPostContent = matter(fileData);
+          const frontMatter = FrontMatterSchema.safeParse(
+            parsedPostContent.data,
+          );
+          if (!frontMatter.success) {
+            console.error(frontMatter.error);
+            throw new Error(
+              "Gray matter 를 이용하여 frontmatter 를 파싱하는데 실패했습니다.",
+            );
+          }
+          const { slug, category, date } = frontMatter.data;
+          const cacheKey = this.#createCacheKey(category, slug);
+          const cacheData = {
+            ...parsedPostContent,
+            cacheKey,
+            category,
+            date,
+          };
+
+          const parsedCacheData = CacheDataSchema.safeParse(cacheData);
+          if (!parsedCacheData.success) {
+            console.error(parsedCacheData.error);
+            throw new Error("캐시 데이터를 생성하는데 실패했습니다.");
+          }
+
+          this.#lruCache.set(cacheKey, parsedCacheData.data);
+          categorizedPost.push(parsedCacheData.data);
+        }
+        const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
+        this.#lruCache.set(postCategoryCacheKey, categorizedPost);
+      }),
     );
   }
 
-  async allCSPost() {
-    return this.#_allPost.blogpost.filter((post) => post.category === "cs");
-    // return this.#_allPost.blogpost.filter((post) => post.category === "cs");
+  getPostsByCategory(category: string) {
+    const parsedCategory = PostCategorySchema.safeParse(category);
+    if (!parsedCategory.success) {
+      console.error(parsedCategory.error);
+      throw new Error("잘못된 카테고리입니다.");
+    }
+    const cacheKey = this.#createPostCategoryCacheKey(category);
+    if (this.#lruCache.has(cacheKey)) {
+      return this.#lruCache.get(cacheKey);
+    }
   }
 
-  async allCodePost() {
-    return this.#_allPost.blogpost.filter((post) => post.category === "code");
+  getPostBySlug(category: string, slug: string) {
+    const cacheKey = this.#createCacheKey(category, slug);
+    if (this.#lruCache.has(cacheKey)) {
+      return this.#lruCache.get(cacheKey);
+    }
+    return null;
   }
 
-  async allBlogPost(): Promise<MDXFile[]> {
-    return this.#_allPost.blogpost;
+  async #initializeCache() {
+    const allPosts: z.infer<typeof CacheDataSchema>[] = [];
+
+    await Promise.all(
+      STATIC_POST_CATEGORIES.map(async (category) => {
+        const categoryPostFilePath = path.join(STATIC_DIR, category);
+        await this.readMDXFile(category, categoryPostFilePath);
+
+        const categorizedPosts = this.getPostsByCategory(category) || [];
+        allPosts.push(...categorizedPosts);
+      }),
+    );
+    this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, allPosts);
   }
 
-  async getRecentlyPublished() {
-    const recentlyPublished = this.#_allPost.blogpost.slice(0, 10);
-    return recentlyPublished;
+  getAllPosts() {
+    if (this.#lruCache.has(this.#ALL_POSTS_CACHE_KEY)) {
+      return this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY);
+    }
+    return [];
   }
 
-  async getMostUsedTags() {
-    return this.#_allPost.mostUsedTags;
+  getRecentPosts(count: number = 10) {
+    const allPostsKeys = this.#lruCache.get(
+      this.#ALL_POSTS_CACHE_KEY,
+    ) as z.infer<typeof CacheDataSchema>[];
+    if (!allPostsKeys) {
+      throw new Error("게시물이 존재하지 않습니다.");
+    }
+
+    return allPostsKeys
+      .map(({ cacheKey }) => this.#lruCache.get(cacheKey))
+      .filter((post): post is z.infer<typeof CacheDataSchema> => post != null)
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
+      .slice(0, count)
+      .map(({ data }) => data);
   }
 }
 
-const getBlog = async () => {
-  return singleton("blogpost", () => new BlogData());
+let blogInstance: Promise<Blog> | null = null;
+
+const getBlogInstance = () => {
+  if (!blogInstance) {
+    blogInstance = Blog.initialize();
+  }
+  return blogInstance;
 };
 
-export type { MDXFile, BlogContent };
+export const getRecentPosts = unstable_cache(
+  async (count: number = 10) => {
+    const blog = await getBlogInstance();
+    return blog.getRecentPosts(count);
+  },
+  ["recent-posts"],
+  {
+    revalidate: 30,
+    tags: ["posts"],
+  },
+);
 
-export default getBlog;
+export const getPostsByCategory = unstable_cache(
+  async (category: string): Promise<z.infer<typeof CacheDataSchema>[]> => {
+    const blog = await getBlogInstance();
+    return blog.getPostsByCategory(category);
+  },
+  ["posts-by-category"],
+  {
+    revalidate: 30,
+    tags: ["posts"],
+  },
+);
+
+export const getPostBySlug = unstable_cache(
+  async (
+    category: string,
+    slug: string,
+  ): Promise<z.infer<typeof CacheDataSchema>> => {
+    const blog = await getBlogInstance();
+    return blog.getPostBySlug(category, slug);
+  },
+  ["post-by-slug"],
+  {
+    revalidate: 30,
+    tags: ["posts"],
+  },
+);
+
+export const getAllPosts = unstable_cache(
+  async (): Promise<z.infer<typeof CacheDataSchema>[]> => {
+    const blog = await getBlogInstance();
+    return blog.getAllPosts();
+  },
+  ["all-posts"],
+  {
+    revalidate: 30,
+    tags: ["posts"],
+  },
+);
