@@ -1,44 +1,30 @@
 import React from "react";
-import { baseUrl } from "@/utils/baseUrl";
-import getBlog from "db/blog";
 import { Article } from "./page.style";
 import { FrontMatter } from "type";
-import { notFound } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
-import ProgressNav from "@/components/ui/progressNav";
 import Wave from "./wave";
-import CustomMDXRemote from "@/components/ui/customMdxRemote";
-import { getPostBySlug } from "db/PostRepository";
+// import CustomMDXRemote from "@/components/ui/customMdxRemote";
+import { getPostBySlug } from "db/blog";
 
-type Cateogry = "code" | "web" | "cs" | "algorithm";
+type Category = "code" | "web" | "cs" | "algorithm";
 
-interface Props {
-  params: {
-    category: Cateogry;
-    slug: string;
-  };
-}
-
-const blog = await getBlog();
-
-const categoryHandlers = {
-  code: blog.allCodePost.bind(blog),
-  web: blog.allWebPost.bind(blog),
-  cs: blog.allCSPost.bind(blog),
-  algorithm: blog.allAlgorithmPost.bind(blog),
-};
+type Params = Promise<{
+  category: Category;
+  slug: string;
+}>;
 
 export async function generateMetadata({
   params,
 }: {
-  params: { category: Cateogry; slug: string };
+  params: Params;
 }): Promise<Partial<FrontMatter> | undefined> {
-  const { category, slug } = params;
-  const frontmatter = await getPostBySlug(slug);
-  if (!frontmatter) {
+  const resolvedParams = await params;
+  const { category, slug } = resolvedParams;
+  const postData = await getPostBySlug(category, slug);
+  if (!postData) {
     throw new Error("찾을 수 없는 포스트 입니다.");
   }
-  let { title, summary, date } = frontmatter;
+  const { title, summary, date } = postData.data;
   const localeDateString = new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
     month: "long",
@@ -54,15 +40,15 @@ export async function generateMetadata({
 
 function formatDate(date: string) {
   noStore();
-  let currentDate = new Date();
+  const currentDate = new Date();
   if (!date.includes("T")) {
     date = `${date}T00:00:00`;
   }
-  let targetDate = new Date(date);
+  const targetDate = new Date(date);
 
-  let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  let monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  let daysAgo = currentDate.getDate() - targetDate.getDate();
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  const daysAgo = currentDate.getDate() - targetDate.getDate();
 
   let formattedDate = "";
 
@@ -76,7 +62,7 @@ function formatDate(date: string) {
     formattedDate = "Today";
   }
 
-  let fullDate = targetDate.toLocaleString("en-us", {
+  const fullDate = targetDate.toLocaleString("en-us", {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -85,21 +71,16 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
-async function Page({ params }: Props) {
-  const { category, slug } = params;
+const CustomMDXRemote = React.lazy(
+  () => import("@/components/ui/customMdxRemote"),
+);
 
-  const frontmatter = await getPostBySlug(slug);
-  if (!frontmatter) {
-    throw new Error("찾을 수 없는 포스트 입니다.");
-  }
+async function Page({ params }: { params: Params }) {
+  const resolvedParams = await params;
+  const { category, slug } = resolvedParams;
 
-  const { title, date, summary } = frontmatter;
-  const response = await fetch(`${baseUrl}/api/post/${category}/${slug}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  const { content } = await response.json();
+  const postData = await getPostBySlug(category, slug);
+  const { title, summary, date } = postData.data;
 
   return (
     <React.Fragment>
@@ -113,25 +94,23 @@ async function Page({ params }: Props) {
               "@context": "https://schema.org",
               "@type": "BlogPosting",
               headline: title,
-              datePublised: date,
+              datePublished: date,
               dateModified: date,
               description: summary,
             }),
           }}
         />
         <div className="flex flex-col items-center justify-center w-full text-center break-all pt-20 pb-20 ml-auto mr-auto">
-          <h1 className="f font-bold text-5xl leading-8 mb-8 text-pretty">
+          <h1 className="font-bold text-5xl leading-8 mb-8 text-pretty">
             {title}
           </h1>
           <React.Suspense fallback={<div>...</div>}>
             <p>
-              {formatDate(
-                new Intl.DateTimeFormat("ko-KR", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }).format(date),
-              )}
+              {new Intl.DateTimeFormat("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }).format(new Date(date))}
             </p>
           </React.Suspense>
         </div>
@@ -140,7 +119,9 @@ async function Page({ params }: Props) {
           className="relative flex flex-row justify-center gap-[2.25rem]"
         >
           <Article>
-            <CustomMDXRemote source={content} />
+            <React.Suspense fallback={<div>콘텐츠를 불러오는 중...</div>}>
+              <CustomMDXRemote source={postData.content} />
+            </React.Suspense>
           </Article>
         </div>
       </main>

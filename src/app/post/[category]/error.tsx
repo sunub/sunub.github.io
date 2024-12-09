@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/router";
+import { useRouter } from "next/compat/router";
 
 export default function Error({
   error,
@@ -29,7 +29,7 @@ export default function Error({
             <Button
               variant={"destructive"}
               onClick={() => {
-                router.push("/");
+                router?.push("/");
               }}
             >
               홈으로 돌아가기

@@ -1,54 +1,24 @@
-import getBlog from "db/blog";
 import Wave from "@/components/HeaderContents/Wave";
 import Spacer from "@/components/Spacer";
 import { FrontmatterWrapper } from "./page.style";
 import Card from "@/components/Card";
-import { MDXFile } from "type";
-
-interface Props {
-  params: {
-    category: Cateogry;
-  };
-}
-
-type CategoryHandlers = {
-  code: () => Promise<MDXFile[]>;
-  web: () => Promise<MDXFile[]>;
-  cs: () => Promise<MDXFile[]>;
-  algorithm: () => Promise<MDXFile[]>;
-};
+import { getPostsByCategory } from "db/blog";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
 
-async function handleCategory(
-  category: Cateogry,
-  categoryHandlers: CategoryHandlers,
-) {
-  const handler = categoryHandlers[category];
-  if (handler) {
-    return await handler();
-  } else {
-    console.log("Unknown category");
-    return [];
-  }
-}
+type Params = Promise<{
+  category: Cateogry;
+}>;
 
-export default async function Page({ params }: Props) {
-  const { category } = params;
-  const blog = await getBlog();
-  const categoryHandlers = {
-    code: blog.allCodePost.bind(blog),
-    web: blog.allWebPost.bind(blog),
-    cs: blog.allCSPost.bind(blog),
-    algorithm: blog.allAlgorithmPost.bind(blog),
-  };
-
-  const postinfo = await handleCategory(category, categoryHandlers);
+export default async function Page({ params }: { params: Params }) {
+  const resolvedParams = await params;
+  const { category } = resolvedParams;
+  const postinfo = await getPostsByCategory(category);
   if (!postinfo.length) {
     throw new Error("없는 카테고리 입니다.");
   }
 
-  const frontmatters = postinfo.map((post) => post.frontmatter);
+  const frontmatters = postinfo.map((post) => post.data);
 
   const title = {
     code: "Code",
