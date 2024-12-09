@@ -1,18 +1,29 @@
 /** @type {import('next').NextConfig} */
-const { PrismaClient } = require("@prisma/client");
+import createMDX from "@next/mdx";
+import type { NextConfig } from "next";
+import { PrismaClient } from "@prisma/client";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   basePath: "",
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
-  swcMinify: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   images: {
     formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 31536000,
+    minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96],
   },
   compiler: {
-    styledComponents: true,
+    styledComponents: {
+      ssr: true,
+      displayName: process.env.NODE_ENV === "development",
+      pure: true,
+      cssProp: false,
+    },
+  },
+  experimental: {
+    mdxRs: true,
   },
   output: "standalone",
   redirects: async () => {
@@ -95,4 +106,9 @@ const securityHeaders = [
     value: "Cache-Control",
   },
 ];
-module.exports = nextConfig;
+
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+});
+
+export default withMDX(nextConfig);
