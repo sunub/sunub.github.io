@@ -1,13 +1,22 @@
 import { PrismaClient } from "@prisma/client";
-import getBlog, { MDXFile } from "db/blog";
+import { getPostsByCategory } from "db/blog";
 import chalk from "chalk";
 import ora from "ora";
+import { z } from "zod";
+import { CacheDataSchema } from "@/types/schema";
 
 const prisma = new PrismaClient();
 
+type MDXFile = z.infer<typeof CacheDataSchema>;
+
+const allWebPosts = await getPostsByCategory("web");
+const allCSPosts = await getPostsByCategory("cs");
+const allCodePosts = await getPostsByCategory("code");
+const allAlgorithmPosts = await getPostsByCategory("algorithm");
+
 async function seedPostFiles(postData: MDXFile[]) {
   for (const post of postData) {
-    const frontmatter = post.frontmatter;
+    const frontmatter = post.data;
     if (!frontmatter) continue;
 
     await prisma.post.create({
@@ -29,32 +38,31 @@ async function seedPostFiles(postData: MDXFile[]) {
 
 async function createRedirectPaths() {
   const result = [];
-  const blog = await getBlog();
-  const allWebPosts = await blog.allWebPost();
   for (const post of allWebPosts) {
-    const source = `/${post.category}/${post.slug}`;
-    const destination = `/post/${post.category}/${post.slug}`;
+    const { slug, category } = post.data;
+    const source = `/${category}/${slug}`;
+    const destination = `/post/${category}/${slug}`;
     result.push({ source, destination });
   }
 
-  const allCSPosts = await blog.allCSPost();
   for (const post of allCSPosts) {
-    const source = `/${post.category}/${post.slug}`;
-    const destination = `/post/${post.category}/${post.slug}`;
+    const { slug, category } = post.data;
+    const source = `/${category}/${slug}`;
+    const destination = `/post/${category}/${slug}`;
     result.push({ source, destination });
   }
 
-  const allCodePosts = await blog.allCodePost();
   for (const post of allCodePosts) {
-    const source = `/${post.category}/${post.slug}`;
-    const destination = `/post/${post.category}/${post.slug}`;
+    const { slug, category } = post.data;
+    const source = `/${category}/${slug}`;
+    const destination = `/post/${category}/${slug}`;
     result.push({ source, destination });
   }
 
-  const allAlgorithmPosts = await blog.allAlgorithmPost();
   for (const post of allAlgorithmPosts) {
-    const source = `/${post.category}/${post.slug}`;
-    const destination = `/post/${post.category}/${post.slug}`;
+    const { slug, category } = post.data;
+    const source = `/${category}/${slug}`;
+    const destination = `/post/${category}/${slug}`;
     result.push({ source, destination });
   }
 
@@ -94,13 +102,12 @@ async function cleanUpDB() {
   log("\n");
 }
 
-async function seedingWebPost(blog: any) {
+async function seedingWebPost() {
   const webPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`,
   ).start();
   try {
     console.time("📝 Created web posts...");
-    const allWebPosts = await blog.allWebPost();
     await seedPostFiles(allWebPosts);
     webPostSpinner.succeed(chalk.green("Web Post has been seeded!!"));
     console.timeEnd("📝 Created web posts...");
@@ -110,13 +117,12 @@ async function seedingWebPost(blog: any) {
   }
 }
 
-async function seedingCsPost(blog: any) {
+async function seedingCsPost() {
   const csPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`,
   ).start();
   try {
     console.time("📝 Created cs posts...");
-    const allCSPosts = await blog.allCSPost();
     await seedPostFiles(allCSPosts);
     csPostSpinner.succeed(chalk.green("CS Post has been seeded!!"));
     console.timeEnd("📝 Created cs posts...");
@@ -125,13 +131,12 @@ async function seedingCsPost(blog: any) {
   }
 }
 
-async function seedingCodePost(blog: any) {
+async function seedingCodePost() {
   const codePostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...`,
   ).start();
   try {
     console.time("📝 Created code posts...");
-    const allCodePosts = await blog.allCodePost();
     await seedPostFiles(allCodePosts);
     codePostSpinner.succeed(chalk.green("Code Post has been seeded!!"));
     console.timeEnd("📝 Created code posts...");
@@ -140,13 +145,12 @@ async function seedingCodePost(blog: any) {
   }
 }
 
-async function seedingAlgoPost(blog: any) {
+async function seedingAlgoPost() {
   const algorithmPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`,
   ).start();
   try {
     console.time("📝 Created algorithm posts...");
-    const allAlgorithmPosts = await blog.allAlgorithmPost();
     await seedPostFiles(allAlgorithmPosts);
     algorithmPostSpinner.succeed(
       chalk.green("Algorithm Post has been seeded!!"),
@@ -180,13 +184,11 @@ async function seed() {
   console.time(chalk.green(`🌱 Database has been seeded`));
   await cleanUpDB();
 
-  const blog = await getBlog();
-
   log(chalk.bgBlue(" Seed Post data..."));
-  await seedingWebPost(blog);
-  await seedingCsPost(blog);
-  await seedingCodePost(blog);
-  await seedingAlgoPost(blog);
+  await seedingWebPost();
+  await seedingCsPost();
+  await seedingCodePost();
+  await seedingAlgoPost();
 
   log(chalk.bgBlue(" Seed Post Redirects..."));
   await seedingRedirectPath();
