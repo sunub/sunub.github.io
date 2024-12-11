@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   right: 0px;
   width: 100%;
   max-width: 100cqw;
+  transform: translateY(1px);
   z-index: 3;
   user-select: none;
   pointer-events: none;
