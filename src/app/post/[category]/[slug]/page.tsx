@@ -1,5 +1,10 @@
 import React from "react";
-import { Article } from "./page.style";
+import {
+  Article,
+  PostTitle,
+  ArticleWrapper,
+  ArticleHeader,
+} from "./page.style";
 import { FrontMatter } from "type";
 import { unstable_noStore as noStore } from "next/cache";
 import Wave from "./wave";
@@ -108,10 +113,8 @@ async function Page({ params }: { params: Params }) {
             }),
           }}
         />
-        <div className="flex flex-col items-center justify-center w-full text-center break-all pt-20 pb-20 ml-auto mr-auto">
-          <h1 className="font-bold text-5xl leading-8 mb-8 text-pretty">
-            {title}
-          </h1>
+        <ArticleHeader>
+          <PostTitle>{title}</PostTitle>
           <React.Suspense fallback={<div>...</div>}>
             <p>
               {new Intl.DateTimeFormat("ko-KR", {
@@ -121,17 +124,14 @@ async function Page({ params }: { params: Params }) {
               }).format(new Date(date))}
             </p>
           </React.Suspense>
-        </div>
-        <div
-          id="blog-post__article"
-          className="relative flex flex-row justify-center gap-[2.25rem]"
-        >
+        </ArticleHeader>
+        <ArticleWrapper id="blog-post__article">
           <Article>
             <React.Suspense fallback={<div>콘텐츠를 불러오는 중...</div>}>
               <CustomMDXRemote source={postData.content} />
             </React.Suspense>
           </Article>
-        </div>
+        </ArticleWrapper>
       </main>
     </React.Fragment>
   );

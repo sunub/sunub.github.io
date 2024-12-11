@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   left: 0px;
   right: 0px;
   width: 100%;
-  transform: translateY(1px);
+  max-width: 100cqw;
   z-index: 3;
   user-select: none;
   pointer-events: none;
