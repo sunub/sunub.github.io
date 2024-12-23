@@ -43,7 +43,7 @@ async function CodeBlock({
   } catch (error) {
     console.error(
       "Shiki를 사용하여 코드 하이라이팅을 변환하는 동안 오류가 발생했습니다.",
-      error
+      error,
     );
     return (
       <pre className={className}>
@@ -55,7 +55,7 @@ async function CodeBlock({
 
 function InlineCode({ children }: { children: React.ReactNode }) {
   return (
-    <code className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-200 text-sm font-mono">
+    <code className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-200 text-sm font-mono">
       {children}
     </code>
   );

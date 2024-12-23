@@ -1,7 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
 import React from "react";
-import { articleCompos } from "./article";
 import { postComponents } from "./postComponents";
 
 const components = postComponents;

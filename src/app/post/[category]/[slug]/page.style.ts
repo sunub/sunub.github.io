@@ -35,7 +35,8 @@ export const ArticleWrapper = styled.div`
 `;
 
 export const Article = styled.article`
-  max-width: 700px;
+  max-width: 850px;
+  font-size: 18px;
   line-height: calc(1.7rem + 0.8rem);
   & > pre {
     background: var(--color-codeBlock);

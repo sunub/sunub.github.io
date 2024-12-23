@@ -4,12 +4,12 @@ import styled from "styled-components";
 
 const Li = styled.li`
   position: relative;
+  left: 2.5rem;
 
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 8px;
-  font-size: 1rem;
 `;
 
 const SvgContainer = styled.div`
