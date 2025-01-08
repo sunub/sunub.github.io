@@ -53,9 +53,23 @@ class Blog {
   }
 
   async readMDXFile(category: string, dir: string) {
+    async function parsingMDXFile(fullPath: string) {
+      const fileData = await fs.readFile(fullPath, "utf-8");
+      const parsedPostContent = matter(fileData);
+      const frontMatter = FrontMatterSchema.safeParse(parsedPostContent.data);
+      if (!frontMatter.success) {
+        console.error(frontMatter.error);
+        throw new Error(
+          "Gray matter 를 이용하여 frontmatter 를 파싱하는데 실패했습니다.",
+        );
+      }
+      return { frontmatter: frontMatter.data, parsedPostContent };
+    }
+
     const files = await fs.readdir(dir);
 
     const categorizedPost: z.infer<typeof CacheDataSchema>[] = [];
+
     await Promise.all(
       files.map(async (filePath) => {
         const fullPath = path.join(dir, filePath);
@@ -63,18 +77,9 @@ class Blog {
         if (stats.isDirectory()) {
           this.readMDXFile(category, fullPath);
         } else {
-          const fileData = await fs.readFile(fullPath, "utf-8");
-          const parsedPostContent = matter(fileData);
-          const frontMatter = FrontMatterSchema.safeParse(
-            parsedPostContent.data,
-          );
-          if (!frontMatter.success) {
-            console.error(frontMatter.error);
-            throw new Error(
-              "Gray matter 를 이용하여 frontmatter 를 파싱하는데 실패했습니다.",
-            );
-          }
-          const { slug, category, date } = frontMatter.data;
+          const { frontmatter, parsedPostContent } =
+            await parsingMDXFile(fullPath);
+          const { category, slug, date } = frontmatter;
           const cacheKey = this.#createCacheKey(category, slug);
           const cacheData = {
             ...parsedPostContent,
