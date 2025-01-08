@@ -1,0 +1,222 @@
+---
+title: 상태관리는 왜 중요할까?
+date: 2024-01-02
+tags: [react, state-management]
+summary: 프론트엔드에서 상태관리는 왜 중요한 것일까?
+slug: state-management
+category: code
+completed: true
+---
+
+프론트엔드 분야에서 상태 관리는 이제 가장 중요한 요소로 자리잡았습니다. 그렇다면 어째서 상태관리가 중요한 것이고 상태에는 어떠한 종류가 있을 지 알아보도록 하겠습니다.
+
+### 상태의 종류
+
+`상태(State)` 는 어떠한 의미를 지닌 값이며 애플리케이션 시나리오에 따라 지속적으로 변경 될 수 있는 값을 의미합니다. 현대 애플리케이션은 상태의 종류를 여러가지 분류로 구분지을 수 있기 때문에 각각의 카데고리가 어떠한 상태를 갖는 지에 대해서 이야기 해보겠습니다.
+
+#### UI와 관련된 상태 값
+
+기본적으로 웹에서 상호작용이 가능한 모든 요소의 현재 값을 의미합니다. 예를 들어 다크모드/라이트 모드를 구분하는 Theme 값, 각종 input, 알림창의 외부 노출 여부등의 상태가 존재합니다.
+
+#### URL에 포함되는 상태 값
+
+브라우저에서 관리되고 있는 상태 값을 의미합니다. 예를 들어 `http://localhost:3000/rooms/31232?adults=2` 와 같은 주소는 roomId는 31232 adult=2 라는 상태를 갖고 있고 이러한 상태는 주로 라우팅 시  사용되고 관리됩니다.
+
+#### 폼(form)과 관련된 상태 값
+
+`pending`, `idle`, `loading` 과 같이 사용자가 폼을 이용해서 전송하는 데이터의 진행 상황등의 상태 데이터가 존재합니다.
+
+#### 서버에서 불러오는 상태 값
+
+서버에서 가져온 값은 주로 API 요청을 통해 데이터를 받아오며, 이러한 데이터는 **서버 상태**로 간주됩니다. 서버 상태는 로컬 상태와는 다르게 외부의 데이터 소스에 의존하므로, API 응답 시간, 에러 처리, 데이터 갱신 등의 복잡성을 포함합니다.
+
+### 상태관리
+
+이렇듯 오늘 날의 애플리케이션은 여러 종류의 상태가 존재한다는 것을 알 수 있습니다. 이렇듯 상태가 늘어나게 되면서 자연스럽게 이러한 상태들을 어떻게 관리할 것인지에 대한 문제가 발생했습니다.
+
+위에서 설명했던 상태들이 지역적인 상태일 경우에는 큰 문제가 되지 않습니다. 문제가 되는 경우는 상태를 전역에서 관리할 경우 가장 큰 문제가 됩니다. 전역의 상태가 문제가 되는 이유는 제한하고 관리하는 범위의 설정, 전역에서 변하는 상태들을 자식 컴포넌트들이 어떻게 감지할 것인지가 어려워지기 때문입니다.
+
+위에서 설명한 문제를 주로 애플리케이션이 찢어지는 문제, Tearing 문제라고 하는데 하나의 상태에 따라 사용자에게 서로 다른 결과물을 보여주게 되는 현상을 의미합니다. 이러한 문제를 해결하기 위해 등장한 패턴이 Flux 패턴 입니다.
+
+### Flux 패턴
+
+MVC 패턴은 애플리케이션에서 `데이터(Model)`와 `화면 업데이트(View)`, `사용자 입력 처리(Controller)`의 책임을 분리하여 의존성을 줄이기 위한 목적으로 등장한 디자인 패턴입니다.
+
+이러한 의존성을 줄이는 것은 확장성, 유지보수성, 테스트의 용이성을 높이기 위해서는 중요한 요소이므로 MVC 패턴은 널리 사용 되었습니다. 하지만 현대에는 웹 애플리케이션의 요구사항이 늘어남에 따라 MVC 패턴은 더이상 유용한 디자인 패턴이라고 할 수 없게 되었습니다.
+
+![state_management1](/images/code/state_management1.png)
+
+현대 웹 애플리케이션에서는 사용자의 UI 조작에 따라 동적으로 UI를 업데이트 하거나 주식과 같이 실시간으로 데이터를 받아 UI를 업데이트 해야하는 작업들이 늘어났습니다. 이러한 작업의 여파로 인해서 위의 그림에서 확인할 수 있는 것처럼 의존성이 분리가 되지 않고 서로 상호의존하게 되는 문제가 발생했습니다. 이러한 문제를 해결하기 위해서 등장한 것이 바로 **Flux 패턴**입니다.
+
+![state_management3](/images/code/state_management3.png)
+
+- **액션(Action)** : 어떠한 작업을 처리할 액션과 그 액션 발생 시 포함시킬 데이터를 의미하며 액션 타입과 데이터를 디스패처로 전송한다.
+
+- **디스패처(Dispatcher)** : 액션을 스토어에 보내는 역할을 수행하며 콜백 함수의 형태로 액션이 정의한 타입과 데이터를 모두 스토어에 보낸다.
+
+- **스토어(Store)** : 여기에서 실제 상태에 따른 값과 상태를 변경할 수 있는 메서드를 갖고 있으며 액션의 타입에 따라 어떻게 상태를 변경할지 정의되어 있다.
+
+- **View** : 리액트의 컴포넌트에 해당하고 애플리케이션에서 사용되는 데이터를 사용자가 볼 수 있게끔 렌더링 하는 역할을 수행한다. 또한 뷰에서 사용자의 입력이나 행위에 따라 상태를 업데이트 할 필요가 있을 경우 액션을 호출하게 된다.
+
+Flux 패턴은 의존성의 방향을 한방향으로 흐르게끔 디자인이 되어 있습니다. 이러한 이유는 MVC 패턴에서 의존성이 서로 상호의존 되는 문제를 해결해야 했기 때문입니다. Flux 패턴이 이러한 문제를 해결하는 방법에 대해서 간단한 코드를 통해서 확인해보겠습니다.
+
+```js
+{
+  type: "ADD_TODO",
+  payload: { text: "Learn Flux" }
+}
+```
+
+Action은 위와 같이 사용자의 상호작용으로 인해 발생하는 모든 이벤트(사용자 입력, API 응답, 타이머 이벤트 등)를 **구체적인 형태로 표현**하는 객체입니다. 위와 같이 이벤트를 타입으로 정의 하는 경우 어떻게 상태를 처리하는 지에 대해서 다루어 보겠습니다.
+
+Dispatcher는 사용자의 상호작용으로 인해서 생성된 데이터를 전송하는 역할만을 수행합니다. Dispatcher 역시 간단한 코드와 같이 살펴보겠습니다.
+
+```js
+class Dispatcher {
+  constructor() {
+    this._subscribedCallbacks = new Set();
+  }
+  register(callback) {
+    this._subscribedCallbacks.add(callback);
+  }
+  dispatch(action) {
+    for (const callback of this._subscribedCallbacks) {
+      callback(action); // Action을 각 콜백으로 전달
+    }
+  }
+}
+```
+
+위의 코드는 최대한 Dispatcher 단순화한 코드입니다. 위의 간단한 코드에서 우리가 확인해야 할 것은 `register`와 `dispatch` 메서드입니다.
+
+이 각각의 두 메서드는 `register()` 메서드를 통해 Store의 콜백을 등록하고, `dispatch()` 메서드를 사용해 register를 이용하여 등록되어 있는 콜백함수들을 Store에 전달하여 실행 시키는 역할을 수행합니다. 간단한 사용 예시는 아래와 같습니다.
+
+```js
+const todoDispatcher = new Dispatcher();
+todoDispatcher.register((action) => {
+  switch (action.type) {
+    case "ADD_TODO":
+      Store.handleAction(action);
+      break;
+  }
+});
+
+const TodoAction = {
+  addTodo: (text) =>
+    todoDispatcher.dispatch({
+      type: "ADD_TODO",
+      payload: { text },
+    }),
+};
+```
+
+Dispatcher는 사용자의 인터렉션을 처리하는 허브의 역할을 위와 같이 수행함으로써 각각의 action에 맞춰 Store에 전달하는 역할을 수행함으로써 의존성을 단방향으로 흐를 수 있게끔 제어하는 역할을 수행합니다. 그럼 간단한 Store의 코드도 작성 해보겠습니다.
+
+```js
+const TodoStore = {
+  todos: [],
+  listeners: new Set(),
+  getTodos: function () {
+    return this.todos;
+  },
+  addTodo: function (text) {
+    this.todos.push({ id: Date.now(), text });
+    this.emitChange();
+  },
+  emitChange: () => {
+    for (const listener of listners) {
+      listener();
+    }
+  },
+};
+```
+
+Store는 위와 같이 실질적으로 데이터의 상태를 직접적으로 변경하거나 반환하는 역할을 수행하고 오직 Store 만을 이용하여 데이터의 변화가 이루어지기 때문에 action이 미치는 영향을 고려하지 않아도 안전하게 애플리케이션을 이용할 수 있다는 장점이 있습니다.
+
+### 리덕스(Redux)
+
+오늘 날 상태관리 라이브러리를 하나만 이야기하라고 하면 당연하게 먼저 언급되는 것은 `리덕스 (Redux)`일 것입니다. 리덕스가 유명한 이유는 Flux 패턴을 적용하여 상태관리의 어려움을 해결하고자 했던 최초의 라이브러리였기 때문입니다. 리덕스는 기존의 Flux 패턴의 아이디어를 확장하고 추가로 Elm 아키텍쳐의 몇 가지 주요 개념을 차용하여 설계되었습니다.
+
+이러한 이유는 기존의 Flux 패턴은 Store 간의 의존성 문제가 생길 수 있는 위험이 존재했기 때문입니다. 한 가지 예를들어 보겠습니다.
+
+우리는 소셜 미디어 앱을 만들었습니다. 그리고 사용자의 개인 정보를 관리하기 위하여 `UserStore` 라는 Store를 만들었습니다. 그리고 이 후에 사용자의 팔로워와 팔로잉 리스트를 관리하기 위하여 추가로 `FollwerStore` 스토어를 생성했습니다.
+
+위와 같이 작성되어 있는 상태를 신선하게 관리하기 위해서는 `UserStore`가 먼저 업데이트되고, `FollowerStore`에서 `UserStore`의 데이터를 참조해 이름을 업데이트해야 합니다. 만약 이 과정에서 순서를 잘못 처리할 경우 스토어에 저장되어 있는 데이터가 최신 데이터를 반영하고 있지 않는 문제가 발생할 수 있습니다.
+
+위와 같은 문제를 해결하기 위하여 Elm 아키텍처의 일정 부분을 차용해오기로 결정 했습니다.
+
+### Elm 아키텍쳐
+
+위와 같은 Store 간에 생기는 의존성을 줄이기 위해 리덕스가 결정한 방법은 여러개의 Store를 사용하는 것이 아닌 단일 Store 를 이용하여 상태를 관리하여 문제를 해결하고자 하였습니다.
+
+```elm
+module Main exposing (..)
+
+-- MODEL
+type alias Model = Int
+
+init: Model
+init =
+	0
+
+-- UPDATE
+type Msg
+	= Increment
+update: Msg -> Model -> Model
+update msg model =
+	case msg of
+		Increment ->
+			model + 1
+
+-- VIEW
+view: Model -> Html Msg
+view model =
+	div []
+		[ button [ onClick Increment ] [text "+"]]
+<div>
+	<button>+</button>
+</div
+```
+
+```ts
+type State<T> = {
+  get: () => T;
+  set: (state: T | (prev: T) => T) => T;
+  subscribe: (callback: () => void) => () => void
+}
+```
+
+위의 상태는 항상 최신 값을 불러오기 위하여 `get` 메서드는 함수로 작성이 되어 있고 `set` 함수의 경우 특정 값으로 상태를 바로 업데이트 시키거나 함수를 이용하여 이전 상태를 기반으로 현재 상태 값을 변화 시키는 것이 가능합니다.
+
+위의 상태에서 get, set 의 메서드는 일반적으로 상태를 관리할 때 사용하는 getter, setter 함수와 크게 다르지 않습니다. 여기서 중요한 역할을 수행하는 것은 `subscribe` 함수입니다. 어째서 subscribe 함수가 중요한 역할을 수행하는 지 알아보겠습니다.
+
+```ts
+// store.ts
+let state = { counte: 0 };
+export const get = () => state;
+export const set = (newState: State | ((prevState: State) => State)) => {
+  state =
+    typeof newState === "function"
+      ? (newState as (prevState: State) => State)(state)
+      : newState;
+};
+```
+
+위와 같이 작성되어 있는 store 를 이용하여 버튼을 업데이트 시켜 보겠습니다.
+
+```jsx
+function Counter1() {
+  const state = get();
+  function handleClick() {
+    set((prev) => ({ count: prev.count + 1 }));
+  }
+  return (
+    <div>
+            <h3>Counter 1 : {state.count}</h3>     {" "}
+      <button onClick={handleClick}>+</button>   {" "}
+    </div>
+  );
+}
+```
+
+위의 Counter는 React 환경에서 우리가 의도한 대로 작동할까요? 그렇지 않습니다. 어떤 것이 문제가 될까요?
