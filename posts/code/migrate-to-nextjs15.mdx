@@ -1,0 +1,70 @@
+---
+title: Next.js 15 버전에서 변경된 것
+date: 2024-12-24
+tags: [nextjs]
+summary: Next.js 15 버전에서 변경된 Dynamic Routes에 관하여
+slug: migrate-to-nextjs15
+category: code
+completed: true
+---
+
+### 바뀐 Dynamic Routes에서의 param 사용 방법과 cookie 사용 방법
+
+```jsx
+// before
+export default function Page({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const { slug } = params
+  return <div>My Post: {slug}</div>
+}
+
+// after
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const slug = (await params).slug
+  return <div>My Post: {slug}</div>
+}
+```
+
+기존 Next.js의 Routing 중 URL의 특정 부분을 변수로 처리하여 다양한 값을 받을 수 있게 하는 Dynamic Routes에서, 이러한 URL 파라미터를 컴포넌트에서 사용하는 방식이 변경되었습니다.
+
+기존에는 서버 컴포넌트 내부에서 `await` 을 이용하지 않더라도 파라미터를 컴포넌트에서 사용이 가능 했습니다. 하지만 Next.js 에서는 param 을 `await` 을 사용하지 않을 경우 사용할 수 없게 끔 변경이 되었습니다.
+
+```jsx
+"use server";
+
+// before
+function dosomething() {
+  const cookie = cookies().get("hello");
+}
+
+// after
+async function dosomething() {
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get("hello");
+}
+```
+
+이러한 변경사항은 `cookies, headers, params` 등에서도 적용된 변경사항입니다. 그렇다면 vercel 이 버전을 업그레이드 하면서 기존의 API 들을 변경한 이유가 무엇일까요?
+
+### 전통적인 서버사이드 렌더링
+
+![traditional_server_side_rendering](/images/code/traditional_server_side_rendering.png)
+
+전통적인 서버 사이드 렌더링에서는 서버가 어떤 컨텐츠를 렌더링 하기 이전에 서버에서 웹에 렌더링할 HTML을 생성하는 것을 기다려야 했습니다. 하지만 모든 컴포넌트가 서버에서 요청을 전송받고 데이터를 처리하여 HTML을 생성하는 방식에 의존하는 것은 아니기 때문에 렌더링을 하기 위해 요청을 기다리는 것은 불필요한 작업입니다. Next.js 에서는 이번에 버전을 업데이트 함으로써 이 불필요한 작업을 개선하고자 했습니다.
+
+### 기존의 API를 변경한 이유
+
+Next.js 15에서는 이러한 불필요한 요청을 기다리는 작업을 개선하기 위해서 기존의 API를 수정하였습니다. 이상적으로는, 서버가 요청이 도착하기 전에 가능한 한 많은 준비를 해두어야 합니다.
+
+여기서 이야기 하는 준비는 정적 리소스를 준비하고 공통 데이터를 캐싱하는 등의 렌더링 하는 과정에서 미리 준비하여 성능을 개선시킬 수 있는 자원들을 미리 준비한다는 것을 이야기 합니다.
+
+서버가 요청이 도착하기 전에 가능한 한 많은 준비를 해두고 향후 최적화를 위한 기반을 마련하기 위해 요청을 기다려야 하는 시점을 알아야 할 필요가 있습니다.
+
+그래서 렌더링 과정에서 Request에 의존적인 데이터를 필요로 하는 `headers, cookies, params, searchParams` 와 같은 API를 비동기적으로 전환하여 데이터 요청을 기다려야 하는 컴포넌트와 그렇지 않은 컴포넌트를 구분하여 전통적인 서버사이드 렌더링의 단점을 개선하고자 한 것입니다.
