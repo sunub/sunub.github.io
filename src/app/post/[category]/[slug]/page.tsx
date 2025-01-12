@@ -6,7 +6,6 @@ import {
   ArticleHeader,
 } from "./page.style";
 import { FrontMatter } from "type";
-import { unstable_noStore as noStore } from "next/cache";
 import Wave from "./wave";
 import { getPostBySlug, getAllPosts } from "db/blog";
 
@@ -49,39 +48,6 @@ export async function generateMetadata({
     date: localeDateString,
     category,
   };
-}
-
-function formatDate(date: string) {
-  noStore();
-  const currentDate = new Date();
-  if (!date.includes("T")) {
-    date = `${date}T00:00:00`;
-  }
-  const targetDate = new Date(date);
-
-  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  const daysAgo = currentDate.getDate() - targetDate.getDate();
-
-  let formattedDate = "";
-
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}y ago`;
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}mo ago`;
-  } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}d ago`;
-  } else {
-    formattedDate = "Today";
-  }
-
-  const fullDate = targetDate.toLocaleString("en-us", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  return `${fullDate} (${formattedDate})`;
 }
 
 const CustomMDXRemote = React.lazy(
