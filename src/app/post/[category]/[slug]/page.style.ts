@@ -72,11 +72,11 @@ export const Article = styled.article`
 
   & > h3 {
     font-size: calc(1rem + 0.35rem);
-    font-weight: 400;
+    font-weight: 900;
   }
 
   & > :is(h2, h3, h4, h5, h6) {
-    margin-top: 3.5rem;
+    margin-top: 2rem;
     margin-bottom: 1.5rem;
     & > span {
       color: var(--color-title);

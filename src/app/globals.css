@@ -184,8 +184,8 @@ strong {
   font-weight: 900;
   font-size: 1.15rem;
   color: var(--color-highlight);
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .image_wrapper {
