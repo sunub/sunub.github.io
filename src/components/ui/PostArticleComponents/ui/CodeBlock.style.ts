@@ -12,7 +12,6 @@ export const CodeBlockWrapper = styled.div`
     word-break: break-all;
     padding: 2rem 1.5rem;
     font-size: 0.9rem;
-    background: oklch(99.12% 0.0016 0);
     border-radius: 3rem;
   }
   pre {

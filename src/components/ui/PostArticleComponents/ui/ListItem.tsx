@@ -2,37 +2,6 @@
 
 import styled from "styled-components";
 
-const Li = styled.li`
-  position: relative;
-  left: 2.5rem;
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 8px;
-`;
-
-const SvgContainer = styled.div`
-  position: absolute;
-  left: -1.5rem;
-  top: 0.5rem;
-
-  & > svg {
-    stroke: oklch(73.44% 0.152 21.47);
-  }
-`;
-
-const Ul = styled.ul`
-  list-style: none;
-  padding: 0;
-  font-size: inherit;
-  margin-bottom: 1.5rem;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
 function ListItem({ children }: { children: React.ReactNode }) {
   return (
     <Li>
@@ -57,8 +26,28 @@ function ListItem({ children }: { children: React.ReactNode }) {
   );
 }
 
-function UnOrderedList({ children }: { children: React.ReactNode }) {
-  return <Ul>{children}</Ul>;
-}
+const Li = styled.li`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 0.5rem;
 
-export { ListItem, UnOrderedList };
+  & > ul {
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+  }
+`;
+
+const SvgContainer = styled.div`
+  position: absolute;
+  left: -1.5rem;
+  top: 0.5rem;
+
+  & > svg {
+    stroke: oklch(73.44% 0.152 21.47);
+  }
+`;
+
+export { ListItem };

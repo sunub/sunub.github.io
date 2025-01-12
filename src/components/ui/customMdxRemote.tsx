@@ -1,9 +1,9 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
 import React from "react";
-import { postComponents } from "./postComponents";
+import { PostArticleComponents } from "./PostArticleComponents";
 
-const components = postComponents;
+const components = PostArticleComponents;
 
 function CustomMDXRemote(props: MDXRemoteProps) {
   return (

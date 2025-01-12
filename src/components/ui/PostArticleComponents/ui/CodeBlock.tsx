@@ -1,6 +1,6 @@
 import React from "react";
 import { codeToHtml } from "shiki";
-import { CodeBlockWrapper } from "./codeBlock.style";
+import { CodeBlockWrapper } from "./CodeBlock.style";
 
 const languageMap = {
   "language-html": "html",
@@ -31,22 +31,17 @@ async function CodeBlock({
 
   try {
     const html = await codeToHtml(codeToString, {
-      theme: "snazzy-light",
-      lang: languageMap[className as LanguageKey] || "text",
+      theme: "tokyo-night",
+      lang: languageMap[className as LanguageKey] || "plaintext",
     });
-    return (
-      <CodeBlockWrapper
-        className="relative group"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
-    );
+    return <CodeBlockWrapper dangerouslySetInnerHTML={{ __html: html }} />;
   } catch (error) {
     console.error(
       "Shiki를 사용하여 코드 하이라이팅을 변환하는 동안 오류가 발생했습니다.",
       error,
     );
     return (
-      <pre className={className}>
+      <pre className={className} {...props}>
         <code>{codeToString}</code>
       </pre>
     );

@@ -118,4 +118,4 @@ function PauseSvg() {
   );
 }
 
-export default Video;
+export { Video };

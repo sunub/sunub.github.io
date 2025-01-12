@@ -1,10 +1,21 @@
 import React from "react";
-import { LinkAnchor, LinkSVG, H1, H2, H3, H4, H5, H6 } from "./sectionHeading";
-import { PostImage } from "./image";
-import Video from "./video";
-import { CodeBlock, InlineCode } from "./codeBlock";
-import { ListItem, UnOrderedList } from "./ul";
-import { Blockquote } from "./blockquote";
+import {
+  LinkAnchor,
+  LinkSVG,
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+} from "./PostArticleComponents.style";
+import { PostImage } from "./PostImage";
+import { Video } from "./Video";
+import { CodeBlock, InlineCode } from "./CodeBlock";
+import { Blockquote } from "./BlockQuote";
+import { ListItem } from "./ListItem";
+import { UnOrderedList } from "./UnOrderedList";
+import { CustomLink } from "./CustomLink";
 
 function LinkIcon() {
   return (
@@ -56,7 +67,7 @@ type CodeProps = {
   children: React.ReactNode;
 };
 
-const postComponents: any = {
+const PostArticleComponents: any = {
   h1: createHeadingComponent(1),
   h2: createHeadingComponent(2),
   h3: createHeadingComponent(3),
@@ -78,6 +89,7 @@ const postComponents: any = {
   ul: UnOrderedList,
   li: ListItem,
   blockquote: Blockquote,
+  a: CustomLink,
 };
 
-export { postComponents };
+export { PostArticleComponents };
