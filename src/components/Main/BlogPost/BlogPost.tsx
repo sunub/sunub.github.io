@@ -5,31 +5,40 @@ import { getRecentPosts } from "db/blog";
 async function BlogPost() {
   try {
     const recentlyPublished = await getRecentPosts(10);
-
     if (!recentlyPublished || recentlyPublished.length === 0) {
       return <div>현재 표시할 포스트가 없습니다.</div>;
     }
 
     return (
-      <div style={{ paddingLeft: "16px" }}>
+      <Styled.BlogPostList>
         {recentlyPublished.map((post) => {
-          const { slug, title, summary, category } = post;
+          const { slug, title, summary, category, date } = post;
+          const localeDate = new Intl.DateTimeFormat("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(date));
           return (
-            <Styled.BlogPostWrapper
+            <Styled.BlogPostListItem
               key={`${post.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
             >
-              <Link href={`/${category}/${slug}`} scroll={true}>
-                <Styled.BlogPostTitle>
-                  <Styled.Title>{title}</Styled.Title>
-                  <Styled.TitleDot />
-                  <UnderLineWaveSVG />
-                </Styled.BlogPostTitle>
-                <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
-              </Link>
-            </Styled.BlogPostWrapper>
+              <Styled.BlogPostWrapper>
+                <Link href={`/${category}/${slug}`} scroll={true}>
+                  <Styled.BlogPostTitle>
+                    <Styled.Title>{title}</Styled.Title>
+                    <Styled.TitleDot />
+                    <UnderLineWaveSVG />
+                  </Styled.BlogPostTitle>
+                  <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+                </Link>
+              </Styled.BlogPostWrapper>
+              <Styled.Footer>
+                <Styled.Date>{localeDate}</Styled.Date>
+              </Styled.Footer>
+            </Styled.BlogPostListItem>
           );
         })}
-      </div>
+      </Styled.BlogPostList>
     );
   } catch (error) {
     console.error(error);

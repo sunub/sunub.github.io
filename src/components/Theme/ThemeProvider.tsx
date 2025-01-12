@@ -81,4 +81,6 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+export const useColorTheme = () => React.useContext(ThemeContext);
+
 export default ThemeProvider;
