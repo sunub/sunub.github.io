@@ -6,7 +6,7 @@ import { LRUCache } from "lru-cache";
 import matter from "gray-matter";
 import { z } from "zod";
 import { unstable_cache } from "next/cache";
-import { singleton } from "@/utils/singleton";
+import chokidar from "chokidar";
 import {
   CacheDataSchema,
   FrontMatterSchema,
@@ -36,6 +36,67 @@ class Blog {
   constructor() {
     this.#lruCache = LRUCacheInstance;
     this.#initializeCache();
+
+    const watcher = chokidar.watch(STATIC_DIR, {
+      persistent: true,
+      ignoreInitial: true,
+    });
+
+    watcher.on("change", (filePath) => this.handleFileChange(filePath));
+  }
+
+  async handleFileChange(filePath: string) {
+    const relativePath = path.relative(STATIC_DIR, filePath);
+    try {
+      const { frontmatter, parsedPostContent } = await this.parsingMDXFile(
+        path.join(STATIC_DIR, relativePath),
+      );
+      const { category, slug, date } = frontmatter;
+      const cacheKey = this.#createCacheKey(category, slug);
+      const cacheData = {
+        ...parsedPostContent,
+        cacheKey,
+        category,
+        date,
+      };
+
+      const parsedCacheData = CacheDataSchema.safeParse(cacheData);
+      if (!parsedCacheData.success) {
+        console.error(parsedCacheData.error);
+        throw new Error("캐시 데이터를 생성하는데 실패했습니다.");
+      }
+
+      const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
+      const categorizedPost = this.getPostsByCategory(category) || [];
+      const udpatedCategorizedPost: z.infer<typeof CacheDataSchema>[] =
+        categorizedPost.map((post: z.infer<typeof CacheDataSchema>) => {
+          if (post.cacheKey === cacheKey) {
+            return parsedCacheData.data;
+          }
+          return post;
+        });
+
+      const allPosts = this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
+      interface CacheData {
+        cacheKey: string;
+        category: string;
+        date: Date;
+        [key: string]: any;
+      }
+      const updatedAllPosts: CacheData[] = allPosts.map((post: CacheData) => {
+        if (post.cacheKey === cacheKey) {
+          return parsedCacheData.data as CacheData;
+        }
+        return post;
+      });
+
+      this.#lruCache.set(cacheKey, parsedCacheData.data);
+      this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, updatedAllPosts);
+      this.#lruCache.set(postCategoryCacheKey, udpatedCategorizedPost);
+      console.log(`File changed: ${relativePath}`);
+    } catch (error) {
+      console.error(`Failed to update cache for ${filePath}:`, error);
+    }
   }
 
   static async initialize() {
@@ -52,22 +113,21 @@ class Blog {
     return `${category}`;
   }
 
-  async readMDXFile(category: string, dir: string) {
-    async function parsingMDXFile(fullPath: string) {
-      const fileData = await fs.readFile(fullPath, "utf-8");
-      const parsedPostContent = matter(fileData);
-      const frontMatter = FrontMatterSchema.safeParse(parsedPostContent.data);
-      if (!frontMatter.success) {
-        console.error(frontMatter.error);
-        throw new Error(
-          "Gray matter 를 이용하여 frontmatter 를 파싱하는데 실패했습니다.",
-        );
-      }
-      return { frontmatter: frontMatter.data, parsedPostContent };
+  async parsingMDXFile(fullPath: string) {
+    const fileData = await fs.readFile(fullPath, "utf-8");
+    const parsedPostContent = matter(fileData);
+    const frontMatter = FrontMatterSchema.safeParse(parsedPostContent.data);
+    if (!frontMatter.success) {
+      console.error(frontMatter.error);
+      throw new Error(
+        "Gray matter 를 이용하여 frontmatter 를 파싱하는데 실패했습니다.",
+      );
     }
+    return { frontmatter: frontMatter.data, parsedPostContent };
+  }
 
+  async readMDXFile(category: string, dir: string) {
     const files = await fs.readdir(dir);
-
     const categorizedPost: z.infer<typeof CacheDataSchema>[] = [];
 
     await Promise.all(
@@ -78,7 +138,7 @@ class Blog {
           this.readMDXFile(category, fullPath);
         } else {
           const { frontmatter, parsedPostContent } =
-            await parsingMDXFile(fullPath);
+            await this.parsingMDXFile(fullPath);
           const { category, slug, date } = frontmatter;
           const cacheKey = this.#createCacheKey(category, slug);
           const cacheData = {
@@ -124,7 +184,7 @@ class Blog {
   }
 
   async #initializeCache() {
-    const allPosts: z.infer<typeof CacheDataSchema>[] = [];
+    let allPosts: z.infer<typeof CacheDataSchema>[] = [];
 
     await Promise.all(
       STATIC_POST_CATEGORIES.map(async (category) => {
@@ -132,7 +192,7 @@ class Blog {
         await this.readMDXFile(category, categoryPostFilePath);
 
         const categorizedPosts = this.getPostsByCategory(category) || [];
-        allPosts.push(...categorizedPosts);
+        allPosts = [...allPosts, ...categorizedPosts];
       }),
     );
     this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, allPosts);
@@ -146,14 +206,14 @@ class Blog {
   }
 
   getRecentPosts(count: number = 10) {
-    const allPostsKeys = this.#lruCache.get(
-      this.#ALL_POSTS_CACHE_KEY,
-    ) as z.infer<typeof CacheDataSchema>[];
-    if (!allPostsKeys) {
+    const allPosts = this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) as z.infer<
+      typeof CacheDataSchema
+    >[];
+    if (!allPosts) {
       throw new Error("게시물이 존재하지 않습니다.");
     }
 
-    return allPostsKeys
+    return allPosts
       .map(({ cacheKey }) => this.#lruCache.get(cacheKey))
       .filter((post): post is z.infer<typeof CacheDataSchema> => post != null)
       .sort((a, b) => b.date.getTime() - a.date.getTime())
