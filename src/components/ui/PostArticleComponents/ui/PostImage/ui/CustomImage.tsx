@@ -28,12 +28,11 @@ const CustomImage = memo(
         alt={alt}
         {...(type === "responsive"
           ? {
-              layout: "responsive",
               width: 800,
               height: 500,
               style: { width: "100%", height: "auto" },
             }
-          : { layout: "fill" })}
+          : { fill: true })}
         className={`
             object-contain
             transition-opacity duration-300
