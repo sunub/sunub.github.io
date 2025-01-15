@@ -1,36 +1,36 @@
 ---
 title: 상태관리는 왜 중요할까?
-date: 2025-01-02
+date: 2025-01-15
 tags: [react, state-management]
 summary: 프론트엔드에서 상태관리는 왜 중요한 것일까?
 slug: state-management
 category: code
-completed: true
+completed: false
 ---
 
 프론트엔드 분야에서 상태 관리는 이제 가장 중요한 요소로 자리잡았습니다. 그렇다면 어째서 상태관리가 중요한 것이고 상태에는 어떠한 종류가 있을 지 알아보도록 하겠습니다.
 
-### 상태의 종류
+## 상태의 종류
 
 `상태(State)` 는 어떠한 의미를 지닌 값이며 애플리케이션 시나리오에 따라 지속적으로 변경 될 수 있는 값을 의미합니다. 현대 애플리케이션은 상태의 종류를 여러가지 분류로 구분지을 수 있기 때문에 각각의 카데고리가 어떠한 상태를 갖는 지에 대해서 이야기 해보겠습니다.
 
-#### UI와 관련된 상태 값
+### UI와 관련된 상태 값
 
 기본적으로 웹에서 상호작용이 가능한 모든 요소의 현재 값을 의미합니다. 예를 들어 다크모드/라이트 모드를 구분하는 Theme 값, 각종 input, 알림창의 외부 노출 여부등의 상태가 존재합니다.
 
-#### URL에 포함되는 상태 값
+### URL에 포함되는 상태 값
 
 브라우저에서 관리되고 있는 상태 값을 의미합니다. 예를 들어 `http://localhost:3000/rooms/31232?adults=2` 와 같은 주소는 roomId는 31232 adult=2 라는 상태를 갖고 있고 이러한 상태는 주로 라우팅 시  사용되고 관리됩니다.
 
-#### 폼(form)과 관련된 상태 값
+### 폼(form)과 관련된 상태 값
 
 `pending`, `idle`, `loading` 과 같이 사용자가 폼을 이용해서 전송하는 데이터의 진행 상황등의 상태 데이터가 존재합니다.
 
-#### 서버에서 불러오는 상태 값
+### 서버에서 불러오는 상태 값
 
 서버에서 가져온 값은 주로 API 요청을 통해 데이터를 받아오며, 이러한 데이터는 **서버 상태**로 간주됩니다. 서버 상태는 로컬 상태와는 다르게 외부의 데이터 소스에 의존하므로, API 응답 시간, 에러 처리, 데이터 갱신 등의 복잡성을 포함합니다.
 
-### 상태관리
+## 상태관리
 
 이렇듯 오늘 날의 애플리케이션은 여러 종류의 상태가 존재한다는 것을 알 수 있습니다. 이렇듯 상태가 늘어나게 되면서 자연스럽게 이러한 상태들을 어떻게 관리할 것인지에 대한 문제가 발생했습니다.
 
@@ -38,7 +38,7 @@ completed: true
 
 위에서 설명한 문제를 주로 애플리케이션이 찢어지는 문제, Tearing 문제라고 하는데 하나의 상태에 따라 사용자에게 서로 다른 결과물을 보여주게 되는 현상을 의미합니다. 이러한 문제를 해결하기 위해 등장한 패턴이 Flux 패턴 입니다.
 
-### Flux 패턴
+## Flux 패턴
 
 MVC 패턴은 애플리케이션에서 `데이터(Model)`와 `화면 업데이트(View)`, `사용자 입력 처리(Controller)`의 책임을 분리하여 의존성을 줄이기 위한 목적으로 등장한 디자인 패턴입니다.
 
@@ -133,7 +133,7 @@ const TodoStore = {
 
 Store는 위와 같이 실질적으로 데이터의 상태를 직접적으로 변경하거나 반환하는 역할을 수행하고 오직 Store 만을 이용하여 데이터의 변화가 이루어지기 때문에 action이 미치는 영향을 고려하지 않아도 안전하게 애플리케이션을 이용할 수 있다는 장점이 있습니다.
 
-### 리덕스(Redux)
+## 리덕스(Redux)
 
 오늘 날 상태관리 라이브러리를 하나만 이야기하라고 하면 당연하게 먼저 언급되는 것은 `리덕스 (Redux)`일 것입니다. 리덕스가 유명한 이유는 Flux 패턴을 적용하여 상태관리의 어려움을 해결하고자 했던 최초의 라이브러리였기 때문입니다. 리덕스는 기존의 Flux 패턴의 아이디어를 확장하고 추가로 Elm 아키텍쳐의 몇 가지 주요 개념을 차용하여 설계되었습니다.
 
@@ -177,6 +177,113 @@ view model =
 	<button>+</button>
 </div
 ```
+
+위에서 확인할 수 있는 Elm 아키텍처의 특징은 아래와 같습니다.
+
+- **Model**: 상태(데이터)를 표현.
+- **Update**: 상태를 변경하는 순수 함수.
+- **View**: 상태를 기반으로 UI를 렌더링.
+
+```plaintext
+Event 발생 -> view -> update -> model
+
+View가 사용자가 이벤트를 트리거 -> Update가 특정 메시지를 기반으로 Model을 업데이트
+```
+
+위의 설명만 보았을 때는 Flux 패턴과 어떤 부분이 다르기 때문에 Redux가 Elm 아키텍처를 체택 했는지 모호하기 때문에 어떤 부분에 차이점이 있었는지 자세히 다루어 보겠습니다.
+
+### Elm 아키텍처와 Flux 패턴의 다른점
+
+Redux가 Flux 패턴에서 부족한 부분을 채우려고 한 것은 `단일 상태`를 통해서 상태를 관리하려고 했던 것입니다. Flux 패턴은 `다중 상태`를 갖는다는 문제가 있었습니다. 다중 상태는 특정 상태가 어디에서 관리되고 변경되는지 파악하기 어려울 수 있습니다. 또한 Store간의 의존성을 가질 수 있다는 문제가 있습니다. 예를들어 보겠습니다.
+
+```jsx
+// UserStore
+const UserStore = {
+  users: { 1: { name: "Alice", profilePicture: "alice.jpg" } },
+};
+
+// PostStore
+const PostStore = {
+  posts: [{ id: 1, content: "Hello, World!", authorId: 1 }],
+};
+
+// UI에서 의존성 문제 발생
+function renderPost(postId) {
+  const post = PostStore.posts.find((p) => p.id === postId);
+  const author = UserStore.users[post.authorId]; // 의존성 증가
+  console.log(`${author.name}: ${post.content}`);
+}
+```
+
+위의 예제는 두 Store가 서로 의존되어 있다는 문제를 갖고 있습니다. 위와 같이 두 Store가 의존관계를 갖고 있을 경우 갱신이 제대로 이루어지지 않으면 업데이트를 하였더라도 게시물 작성자의 정보가 최신 상태가 아닐 수 있습니다.
+
+반면에 Elm 아키텍처는 단일 상태를 갖고 상태 변경이 항상 새로운 상태를 반환하는 순수 함수(`Update`)를 통해 이루어진다는 특징을 갖고 있습니다. Redux는 이러한 다중 상태로 인해서 예측이 어렵고 서로 의존성을 갖게 되는 문제를 해결하기 위하여 Elm 아키텍처를 도입한 것입니다.
+
+## 하나의 상태로 UI 업데이트 하기
+
+우선 Context API를 이용하여 하나의 상태를 이용하여 UI를 업데이트 하는 방법과 Redux를 흉내내서 작성하면서 어떠한 차이가 있는지에 대해서 자세하게 다루어 보겠습니다.
+
+### Context API
+
+<ContextApiProblem />
+
+위의 컴포넌트는 Context API를 활용하여 하나의 상태 값을 이용해 UI를 업데이트 하는 방법을 보여주고 있습니다.
+
+```jsx
+function ContextApiProblem() {
+  return (
+    <SomeProvider>
+           {" "}
+      <div className="flex  items-center justify-center  gap-4">
+               {" "}
+        <div className="flex items-center justify-center flex-col">
+                    <SomChildDisplay />
+                    <SomeChildComponent />       {" "}
+        </div>
+               {" "}
+        <div className="flex items-center justify-center flex-col">
+                    <TextEditor />       {" "}
+        </div>
+             {" "}
+      </div>
+         {" "}
+    </SomeProvider>
+  );
+}
+```
+
+위의 컴포넌트가 렌더링이 어떻게 이루어지고 있는지 확인하셨다면 Text를 변경하면 Count1의 컴포넌트도 같이 렌더링이 이루어지고 있는 것을 알 수 있습니다. 이러한 문제가 일어나는 이유는 컴포넌트들이 하나의 객체로 구성이 되어 있는 Context Value를 사용하고 있기 때문입니다.
+
+```typescript
+type SomeContextType = {
+  count: number;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
+  text: string;
+  setText: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const SomeContext = React.createContext<SomeContextType | undefined>(undefined);
+```
+
+위에서 다루고 있는 상태 값은 객체로 count와 text를 관리하고 있습니다. 객체 내부에 있는 속성 값을 변경할 경우 참조 값이 변경되지 않기 때문에 값이 변경되지는 않을텐데 왜 이런 일이 일어나는 걸까요?
+
+이러한 현상이 나타나는 이유는 Context API 의 매커니즘 때문입니다. Context API는 Context의 Value가 변경이 될 경우 해당 Value를 새롭게 생성하고 해당 Context를 구독하는 모든 컴포넌트가 리렌더링이 된다는 매커니즘을 갖고 있기 때문입니다. 아래의 흐름을 참고 해주세요.
+
+```plaintext
+Context.Provider가 value를 갖고 있고, 이를 Fiber 트리상에서 이 Context를 쓰는 Consumer들이 어디에 있는지를 추적합니다.
+
+-> Provider의 value가 바뀌면, React는 “새로운 value가 이전 value와 동일한지?”를 판단하고, 다르다면(주로 `Object.is`로 비교) 해당 Context를 구독하는 Consumer 부분(Fiber Subtree)에 이 Context가 업데이트됨을 알려줍니다.
+
+-> 그 Consumer들은 다음 렌더 단계에서 “useContext(Context)”로 읽은 “value”가 달라진 것을 감지, 리렌더링이 필요해집니다.
+```
+
+위와 같은 매커니즘 때문에 컴포넌트의 구조를 새롭게 변경하지 않는 이상 Context를 활용하여 하나의 상태를 활용하여 불필요한 렌더링이 발생하지 않게끔 하는 것은 불가능합니다. 이러한 특징 때문에 Context API는 `의존성을 주입` 하는 것과 유사하다는 표현이 생긴 것입니다.
+
+### Redux 흉내내기
+
+<ImitateRedux />
+
+위의 컴포넌트도 위의 Context API와 마찬가지로 하나의 상태 값을 이용하여 UI를 업데이트하고 있지만 불필요한 리렌더링이 발생하고 있지 않다는 것을 확인할 수 있습니다.
 
 ```ts
 type State<T> = {
