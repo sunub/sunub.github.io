@@ -16,6 +16,7 @@ import { Blockquote } from "./BlockQuote";
 import { ListItem } from "./ListItem";
 import { UnOrderedList } from "./UnOrderedList";
 import { CustomLink } from "./CustomLink";
+import { MDXComponents } from "@/MDXComponents";
 
 function LinkIcon() {
   return (
@@ -90,6 +91,7 @@ const PostArticleComponents: any = {
   li: ListItem,
   blockquote: Blockquote,
   a: CustomLink,
+  ...MDXComponents,
 };
 
 export { PostArticleComponents };
