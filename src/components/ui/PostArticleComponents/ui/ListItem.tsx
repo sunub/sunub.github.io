@@ -46,7 +46,7 @@ const SvgContainer = styled.div`
   top: 0.5rem;
 
   & > svg {
-    stroke: oklch(73.44% 0.152 21.47);
+    stroke: var(--color-highlight);
   }
 `;
 
