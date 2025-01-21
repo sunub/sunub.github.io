@@ -38,7 +38,8 @@
       "@/components/*": ["./src/components/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/posts/*": ["./src/app/posts/*"],
-      "@/public/*": ["./public/*"]
+      "@/public/*": ["./public/*"],
+      "@/shared/*": ["./src/shared/*"]
     },
     "sourceMap": true
   },
