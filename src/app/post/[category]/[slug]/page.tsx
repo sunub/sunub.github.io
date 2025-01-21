@@ -6,8 +6,8 @@ import {
   ArticleHeader,
 } from "./page.style";
 import { FrontMatter } from "type";
-import Wave from "./wave";
 import { getPostBySlug, getAllPosts } from "db/blog";
+import { Wave } from "@/widgets/Wave";
 
 type Category = "code" | "web" | "cs" | "algorithm";
 
