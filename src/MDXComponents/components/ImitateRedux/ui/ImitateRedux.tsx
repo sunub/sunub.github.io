@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { memo, useCallback, useEffect } from "react";
 import { useStoreSelector } from "../hook/useStoreSelector";
 import { createStore } from "../model/store";
 
@@ -12,17 +12,12 @@ const selectStore = createStore({
 function SelectorCounter() {
   const count = useStoreSelector(
     selectStore,
-    useCallback((state) => state.count, []),
+    useCallback((state: ReturnType<typeof selectStore.get>) => state.count, []),
   );
 
   function handleClick() {
     selectStore.set((prev) => ({ ...prev, count: prev.count + 1 }));
-    console.log(selectStore.get());
   }
-
-  useEffect(() => {
-    console.log("SelectorCounter rendered");
-  }, []);
 
   return (
     <div>
@@ -37,14 +32,11 @@ function SelectorCounter() {
   );
 }
 
-const textSelector = (state: ReturnType<typeof selectStore.get>) => state.text;
-
-function TextEditor() {
-  const text = useStoreSelector(selectStore, textSelector);
-
-  useEffect(() => {
-    console.log("TextEditor rendered");
-  }, []);
+const TextEditor = memo(() => {
+  const text = useStoreSelector(
+    selectStore,
+    useCallback((state: ReturnType<typeof selectStore.get>) => state.text, []),
+  );
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     selectStore.set((prev) => ({ ...prev, text: e.target.value }));
@@ -56,7 +48,7 @@ function TextEditor() {
       <input value={text} onChange={handleChange} />
     </div>
   );
-}
+});
 
 function ImitateRedux() {
   return (

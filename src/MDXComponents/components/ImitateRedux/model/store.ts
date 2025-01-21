@@ -28,7 +28,9 @@ export const createStore = <State>(
 
   const subscribe = (callback: () => void) => {
     callbacks.add(callback);
-    return () => callbacks.delete(callback);
+    return () => {
+      callbacks.delete(callback);
+    };
   };
 
   return { get, set, subscribe };
