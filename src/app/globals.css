@@ -246,6 +246,12 @@ li.active > a {
   transform: scale(1.25) translateX(-2px) translateZ(16px);
 }
 
+.post-heading-titles {
+  & > code {
+    transform: translateX(-4px) translateY(-4px);
+  }
+}
+
 #moblie-nav__link-wrapper li:nth-child(3),
 #moblie-nav__link-wrapper li:nth-child(4),
 #moblie-nav__link-wrapper li:nth-child(5),
