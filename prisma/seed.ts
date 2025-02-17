@@ -15,26 +15,39 @@ const allCSPosts = await blog.getPostsByCategory("cs");
 const allCodePosts = await blog.getPostsByCategory("code");
 const allAlgorithmPosts = await blog.getPostsByCategory("algorithm");
 
-async function seedPostFiles(postData: MDXFile[]) {
-  for (const post of postData) {
-    const frontmatter = post.data;
-    if (!frontmatter) continue;
-
-    await prisma.post.create({
-      select: { id: true },
-      data: {
+async function seedPostFiles(data: MDXFile[]) {
+  const postData = data
+    .filter((post) => post.data)
+    .map((post) => {
+      const frontmatter = post.data;
+      return {
         title: frontmatter.title,
         category: frontmatter.category,
         date: new Date(frontmatter.date),
         summary: frontmatter.summary,
         slug: frontmatter.slug,
-        tags: {
-          create: frontmatter.tags.map((tag) => ({ name: tag })),
-        },
-      },
+      };
     });
-  }
-  return;
+
+  await prisma.post.createMany({
+    data: postData,
+    skipDuplicates: true,
+  });
+
+  const tagsData = data
+    .filter((post) => post.data)
+    .flatMap((post) => {
+      const frontMatter = post.data;
+      return frontMatter.tags.map((tag) => ({
+        name: tag,
+        postSlug: frontMatter.slug,
+      }));
+    });
+
+  await prisma.tags.createMany({
+    data: tagsData,
+    skipDuplicates: true,
+  });
 }
 
 async function createRedirectPaths() {
@@ -72,16 +85,10 @@ async function createRedirectPaths() {
 
 async function seedRedirects() {
   const redirects = await createRedirectPaths();
-  for (const redirect of redirects) {
-    const { source, destination } = redirect;
-    await prisma.redirects.create({
-      select: { id: true },
-      data: {
-        source,
-        destination,
-      },
-    });
-  }
+  await prisma.redirects.createMany({
+    data: redirects,
+    skipDuplicates: true,
+  });
 }
 
 const log = console.log;
@@ -183,13 +190,22 @@ async function seedingRedirectPath() {
 async function seed() {
   log(chalk.bgGreen("\n Seeding..."));
   console.time(chalk.green(`🌱 Database has been seeded`));
-  await cleanUpDB();
+
+  await prisma.$transaction(async (tx) => {
+    console.time("🧹 Cleaned up the database...");
+    await tx.tags.deleteMany();
+    await tx.post.deleteMany();
+    await tx.redirects.deleteMany();
+  });
 
   log(chalk.bgBlue(" Seed Post data..."));
-  await seedingWebPost();
-  await seedingCsPost();
-  await seedingCodePost();
-  await seedingAlgoPost();
+  await Promise.all([
+    seedingWebPost(),
+    seedingCsPost(),
+    seedingCodePost(),
+    seedingAlgoPost(),
+    seedingRedirectPath(),
+  ]);
 
   log(chalk.bgBlue(" Seed Post Redirects..."));
   await seedingRedirectPath();
