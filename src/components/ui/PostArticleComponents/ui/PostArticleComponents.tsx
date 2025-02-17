@@ -58,7 +58,11 @@ function createHeadingComponent(level: number) {
       React.createElement(LinkAnchor, { href: `#${slug}`, key: `${slug}` }, [
         React.createElement(LinkIcon, { key: `${slug}-icon` }),
       ]),
-      children,
+      React.createElement(
+        "div",
+        { key: `${slug}-content`, className: "post-heading-titles" },
+        children,
+      ),
     ]);
   };
 }

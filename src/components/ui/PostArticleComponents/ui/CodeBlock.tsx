@@ -50,7 +50,7 @@ async function CodeBlock({
 
 function InlineCode({ children }: { children: React.ReactNode }) {
   return (
-    <code className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-200 text-sm font-mono">
+    <code className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-200 text-sm font-mono inline-block">
       {children}
     </code>
   );

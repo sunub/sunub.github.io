@@ -21,7 +21,7 @@ function ListItem({ children }: { children: React.ReactNode }) {
           <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
         </svg>
       </SvgContainer>
-      {children}
+      <TextContainer>{children}</TextContainer>
     </Li>
   );
 }
@@ -29,7 +29,6 @@ function ListItem({ children }: { children: React.ReactNode }) {
 const Li = styled.li`
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
   margin-bottom: 8px;
   gap: 0.5rem;
@@ -40,14 +39,15 @@ const Li = styled.li`
   }
 `;
 
-const SvgContainer = styled.div`
-  position: absolute;
-  left: -1.5rem;
-  top: 0.5rem;
-
+const SvgContainer = styled.span`
+  transform: translateX(0px) translateY(8px);
   & > svg {
     stroke: var(--color-highlight);
   }
+`;
+
+const TextContainer = styled.div`
+  flex: 1 1;
 `;
 
 export { ListItem };
