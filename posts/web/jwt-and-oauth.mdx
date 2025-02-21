@@ -1,0 +1,285 @@
+---
+title: JWT와 OAuth2.0에 관하여
+date: 2025-02-03
+tags: [network, jwt, oauth]
+summary: JWT와 OAuth2.0에 대해서 알아보겠습니다.
+slug: jwt-and-oauth
+category: web
+completed: true
+---
+
+## JWT
+
+JWT는 클라이언트 측 세션 기법입니다. 서버가 세션을 저장하지 않고, 클라이언트가 인증 정보를 직접 보관하는 방식을 이야기 합니다. 주로 쿠키를 활용하여 JWT로 생성된 세션 데이터를 브관하는 경우가 일반적입니다.
+
+```plaintext
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9. eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9. TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+```
+
+위의 결과물을 봤을때 `.`으로 각 줄이 구분이 되어 있는 것을 확인할 수 있습니다. 위에서 부터 header, payload, signature에 해당합니다.
+
+### Header
+
+```json
+{
+  "alg": "HS256",
+  "type": "JWT", // optional
+  "cty": "JWT" // optional
+}
+```
+
+헤더는 JWT를 사용할 경우 반드시 포함되어야 합니다. 헤더의 정보는 일반적으로 어떠한 알고리즘을 사용하고 이 알고리즘은 사용자를 `signed` 할 경우 데이터를 `encrypted`, `decrypted`하는 경우 사용이 됩니다.
+
+`type`헤더는 JWT 자체의 미디어 타입을 설정하는 헤더 속성입니다. `JOSE(Javascript Object Signing and Encryption) 헤더`를 포함하는 다른 객체들과 JWT가 혼합될 가능성이 있는 경우를 돕기 위한 용도로 사용이 됩니다. 하지만 실제로 이러한 경우는 거의 발생하지 않습니다.
+
+`cty`헤더는 콘텐츠 타입을 설정하는 헤더 속성입니다. 대부분의 JWT는 특정 클레임(Claim)과 임이의 데이터를 페이로드로 포함합니다. 이러한 경우 `cty` 클레임은 설정이 되지 않아야 합니다. `cty`를 설정하는 경우는 페이로드에 또 다른 JWT를 중첩하여 사용하는 경우 반드시 `cty`를 JWT로 설정 해주어야 합니다.
+
+### The Payload
+
+```json
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true
+}
+```
+
+Payload에는 주로 JWT를 이용하여 전달하고자 하는 데이터가 담기는 주된 JSON Object 입니다. 이 Object에는 특정한 의미를 갖는 클레임이 존재합니다. 모든 클레임이 필수적인 것은 아니지만, 일부 특정 클레임은 명확한 의미를 갖습니다.
+
+- **iss(발급자)** : JWT를 발급한 주체를 고유하게 식별하는 대소문자 구분 문자열 또는 URI
+- **sub(주체)** : JWT가 정보를 포함하는 대상을 고유하게 식별하는 문자열 또는 URI가 작성됩니다. 즉, 특정 주체(사용자 또는 엔터티 등)에 대한 정보를 포함하고 있습니다. **iss** 컨텍스트 내에서 고유해야 하며 글로벌하게 유일해야 합니다.
+- **aud(대상)** : aud를 설정하여 여러 개의 서비스에서 토큰을 사용할 수 있게 끔 할 수 있습니다. 예를 들어 배열로 **https://api.example.com**, **https://payments.example.com**을 작성할 경우 이 두 사이트에서만 이 토큰을 사용이 가능해집니다.
+- **exp(만료 시간)** : JWT가 더 이상 유효하지 않은 시점을 초단위로 나타내는 숫자입니다
+- **nbf(사용 가능 시작 시간)** : JWT가 유효해지는 시점을 초단위로 나타낼 수 있습니다. 현재 시간이 이 값과 같거나 이후여야 JWT가 유효해집니다.
+- **jti(JWT 고유 식별자)** : 동일한 내용의 다른 JWT와 구분하는데 사용할 수 있으며 재사용 공격을 방지하는데 유용합니다.
+
+JWT는 세가지 파트로 구분이 됩니다.
+
+```json
+{
+	"alg" : "HS256",
+	"typ" : "JWT"
+}
+{
+	"sub": "1234567890", "name": "John Doe", "admin": true
+}
+```
+
+JWT의 마법은 일반적인 작업에서 유용한 특정 `클레임(Claim)`을 표준화한다는 점에 있다. JWT는 Payload에 특정 정보를 담는 구조를 가지고 있으며, 이때 담기는 정보를 `클레임(Claim)`이라고 표현합니다.
+
+이러한 일반적인 작업 중 하나는 특정 주체의 신원을 확인하는 작업입니다. 따라서 JWT에서 표준적으로 사용되는 클레임 중 하나가 `sub 클레임`입니다.
+
+```json
+{
+  "iss": "auth.example.com", // 토큰 발급자 (Issuer)
+  "sub": "user-12345", // 이 토큰의 주체 (Subject) -> 사용자 ID
+  "aud": "my-app", // 이 토큰을 사용할 대상 (Audience)
+  "exp": 1717045200 // 만료 시간 (Expiration)
+}
+```
+
+위의 정보에서 표현하듯이 `sub claim`은 JWT가 나타내는 `대상(Subject)`을 식별하는 역할을 수행합니다. `sub claim`은 인증 및 권한 부여 시스템에서 사용자의 ID나 엔터티를 명확하게 식별하는 역할을 수행합니다.
+
+또다른 JWT의 또 다른 핵심적인 측면은 서명과 암호화가 가능하다는 점입니다. `JSON Web Signatures(JWS)`를 이용하여 서명을 할 수 있으며, 또한 `JSON Web Encryption`을 사용하여 JWT를 암호화할 수도 있습니다.
+
+> 웹에서 `Signing(셔명)`하는 것의 의미
+> 웹에서 서명은 데이터의 무결성과 인증을 보장하기 위해 디지털 서명을 추가하는 과정을 의미합니다. 즉, 데이터가 변겨오디지 않았음을 증명하고, 특정한 주체가 생성했다는 것을 보장하는 방식을 이야기 합니다.
+
+### Signature Stripping
+
+JWT를 사용할 때 가장 보편적으로 공격을 받을 수 있는 경우는 JWT에 작성되어 있는 signature를 삭제하는 것이다. 서명을 확인 받은 JWT는 3가지 부분으로 구성이 되어 있는데 `header`, `payload`, `signature`로 구성이 되어 있다. 이 세가지 부분은 서로 다르게 인코딩이 진행이 된다. 이 3가지 파트 중 `signature`를 삭제하여 헤더를 변경하여 JWT가 `unsigned`한 것처럼 속일 수 있습니다.
+
+이런 공격이 위험한 이유는 JWT의 내용을 수정할 수 있게 되기 때문입니다. 예를 들어 초기에 전송된 JWT의 페이로드에 포함된 사용자의 역할은 `user`였지만 `admin`으로 수정하여 사용이 가능하기 때문입니다.
+
+이러한 공격을 막는 방법은 단순합니다. 애플리케이션에서 JWT 를 검증하는 과정을 갖고 검증 결과 서명이 없을 경우, `unsigned`일 경우 절대 유효한 경우로 판단하지 않으면 됩니다. 또한 JWT를 신뢰할 수 없는 환경, 클라이언트에 저장하지 않으면 됩니다.
+
+### Cross-Site Request Forgery(CSRF)
+
+![jwt_oauth1](/images/web/jwt_oauth1.png)
+
+**크로스사이트 요청 위조(Cross-Site Request Forgery, CSRF) 공격** 은 사용자가 로그인한 사이트에 대해 요청을 수행하도록 유도하는 방식의 공격입니다. 공격자는 사용자의 브라우저가 다른 사이트에서 특정 요청을 보내도록 소이는 것을 목표로 합니다.
+
+이를 수행하기 위해서는 특별히 조작된 사이트(또는 요소)가 공격 대상 사이트에 URL을 포함해야만 합니다. 대표적인 예를 살펴보겠습니다.
+
+```html
+<!-- 이 태그가 악성 사이트에 삽입됨 -->
+<img src="http://target.site.com/add-user?user=name&grant=admin" />
+```
+
+위와 같이 `img` 태그에 포함되어 있는 페이지가 로드될 때 마다 `http://target.site.com/add-user?user=name&grant=admin` 으로 요청을 보냅니다. 만약 사용자가 이전에 `target.site.com`에 로그인했고, 해당 사이트가 쿠키를 이용해 세션을 유지할 경우 이 요청과 함께 로그인된 세션 쿠키도 같이 전송이 될 것입니다.
+
+#### JWT에서 CSRF 공격을 방지하는 방법
+
+일반적인 `CSRF 방어 기법`에 대해서 설명해보겠습니다. 특정 HTTP 헤더를 요청에 추가하여 올바른 출처에서 수행된 요청인지 확인하는 방법이 있습니다. 이 특정 HTTP 헤더를 요청에 추가하고 검증하는 과정은 세션을 생성 헀던 서버에서만 포함이 되기 때문에 공격하는 서버에는 포함이 되지 않아 검증 과정을 가질 수 있습니다.
+
+또 다른 방법은 **세션 단위 쿠키**를 사용하여 특정 세션과 연계하는 방식을 사용하는 것입니다. 세션 단위 쿠키는 세션이 활성화된 동안에만 유지되며, 브라우저가 닫히면 자동으로 삭제되는 쿠키를 의미합니다. 이 쿠키를 사용하기 위해서는 쿠키에 `Expire` 또는 `Max-Age` 속성을 설정하지 않는 것입니다. 브라우저는 이 속성이 없는 쿠키를 세션 쿠키로 인식하고 브라우저 종료 시 삭제하게 됩니다.
+
+쿠키를 이용한 또 다른 방어 방법은 **요청 단위 토큰(Per-request tokens)** 을 사용하는 것입니다. 매 요청마다 고유한 토큰을 요구하는 방식입니다.
+
+또한 JWT를 cookie에 포함시키지 않는 것입니다. 이 경우에는 CSRF 공격 자체가 불가능하기 때문입니다. 하지만 이러한 방법을 모두 수행하더라도 여전히 `XSS` 공격을 당할 수 있습니다.
+
+### 그럼에도 클라이언트 측 세션(Client-Side Sessions)은 유용한가?
+
+모든 접근 방식에는 장점과 단점이 있으며, 클라이언트 측 세션도 예외는 아닙니다. 일부 애플리케이션은 **대용량 세션(Big Sessions)** 을 필요로 할 수도 있습니다. 이 상태(State)를 모든 요청(또는 여러 요청 그룹)마다 주고받게 되면, 백엔드의 통신량(Chattiness)이 감소하는 이점이 상쇄될 수 있습니다
+
+클라이언트 측 데이터와 **백엔드에서의 데이터 조회(Database Lookups) 간의 적절한 균형** 이 필요합니다. 이것은 애플리케이션의 데이터 모델(Data Model)에 따라 달라질 수 있습니다.
+
+일부 애플리케이션은 클라이언트 측 세션과 잘 맞지 않을 수도 있고 반면, 일부 애플리케이션은 클라이언트 측 데이터에 완전히 의존할 수도 있다. 이 문제에 대한 최종 결정은 전적으로 개발자의 몫입니다! 결정을 내릴 때 아래와 같은 요소들을 고려하는 것이 도움이 될 수 있습니다.
+
+- **벤치마크(Benchmark)를 실행하고, 일부 상태를 클라이언트 측에 유지하는 것이 주는 이점을 분석하라**.
+- **JWT가 너무 큰가?**
+- **대역폭(Bandwidth)에 영향을 미치는가?**
+- **대역폭 증가로 인해 백엔드의 지연 시간 감소 효과가 상쇄되는가?**
+- **작은 요청(Small Requests)을 하나의 더 큰 요청(Bigger Request)으로 묶을 수 있는가?**
+- **이러한 요청들이 여전히 대규모 데이터베이스 조회(Database Lookups)를 필요로 하는가?**
+
+## OAuth2.0
+
+OAuth 2는 애플리케이션 예를 들어 Facebook, GitHub등이 HTTP 서비스에서 사용자 계정에 대한 제한된 액세스를 얻을 수 있도록 하는 인증 프레임워크입니다. 이는 사용자 계정을 호스팅하는 서비스에 사용자 인증을 위임하고, 제3자 애플리케이션이 해당 사용자 게정에 엑세스하도록 승인하는 방식으로 작동합니다.
+
+OAuth2의 장점은 웹 및 데스크톱 애플리케이션뿐만 아니라 모바일 기기에서도 사용할 수 있는 인증 흐름을 제공한다는 큰 장점을 갖습니다. OAuth에서는 아래와 같이 네 가지 역할을 정의합니다.
+
+- **리소스 소유자(Resource Owner):** 리소스 소유자는 애플리케이션이 자신의 계정에 액세스하도록 승인하는 사용자입니다. 애플리케이션이 사용자 계정에 액세스할 수 있는 범위는 사용자가 승인한 권한(예: 읽기 또는 쓰기 액세스)에 따라 제한됩니다.
+- **클라이언트(Client):** 클라이언트는 사용자의 계정에 액세스하려는 애플리케이션입니다. 계정에 액세스하기 전에 사용자의 승인을 받아야 하며, 해당 승인은 API에 의해 검증되어야 합니다.
+- **리소스 서버(Resource Server):** 리소스 서버는 보호된 사용자 계정을 호스팅하는 서버입니다.
+- **인증 서버(Authorization Server):** 인증 서버는 사용자의 신원을 확인한 후 애플리케이션에 액세스 토큰을 발급합니다.
+
+애플리케이션 개발자의 관점에서 보면, 서비스의 API는 리소스 서버와 인증 서버 역할을 모두 수행합니다. 따라서 우리는 이 두 가지 역할을 합쳐 **서비스(Service) 또는 API 역할**이라고 부릅니다.
+
+## Protocol Flow
+
+```plaintext
+     +--------+                               +---------------+
+     |        |--(A)- Authorization Request ->|   Resource    |
+     |        |                               |     Owner     |
+     |        |<-(B)-- Authorization Grant ---|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(C)-- Authorization Grant -->| Authorization |
+     | Client |                               |     Server    |
+     |        |<-(D)----- Access Token -------|               |
+     |        |                               +---------------+
+     |        |
+     |        |                               +---------------+
+     |        |--(E)----- Access Token ------>|    Resource   |
+     |        |                               |     Server    |
+     |        |<-(F)--- Protected Resource ---|               |
+     +--------+                               +---------------+
+
+                     Figure 1: Abstract Protocol Flow
+```
+
+1. 애플리케이션이 사용자에게 서비스 리소스에 대한 엑세스 권한을 Resource Owner에게 요청합니다.
+2. 사용자가 요청을 승인하면, 애플리케이션은 **인가 코드(Authorization Grant)** 를 받습니다.
+   어떤 것들에 대한 정보를 읽을 거니까 이 정보를 허용 해줄래?
+3. 애플리케이션은 자신의 신원 인증 정보와 함께 받은 인가 코드를 제시하여 **인증 서버(Authorization Server)** 에 엑세스 토큰을 요청합니다.
+4. 애플리케이션의 신원이 인증되고 인가 코드가 유효하면, 인증 서버(API)는 애플리케이션에 **액세스 토큰(Access Token)** 을 발급합니다. 이로써 인가 과정이 완료됩니다.
+5. 애플리케이션은 **리소스 서버(Resource Server, API)** 에 리소스를 요청하며, 인증을 위해 액세스 토큰을 함께 전달합니다.
+6. 액세스 토큰이 유효하면, 리소스 서버(API)는 애플리케이션에 요청한 리소스를 제공합니다.
+
+## Authorization Code Flow
+
+```plaintext
+     +----------+
+     | Resource |
+     |   Owner  |
+     |          |
+     +----------+
+          ^
+          |
+         (B)
+     +----|-----+          Client Identifier      +---------------+
+     |         -+----(A)-- & Redirection URI ---->|               |
+     |  User-   |                                 | Authorization |
+     |  Agent  -+----(B)-- User authenticates --->|     Server    |
+     |          |                                 |               |
+     |         -+----(C)-- Authorization Code ---<|               |
+     +-|----|---+                                 +---------------+
+       |    |                                         ^      v
+      (A)  (C)                                        |      |
+       |    |                                         |      |
+       ^    v                                         |      |
+     +---------+                                      |      |
+     |         |>---(D)-- Authorization Code ---------'      |
+     |  Client |          & Redirection URI                  |
+     |         |                                             |
+     |         |<---(E)----- Access Token -------------------'
+     +---------+       (w/ Optional Refresh Token)
+
+       Note: The lines illustrating steps (A), (B), and (C) are broken into
+	   two parts as they pass through the user-agent.
+
+                        Figure 3: Authorization Code Flow
+```
+
+### 1단계 : 인가 코드 링크
+
+```plaintext
+https://cloud.digitalocean.com/v1/oauth/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read
+
+API authorization endpoint/client_id/redirect_id/response_type/scope 로 구성됩니다
+```
+
+먼저, 사용자에게 다음과 같은 **인가 코드 링크**가 제공됩니다. 이 인가 코드는 다음과 같이 구성되어 있습니다.
+
+- **`https://cloud.digitalocean.com/v1/oauth/authorize`**: API의 인가 엔드포인트(Authorization Endpoint)
+- **`client_id=CLIENT_ID`**: 애플리케이션의 클라이언트 ID(API가 애플리케이션을 식별하는 방식)
+- **`redirect_uri=CALLBACK_URL`**: 사용자가 애플리케이션을 승인한 후 리디렉션될 URI
+- **`response_type=code`**: 애플리케이션이 **인가 코드(Authorization Code) 부여 유형**을 요청하고 있음을 나타냄
+- **`scope=read`**: 애플리케이션이 요청하는 액세스 범위(예: 읽기 권한)
+
+### 2단계 : 사용자가 애플리케이션을 승인
+
+사용자가 링크를 클릭하면, 먼저 해당 서비스에 로그인하여 본인의 신원을 인증해야 합니다. 이후, 서비스는 사용자에게 애플리케이션이 계정 엑세스를 승인할 것인지 선택할 수 있는 **인가 화면(Authorization Prompt)** 을 표시합니다.
+
+### 3단계 : 애플리케이션이 인가 코드 수신
+
+```plaintext
+https://example.com/callback?code=AUTHORIZATION_CODE
+```
+
+사용자가 승인 버튼을 클릭하면, 서비스는 등록된 리다이렉트 URI로 사용자를 리다이렉트하며, 인가 코드를 함께 전달합니다. 예를 들어, 애플리케이션 URL이 `example.com`일 경우 위와 같은 형태의 리다이렉션이 발생합니다.
+
+### 4단계 : 애플리케이션이 액세스 토큰 요청
+
+애플리케이션은 **API의 토큰 엔드포인트(Token Endpoint)** 로 인가 코드와 클라이언트 시크릿(Client Secret) 등의 인증 정보를 포함하여 액세스 토큰을 요청합니다.
+
+### 5단계 : 애플리케이션이 액세스 토큰 수신
+
+요청이 유효하면, API는 **액세스 토큰(Access Token)** 을 포함한 응답을 애플리케이션에 반환합니다.(옵션으로 **리프레시 토큰(Refresh Token)** 도 포함될 수 있음)
+
+```json
+{
+  "access_token": "ACCESS_TOKEN",
+  "token_type": "bearer",
+  "expires_in": 2592000,
+  "refresh_token": "REFRESH_TOKEN",
+  "scope": "read",
+  "uid": 100101,
+  "info": {
+    "name": "Mark E. Mark",
+    "email": "mark@thefunkybunch.com"
+  }
+}
+```
+
+이제 애플리케이션은 **액세스 토큰을 사용하여 서비스 API를 통해 사용자의 계정에 액세스할 수 있습니다**. 단, 액세스는 토큰의 **유효 기간(Expires In)** 이 지나거나 사용자가 토큰을 **취소(Revoked)** 하기 전까지만 가능합니다.
+
+만약 **리프레시 토큰(Refresh Token)** 이 제공되었다면, 기존 액세스 토큰이 만료된 후 새로운 액세스 토큰을 요청하는 데 사용할 수 있습니다.
+
+### 인가 코드 교환을 위한 증명 키
+
+공개 클라이언트, 예를 들어 모바일 앱에 코드 부여 방식을 사용할 경우, 인가 코드가 중간에 탈취될 가능성이 있습니다. 이를 방지하기 위해서 OAuth 2.0은 **PKCE(픽시, Proof Key for Code Exchange)** 라는 확장을 제공합니다.
+
+PKCE 방식에는 클라이언트가 인가 요청마다 랜덤한 문자열을 이용하여 **고유한 비밀키, 코드 검증자(Code Verifier)** 를 생성하고 저장합니다. 이후, **코드 검증자(Code Verifier)** 를 변환하여 **코드 챌린지(Code Challenge)** 를 생성한 후, 이를 변환 방식과 함께 인가 엔드포인트로 전송합니다.
+
+인가 엔드포인트(Authorization Server, 인가 처리를 하는 API 주소)는 전달받은 **코드 챌린지와 변환 방식**을 기록한 후, 기존과 동일하게 **인가 코드(Authorization Code)** 를 응답으로 반환합니다.
+
+이후, 클라이언트는 **액세스 토큰 요청 시** 원래 생성한 **코드 검증자(Code Verifier)** 를 포함하여 서버에 보냅니다. **인가 서버(Authorization Server)** 는 클라이언트가 보낸 **코드 검증자(Code Verifier)** 를 다시 변환하여, **처음 기록된 코드 챌린지와 비교**합니다. 만약 클라이언트가 보낸 코드 검증자로부터 생성된 코드 챌린지가 **처음 기록된 값과 일치하지 않으면**, 서버는 클라이언트의 액세스를 거부합니다. 이러한 방법을 이용하여 OAuth 2.0 엑세스 토큰을 사용한 보안 문제를 해결하고 있습니다.
+
+## 참조
+
+[https://datatracker.ietf.org/doc/html/rfc6749](https://datatracker.ietf.org/doc/html/rfc6749)
+
+[https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2](https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2)
