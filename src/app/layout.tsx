@@ -40,6 +40,13 @@ export const metadata: Metadata = {
   },
 };
 
+const pretendard = localFont({
+  src: "../../public/fonts/PretendardVariable.woff2",
+  display: "swap",
+  style: "normal",
+  variable: "--pretendard",
+});
+
 const nanumRound = localFont({
   src: "../../public/fonts/NanumSquareRoundR.woff2",
   display: "swap",
@@ -62,7 +69,11 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
-      className={clsx([nanumRoundBold.variable, nanumRound.variable])}
+      className={clsx([
+        nanumRoundBold.variable,
+        nanumRound.variable,
+        pretendard.variable,
+      ])}
       suppressHydrationWarning={true}
     >
       <head>

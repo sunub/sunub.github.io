@@ -20,7 +20,7 @@ export const ArticleHeader = styled.div`
 `;
 
 export const PostTitle = styled.h1`
-  font-weight: 700;
+  font-weight: 900;
   font-size: 3rem;
   line-height: 3.5rem;
   margin-bottom: 2rem;
@@ -67,12 +67,12 @@ export const Article = styled.article`
   & > h2 {
     color: var(--color-title);
     font-size: calc(1rem + 0.8rem);
-    font-weight: 900;
+    font-weight: 700;
   }
 
   & > h3 {
     font-size: calc(1rem + 0.35rem);
-    font-weight: 900;
+    font-weight: 500;
   }
 
   & > :is(h2, h3, h4, h5, h6) {

@@ -17,6 +17,8 @@ body {
   color: var(--color-text);
   min-height: 100%;
   background: var(--color-background);
+  font-size: 1rem;
+  font-weight: 300;
 }
 
 html {
@@ -40,7 +42,7 @@ html {
 
 html,
 body {
-  font-family: var(--nanum-round), sans-serif;
+  font-family: var(--pretendard), sans-serif;
   height: 100%;
 }
 
@@ -55,7 +57,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--nanum-round-bold), sans-serif;
+  font-family: var(--pretendard), sans-serif;
 }
 
 ol,
@@ -165,24 +167,70 @@ a {
 }
 
 table {
-  table-layout: auto;
-  text-align: center;
+  display: table;
+  border-collapse: separate;
+  text-indent: initial;
+  unicode-bidi: isolate;
+  border-color: gray;
+
+  margin-bottom: 48px;
+  margin-inline: -16px;
 }
 
-table,
-th,
-td {
-  border-collapse: collapse;
+thead {
+  display: table-header-group;
+  vertical-align: middle;
+  unicode-bidi: isolate;
+  border-color: inherit;
 }
 
-th,
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  unicode-bidi: isolate;
+  border-color: inherit;
+}
+
+tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+}
+
+th {
+  text-align: left;
+  font-weight: 700;
+  color: oklch(42.44% 0.0107 17.58 / 0.8);
+  padding: 6px 14px;
+  border-bottom: 3px solid oklch(42.44% 0.0107 17.58 / 0.8);
+}
+
+th:not(:last-of-type) {
+  border-right: 1px solid oklch(42.44% 0.0107 17.58 / 0.8);
+}
+
 td {
-  border: 1px solid;
+  display: table-cell;
+  vertical-align: inherit;
+  unicode-bidi: isolate;
+  color: oklch(42.44% 0.0107 17.58 / 0.8);
+  border-bottom: 1px solid oklch(42.44% 0.0107 17.58 / 0.8);
+}
+
+td:not(:last-of-type) {
+  border-right: 1px solid oklch(42.44% 0.0107 17.58 / 0.8);
+}
+
+td:first-of-type {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 strong {
-  font-weight: 900;
-  font-size: 1.15rem;
+  font-weight: 700;
+  font-size: 1rem;
   color: var(--color-highlight);
   padding-left: 2px;
   padding-right: 2px;
