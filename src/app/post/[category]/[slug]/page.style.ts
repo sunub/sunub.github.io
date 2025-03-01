@@ -24,6 +24,8 @@ export const PostTitle = styled.h1`
   font-size: 3rem;
   line-height: 3.5rem;
   margin-bottom: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   text-wrap: pretty;
 `;
 

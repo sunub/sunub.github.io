@@ -8,6 +8,7 @@ import {
 import { FrontMatter } from "type";
 import { getPostBySlug, getAllPosts } from "db/blog";
 import { Wave } from "@/widgets/Wave";
+import { notFound } from "next/navigation";
 
 type Category = "code" | "web" | "cs" | "algorithm";
 
@@ -25,33 +26,39 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Params;
-}): Promise<Partial<FrontMatter> | undefined> {
+export async function generateMetadata({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
   const postData = await getPostBySlug(category, slug);
-  if (!postData) {
-    throw new Error("찾을 수 없는 포스트 입니다.");
-  }
-  const { title, summary, date } = postData.data;
-  const localeDateString = new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(new Date(date));
+  if (!postData) return notFound();
+
+  const { title, summary, date, tags } = postData.data;
   return {
     title,
-    summary,
-    date: localeDateString,
-    category,
+    description: summary,
+    keywords: tags.join(", "),
+    openGraph: {
+      title,
+      description: summary,
+      type: "article",
+      publishedTime: new Date(date).toISOString(),
+      authors: ["sun_ub"],
+      tags,
+      url: `https://sunub.vercel.app/post/${category}/${slug}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: summary,
+    },
+    alternates: {
+      canonical: `https://sunub.vercel.app/post/${category}/${slug}`,
+    },
   };
 }
 
 const CustomMDXRemote = React.lazy(
-  () => import("@/components/ui/customMdxRemote"),
+  () => import("@/components/ui/customMdxRemote")
 );
 
 async function Page({ params }: { params: Params }) {
@@ -76,6 +83,16 @@ async function Page({ params }: { params: Params }) {
               datePublished: date,
               dateModified: date,
               description: summary,
+              author: {
+                "@type": "Person",
+                name: "sun_ub",
+                url: "https://sunub.vercel.app",
+              },
+              image: "https://sunub.vercel.app/assets/default-og-image.jpg",
+              mainEntryOfPage: {
+                "@type": "WebPage",
+                "@id": `https://sunub.vercel.app/post/${category}/${slug}`,
+              },
             }),
           }}
         />
