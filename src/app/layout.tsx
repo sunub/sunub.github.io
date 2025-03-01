@@ -99,6 +99,18 @@ export default async function RootLayout({
         <InitTheme />
       </head>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "sun_ub",
+              url: "https://sunub.vercel.app",
+              description: "디자인과 개발을 좋아합니다.",
+            }),
+          }}
+        />
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
