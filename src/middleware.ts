@@ -1,37 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  if (pathname === "/api") {
-    return NextResponse.next({
-      status: 200,
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-    });
+export function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
+
+  // 이전 URL을 새 구조로 리디렉션
+  if (url.pathname.match(/^\/blog\/[^\/]+$/)) {
+    const slug = url.pathname.split("/").pop();
+    return NextResponse.redirect(new URL(`/post/web/${slug}`, request.url));
   }
 
-  if (
-    pathname.startsWith("/_next/image") &&
-    pathname.includes("/assets/hero-image__light-moon.avif")
-  ) {
+  const userAgent = request.headers.get("user-agent") || "";
+
+  if (userAgent.includes("Googlebot") || userAgent.includes("bingbot")) {
     const response = NextResponse.next();
-    response.headers.set("Cache-Control", "public, max-age=31536000");
+    response.headers.set(
+      "X-Robots-Tag",
+      "all, max-snippet:-1, max-image-preview:large"
+    );
     return response;
   }
 
-  if (pathname.startsWith("/assets") && pathname.endsWith(".avif")) {
-    const response = NextResponse.next();
-    response.headers.set("Cache-Control", "public, max-age=31536000");
-    return response;
-  }
-
-  const response = NextResponse.next({
-    status: 200,
-    headers: {
-      "Cache-Control": "no-cache",
-    },
-  });
-  response.headers.delete("x-powerd-by");
-  return response;
+  return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
