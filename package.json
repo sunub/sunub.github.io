@@ -17,7 +17,7 @@
     "@mdx-js/react": "^3.1.0",
     "@next/bundle-analyzer": "^13.5.4",
     "@next/mdx": "^15.0.4",
-    "@prisma/client": "^5.16.1",
+    "@prisma/client": "^5.22.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@react-spring/types": "^9.7.3",
     "@react-spring/web": "^9.7.3",
@@ -28,6 +28,7 @@
     "@types/mdx": "^2.0.13",
     "@types/react": "18.2.12",
     "@types/react-dom": "18.2.5",
+    "@types/web-push": "^3.6.4",
     "@vercel/analytics": "^1.1.0",
     "@vercel/postgres": "^0.7.2",
     "@vercel/speed-insights": "^1.0.10",
@@ -55,6 +56,7 @@
     "ora": "^8.0.1",
     "postcss-preset-env": "^9.3.0",
     "postcss-selector-parser": "^7.0.0",
+    "prisma": "^6.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-focus-lock": "^2.9.6",
@@ -74,6 +76,7 @@
     "unified": "^11.0.4",
     "valibot": "^0.27.0",
     "vercel": "latest",
+    "web-push": "^3.6.7",
     "web-vitals": "^3.5.0",
     "zod": "^3.23.8"
   },
@@ -105,7 +108,6 @@
     "postcss": "^8.4.38",
     "postcss-loader": "^8.0.0",
     "postcss-styled-syntax": "^0.4.0",
-    "prisma": "^5.16.1",
     "shiki": "^1.22.1",
     "stylelint": "^7.13.0",
     "stylelint-config-standard": "^16.0.0",
@@ -119,5 +121,12 @@
   },
   "resolutions": {
     "postcss-selector-parser": "^6.0.10"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma"
+    ]
   }
 }
