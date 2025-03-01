@@ -1,14 +1,19 @@
 import Link from "next/link";
-import * as Styled from "./Categories.style";
+import {
+  RootWrapper,
+  TitleWrapper,
+  Title,
+  CategoryListWrapper,
+} from "./Categories.style";
 
 function Categories({ categories }: { categories: string[] }) {
   return (
-    <Styled.RootWrapper>
-      <Styled.TitleWrapper>
+    <RootWrapper>
+      <TitleWrapper>
         <FeatherIcon />
-        <Styled.Title>Categories</Styled.Title>
-      </Styled.TitleWrapper>
-      <Styled.CategoryListWrapper>
+        <Title>카테고리들</Title>
+      </TitleWrapper>
+      <CategoryListWrapper>
         {categories.map((category) => (
           <Link
             className="blog-main__landing-page-link"
@@ -18,8 +23,8 @@ function Categories({ categories }: { categories: string[] }) {
             {category}
           </Link>
         ))}
-      </Styled.CategoryListWrapper>
-    </Styled.RootWrapper>
+      </CategoryListWrapper>
+    </RootWrapper>
   );
 }
 

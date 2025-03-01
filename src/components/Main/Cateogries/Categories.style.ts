@@ -14,7 +14,8 @@ export const TitleWrapper = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 2rem;
+  font-size: 1.75rem;
+  font-family: var(--nanum-round-bold);
 `;
 
 export const CategoryListWrapper = styled.div`
@@ -37,8 +38,7 @@ export const Item = styled(Link)`
   border-radius: 18px;
   background-color: var(--color-primary);
   user-select: none;
-  box-shadow:
-    0px 1px 3px 1px rgba(0, 0, 0, 0.15),
+  box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15),
     0px 1px 2px 0px rgba(0, 0, 0, 0.3);
   transform: scale(1) translateX(0) translateZ(0);
   transition: transform 200ms cubic-bezier(0.5, 1.25, 0.75, 1.25);

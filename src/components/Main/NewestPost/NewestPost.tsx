@@ -1,17 +1,17 @@
-import * as Styled from "./NewestPost.style";
-import Spacer from "@/components/Spacer";
 import BlogPost from "../BlogPost";
+import Spacer from "@/components/Spacer";
+import { RootWrapper, TitleWrapper, Title } from "./NewestPost.style";
 
 function NewestPost() {
   return (
-    <Styled.RootWrapper>
-      <Styled.TitleWrapper>
+    <RootWrapper>
+      <TitleWrapper>
         <FeatherIcon />
-        <Styled.Title>Recently Published</Styled.Title>
-      </Styled.TitleWrapper>
+        <Title>최신 포스트들</Title>
+      </TitleWrapper>
       <Spacer axis={"vertical"} size={64} />
       <BlogPost />
-    </Styled.RootWrapper>
+    </RootWrapper>
   );
 }
 
