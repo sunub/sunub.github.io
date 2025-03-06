@@ -5,7 +5,6 @@ import {
   ArticleWrapper,
   ArticleHeader,
 } from "./page.style";
-import { FrontMatter } from "type";
 import { getPostBySlug, getAllPosts } from "db/blog";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";

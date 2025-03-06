@@ -31,12 +31,18 @@ export const PostTitle = styled.h1`
 
 export const ArticleWrapper = styled.div`
   position: relative;
+  width: 100%;
+  height: 100%;
+
   display: flex;
   justify-content: center;
   gap: 2.25rem;
 `;
 
 export const Article = styled.article`
+  width: 100%;
+  height: 100%;
+
   max-width: 850px;
   font-size: 18px;
   line-height: calc(1.7rem + 0.8rem);
