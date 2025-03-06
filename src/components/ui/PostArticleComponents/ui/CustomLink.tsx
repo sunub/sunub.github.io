@@ -23,6 +23,7 @@ function CustomLink({
 }
 
 const LinkComponent = styled(Link)`
+  word-break: break-all;
   text-decoration: underline;
   text-underline-offset: 2px;
   padding: 4px 4px;
