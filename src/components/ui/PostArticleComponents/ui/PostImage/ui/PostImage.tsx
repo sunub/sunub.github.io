@@ -99,11 +99,11 @@ const PostImage = memo(
               </ZoomedImage>
               <BlurredBackground />
             </ZoomImageContainer>,
-            document.body,
+            document.body
           )}
       </Fragment>
     );
-  },
+  }
 );
 
 const Figure = styled.figure`
@@ -118,7 +118,6 @@ const Figure = styled.figure`
 const ImageWrapper = styled.div`
   position: relative;
   width: 100%;
-  min-height: 350px;
   aspect-ratio: auto;
   cursor: zoom-in;
 `;
