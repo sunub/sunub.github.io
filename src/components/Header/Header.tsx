@@ -10,9 +10,9 @@ function Header() {
   return (
     <React.Fragment>
       <Styled.RootWrapper>
-        <Styled.DemoWrapper />
         <Spacer size={60} axis={"vertical"} />
         <Styled.HeaderWrapper id="blog-main__header-contents">
+          <Styled.DemoWrapper />
           <Styled.Header>
             <Styled.LogoAndNavWrapper>
               <Logo />

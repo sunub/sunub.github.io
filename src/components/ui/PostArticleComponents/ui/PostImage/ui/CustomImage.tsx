@@ -69,7 +69,7 @@ const CustomImage = memo(
       prevProps.isLoading === nextProps.isLoading &&
       prevProps.quality === nextProps.quality
     );
-  },
+  }
 );
 
 export { CustomImage };
