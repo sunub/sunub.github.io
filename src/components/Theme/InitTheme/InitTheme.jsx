@@ -1,4 +1,5 @@
 import React from "react";
+import Cookies from "js-cookie";
 
 function setColorsByTheme() {
   const LIGHT_COLORS = {
@@ -84,7 +85,8 @@ function setColorsByTheme() {
   };
 
   function getInitialColorMode() {
-    const persistedLocalItems = window.localStorage.getItem("color-theme");
+    const persistedLocalItems = Cookies.get("color-theme");
+    // const persistedLocalItems = window.localStorage.getItem("color-theme");
 
     if (persistedLocalItems === "light" || persistedLocalItems === "dark") {
       return persistedLocalItems;
@@ -105,7 +107,8 @@ function setColorsByTheme() {
   }
 
   function setLocalStorage(data) {
-    window.localStorage.setItem("color-theme", data);
+    Cookies.set("color-theme", data, { expires: 1000 });
+    // window.localStorage.setItem("color-theme", data);
   }
 
   const colorMode = getInitialColorMode();
@@ -121,7 +124,11 @@ function setColorsByTheme() {
     .querySelector("meta[name=theme-color]")
     .setAttribute(
       "content",
-      `${colorMode === "light" ? "oklch(87.44% 0.067 30.96)" : "oklch(43.81% 0.072 289.34)"}`,
+      `${
+        colorMode === "light"
+          ? "oklch(87.44% 0.067 30.96)"
+          : "oklch(43.81% 0.072 289.34)"
+      }`
     );
 
   window
@@ -141,7 +148,11 @@ function setColorsByTheme() {
         .querySelector("meta[name=theme-color]")
         .setAttribute(
           "content",
-          `${colorMode === "light" ? "oklch(87.44% 0.067 30.96)" : "oklch(43.81% 0.072 289.34)"}`,
+          `${
+            colorMode === "light"
+              ? "oklch(87.44% 0.067 30.96)"
+              : "oklch(43.81% 0.072 289.34)"
+          }`
         );
     });
 

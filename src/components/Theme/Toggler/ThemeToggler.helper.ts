@@ -1,7 +1,11 @@
+import Cookies from "js-cookie";
+
 function handleChangeTheme() {
-  const currTheme = window.localStorage.getItem("color-theme");
+  const currTheme = Cookies.get("color-theme") ?? "light";
   const nextTheme = currTheme === "light" ? "dark" : "light";
-  window.localStorage.setItem("color-theme", nextTheme);
+  Cookies.set("color-theme", nextTheme, {
+    expires: 1000,
+  });
   return nextTheme;
 }
 

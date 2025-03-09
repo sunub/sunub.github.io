@@ -3,6 +3,7 @@
 import React from "react";
 import { Theme } from "type";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
+import Cookies from "js-cookie";
 
 interface ThemeContextProps {
   colorTheme: Theme;
@@ -28,7 +29,9 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     function matchMediaHandler({ matches: isDark }: { matches: boolean }) {
       const nextColorTheme = isDark ? "dark" : "light";
-      window.localStorage.setItem("color-theme", nextColorTheme);
+      Cookies.set("color-theme", nextColorTheme, {
+        expires: 1000,
+      });
 
       const root = document.documentElement;
       const nextColor = nextColorTheme === "light" ? LIGHT_COLORS : DARK_COLORS;
@@ -43,14 +46,14 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
     window
       .matchMedia("(prefers-color-scheme: dark)")
       .addEventListener("change", ({ matches: isDark }) =>
-        matchMediaHandler({ matches: isDark }),
+        matchMediaHandler({ matches: isDark })
       );
 
     return () =>
       window
         .matchMedia("(prefers-color-scheme: dark)")
         .removeEventListener("change", ({ matches: isDark }) =>
-          matchMediaHandler({ matches: isDark }),
+          matchMediaHandler({ matches: isDark })
         );
   }, []);
 
@@ -64,7 +67,9 @@ function ThemeProvider({ children }: { children: React.ReactNode }) {
         root.style.setProperty(key, value as any);
       });
 
-      window.localStorage.setItem("color-theme", nextValue);
+      Cookies.set("color-theme", nextValue, {
+        expires: 1000,
+      });
       rawSetColorTheme(nextValue);
     };
 

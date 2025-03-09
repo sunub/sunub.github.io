@@ -10,6 +10,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import localFont from "next/font/local";
 import clsx from "clsx";
+import { cookies } from "next/headers";
+import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -66,6 +68,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const savedTheme = (await cookies()).get("color-theme");
+  const theme = savedTheme?.value ?? "light";
+  const themeColors = theme === "light" ? LIGHT_COLORS : DARK_COLORS;
+
   return (
     <html
       lang="ko"
@@ -75,6 +81,8 @@ export default async function RootLayout({
         pretendard.variable,
       ])}
       suppressHydrationWarning={true}
+      data-color-theme={theme}
+      style={themeColors as React.CSSProperties}
     >
       <head>
         <meta charSet="utf-8" />
@@ -96,7 +104,7 @@ export default async function RootLayout({
           href="/assets/favicon.ico"
           as="icon"
         />
-        <InitTheme />
+        {/* <InitTheme /> */}
       </head>
       <body>
         <script

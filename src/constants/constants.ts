@@ -32,12 +32,6 @@ const LIGHT_COLORS = {
   "--sh-string": "#00a99a",
   "--sh-keyword": "#f47067",
   "--sh-comment": "#a19595",
-
-  "--color-headerBackground": `linear-gradient(
-    16deg,
-    oklch(97.14% 0.011 31.07) 0.41%,
-    oklch(87.44% 0.067 30.96) -0.89%
-  );`,
 };
 
 const DARK_COLORS = {
@@ -73,11 +67,6 @@ const DARK_COLORS = {
   "--sh-keyword": "#f47067",
   "--sh-string": "#0fa295",
   "--sh-comment": "#a19595",
-
-  "--color-headerBackground": `linear-gradient(
-    16deg,
-    oklch(76.95% 0.12588555394033804 289.2710106250223) 0.41%, oklch(43.6% 0.073 290.15) -0.89%
-  );`,
 };
 
 const COLOR_MODE_KEY = "theme-preference";

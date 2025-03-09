@@ -5,6 +5,7 @@ import React from "react";
 import { Theme } from "type";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { ThemeContext } from "@/components/Theme/ThemeProvider";
+import Cookies from "js-cookie";
 
 export default function ThemeToggler({
   maskId,
@@ -26,7 +27,7 @@ export default function ThemeToggler({
   function handleClick() {
     const root = document.documentElement;
     const nextTheme = colorTheme === "light" ? "dark" : "light";
-    window.localStorage.setItem("color-theme", nextTheme);
+    Cookies.set("color-theme", nextTheme);
     const nextColor = nextTheme === "dark" ? DARK_COLORS : LIGHT_COLORS;
 
     rawSetColorTheme(nextTheme);
@@ -52,7 +53,7 @@ export default function ThemeToggler({
               "content",
               nextTheme === "light"
                 ? "oklch(87.44% 0.067 30.96)"
-                : "oklch(43.81% 0.072 289.34)",
+                : "oklch(43.81% 0.072 289.34)"
             );
         }}
       >
