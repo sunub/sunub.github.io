@@ -13,6 +13,7 @@ const languageMap = {
   "language-yaml": "yaml",
   "language-json": "json",
   "language-css": "css",
+  "language-c++": "cpp",
 } as const;
 
 type LanguageKey = keyof typeof languageMap;
@@ -31,14 +32,17 @@ async function CodeBlock({
 
   try {
     const html = await codeToHtml(codeToString, {
-      theme: "tokyo-night",
+      themes: {
+        light: "vitesse-light",
+        dark: "tokyo-night",
+      },
       lang: languageMap[className as LanguageKey] || "plaintext",
     });
     return <CodeBlockWrapper dangerouslySetInnerHTML={{ __html: html }} />;
   } catch (error) {
     console.error(
       "Shiki를 사용하여 코드 하이라이팅을 변환하는 동안 오류가 발생했습니다.",
-      error,
+      error
     );
     return (
       <pre className={className} {...props}>
