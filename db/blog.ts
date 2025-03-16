@@ -43,12 +43,16 @@ class Blog {
   #isInitializing: boolean;
   #pendingCategories: Set<string>;
   #updateLock: Promise<void>;
+  #categoryLoadedState: Map<string, boolean>;
 
   constructor() {
     this.#lruCache = LRUCacheInstance;
     this.#isInitializing = false;
     this.#pendingCategories = new Set();
     this.#updateLock = Promise.resolve();
+    this.#categoryLoadedState = new Map(
+      STATIC_POST_CATEGORIES.map((category) => [category, false])
+    );
 
     const watcher = chokidar.watch(STATIC_DIR, {
       persistent: true,
@@ -174,18 +178,22 @@ class Blog {
     if (this.#isInitializing) return;
     this.#isInitializing = true;
 
-    await Promise.all(
-      STATIC_POST_CATEGORIES.map(async (category) => {
-        return this.#loadCategoryPosts(category, 5);
-      })
-    );
-    this.#isInitializing = false;
-    setTimeout(() => {
-      this.#loadRemainingPosts();
-    }, 2000);
+    try {
+      await Promise.all(
+        STATIC_POST_CATEGORIES.map(async (category) => {
+          return this.#loadAllCategoryPosts(category);
+        })
+      );
+    } catch (error) {
+      console.error("Error initializing cache:", error);
+    } finally {
+      this.#isInitializing = false;
+    }
+
+    console.log("All posts loaded successfully");
   }
 
-  async #loadCategoryPosts(category: string, limit?: number) {
+  async #loadAllCategoryPosts(category: string) {
     if (this.#pendingCategories.has(category)) return;
     this.#pendingCategories.add(category);
 
@@ -232,13 +240,10 @@ class Blog {
         return b.date.getTime() - a.date.getTime();
       });
 
-      const filesToProcess = limit
-        ? fileMetadata.slice(0, limit)
-        : fileMetadata;
       const categoryPosts: CachedPost[] = [];
 
       await Promise.all(
-        filesToProcess.map(async ({ filePath, fullPath }) => {
+        fileMetadata.map(async ({ filePath, fullPath }) => {
           try {
             const { frontmatter, parsedPostContent } =
               await this.parsingMDXFile(fullPath);
@@ -287,6 +292,11 @@ class Blog {
       ];
       this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, updatedAllPostsKeys);
 
+      this.#categoryLoadedState.set(category, true);
+      console.log(
+        `Category ${category} loaded with ${categoryPosts.length} posts`
+      );
+
       return categoryPosts;
     } catch (error) {
       console.error(`Failed to load category: ${category}`, error);
@@ -295,86 +305,8 @@ class Blog {
     }
   }
 
-  async #loadRemainingPosts() {
-    for (const category of STATIC_POST_CATEGORIES) {
-      const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
-      const existingPosts: CachedPost[] =
-        this.#lruCache.get(postCategoryCacheKey) || [];
-      const categoryDir = path.join(STATIC_DIR, category);
-      const files = await fs.readdir(categoryDir);
-      const processedSlugs = new Set(
-        existingPosts.map((post) => post.data.cacheKey.split("/")[1])
-      );
-
-      const remainingFiles = files.filter((file) => {
-        const fileName = path.basename(file, path.extname(file));
-        return (
-          !processedSlugs.has(fileName) &&
-          (file.endsWith(".md") || file.endsWith(".mdx"))
-        );
-      });
-
-      const chunkSize = 5;
-      for (let i = 0; i < remainingFiles.length; i += chunkSize) {
-        const filesChunk = remainingFiles.slice(i, i + chunkSize);
-        await Promise.all(
-          filesChunk.map(async (filePath) => {
-            const fullPath = path.join(categoryDir, filePath);
-            const stats = await fs.stat(fullPath);
-            if (!stats.isDirectory()) {
-              try {
-                const { frontmatter, parsedPostContent } =
-                  await this.parsingMDXFile(fullPath);
-                const { category, slug, date } = frontmatter;
-                const cacheKey = this.#createCacheKey(category, slug);
-                if (this.#lruCache.has(cacheKey)) return;
-                const metadata: PostMetadata = {
-                  slug: frontmatter.slug,
-                  title: frontmatter.title,
-                  summary: frontmatter.summary,
-                  date: frontmatter.date,
-                  category: frontmatter.category,
-                  tags: frontmatter.tags,
-                  completed: frontmatter.completed,
-                };
-                const cacheData = {
-                  ...parsedPostContent,
-                  cacheKey,
-                  category,
-                  date,
-                };
-                const parsedCacheData = CacheDataSchema.safeParse(cacheData);
-                if (!parsedCacheData.success) {
-                  console.error(parsedCacheData.error);
-                  return;
-                }
-                const combined: CachedPost = {
-                  data: parsedCacheData.data,
-                  metadata,
-                };
-                this.#lruCache.set(cacheKey, combined);
-
-                let allPostsKeys: string[] =
-                  this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
-                if (!allPostsKeys.includes(cacheKey)) {
-                  allPostsKeys.push(cacheKey);
-                  this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, allPostsKeys);
-                }
-
-                let categoryPosts: CachedPost[] =
-                  this.#lruCache.get(postCategoryCacheKey) || [];
-                categoryPosts.push(combined);
-                this.#lruCache.set(postCategoryCacheKey, categoryPosts);
-              } catch (error) {
-                console.error(`Failed to process file: ${filePath}`, error);
-              }
-            }
-          })
-        );
-        await new Promise((resolve) => setTimeout(resolve, 50));
-      }
-    }
-    console.log("All posts loaded.");
+  isCategoryLoaded(category: string): boolean {
+    return this.#categoryLoadedState.get(category) || false;
   }
 
   getPostsMetadataByCategory(category: string): PostMetadata[] {
@@ -510,6 +442,19 @@ export const getBlogInstanceForSeed = async () => {
   return blogInstance;
 };
 
+export const ensureCategoryLoaded = async (category: string): Promise<void> => {
+  const blog = await getBlogInstance();
+
+  if (!blog.isCategoryLoaded(category)) {
+    for (let i = 0; i < 10; i++) {
+      if (blog.isCategoryLoaded(category)) {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+  }
+};
+
 export const getRecentPostsMetadata = unstable_cache(
   async (count: number = 10): Promise<PostMetadata[]> => {
     const blog = await getBlogInstance();
@@ -536,6 +481,8 @@ export const getRecentPosts = unstable_cache(
 
 export const getPostsMetadataByCategory = unstable_cache(
   async (category: string): Promise<PostMetadata[]> => {
+    await ensureCategoryLoaded(category);
+
     const blog = await getBlogInstance();
     return blog.getPostsMetadataByCategory(category);
   },
@@ -548,6 +495,8 @@ export const getPostsMetadataByCategory = unstable_cache(
 
 export const getPostsByCategory = unstable_cache(
   async (category: string): Promise<CachedPost[]> => {
+    await ensureCategoryLoaded(category);
+
     const blog = await getBlogInstance();
     return blog.getPostsByCategory(category);
   },
