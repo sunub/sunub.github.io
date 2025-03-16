@@ -28,11 +28,7 @@ async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
         return (
           <Styled.BlogPostListItem key={`${category}-${slug}`}>
             <Styled.BlogPostWrapper>
-              <Link
-                href={`/post/${category}/${slug}`}
-                scroll={true}
-                prefetch={false}
-              >
+              <Link href={`/post/${category}/${slug}`} scroll={true}>
                 <Styled.BlogPostTitle>
                   <Styled.Title>{title}</Styled.Title>
                   <Styled.TitleDot />
