@@ -98,19 +98,8 @@ async function Page({ params }: { params: Params }) {
   const PostContent = async () => {
     const fullPost = await getPostBySlug(category, slug);
     if (!fullPost) return <div>포스트를 찾을 수 없습니다.</div>;
-
     const content = fullPost.content;
-    const contentChunks = splitContentIfNeeded(content);
-
-    return (
-      <>
-        {contentChunks.map((chunk, idx) => (
-          <React.Fragment key={`chunk-${idx}`}>
-            <CustomMDXRemote source={chunk} />
-          </React.Fragment>
-        ))}
-      </>
-    );
+    return <CustomMDXRemote source={content} />;
   };
 
   return (
