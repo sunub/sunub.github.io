@@ -1,16 +1,22 @@
 import BlogPost from "../BlogPost";
 import Spacer from "@/components/Spacer";
 import { RootWrapper, TitleWrapper, Title } from "./NewestPost.style";
+import { z } from "zod";
+import { FrontMatterSchema } from "@/types/schema";
 
-function NewestPost() {
+function NewestPost({
+  initialPosts,
+}: {
+  initialPosts: z.infer<typeof FrontMatterSchema>[];
+}) {
   return (
     <RootWrapper>
       <TitleWrapper>
         <FeatherIcon />
         <Title>최신 포스트들</Title>
       </TitleWrapper>
-      <Spacer axis={"vertical"} size={64} />
-      <BlogPost />
+      <Spacer axis={"vertical"} size={32} />
+      <BlogPost initialPosts={initialPosts} />
     </RootWrapper>
   );
 }

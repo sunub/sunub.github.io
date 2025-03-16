@@ -1,49 +1,54 @@
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import { getRecentPosts } from "db/blog";
+import { getRecentPostsMetadata } from "db/blog";
+import { Suspense } from "react";
+import { PostSkeleton } from "@/components/Skeletons";
+import { z } from "zod";
+import { FrontMatterSchema } from "@/types/schema";
 
-async function BlogPost() {
-  try {
-    const recentlyPublished = await getRecentPosts(10);
-    if (!recentlyPublished || recentlyPublished.length === 0) {
-      return <div>현재 표시할 포스트가 없습니다.</div>;
-    }
+type PostMetadata = z.infer<typeof FrontMatterSchema>;
 
-    return (
-      <Styled.BlogPostList>
-        {recentlyPublished.map((post) => {
-          const { slug, title, summary, category, date } = post;
-          const localeDate = new Intl.DateTimeFormat("ko-KR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }).format(new Date(date));
-          return (
-            <Styled.BlogPostListItem
-              key={`${post.slug}-${Math.floor(Math.random() * 10000 + 1)}`}
-            >
-              <Styled.BlogPostWrapper>
-                <Link href={`/${category}/${slug}`} scroll={true}>
-                  <Styled.BlogPostTitle>
-                    <Styled.Title>{title}</Styled.Title>
-                    <Styled.TitleDot />
-                    <UnderLineWaveSVG />
-                  </Styled.BlogPostTitle>
-                  <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
-                </Link>
-              </Styled.BlogPostWrapper>
-              <Styled.Footer>
-                <Styled.Date>{localeDate}</Styled.Date>
-              </Styled.Footer>
-            </Styled.BlogPostListItem>
-          );
-        })}
-      </Styled.BlogPostList>
-    );
-  } catch (error) {
-    console.error(error);
-    return <div>포스트를 불러오는 중 오류가 발생했습니다.</div>;
+async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
+  const recentlyPublished = initialPosts || (await getRecentPostsMetadata(10));
+
+  if (!recentlyPublished || recentlyPublished.length === 0) {
+    return <div>현재 표시할 포스트가 없습니다.</div>;
   }
+
+  return (
+    <Styled.BlogPostList>
+      {recentlyPublished.map((post) => {
+        const { slug, title, summary, category, date } = post;
+        const localeDate = new Intl.DateTimeFormat("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).format(new Date(date));
+
+        return (
+          <Styled.BlogPostListItem key={`${category}-${slug}`}>
+            <Styled.BlogPostWrapper>
+              <Link
+                href={`/post/${category}/${slug}`}
+                scroll={true}
+                prefetch={false}
+              >
+                <Styled.BlogPostTitle>
+                  <Styled.Title>{title}</Styled.Title>
+                  <Styled.TitleDot />
+                  <UnderLineWaveSVG />
+                </Styled.BlogPostTitle>
+                <Styled.BlogPostContent>{summary}</Styled.BlogPostContent>
+              </Link>
+            </Styled.BlogPostWrapper>
+            <Styled.Footer>
+              <Styled.Date>{localeDate}</Styled.Date>
+            </Styled.Footer>
+          </Styled.BlogPostListItem>
+        );
+      })}
+    </Styled.BlogPostList>
+  );
 }
 
 function UnderLineWaveSVG() {
@@ -61,4 +66,18 @@ function UnderLineWaveSVG() {
     </Styled.UnderLineWaveSVG>
   );
 }
-export default BlogPost;
+
+// Suspense 지원 래퍼 컴포넌트
+function BlogPostWithSuspense({
+  initialPosts,
+}: {
+  initialPosts?: PostMetadata[];
+}) {
+  return (
+    <Suspense fallback={<PostSkeleton />}>
+      <BlogPost initialPosts={initialPosts} />
+    </Suspense>
+  );
+}
+
+export default BlogPostWithSuspense;

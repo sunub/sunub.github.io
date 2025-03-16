@@ -1,18 +1,20 @@
 import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
-import React from "react";
+import React, { Suspense } from "react";
 import { PostArticleComponents } from "./PostArticleComponents";
 import { convertMarkdownTables } from "./table";
+import { ComponentSkeleton } from "../Skeletons";
 
 const components = PostArticleComponents;
-
 function CustomMDXRemote(props: MDXRemoteProps) {
   const processedSource = convertMarkdownTables(props.source as string);
 
   return (
-    <MDXRemote
-      source={processedSource}
-      components={{ ...components, ...(props.components || {}) }}
-    />
+    <Suspense fallback={<ComponentSkeleton />}>
+      <MDXRemote
+        source={processedSource}
+        components={{ ...components, ...(props.components || {}) }}
+      />
+    </Suspense>
   );
 }
 
