@@ -10,9 +10,7 @@ function Header() {
   return (
     <React.Fragment>
       <Styled.RootWrapper>
-        <Spacer size={60} axis={"vertical"} />
         <Styled.HeaderWrapper id="blog-main__header-contents">
-          <Styled.DemoWrapper />
           <Styled.Header>
             <Styled.LogoAndNavWrapper>
               <Logo />
@@ -25,6 +23,7 @@ function Header() {
         </Styled.HeaderWrapper>
       </Styled.RootWrapper>
       <Hamburger />
+      <div id="blog-main__header-scroll-trigger" />
     </React.Fragment>
   );
 }

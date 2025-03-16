@@ -2,6 +2,14 @@
 
 import styled from "styled-components";
 
+export const ScrollTrigger = styled.div`
+  position: sticky;
+  bottom: 326px;
+
+  height: 1px;
+  width: 100cqw;
+`;
+
 export const TitleDot = styled.span`
   content: "";
   display: inline-block;
