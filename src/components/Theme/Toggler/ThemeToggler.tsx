@@ -114,7 +114,12 @@ function ThemeIcon({
           strokeLinecap="round"
         />
       </Styled.SunAndBeams>
-      <Styled.Moon $colorTheme={colorTheme} id={maskId}>
+      <Styled.Moon
+        $colorTheme={colorTheme}
+        id={maskId}
+        maskUnits={"userSpaceOnUse"}
+        maskContentUnits={"userSpaceOnUse"}
+      >
         <rect x="0" y="0" width="100%" height="100%" fill="white" />
         <circle cx="24" cy="24" r="6" fill="black" />
       </Styled.Moon>
