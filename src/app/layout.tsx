@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import React from "react";
-import InitTheme from "@/components/Theme/InitTheme";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -12,6 +11,7 @@ import localFont from "next/font/local";
 import clsx from "clsx";
 import { cookies } from "next/headers";
 import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
+import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -104,7 +104,6 @@ export default async function RootLayout({
           href="/assets/favicon.ico"
           as="icon"
         />
-        {/* <InitTheme /> */}
       </head>
       <body>
         <script
@@ -122,9 +121,10 @@ export default async function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
-              <div id="blog-main__header-wrapper">
+              <ScrollHeader>
                 <Header />
-              </div>
+              </ScrollHeader>
+              <div className="blog-main__background-template" />
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
               <div id="mobile-nav-portal" />
