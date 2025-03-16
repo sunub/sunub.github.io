@@ -8,13 +8,15 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+
   images: {
     formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 60 * 60 * 24,
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96],
     dangerouslyAllowSVG: true,
   },
+
   compiler: {
     styledComponents: {
       ssr: true,
@@ -23,6 +25,7 @@ const nextConfig: NextConfig = {
       cssProp: false,
     },
   },
+
   compress: true,
   output: "standalone",
   redirects: async () => {
@@ -30,20 +33,32 @@ const nextConfig: NextConfig = {
       return [];
     }
 
-    const prisma = new PrismaClient();
-    const redirects = await prisma.redirects.findMany({
-      select: {
-        source: true,
-        destination: true,
-      },
-    });
+    try {
+      const prisma = new PrismaClient();
+      const redirects = await prisma.redirects.findMany({
+        select: {
+          source: true,
+          destination: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 100,
+      });
 
-    return redirects.map(({ source, destination }) => ({
-      source,
-      destination,
-      permanent: true,
-    }));
+      await prisma.$disconnect();
+
+      return redirects.map(({ source, destination }) => ({
+        source,
+        destination,
+        permanent: true,
+      }));
+    } catch (error) {
+      console.error("리다이렉트 로드 중 오류 발생:", error);
+      return [];
+    }
   },
+
   async headers() {
     return [
       {
@@ -52,6 +67,15 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/_next/image",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/assets/(.*)",
         headers: [
           {
             key: "Cache-Control",
