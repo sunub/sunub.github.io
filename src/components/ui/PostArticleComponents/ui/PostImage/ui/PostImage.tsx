@@ -5,8 +5,8 @@ import { Fragment, memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useInView } from "react-intersection-observer";
 import styled, { keyframes } from "styled-components";
-import { isImageLoaded } from "../model/cache";
-import { CustomImage } from "./CustomImage";
+import { isImageLoaded, markImageAsLoaded } from "../model/cache";
+import Image from "next/image";
 
 type ImageLayout = "default" | "wide" | "full" | "float-left" | "float-right";
 
@@ -27,13 +27,83 @@ interface PostImageProps {
   caption?: string;
 }
 
+const CustomImage = memo(
+  ({
+    src,
+    alt,
+    isLoading,
+    setIsLoading,
+    type = "responsive",
+    additionalStyle,
+    quality = 75,
+    priority = false,
+  }: {
+    src: string;
+    alt: string;
+    isLoading: boolean;
+    setIsLoading: (value: boolean) => void;
+    type?: "responsive" | "wide";
+    additionalStyle?: string;
+    quality?: number;
+    priority?: boolean;
+  }) => {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        {...(type === "responsive"
+          ? {
+              width: 800,
+              height: 500,
+              style: { width: "100%", height: "auto" },
+            }
+          : { fill: true })}
+        className={`
+            object-contain
+            transition-opacity duration-300
+            ${isLoading ? "opacity-0" : "opacity-100"}
+            ${additionalStyle ?? ""}
+          `}
+        loading={priority ? "eager" : "lazy"}
+        priority={priority}
+        quality={quality}
+        sizes={`
+            (max-width: 640px) 100vw,
+            (max-width: 1024px) 75vw,
+            (max-width: 1280px) 50vw,
+            33vw
+          `}
+        placeholder="blur"
+        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAvM1P7YAAAAASUVORK5CYII="
+        onLoad={() => {
+          if (!isImageLoaded(src)) {
+            markImageAsLoaded(src);
+            setIsLoading(false);
+          }
+        }}
+      />
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.src === nextProps.src &&
+      prevProps.alt === nextProps.alt &&
+      prevProps.priority === nextProps.priority &&
+      prevProps.type === nextProps.type &&
+      prevProps.additionalStyle === nextProps.additionalStyle &&
+      prevProps.isLoading === nextProps.isLoading &&
+      prevProps.quality === nextProps.quality
+    );
+  }
+);
+
 const PostImage = memo(
   ({ src, alt, priority = false, caption }: PostImageProps) => {
     const [isLoading, setIsLoading] = useState(!isImageLoaded(src));
     const { ref, inView } = useInView({
       threshold: 0,
       triggerOnce: true,
-      rootMargin: "50px 0px",
+      rootMargin: "200px 0px",
     });
     const [isZoomIn, toggleZoomStatus] = useToggle();
     const imageRef = useRef<HTMLDivElement>(null);
@@ -51,14 +121,16 @@ const PostImage = memo(
         }
       };
 
-      window.addEventListener("scroll", handleScroll);
-      window.addEventListener("keydown", handleKeyDown);
+      if (isZoomIn) {
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        window.addEventListener("keydown", handleKeyDown);
 
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-        window.removeEventListener("keydown", handleKeyDown);
-      };
-    }, [isZoomIn]);
+        return () => {
+          window.removeEventListener("scroll", handleScroll);
+          window.removeEventListener("keydown", handleKeyDown);
+        };
+      }
+    }, [isZoomIn, toggleZoomStatus]);
 
     return (
       <Fragment>
@@ -67,13 +139,14 @@ const PostImage = memo(
             {(inView || priority) && (
               <>
                 {isLoading && (
-                  <div className="absolute inset-0 bg-gray-200 animate-pulse z" />
+                  <div className="absolute inset-0 bg-gray-200 animate-pulse" />
                 )}
                 <CustomImage
                   src={src}
                   alt={alt}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
+                  priority={priority}
                 />
               </>
             )}
