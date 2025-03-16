@@ -63,56 +63,14 @@ const CustomMDXRemote = React.lazy(
   () => import("@/components/ui/customMdxRemote")
 );
 
-function splitContentIfNeeded(content: string, chunkSize = 10000) {
-  if (content.length <= chunkSize) return [content];
-
-  const chunks = [];
-  let currentPos = 0;
-
-  while (currentPos < content.length) {
-    let endPos = Math.min(currentPos + chunkSize, content.length);
-
-    if (endPos < content.length) {
-      const nextHeaderPos = content.indexOf("\n#", endPos);
-      if (nextHeaderPos !== -1 && nextHeaderPos < endPos + 1000) {
-        endPos = nextHeaderPos;
-      }
-    }
-
-    chunks.push(content.slice(currentPos, endPos));
-    currentPos = endPos;
-  }
-
-  return chunks;
-}
-
 async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
 
-  const postMetadata = await getPostMetadataBySlug(category, slug);
+  const postMetadata = await getPostBySlug(category, slug);
+
   if (!postMetadata) return notFound();
-
-  const { title, date } = postMetadata;
-
-  const PostContent = async () => {
-    const fullPost = await getPostBySlug(category, slug);
-    if (!fullPost) return <div>포스트를 찾을 수 없습니다.</div>;
-
-    const content = fullPost.content;
-    const contentChunks = splitContentIfNeeded(content);
-
-    return (
-      <>
-        {contentChunks.map((chunk, idx) => (
-          <React.Fragment key={`chunk-${idx}`}>
-            <CustomMDXRemote source={chunk} />
-          </React.Fragment>
-        ))}
-      </>
-    );
-  };
-
+  const { title, date } = postMetadata.data;
   return (
     <React.Fragment>
       <Wave />
@@ -127,7 +85,7 @@ async function Page({ params }: { params: Params }) {
               headline: title,
               datePublished: date,
               dateModified: date,
-              description: postMetadata.summary,
+              description: postMetadata.data.summary,
               author: {
                 "@type": "Person",
                 name: "sun_ub",
@@ -156,7 +114,7 @@ async function Page({ params }: { params: Params }) {
         <ArticleWrapper id="blog-post__article">
           <Article>
             <Suspense fallback={<ComponentSkeleton />}>
-              <PostContent />
+              <CustomMDXRemote source={postMetadata.content} />
             </Suspense>
           </Article>
         </ArticleWrapper>
