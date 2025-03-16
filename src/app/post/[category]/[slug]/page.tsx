@@ -5,9 +5,11 @@ import {
   ArticleWrapper,
   ArticleHeader,
 } from "./page.style";
-import { getPostBySlug, getAllPosts } from "db/blog";
+import { getPostBySlug, getPostMetadataBySlug, getAllPosts } from "db/blog";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { ComponentSkeleton } from "@/components/Skeletons";
 
 type Category = "code" | "web" | "cs" | "algorithm";
 
@@ -19,7 +21,7 @@ type Params = Promise<{
 export async function generateStaticParams() {
   const allPosts = await getAllPosts();
 
-  return allPosts.map(({ data }) => ({
+  return allPosts.slice(0, 30).map(({ data }) => ({
     category: data.category,
     slug: data.slug,
   }));
@@ -28,10 +30,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
-  const postData = await getPostBySlug(category, slug);
+
+  const postData = await getPostMetadataBySlug(category, slug);
   if (!postData) return notFound();
 
-  const { title, summary, date, tags } = postData.data;
+  const { title, summary, date, tags } = postData;
   return {
     title,
     description: summary,
@@ -60,12 +63,55 @@ const CustomMDXRemote = React.lazy(
   () => import("@/components/ui/customMdxRemote")
 );
 
+function splitContentIfNeeded(content: string, chunkSize = 10000) {
+  if (content.length <= chunkSize) return [content];
+
+  const chunks = [];
+  let currentPos = 0;
+
+  while (currentPos < content.length) {
+    let endPos = Math.min(currentPos + chunkSize, content.length);
+
+    if (endPos < content.length) {
+      const nextHeaderPos = content.indexOf("\n#", endPos);
+      if (nextHeaderPos !== -1 && nextHeaderPos < endPos + 1000) {
+        endPos = nextHeaderPos;
+      }
+    }
+
+    chunks.push(content.slice(currentPos, endPos));
+    currentPos = endPos;
+  }
+
+  return chunks;
+}
+
 async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
 
-  const postData = await getPostBySlug(category, slug);
-  const { title, summary, date } = postData.data;
+  const postMetadata = await getPostMetadataBySlug(category, slug);
+  if (!postMetadata) return notFound();
+
+  const { title, date } = postMetadata;
+
+  const PostContent = async () => {
+    const fullPost = await getPostBySlug(category, slug);
+    if (!fullPost) return <div>포스트를 찾을 수 없습니다.</div>;
+
+    const content = fullPost.content;
+    const contentChunks = splitContentIfNeeded(content);
+
+    return (
+      <>
+        {contentChunks.map((chunk, idx) => (
+          <React.Fragment key={`chunk-${idx}`}>
+            <CustomMDXRemote source={chunk} />
+          </React.Fragment>
+        ))}
+      </>
+    );
+  };
 
   return (
     <React.Fragment>
@@ -81,7 +127,7 @@ async function Page({ params }: { params: Params }) {
               headline: title,
               datePublished: date,
               dateModified: date,
-              description: summary,
+              description: postMetadata.summary,
               author: {
                 "@type": "Person",
                 name: "sun_ub",
@@ -109,9 +155,9 @@ async function Page({ params }: { params: Params }) {
         </ArticleHeader>
         <ArticleWrapper id="blog-post__article">
           <Article>
-            <React.Suspense fallback={<div>콘텐츠를 불러오는 중...</div>}>
-              <CustomMDXRemote source={postData.content} />
-            </React.Suspense>
+            <Suspense fallback={<ComponentSkeleton />}>
+              <PostContent />
+            </Suspense>
           </Article>
         </ArticleWrapper>
       </main>

@@ -2,10 +2,11 @@ import Wave from "@/components/HeaderContents/Wave";
 import Spacer from "@/components/Spacer";
 import { FrontmatterWrapper } from "./page.style";
 import Card from "@/components/Card";
-import { getPostsByCategory } from "db/blog";
+import { getPostsMetadataByCategory } from "db/blog";
+import { Suspense } from "react";
+import { CardsSkeleton } from "@/components/Skeletons";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
-
 type Params = Promise<{
   category: Cateogry;
 }>;
@@ -13,12 +14,11 @@ type Params = Promise<{
 export default async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category } = resolvedParams;
-  const postinfo = await getPostsByCategory(category);
-  if (!postinfo.length) {
+
+  const postMetadata = await getPostsMetadataByCategory(category);
+  if (!postMetadata.length) {
     throw new Error("없는 카테고리 입니다.");
   }
-
-  const frontmatters = postinfo.map((post) => post.data);
 
   const title = {
     code: "Code",
@@ -35,11 +35,13 @@ export default async function Page({ params }: { params: Params }) {
       <Wave />
       <div className="bg-base relative top-[-64px] px-8">
         <Spacer size={48} axis={"vertical"} />
-        <FrontmatterWrapper>
-          {frontmatters.map((frontmatter) => (
-            <Card key={frontmatter.slug} frontMatter={frontmatter} />
-          ))}
-        </FrontmatterWrapper>
+        <Suspense fallback={<CardsSkeleton />}>
+          <FrontmatterWrapper>
+            {postMetadata.map((frontmatter) => (
+              <Card key={frontmatter.slug} frontMatter={frontmatter} />
+            ))}
+          </FrontmatterWrapper>
+        </Suspense>
       </div>
     </section>
   );
