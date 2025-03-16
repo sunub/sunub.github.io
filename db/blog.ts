@@ -14,12 +14,19 @@ import {
 } from "@/types/schema";
 
 type PostMetadata = z.infer<typeof FrontMatterSchema>;
+
 const DAY_IN_SECONDS = 86400;
 const STATIC_DIR = path.join(process.cwd(), "posts");
 const STATIC_POST_CATEGORIES = ["web", "algorithm", "cs", "code"] as const;
-const LRUCacheInstance = new LRUCache<string, any>({
-  maxSize: 40 * 1024 * 1024, // 최대 40MB로 제한
-  ttl: 1000 * 60 * 30, // 30분 TTL
+
+interface CachedPost {
+  data: z.infer<typeof CacheDataSchema>;
+  metadata: PostMetadata;
+}
+
+const LRUCacheInstance = new LRUCache<string, CachedPost | any>({
+  maxSize: 40 * 1024 * 1024,
+  ttl: 1000 * 60 * 30,
   updateAgeOnGet: true,
   sizeCalculation: (value) => {
     if (typeof value === "string") {
@@ -30,86 +37,112 @@ const LRUCacheInstance = new LRUCache<string, any>({
 });
 
 class Blog {
-  #lruCache: LRUCache<string, any>;
+  #lruCache: LRUCache<string, CachedPost | any>;
   #ALL_POSTS_CACHE_KEY = "all_posts";
   #RECENT_POSTS_KEYS = "recent_posts_keys";
   #isInitializing: boolean;
   #pendingCategories: Set<string>;
+  #updateLock: Promise<void>;
 
   constructor() {
     this.#lruCache = LRUCacheInstance;
     this.#isInitializing = false;
     this.#pendingCategories = new Set();
+    this.#updateLock = Promise.resolve();
 
-    // 파일 변경 감지
     const watcher = chokidar.watch(STATIC_DIR, {
       persistent: true,
       ignoreInitial: true,
     });
+    watcher.on("change", (filePath) => {
+      clearTimeout((this as any)._debounceTimer);
+      (this as any)._debounceTimer = setTimeout(() => {
+        this.handleFileChange(filePath);
+      }, 100);
+    });
+  }
 
-    watcher.on("change", (filePath) => this.handleFileChange(filePath));
+  async #withLock<T>(fn: () => Promise<T>): Promise<T> {
+    const previousLock = this.#updateLock;
+    let release: () => void;
+    this.#updateLock = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await previousLock;
+    try {
+      return await fn();
+    } finally {
+      release!();
+    }
   }
 
   async handleFileChange(filePath: string) {
     const relativePath = path.relative(STATIC_DIR, filePath);
-    try {
-      const { frontmatter, parsedPostContent } = await this.parsingMDXFile(
-        path.join(STATIC_DIR, relativePath)
-      );
-      const { category, slug, date } = frontmatter;
-      const cacheKey = this.#createCacheKey(category, slug);
+    await this.#withLock(async () => {
+      try {
+        const { frontmatter, parsedPostContent } = await this.parsingMDXFile(
+          filePath
+        );
+        const { category, slug, date } = frontmatter;
+        const cacheKey = this.#createCacheKey(category, slug);
 
-      const metadataOnly = {
-        slug: frontmatter.slug,
-        title: frontmatter.title,
-        summary: frontmatter.summary,
-        date: frontmatter.date,
-        category: frontmatter.category,
-        tags: frontmatter.tags,
-      };
+        const metadata: PostMetadata = {
+          slug: frontmatter.slug,
+          title: frontmatter.title,
+          summary: frontmatter.summary,
+          date: frontmatter.date,
+          category: frontmatter.category,
+          tags: frontmatter.tags,
+          completed: frontmatter.completed,
+        };
 
-      const cacheData = {
-        ...parsedPostContent,
-        cacheKey,
-        category,
-        date,
-      };
+        const cacheData = {
+          ...parsedPostContent,
+          cacheKey,
+          category,
+          date,
+        };
 
-      const parsedCacheData = CacheDataSchema.safeParse(cacheData);
-      if (!parsedCacheData.success) {
-        console.error(parsedCacheData.error);
-        throw new Error("캐시 데이터를 생성하는데 실패했습니다.");
+        const parsedCacheData = CacheDataSchema.safeParse(cacheData);
+        if (!parsedCacheData.success) {
+          console.error(parsedCacheData.error);
+          throw new Error("Failed to generate cache data.");
+        }
+
+        const combined: CachedPost = {
+          data: parsedCacheData.data,
+          metadata,
+        };
+
+        this.#lruCache.set(cacheKey, combined);
+
+        const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
+        let categoryPosts: CachedPost[] =
+          this.#lruCache.get(postCategoryCacheKey) || [];
+        const index = categoryPosts.findIndex(
+          (post) => post.data.cacheKey === cacheKey
+        );
+        if (index >= 0) {
+          categoryPosts[index] = combined;
+        } else {
+          categoryPosts.push(combined);
+        }
+        this.#lruCache.set(postCategoryCacheKey, categoryPosts);
+
+        let allPostsKeys: string[] =
+          this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
+        if (!allPostsKeys.includes(cacheKey)) {
+          allPostsKeys.push(cacheKey);
+          this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, allPostsKeys);
+        }
+
+        this.#lruCache.delete(this.#RECENT_POSTS_KEYS);
+
+        console.log(`File changed: ${relativePath}`);
+      } catch (error) {
+        console.error(`Failed to update cache for ${filePath}:`, error);
       }
-
-      const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
-      const categorizedPost = this.getPostsByCategory(category) || [];
-      const udpatedCategorizedPost: z.infer<typeof CacheDataSchema>[] =
-        categorizedPost.map((post: z.infer<typeof CacheDataSchema>) => {
-          if (post.cacheKey === cacheKey) {
-            return parsedCacheData.data;
-          }
-          return post;
-        });
-
-      const allPostsKeys = this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
-      const updatedAllPostsKeys = [...allPostsKeys];
-      const postIndex = updatedAllPostsKeys.findIndex(
-        (key) => key === cacheKey
-      );
-      if (postIndex === -1) {
-        updatedAllPostsKeys.push(cacheKey);
-      }
-
-      this.#lruCache.set(cacheKey, parsedCacheData.data);
-      this.#lruCache.set(`${cacheKey}_metadata`, metadataOnly);
-      this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, updatedAllPostsKeys);
-      this.#lruCache.set(postCategoryCacheKey, udpatedCategorizedPost);
-
-      this.#lruCache.delete(this.#RECENT_POSTS_KEYS);
-      console.log(`File changed: ${relativePath}`);
-    } catch (error) {
-      console.error(`Failed to update cache for ${filePath}:`, error);
-    }
+    });
   }
 
   static async initialize() {
@@ -132,9 +165,7 @@ class Blog {
     const frontMatter = FrontMatterSchema.safeParse(parsedPostContent.data);
     if (!frontMatter.success) {
       console.error(frontMatter.error);
-      throw new Error(
-        "Gray matter를 이용하여 frontmatter를 파싱하는데 실패했습니다."
-      );
+      throw new Error("Failed to parse frontmatter using gray-matter.");
     }
     return { frontmatter: frontMatter.data, parsedPostContent };
   }
@@ -143,15 +174,12 @@ class Blog {
     if (this.#isInitializing) return;
     this.#isInitializing = true;
 
-    const initialPostsPromises = STATIC_POST_CATEGORIES.map(
-      async (category) => {
+    await Promise.all(
+      STATIC_POST_CATEGORIES.map(async (category) => {
         return this.#loadCategoryPosts(category, 5);
-      }
+      })
     );
-
-    await Promise.all(initialPostsPromises);
     this.#isInitializing = false;
-
     setTimeout(() => {
       this.#loadRemainingPosts();
     }, 2000);
@@ -175,7 +203,6 @@ class Blog {
         files.map(async (filePath) => {
           const fullPath = path.join(categoryDir, filePath);
           const stats = await fs.stat(fullPath);
-
           if (
             !stats.isDirectory() &&
             (filePath.endsWith(".mdx") || filePath.endsWith(".md"))
@@ -183,14 +210,9 @@ class Blog {
             try {
               const fileContent = await fs.readFile(fullPath, "utf-8");
               const { data } = matter(fileContent);
-              let date: Date | null = null;
-
-              if (data.date) {
-                date = new Date(data.date);
-              } else {
-                date = new Date(stats.mtime);
-              }
-
+              let date: Date | null = data.date
+                ? new Date(data.date)
+                : new Date(stats.mtime);
               fileMetadata.push({ filePath, date, fullPath });
             } catch (error) {
               console.error(`Failed to read metadata from ${filePath}:`, error);
@@ -213,48 +235,41 @@ class Blog {
       const filesToProcess = limit
         ? fileMetadata.slice(0, limit)
         : fileMetadata;
-      const categorizedPost: z.infer<typeof CacheDataSchema>[] = [];
-      const metadataList: PostMetadata[] = [];
+      const categoryPosts: CachedPost[] = [];
 
       await Promise.all(
         filesToProcess.map(async ({ filePath, fullPath }) => {
           try {
-            const stats = await fs.stat(fullPath);
-
-            if (!stats.isDirectory()) {
-              const { frontmatter, parsedPostContent } =
-                await this.parsingMDXFile(fullPath);
-              const { category, slug, date } = frontmatter;
-              const cacheKey = this.#createCacheKey(category, slug);
-
-              const metadata: PostMetadata = {
-                slug: frontmatter.slug,
-                title: frontmatter.title,
-                summary: frontmatter.summary,
-                date: frontmatter.date,
-                category: frontmatter.category,
-                tags: frontmatter.tags,
-                completed: frontmatter.completed,
-              };
-
-              const cacheData = {
-                ...parsedPostContent,
-                cacheKey,
-                category,
-                date,
-              };
-
-              const parsedCacheData = CacheDataSchema.safeParse(cacheData);
-              if (!parsedCacheData.success) {
-                console.error(parsedCacheData.error);
-                return;
-              }
-
-              this.#lruCache.set(cacheKey, parsedCacheData.data);
-              this.#lruCache.set(`${cacheKey}_metadata`, metadata);
-              categorizedPost.push(parsedCacheData.data);
-              metadataList.push(metadata);
+            const { frontmatter, parsedPostContent } =
+              await this.parsingMDXFile(fullPath);
+            const { category, slug, date } = frontmatter;
+            const cacheKey = this.#createCacheKey(category, slug);
+            const metadata: PostMetadata = {
+              slug: frontmatter.slug,
+              title: frontmatter.title,
+              summary: frontmatter.summary,
+              date: frontmatter.date,
+              category: frontmatter.category,
+              tags: frontmatter.tags,
+              completed: frontmatter.completed,
+            };
+            const cacheData = {
+              ...parsedPostContent,
+              cacheKey,
+              category,
+              date,
+            };
+            const parsedCacheData = CacheDataSchema.safeParse(cacheData);
+            if (!parsedCacheData.success) {
+              console.error(parsedCacheData.error);
+              return;
             }
+            const combined: CachedPost = {
+              data: parsedCacheData.data,
+              metadata,
+            };
+            this.#lruCache.set(cacheKey, combined);
+            categoryPosts.push(combined);
           } catch (error) {
             console.error(`Failed to process file ${filePath}:`, error);
           }
@@ -262,18 +277,17 @@ class Blog {
       );
 
       const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
-      this.#lruCache.set(postCategoryCacheKey, categorizedPost);
+      this.#lruCache.set(postCategoryCacheKey, categoryPosts);
 
-      const allPostsKeys = this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
-      const newPostKeys = categorizedPost.map((post) => post.cacheKey);
+      let allPostsKeys: string[] =
+        this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
+      const newPostKeys = categoryPosts.map((post) => post.data.cacheKey);
       const updatedAllPostsKeys = [
         ...new Set([...allPostsKeys, ...newPostKeys]),
       ];
       this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, updatedAllPostsKeys);
 
-      this.#lruCache.set(`${postCategoryCacheKey}_metadata`, metadataList);
-
-      return categorizedPost;
+      return categoryPosts;
     } catch (error) {
       console.error(`Failed to load category: ${category}`, error);
     } finally {
@@ -284,13 +298,12 @@ class Blog {
   async #loadRemainingPosts() {
     for (const category of STATIC_POST_CATEGORIES) {
       const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
-      const existingPosts = this.#lruCache.get(postCategoryCacheKey) || [];
-
+      const existingPosts: CachedPost[] =
+        this.#lruCache.get(postCategoryCacheKey) || [];
       const categoryDir = path.join(STATIC_DIR, category);
       const files = await fs.readdir(categoryDir);
-
       const processedSlugs = new Set(
-        existingPosts.map((post: any) => post.data?.slug || "")
+        existingPosts.map((post) => post.data.cacheKey.split("/")[1])
       );
 
       const remainingFiles = files.filter((file) => {
@@ -308,17 +321,13 @@ class Blog {
           filesChunk.map(async (filePath) => {
             const fullPath = path.join(categoryDir, filePath);
             const stats = await fs.stat(fullPath);
-
             if (!stats.isDirectory()) {
               try {
                 const { frontmatter, parsedPostContent } =
                   await this.parsingMDXFile(fullPath);
                 const { category, slug, date } = frontmatter;
                 const cacheKey = this.#createCacheKey(category, slug);
-
                 if (this.#lruCache.has(cacheKey)) return;
-
-                // 메타데이터 분리
                 const metadata: PostMetadata = {
                   slug: frontmatter.slug,
                   title: frontmatter.title,
@@ -328,95 +337,83 @@ class Blog {
                   tags: frontmatter.tags,
                   completed: frontmatter.completed,
                 };
-
                 const cacheData = {
                   ...parsedPostContent,
                   cacheKey,
                   category,
                   date,
                 };
-
                 const parsedCacheData = CacheDataSchema.safeParse(cacheData);
                 if (!parsedCacheData.success) {
                   console.error(parsedCacheData.error);
                   return;
                 }
+                const combined: CachedPost = {
+                  data: parsedCacheData.data,
+                  metadata,
+                };
+                this.#lruCache.set(cacheKey, combined);
 
-                this.#lruCache.set(cacheKey, parsedCacheData.data);
-                this.#lruCache.set(`${cacheKey}_metadata`, metadata);
-
-                const allPostsKeys =
+                let allPostsKeys: string[] =
                   this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
                 if (!allPostsKeys.includes(cacheKey)) {
-                  this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, [
-                    ...allPostsKeys,
-                    cacheKey,
-                  ]);
+                  allPostsKeys.push(cacheKey);
+                  this.#lruCache.set(this.#ALL_POSTS_CACHE_KEY, allPostsKeys);
                 }
 
-                const categoryPosts =
+                let categoryPosts: CachedPost[] =
                   this.#lruCache.get(postCategoryCacheKey) || [];
-                this.#lruCache.set(postCategoryCacheKey, [
-                  ...categoryPosts,
-                  parsedCacheData.data,
-                ]);
-
-                const categoryMetadata =
-                  this.#lruCache.get(`${postCategoryCacheKey}_metadata`) || [];
-                this.#lruCache.set(`${postCategoryCacheKey}_metadata`, [
-                  ...categoryMetadata,
-                  metadata,
-                ]);
+                categoryPosts.push(combined);
+                this.#lruCache.set(postCategoryCacheKey, categoryPosts);
               } catch (error) {
                 console.error(`Failed to process file: ${filePath}`, error);
               }
             }
           })
         );
-
         await new Promise((resolve) => setTimeout(resolve, 50));
       }
     }
-    console.log("모든 포스트 로딩 완료");
+    console.log("All posts loaded.");
   }
 
   getPostsMetadataByCategory(category: string): PostMetadata[] {
     const parsedCategory = PostCategorySchema.safeParse(category);
     if (!parsedCategory.success) {
       console.error(parsedCategory.error);
-      throw new Error("잘못된 카테고리입니다.");
+      throw new Error("Invalid category.");
     }
-
-    const cacheKey = `${this.#createPostCategoryCacheKey(category)}_metadata`;
-    return this.#lruCache.get(cacheKey) || [];
+    const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
+    const categoryPosts: CachedPost[] =
+      this.#lruCache.get(postCategoryCacheKey) || [];
+    return categoryPosts.map((post) => post.metadata);
   }
 
   getPostsByCategory(category: string) {
     const parsedCategory = PostCategorySchema.safeParse(category);
     if (!parsedCategory.success) {
       console.error(parsedCategory.error);
-      throw new Error("잘못된 카테고리입니다.");
+      throw new Error("Invalid category.");
     }
-    const cacheKey = this.#createPostCategoryCacheKey(category);
-    return this.#lruCache.get(cacheKey) || [];
+    const postCategoryCacheKey = this.#createPostCategoryCacheKey(category);
+    return this.#lruCache.get(postCategoryCacheKey) || [];
   }
 
   getPostBySlug(category: string, slug: string) {
     const cacheKey = this.#createCacheKey(category, slug);
-
     if (!this.#lruCache.has(cacheKey)) {
       const filePath = path.join(STATIC_DIR, category, `${slug}.mdx`);
       this.#loadSinglePost(filePath, category, slug).catch((err) => {
         console.error(`Failed to load post: ${category}/${slug}`, err);
       });
     }
-
     return this.#lruCache.get(cacheKey);
   }
 
   getPostMetadataBySlug(category: string, slug: string): PostMetadata | null {
-    const cacheKey = `${this.#createCacheKey(category, slug)}_metadata`;
-    return this.#lruCache.get(cacheKey) || null;
+    const cacheKey = this.#createCacheKey(category, slug);
+    const cached: CachedPost = this.#lruCache.get(cacheKey);
+    return cached ? cached.metadata : null;
   }
 
   async #loadSinglePost(filePath: string, category: string, slug: string) {
@@ -425,7 +422,6 @@ class Blog {
         filePath
       );
       const cacheKey = this.#createCacheKey(category, slug);
-
       const metadata: PostMetadata = {
         slug: frontmatter.slug,
         title: frontmatter.title,
@@ -435,24 +431,23 @@ class Blog {
         tags: frontmatter.tags,
         completed: frontmatter.completed,
       };
-
       const cacheData = {
         ...parsedPostContent,
         cacheKey,
         category,
         date: frontmatter.date,
       };
-
       const parsedCacheData = CacheDataSchema.safeParse(cacheData);
       if (!parsedCacheData.success) {
         console.error(parsedCacheData.error);
-        throw new Error("캐시 데이터를 생성하는데 실패했습니다.");
+        throw new Error("Failed to generate cache data.");
       }
-
-      this.#lruCache.set(cacheKey, parsedCacheData.data);
-      this.#lruCache.set(`${cacheKey}_metadata`, metadata);
-
-      return parsedCacheData.data;
+      const combined: CachedPost = {
+        data: parsedCacheData.data,
+        metadata,
+      };
+      this.#lruCache.set(cacheKey, combined);
+      return combined.data;
     } catch (error) {
       console.error(`Failed to load single post: ${category}/${slug}`, error);
       throw error;
@@ -461,34 +456,31 @@ class Blog {
 
   async getRecentPostsMetadata(count: number = 10): Promise<PostMetadata[]> {
     const cacheKey = `recent_posts_metadata_${count}`;
-
     if (this.#lruCache.has(cacheKey)) {
       return this.#lruCache.get(cacheKey);
     }
-
-    const allPostsKeys = this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
+    const allPostsKeys: string[] =
+      this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
     const metadataList: PostMetadata[] = [];
-
     for (const key of allPostsKeys) {
-      const metadata = this.#lruCache.get(`${key}_metadata`);
-      if (metadata) {
-        metadataList.push(metadata);
+      const cached: CachedPost = this.#lruCache.get(key);
+      if (cached) {
+        metadataList.push(cached.metadata);
       }
     }
-
     const sortedPosts = metadataList
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, count);
-
     this.#lruCache.set(cacheKey, sortedPosts);
     return sortedPosts;
   }
 
   getAllPosts() {
-    const allPostsKeys = this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
+    const allPostsKeys: string[] =
+      this.#lruCache.get(this.#ALL_POSTS_CACHE_KEY) || [];
     return allPostsKeys
       .map((key: string) => this.#lruCache.get(key))
-      .filter((post: PostMetadata) => post != null);
+      .filter((post: CachedPost) => post != null);
   }
 
   async getRecentPosts(count: number = 10) {
@@ -496,16 +488,14 @@ class Blog {
     const recentPostKeys = recentPostsMetadata.map((meta: PostMetadata) =>
       this.#createCacheKey(meta.category, meta.slug)
     );
-
     return recentPostKeys
       .map((key) => this.#lruCache.get(key))
       .filter((post) => post != null)
-      .map(({ data }) => data);
+      .map((cached: CachedPost) => cached.data);
   }
 }
 
 let blogInstance: Promise<Blog> | null = null;
-
 const getBlogInstance = () => {
   if (!blogInstance) {
     blogInstance = Blog.initialize();
@@ -557,7 +547,7 @@ export const getPostsMetadataByCategory = unstable_cache(
 );
 
 export const getPostsByCategory = unstable_cache(
-  async (category: string): Promise<z.infer<typeof CacheDataSchema>[]> => {
+  async (category: string): Promise<CachedPost[]> => {
     const blog = await getBlogInstance();
     return blog.getPostsByCategory(category);
   },
@@ -572,9 +562,10 @@ export const getPostBySlug = unstable_cache(
   async (
     category: string,
     slug: string
-  ): Promise<z.infer<typeof CacheDataSchema>> => {
+  ): Promise<z.infer<typeof CacheDataSchema> | null> => {
     const blog = await getBlogInstance();
-    return blog.getPostBySlug(category, slug);
+    const cached = blog.getPostBySlug(category, slug);
+    return cached ? cached.data : null;
   },
   ["post-by-slug"],
   {
@@ -598,7 +589,7 @@ export const getPostMetadataBySlug = unstable_cache(
 export const getAllPosts = unstable_cache(
   async (): Promise<z.infer<typeof CacheDataSchema>[]> => {
     const blog = await getBlogInstance();
-    return blog.getAllPosts();
+    return blog.getAllPosts().map((cached: CachedPost) => cached.data);
   },
   ["all-posts"],
   {
