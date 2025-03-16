@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import Elevation from "@/constants/Elevation";
+import { FrontMatterSchema } from "@/types/schema";
+import { z } from "zod";
 
 const Wrapper = styled.article`
   ${Elevation(170, 216, 15, "short", "other")}
@@ -70,20 +72,38 @@ const IconWrapper = styled.div`
   display: flex;
 `;
 
-export default function Card({ frontMatter }) {
-  const { title, date, slug, category } = frontMatter;
-  return (
-    <Wrapper>
-      <LinkWrapper href={`/post/${category}/${slug}`} tabIndex={0}>
-        <Header>{title}</Header>
-        <Footer>
-          {new Intl.DateTimeFormat("ko-kr", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }).format(new Date(date))}
-        </Footer>
-      </LinkWrapper>
-    </Wrapper>
-  );
-}
+const Card = memo(
+  function Card({
+    frontMatter,
+  }: {
+    frontMatter: z.infer<typeof FrontMatterSchema>;
+  }) {
+    const { title, date, slug, category } = frontMatter;
+
+    const formattedDate = React.useMemo(() => {
+      return new Intl.DateTimeFormat("ko-kr", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date(date));
+    }, [date]);
+
+    return (
+      <Wrapper>
+        <LinkWrapper
+          href={`/post/${category}/${slug}`}
+          tabIndex={0}
+          prefetch={false} // 필요할 때만 프리페치
+        >
+          <Header>{title}</Header>
+          <Footer>{formattedDate}</Footer>
+        </LinkWrapper>
+      </Wrapper>
+    );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.frontMatter.slug === nextProps.frontMatter.slug;
+  }
+);
+
+export default Card;
