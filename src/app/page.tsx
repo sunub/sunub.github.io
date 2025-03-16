@@ -4,19 +4,19 @@ import Categories from "@/components/Main/Cateogries/Categories";
 import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import { getRecentPostsMetadata } from "db/blog";
+import { NewestPostSkeleton } from "@/components/Skeletons";
 
 const categories = ["cs", "web", "code", "algorithm"];
 
 const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
-  loading: () => (
-    <div className="flex flex-col items-center justify-center w-full">
-      <div>최근 게시물을 불러오는 중...</div>
-    </div>
-  ),
+  loading: () => <NewestPostSkeleton />,
   ssr: true,
 });
 
-function Page() {
+async function Page() {
+  const recentPostsMetadata = await getRecentPostsMetadata(10);
   return (
     <React.Fragment>
       <Styled.HeaderContentsWrapper>
@@ -25,7 +25,9 @@ function Page() {
       </Styled.HeaderContentsWrapper>
       <div id="blog-main__recently-post-list">
         <Styled.MainWrapper>
-          <NewestPost />
+          <Suspense fallback={<NewestPostSkeleton />}>
+            <NewestPost initialPosts={recentPostsMetadata} />
+          </Suspense>
           <Styled.RightSideWrapper>
             <Categories categories={categories} />
           </Styled.RightSideWrapper>
