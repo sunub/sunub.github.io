@@ -27,4 +27,9 @@ const CacheDataSchema = z.object({
   date: z.date(),
 });
 
+type PostCategory = z.infer<typeof PostCategorySchema>;
+type FrontMatter = z.infer<typeof FrontMatterSchema>;
+type CacheData = z.infer<typeof CacheDataSchema>;
+
 export { CacheDataSchema, FrontMatterSchema, PostCategorySchema };
+export type { CacheData, FrontMatter, PostCategory };
