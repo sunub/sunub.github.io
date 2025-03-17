@@ -5,11 +5,12 @@ import {
   ArticleWrapper,
   ArticleHeader,
 } from "./page.style";
-import { getPostBySlug, getPostMetadataBySlug, getAllPosts } from "db/blog";
+import { getPostMetadataBySlug, getAllPosts } from "db/blog";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ComponentSkeleton } from "@/components/Skeletons";
+import { StreamedMdxContent } from "@/components/ui/StreamedMdxContent";
 
 type Category = "code" | "web" | "cs" | "algorithm";
 
@@ -67,10 +68,10 @@ async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
 
-  const postMetadata = await getPostBySlug(category, slug);
+  const postMetadata = await getPostMetadataBySlug(category, slug);
   if (!postMetadata) return notFound();
+  const { title, date } = postMetadata;
 
-  const { title, date } = postMetadata.data;
   return (
     <React.Fragment>
       <Wave />
@@ -85,7 +86,7 @@ async function Page({ params }: { params: Params }) {
               headline: title,
               datePublished: date,
               dateModified: date,
-              description: postMetadata.data.summary,
+              description: postMetadata.summary,
               author: {
                 "@type": "Person",
                 name: "sun_ub",
@@ -114,7 +115,7 @@ async function Page({ params }: { params: Params }) {
         <ArticleWrapper id="blog-post__article">
           <Article>
             <Suspense fallback={<ComponentSkeleton />}>
-              <CustomMDXRemote source={postMetadata.content} />
+              <StreamedMdxContent category={category} slug={slug} />
             </Suspense>
           </Article>
         </ArticleWrapper>

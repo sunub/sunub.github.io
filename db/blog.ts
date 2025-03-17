@@ -7,12 +7,10 @@ import matter from "gray-matter";
 import { z } from "zod";
 import { unstable_cache } from "next/cache";
 import chokidar from "chokidar";
-import {
-  CacheDataSchema,
-  FrontMatterSchema,
-  PostCategorySchema,
-} from "@/types/schema";
-
+import { FrontMatterSchema, PostCategorySchema } from "@/types/schema";
+import { CacheDataSchema, type PostCategory } from "@/types/schema";
+import { createReadStream } from "fs";
+import { Readable } from "stream";
 type PostMetadata = z.infer<typeof FrontMatterSchema>;
 
 const DAY_IN_SECONDS = 86400;
@@ -425,6 +423,58 @@ class Blog {
       .filter((post) => post != null)
       .map((cached: CachedPost) => cached.data);
   }
+  async getPostAsStream(category: PostCategory, slug: string) {
+    return getPostStream(category, slug);
+  }
+
+  async getPostContentWithoutFrontmatter(category: PostCategory, slug: string) {
+    const cacheKey = this.#createCacheKey(category, slug);
+    if (this.#lruCache.has(cacheKey)) {
+      const cached = this.#lruCache.get(cacheKey);
+      return cached.data.content.replace(/---\n([\s\S]*?)\n---/, "");
+    }
+
+    const stream = await getPostStream(category, slug);
+    const content = await streamToString(stream);
+
+    await this.#loadSinglePost(
+      path.join(process.cwd(), "posts", category, `${slug}.mdx`),
+      category,
+      slug
+    );
+
+    return content.replace(/---\n([\s\S]*?)\n---/, "");
+  }
+}
+
+async function getPostStream(category: PostCategory, slug: string) {
+  const validCategory = PostCategorySchema.safeParse(category);
+  if (!validCategory.success) {
+    throw new Error(`올바르지 않은 카데고리 입니다 : ${category}`);
+  }
+  const filePath = path.join(STATIC_DIR, category, `${slug}.mdx`);
+  try {
+    await fs.access(filePath);
+  } catch (error) {
+    throw new Error(`${slug}와 관련된 포스트를 찾을 수 없습니다.`);
+  }
+
+  const fileStream = createReadStream(filePath);
+  const readableStream = Readable.toWeb(fileStream) as ReadableStream;
+  return readableStream;
+}
+
+async function streamToString(stream: ReadableStream) {
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  let content = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    content += decoder.decode(value, { stream: !done });
+  }
+  return content;
 }
 
 let blogInstance: Promise<Blog> | null = null;
@@ -541,6 +591,30 @@ export const getAllPosts = unstable_cache(
     return blog.getAllPosts().map((cached: CachedPost) => cached.data);
   },
   ["all-posts"],
+  {
+    revalidate: DAY_IN_SECONDS,
+    tags: ["posts"],
+  }
+);
+
+export const getPostStreamContent = unstable_cache(
+  async (category: PostCategory, slug: string): Promise<string> => {
+    const blog = await getBlogInstance();
+    return blog.getPostContentWithoutFrontmatter(category, slug);
+  },
+  ["post-stream-content"],
+  {
+    revalidate: DAY_IN_SECONDS,
+    tags: ["posts"],
+  }
+);
+
+export const getPostAsRawStream = unstable_cache(
+  async (category: PostCategory, slug: string): Promise<ReadableStream> => {
+    const blog = await getBlogInstance();
+    return blog.getPostAsStream(category, slug);
+  },
+  ["post-raw-stream"],
   {
     revalidate: DAY_IN_SECONDS,
     tags: ["posts"],
