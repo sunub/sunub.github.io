@@ -22,7 +22,7 @@ type Params = Promise<{
 export async function generateStaticParams() {
   const allPosts = await getAllPosts();
 
-  return allPosts.slice(0, 30).map(({ data }) => ({
+  return allPosts.map(({ data }) => ({
     category: data.category,
     slug: data.slug,
   }));
