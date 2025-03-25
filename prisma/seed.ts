@@ -1,37 +1,47 @@
+// prisma/seed.ts
+
 import { PrismaClient } from "@prisma/client";
-import { getBlogInstanceForSeed } from "db/blog";
+import { getPostsMetadataByCategory } from "db/blog/api";
 import chalk from "chalk";
 import ora from "ora";
 import { z } from "zod";
 import { CacheDataSchema } from "@/types/schema";
+import getBlogInstance from "db/blog/blog";
 
 interface RedirectPath {
   source: string;
   destination: string;
 }
 
+const blog = await getBlogInstance();
+type CategoryPostData = Awaited<
+  ReturnType<typeof blog.getPostsMetadataByCategory>
+>;
+
 const prisma = new PrismaClient();
 type MDXFile = z.infer<typeof CacheDataSchema>;
 
-const blog = await getBlogInstanceForSeed();
-const allWebPosts = await blog.getPostsByCategory("web");
-const allCSPosts = await blog.getPostsByCategory("cs");
-const allCodePosts = await blog.getPostsByCategory("code");
-const allAlgorithmPosts = await blog.getPostsByCategory("algorithm");
+// Blog 인스턴스 생성 및 각 카테고리의 포스트 가져오기
+const allWebPosts = await blog.getPostsMetadataByCategory("web");
+const allCSPosts = await blog.getPostsMetadataByCategory("cs");
+const allCodePosts = await blog.getPostsMetadataByCategory("code");
+const allAlgorithmPosts = await blog.getPostsMetadataByCategory("algorithm");
 
-async function seedPostFiles(data: MDXFile[], chunkSize = 25) {
-  const postData = data
-    .filter((post) => post.data)
-    .map((post) => {
-      const frontmatter = post.data;
-      return {
-        title: frontmatter.title,
-        category: frontmatter.category,
-        date: new Date(frontmatter.date),
-        summary: frontmatter.summary,
-        slug: frontmatter.slug,
-      };
-    });
+/**
+ * MDX 파일로부터 추출된 포스트 데이터를 Prisma의 Post 모델에 맞게 변환해 저장합니다.
+ * 주의: 여기서는 post.data가 아니라 post.metadata에 저장된 frontmatter 정보를 사용합니다.
+ */
+async function seedPostFiles(data: CategoryPostData, chunkSize = 25) {
+  const postData = data.map((post) => {
+    const metadata = post;
+    return {
+      title: metadata.title,
+      category: metadata.category,
+      date: new Date(metadata.date),
+      summary: metadata.summary,
+      slug: metadata.slug,
+    };
+  });
 
   const postChunks = [];
   for (let i = 0; i < postData.length; i += chunkSize) {
@@ -46,15 +56,14 @@ async function seedPostFiles(data: MDXFile[], chunkSize = 25) {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
-  const tagsData = data
-    .filter((post) => post.data)
-    .flatMap((post) => {
-      const frontMatter = post.data;
-      return frontMatter.tags.map((tag) => ({
-        name: tag,
-        postSlug: frontMatter.slug,
-      }));
-    });
+  // 태그 데이터 처리 (각 포스트의 metadata.tags 이용)
+  const tagsData = data.flatMap((post) => {
+    const metadata = post;
+    return metadata.tags.map((tag: string) => ({
+      name: tag,
+      postSlug: metadata.slug,
+    }));
+  });
 
   const tagsChunks = [];
   for (let i = 0; i < tagsData.length; i += chunkSize) {
@@ -66,18 +75,19 @@ async function seedPostFiles(data: MDXFile[], chunkSize = 25) {
       data: chunk,
       skipDuplicates: true,
     });
-
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 }
 
+/**
+ * MDX 파일에서 추출한 포스트의 frontmatter 정보를 기반으로 리다이렉트 경로를 생성합니다.
+ * 이때 역시 post.metadata를 사용합니다.
+ */
 async function createRedirectPaths() {
   const result: RedirectPath[] = [];
-  const processCategory = (posts: MDXFile[]) => {
+  const processCategory = (posts: CategoryPostData) => {
     for (const post of posts) {
-      if (!post.data) continue;
-
-      const { slug, category } = post.data;
+      const { slug, category } = post;
       const source = `/${category}/${slug}`;
       const destination = `/post/${category}/${slug}`;
       result.push({ source, destination });
@@ -94,21 +104,16 @@ async function createRedirectPaths() {
 
 async function seedRedirects() {
   const redirects = await createRedirectPaths();
-
-  // 청크 단위로 처리
   const chunkSize = 50;
   const chunks = [];
   for (let i = 0; i < redirects.length; i += chunkSize) {
     chunks.push(redirects.slice(i, i + chunkSize));
   }
-
   for (const chunk of chunks) {
     await prisma.redirects.createMany({
       data: chunk,
       skipDuplicates: true,
     });
-
-    // 자원 소비 방지를 위한 짧은 딜레이
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 }
@@ -121,14 +126,11 @@ async function cleanUpDB() {
   ).start();
   try {
     console.time("🧹 Cleaned up the database...");
-
-    // 트랜잭션으로 처리하여 원자성 보장
     await prisma.$transaction([
       prisma.tags.deleteMany(),
       prisma.post.deleteMany(),
       prisma.redirects.deleteMany(),
     ]);
-
     cleanupSpinner.succeed(chalk.green("Database has been cleaned up!!"));
     console.timeEnd("🧹 Cleaned up the database...");
   } catch (error) {
@@ -138,7 +140,6 @@ async function cleanUpDB() {
   log("\n");
 }
 
-// 메모리 사용량 최적화를 위해 개별 함수 실행
 async function seedingWebPost() {
   const webPostSpinner = ora(
     `${chalk.bold(chalk.blueBright("loading"))}...\n`
@@ -171,7 +172,7 @@ async function seedingCsPost() {
 
 async function seedingCodePost() {
   const codePostSpinner = ora(
-    `${chalk.bold(chalk.blueBright("loading"))}...`
+    `${chalk.bold(chalk.blueBright("loading"))}...\n`
   ).start();
   try {
     console.time("📝 Created code posts...");
@@ -201,7 +202,6 @@ async function seedingAlgoPost() {
     );
     console.error(error);
   }
-  log("\n");
 }
 
 async function seedingRedirectPath() {
@@ -217,19 +217,18 @@ async function seedingRedirectPath() {
     redirectsSpinner.fail(chalk.redBright("Failed to seed redirects"));
     console.error(error);
   }
-  log("\n");
 }
 
 async function seed() {
   log(chalk.bgGreen("\n Seeding..."));
   console.time(chalk.green(`🌱 Database has been seeded`));
 
-  // 데이터베이스 정리
+  // 데이터베이스 초기화(정리)
   await cleanUpDB();
 
   log(chalk.bgBlue(" Seed Post data..."));
 
-  // 순차 처리로 메모리 사용량 최적화
+  // 메모리 사용량 최적화를 위해 순차 처리
   await seedingWebPost();
   await seedingCsPost();
   await seedingCodePost();
