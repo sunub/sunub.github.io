@@ -1,6 +1,6 @@
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import { getRecentPostsMetadata } from "db/blog";
+import { getRecentPostsMetadata } from "db/blog/api";
 import { Suspense } from "react";
 import { PostSkeleton } from "@/components/Skeletons";
 import { z } from "zod";
