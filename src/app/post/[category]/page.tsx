@@ -2,7 +2,7 @@ import Wave from "@/components/HeaderContents/Wave";
 import Spacer from "@/components/Spacer";
 import { FrontmatterWrapper } from "./page.style";
 import Card from "@/components/Card";
-import { getPostsMetadataByCategory } from "db/blog";
+import { getPostsMetadataByCategory } from "db/blog/api";
 import { Suspense } from "react";
 import { CardsSkeleton } from "@/components/Skeletons";
 

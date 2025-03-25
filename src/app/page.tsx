@@ -5,7 +5,7 @@ import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { getRecentPostsMetadata } from "db/blog";
+import { getRecentPostsMetadata } from "db/blog/api";
 import { NewestPostSkeleton } from "@/components/Skeletons";
 
 const categories = ["cs", "web", "code", "algorithm"];

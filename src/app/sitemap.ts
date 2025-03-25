@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "db/blog";
+import { getAllPosts } from "db/blog/api";
 
 function updateCatetoryDate(
   allBlogPosts: Awaited<ReturnType<typeof getAllPosts>>
@@ -10,7 +10,7 @@ function updateCatetoryDate(
     cs: new Date(),
     algorithm: new Date(),
   };
-  allBlogPosts.forEach(({ data }) => {
+  allBlogPosts.forEach((data) => {
     const postDate = new Date(data.date);
     const category = data.category as keyof typeof result;
     if (postDate > result[category]) {
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const allBlogPosts = await getAllPosts();
 
   const categoryLatestUpdates = updateCatetoryDate(allBlogPosts);
-  const blogXML = allBlogPosts.map(({ data }, i) => ({
+  const blogXML = allBlogPosts.map((data, i) => ({
     url: `https://sunub.vercel.app/post/${data.category}/${data.slug}`,
     lastModified: new Date(data.date).toISOString(),
     changeFrequency: "monthly" as const,
