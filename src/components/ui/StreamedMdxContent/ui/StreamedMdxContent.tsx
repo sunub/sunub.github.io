@@ -1,7 +1,6 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { PostArticleComponents } from "@/components/ui/PostArticleComponents";
 import { type PostCategory } from "@/types/schema";
-import { getPostStreamContent } from "db/blog";
 import { Fragment, Suspense } from "react";
 import { ComponentSkeleton } from "@/components/Skeletons";
 
@@ -28,18 +27,7 @@ async function StreamedMdxContent({
   category: PostCategory;
   slug: string;
 }) {
-  const contentWithoutFrontmatter = await getPostStreamContent(category, slug);
-  const sections = splitContentIntoSections(contentWithoutFrontmatter);
-
-  return (
-    <Fragment>
-      {sections.map((section, index) => (
-        <Suspense key={index} fallback={<ComponentSkeleton />}>
-          <MdxSection content={section} />
-        </Suspense>
-      ))}
-    </Fragment>
-  );
+  return <Fragment></Fragment>;
 }
 
 export { StreamedMdxContent };
