@@ -2,6 +2,7 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 import { PrismaClient } from "@prisma/client";
+import CopyPlugin from "copy-webpack-plugin";
 
 const nextConfig: NextConfig = {
   basePath: "",
@@ -24,6 +25,21 @@ const nextConfig: NextConfig = {
       pure: true,
       cssProp: false,
     },
+  },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins.push(
+        new CopyPlugin({
+          patterns: [
+            {
+              from: "db/workers",
+              to: "db/workers",
+            },
+          ],
+        })
+      );
+    }
+    return config;
   },
 
   compress: true,
