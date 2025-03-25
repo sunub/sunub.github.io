@@ -3,6 +3,7 @@ import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 import { PrismaClient } from "@prisma/client";
 import CopyPlugin from "copy-webpack-plugin";
+import path from "path";
 
 const nextConfig: NextConfig = {
   basePath: "",
@@ -32,8 +33,9 @@ const nextConfig: NextConfig = {
         new CopyPlugin({
           patterns: [
             {
-              from: "db/workers",
+              from: "dist/db/workers", // 컴파일된 파일이 있는 디렉토리
               to: "db/workers",
+              noErrorOnMissing: true, // 파일이 없어도 오류를 발생시키지 않음
             },
           ],
         })

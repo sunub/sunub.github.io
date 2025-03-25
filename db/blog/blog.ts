@@ -5,16 +5,11 @@ import chalk from "chalk";
 import path from "node:path";
 import chokidar from "chokidar";
 import { Worker } from "node:worker_threads";
-import { type WorkerMessage } from "./cache";
-import { ROOT_BLOG_PATH } from "./constants";
 import {
   FrontMatter,
   FrontMatterSchema,
-  PostCategory,
   PostCategorySchema,
 } from "@/types/schema";
-import { LRUCacheInstance } from "./cache";
-import { LRUCache } from "lru-cache";
 import { debounce } from "@/shared/utils/debounce";
 
 type WorkerList = {
@@ -27,24 +22,37 @@ type PostData = {
   content: string[];
 };
 
+type PostMetadata = z.infer<typeof FrontMatterSchema>;
+
+type WorkerMessage = {
+  type: "data" | "fileComplete" | "done" | "error" | "change";
+  chunk: string;
+  content?: string;
+  slug: string;
+  frontmatter: PostMetadata;
+};
+
+type PostCategory = z.infer<typeof PostCategorySchema>;
+const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
+
 type PostKey = `posts:${PostCategory}:${string}`;
 type PostContentKey = `posts:content:${PostCategory}:${string}`;
 
 const workerIdList: WorkerList[] = [
   {
-    path: path.resolve(process.cwd(), "./db/workers/algorithm.worker.js"),
+    path: path.resolve(process.cwd(), "./dist/db/workers/algorithm.worker.js"),
     tag: "algorithm",
   },
   {
-    path: path.resolve(process.cwd(), "./db/workers/code.worker.js"),
+    path: path.resolve(process.cwd(), "./dist/db/workers/code.worker.js"),
     tag: "code",
   },
   {
-    path: path.resolve(process.cwd(), "./db/workers/cs.worker.js"),
+    path: path.resolve(process.cwd(), "./dist/db/workers/cs.worker.js"),
     tag: "cs",
   },
   {
-    path: path.resolve(process.cwd(), "./db/workers/web.worker.js"),
+    path: path.resolve(process.cwd(), "./dist/db/workers/web.worker.js"),
     tag: "web",
   },
 ];
@@ -52,7 +60,6 @@ const workerIdList: WorkerList[] = [
 class Blog {
   #__workers: Map<PostCategory, Worker> = new Map();
   #__updateLock: Promise<void> = Promise.resolve();
-  #__lruCache: LRUCache<string, any, unknown> = LRUCacheInstance;
   sortedPosts: PostData[] = [];
   blogContents: Map<PostContentKey, string[]> = new Map();
   algorithm: Map<string, FrontMatter> = new Map();
@@ -66,7 +73,6 @@ class Blog {
   private static initializationPromise: Promise<Blog> | null = null;
 
   constructor() {
-    this.#__lruCache = LRUCacheInstance;
     const watcher = chokidar.watch(ROOT_BLOG_PATH, {
       persistent: true,
       ignoreInitial: true,
@@ -194,7 +200,6 @@ class Blog {
     const PostContentKey = this.#__createPostContentKey(category, slug);
 
     this[category].set(postKey, { ...frontmatter });
-    this.#__lruCache.set(cacheKey, { data: frontmatter, content });
     this.blogContents.set(PostContentKey, content);
 
     const post = { frontmatter, content, cacheKey };

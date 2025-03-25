@@ -3,7 +3,8 @@
 import getBlogInstance from "./blog";
 import { type PostCategory } from "@/types/schema";
 import { unstable_cache } from "next/cache";
-import { DAY_IN_SECONDS } from "./constants";
+
+const DAY_IN_SECONDS = 86400;
 
 export const getRecentPostsMetadata = unstable_cache(
   async (count: number = 10) => {

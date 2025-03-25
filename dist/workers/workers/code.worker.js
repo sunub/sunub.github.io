@@ -1,14 +1,14 @@
 "use server";
-import { readFileProcess } from "../workers/worker.js";
+import { readFileProcess } from "./worker.js";
 import { parentPort, workerData } from "worker_threads";
 readFileProcess()
-  .then(() => {
+    .then(() => {
     parentPort?.postMessage({ type: "done", content: workerData.tag });
-  })
-  .catch((error) => {
+})
+    .catch((error) => {
     parentPort?.postMessage({
-      type: "error",
-      content: error.message,
+        type: "error",
+        content: error.message,
     });
-  });
-//# sourceMappingURL=web.worker.js.map
+});
+//# sourceMappingURL=code.worker.js.map

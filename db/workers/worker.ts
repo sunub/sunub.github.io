@@ -3,11 +3,23 @@
 import { parentPort, workerData } from "worker_threads";
 import path from "path";
 import { readdir, stat } from "fs/promises";
-import { ROOT_BLOG_PATH, type PostCategory } from "./constants";
 import { createReadStream } from "fs";
 import matter from "gray-matter";
 import { z } from "zod";
-import { WorkerMessage } from "../blog/cache";
+
+export type PostCategory = z.infer<typeof PostCategorySchema>;
+export const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
+export const DAY_IN_SECONDS = 86400;
+
+type PostMetadata = z.infer<typeof FrontMatterSchema>;
+
+type WorkerMessage = {
+  type: "data" | "fileComplete" | "done" | "error" | "change";
+  chunk: string;
+  content?: string;
+  slug: string;
+  frontmatter: PostMetadata;
+};
 
 const PostCategorySchema = z.union([
   z.literal("web"),
