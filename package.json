@@ -2,9 +2,11 @@
   "name": "sunub.github.io",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:workers": "tsc --project tsconfig.worker.json",
     "start": "next build && next start -p 4004",
     "lint": "next lint",
     "analyze": "cross-env ANALYZE=true npm run build",
@@ -138,7 +140,13 @@
     "onlyBuiltDependencies": [
       "@prisma/client",
       "@prisma/engines",
-      "prisma"
+      "@swc/core",
+      "@vercel/speed-insights",
+      "bufferutil",
+      "esbuild",
+      "prisma",
+      "sharp",
+      "utf-8-validate"
     ]
   }
 }
