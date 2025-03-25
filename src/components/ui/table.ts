@@ -11,11 +11,22 @@ function convertTableBlockToHTML(tableLines: string[]) {
       .trim()
       .split("|")
       .map((cell) => cell.trim())
-      .filter((cell) => cell.length > 0),
+      .filter((cell) => cell.length > 0)
   );
 
-  const thead = `<thead><tr>${headers.map((header) => `<th>${header}</th>`).join("")}</tr></thead>`;
-  const tbody = `<tbody>${rows.map((row) => `<tr>${row.map((cell) => `<td className="p-4 text-[.95rem] border-b">${cell}</td>`).join("")}</tr>`).join("")}</tbody>`;
+  const thead = `<thead><tr>${headers
+    .map((header) => `<th>${header}</th>`)
+    .join("")}</tr></thead>`;
+  const tbody = `<tbody>${rows
+    .map(
+      (row) =>
+        `<tr>${row
+          .map(
+            (cell) => `<td className="p-4 text-[.95rem] border-b">${cell}</td>`
+          )
+          .join("")}</tr>`
+    )
+    .join("")}</tbody>`;
   return `<table cellPadding="0" cellSpacing="0">${thead}${tbody}</table>`;
 }
 
