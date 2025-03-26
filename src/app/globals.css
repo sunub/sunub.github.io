@@ -420,6 +420,18 @@ li.active > a {
   }
 }
 
+@keyframes upAndDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.5rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 /* 다크 모드 전환을 위한 스타일 */
 html[data-color-theme="dark"] .shiki,
 html[data-color-theme="dark"] .shiki span {
