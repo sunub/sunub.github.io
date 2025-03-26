@@ -9,7 +9,24 @@ import ThemeToggler from "@/components/Theme/Toggler/ThemeToggler";
 import * as Styled from "./MoblieNav.style";
 import gsap from "gsap";
 
-const CATEGORIES = ["algorithm", "code", "cs", "web"];
+const CATEGORIES = [
+  {
+    name: "cs",
+    href: "/post/cs",
+  },
+  {
+    name: "web",
+    href: "/post/web",
+  },
+  {
+    name: "code",
+    href: "/post/code",
+  },
+  {
+    name: "algorithm",
+    href: "/post/algorithm",
+  },
+];
 
 export interface RefObjects {
   pathStartRef: React.RefObject<SVGPathElement>;
@@ -60,16 +77,16 @@ function MobileNav(props: Props) {
         <Styled.NavigationWrapper>
           <Styled.Wrapper $isOpen={isOpen}>
             <Styled.ListWrapper id="moblie-nav__link-wrapper">
-              <Item name="latest" onClick={handleClick} />
-              <Item name="posts" onClick={handleClick} />
-              {CATEGORIES.map((category: string) => (
+              <Item name="latest" href={"/"} onClick={handleClick} />
+              <Item name="posts" href="" onClick={handleClick} />
+              {CATEGORIES.map(({ name, href }) => (
                 <Item
-                  name={category}
-                  key={`${category}-page`}
+                  name={name}
+                  key={`${href}-page`}
+                  href={href}
                   onClick={handleClick}
                 />
               ))}
-              <Item name="about" onClick={handleClick} />
             </Styled.ListWrapper>
 
             <Styled.ThemeWrapper className="mobile-nav__link-items">
@@ -83,10 +100,18 @@ function MobileNav(props: Props) {
   );
 }
 
-function Item({ name, onClick }: { name: string; onClick: () => void }) {
+function Item({
+  name,
+  href,
+  onClick,
+}: {
+  name: string;
+  href: string;
+  onClick: () => void;
+}) {
   return (
     <Styled.List className="mobile-nav__link-items">
-      <Styled.Item href={`${name}`} onClick={onClick}>
+      <Styled.Item href={href} onClick={onClick}>
         {name}
       </Styled.Item>
     </Styled.List>
