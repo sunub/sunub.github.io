@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import * as Styled from "../Header.style";
-import Spacer from "@/components/Spacer";
-import React from "react";
+import React, { memo } from "react";
 import useToggle from "@/hooks/use-toggle";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
+import { CpuIcon, GlobeIcon, BinaryIcon, PiIcon } from "lucide-react";
 
 function Navigation() {
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -40,29 +40,19 @@ function Navigation() {
         <Styled.NavigationWrapper>
           <Styled.NavigationItem>
             <Styled.PostNaviation>
-              <span className="select-none">post</span>
-              <Spacer axis={"horizonal"} size={8} />
-              <button onClick={toggleOpen} ref={buttonRef}>
-                <svg
-                  width="15"
-                  height="9"
-                  viewBox="0 0 15 9"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M1.73438 1.98438L6.32019 6.59402C7.10063 7.37852 8.36978 7.38018 9.15226 6.59771L13.7656 1.9845"
-                    stroke="var(--color-navlink)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
+              <Button
+                onClick={toggleOpen}
+                ref={buttonRef}
+                className="select-none"
+              >
+                카테고리들
+                <UnderLineWaveIcon />
+              </Button>
               <PortalRef id="post-dropdown-portal" ref={portalRef} />
               {isOpen &&
                 createPortal(
                   <DropDownMenu toggleOpen={toggleOpen} />,
-                  portalRef.current!,
+                  portalRef.current!
                 )}
             </Styled.PostNaviation>
           </Styled.NavigationItem>
@@ -76,20 +66,85 @@ function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
   return (
     <DropDownMenuWrapper>
       <LinkTag href={"/post/cs"} onClick={toggleOpen}>
+        <CpuIcon size={16} />
         cs
       </LinkTag>
       <LinkTag href={"/post/web"} onClick={toggleOpen}>
+        <GlobeIcon size={16} />
         web
       </LinkTag>
       <LinkTag href={"/post/code"} onClick={toggleOpen}>
+        <BinaryIcon size={16} />
         code
       </LinkTag>
       <LinkTag href={"/post/algorithm"} onClick={toggleOpen}>
+        <PiIcon size={16} />
         algorithm
       </LinkTag>
     </DropDownMenuWrapper>
   );
 }
+
+const UnderLineWaveIcon = memo(
+  ({
+    width = 3,
+    scale = "1.25, 1",
+    length = 0.6,
+    delay = 0.5,
+  }: {
+    width?: number;
+    scale?: string;
+    length?: number;
+    delay?: number;
+  }) => {
+    return (
+      <UnderLineWaveSVG
+        xmlns="http://www.w3.org/2000/svg"
+        width="700"
+        height="11"
+        fill="none"
+      >
+        <UnderLineWavePath
+          d="M3 5.19c4-1.69 14-4.31 16.5 0s4.833 3.747 8.5 0c2.684-2.742 6.472-3.093 9.5 0 3.667 3.747 6.26 3.31 9.5 0 2.633-2.69 6 3.31 11 0 3.459-2.29 5.333 3.747 9 0 3.667-3.746 5.292 5.81 13 0 4.896-3.69 5.248 4.566 11.5 0"
+          strokeWidth={width}
+          transform={`scale(${scale})`}
+          pathLength={length}
+          $delay={delay}
+        />
+      </UnderLineWaveSVG>
+    );
+  }
+);
+
+const UnderLineWaveSVG = styled.svg`
+  position: absolute;
+  top: 35px;
+  left: -5px;
+
+  stroke: var(--color-text);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+`;
+
+const UnderLineWavePath = styled.path<{ $delay: number }>`
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.7, 0, 0.3, 1);
+
+  stroke-dashoffset: 1;
+  transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
+  transition-duration: 350ms;
+  stroke: color-mix(in oklch, var(--color-text), transparent);
+`;
+
+const Button = styled.button`
+  :hover {
+    ${UnderLineWavePath} {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+`;
 
 const PortalRef = styled.div`
   position: absolute;
@@ -107,6 +162,7 @@ const DropDownMenuWrapper = styled.div`
   background-color: var(--color-frontWave);
   border-radius: 1rem;
   padding: 1rem 1.5rem;
+
   filter: drop-shadow(0 -5.9px 2.7px oklch(21.18% 0 12 / 0.025))
     drop-shadow(0 -1.2px 6.9px oklch(21.18% 0 12 / 0.025))
     drop-shadow(0 8px 14.2px oklch(21.18% 0 12 / 0.05))
@@ -120,15 +176,20 @@ const DropDownMenuWrapper = styled.div`
     content: "";
     position: absolute;
     top: -14px;
-    left: 49px;
+    left: 41px;
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   }
 `;
 
 const LinkTag = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
   &:hover {
-    font-weight: 700;
-    color: var(--color-highlight);
+    background: color-mix(in oklch, var(--color-highlight), transparent 80%);
   }
 `;
 
