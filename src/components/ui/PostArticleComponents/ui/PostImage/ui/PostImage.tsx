@@ -141,12 +141,13 @@ const PostImage = memo(
                 {isLoading && (
                   <div className="absolute inset-0 bg-gray-200 animate-pulse" />
                 )}
+                {/* priority를 inView와 결합하여 전달 */}
                 <CustomImage
                   src={src}
                   alt={alt}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}
-                  priority={priority}
+                  priority={priority && inView}
                 />
               </>
             )}
@@ -168,6 +169,7 @@ const PostImage = memo(
                   setIsLoading={setIsLoading}
                   type="wide"
                   additionalStyle="cursor-zoom-out z-[10000]"
+                  // zoomed image는 별도의 priority 처리가 필요하지 않음
                 />
               </ZoomedImage>
               <BlurredBackground />
