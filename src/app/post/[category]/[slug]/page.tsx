@@ -12,6 +12,7 @@ import {
 } from "db/blog/api";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
+import CustomMDXRemote from "@/components/ui/customMdxRemote";
 
 export const revalidate = 86400;
 
@@ -62,10 +63,6 @@ export async function generateMetadata({ params }: { params: Params }) {
     },
   };
 }
-
-const CustomMDXRemote = React.lazy(
-  () => import("@/components/ui/customMdxRemote")
-);
 
 async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;

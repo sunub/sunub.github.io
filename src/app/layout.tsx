@@ -5,8 +5,6 @@ import React from "react";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import localFont from "next/font/local";
 import clsx from "clsx";
 import { cookies } from "next/headers";
@@ -131,8 +129,6 @@ export default async function RootLayout({
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
