@@ -68,6 +68,8 @@ function validateFrontMatter(
 class Blog {
   #__workers: Map<PostCategory, Worker> = new Map();
   #__updateLock: Promise<void> = Promise.resolve();
+  #__completedFiles: Set<string> = new Set();
+
   sortedPosts: PostData[] = [];
   blogContents: Map<PostContentKey, string[]> = new Map();
   algorithm: Map<string, FrontMatter> = new Map();
@@ -231,6 +233,9 @@ class Blog {
 
         worker.postMessage(tag);
         worker.on("message", (message: WorkerMessage) => {
+          const fileKey = `${tag}-${message.slug}`;
+          if (this.#__completedFiles.has(fileKey)) return;
+
           switch (message.type) {
             case "data":
               const { chunk } = message;
@@ -243,6 +248,7 @@ class Blog {
               }
               break;
             case "fileComplete":
+              if (this.#__completedFiles.has(fileKey)) return;
               if (frontmatter && content.length) {
                 this.#__storeResultByCategoryAndSlug(
                   tag,
@@ -251,6 +257,7 @@ class Blog {
                   content
                 );
               }
+              this.#__completedFiles.add(fileKey);
               frontmatter = null;
               content = [];
               break;
@@ -291,8 +298,16 @@ class Blog {
   }
 }
 
+declare global {
+  var __BLOG_INSTANCE__: Blog | undefined;
+}
+
 const getBlogInstance = async () => {
-  return Blog.getInstance();
+  if (global.__BLOG_INSTANCE__ && global.__BLOG_INSTANCE__.isInitialized) {
+    return global.__BLOG_INSTANCE__;
+  }
+  global.__BLOG_INSTANCE__ = await Blog.getInstance();
+  return global.__BLOG_INSTANCE__;
 };
 
 export default getBlogInstance;
