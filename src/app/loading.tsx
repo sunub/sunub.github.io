@@ -1,64 +1,185 @@
 "use client";
 
-import { Wave } from "@/widgets/Wave";
-import {
-  ArticleHeader,
-  PostTitle,
-  ArticleWrapper,
-  Article,
-} from "./loading.style";
 import styled from "styled-components";
-
-const Dot = styled.span<{ $delay?: number }>`
-  font-size: 4rem;
-  animation: fadeIn 1s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
-  animation-delay: ${({ $delay }) => $delay}s;
-`;
-
-const Dash = styled.span<{ $delay?: number }>`
-  font-size: 2rem;
-  animation: fadeIn 1s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
-  animation-delay: ${({ $delay }) => $delay}s;
-`;
-
-const Bar = styled.div`
-  width: 100%;
-  height: 70px;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-`;
+import HeroImage from "@/components/HeroImage";
+import Wave from "@/components/HeaderContents/Wave";
+import { UnderLineWaveIcon } from "@/components/UnderLineWaveIcon";
 
 export default function Loading() {
   return (
     <>
-      <Wave />
-      <main className="bg-base">
-        <ArticleHeader>
-          <PostTitle>
-            <Dot $delay={0.1}>.</Dot>
-            <Dot $delay={0.2}>.</Dot>
-            <Dot $delay={0.3}>.</Dot>
-            <Dot $delay={0.4}>.</Dot>
-            <Dot $delay={0.5}>.</Dot>
-            <Dot $delay={0.6}>.</Dot>
-            <Dot $delay={0.7}>.</Dot>
-            <Dot $delay={0.8}>.</Dot>
-          </PostTitle>
-          <div>
-            <Dash $delay={0.6}>.</Dash>
-            <Dash $delay={0.5}>.</Dash>
-            <Dash $delay={0.4}>.</Dash>
-            <Dash $delay={0.3}>.</Dash>
-            <Dash $delay={0.2}>.</Dash>
-            <Dash $delay={0.1}>.</Dash>
-          </div>
-        </ArticleHeader>
-        <ArticleWrapper>
-          <Article>
-            <Bar />
-          </Article>
-        </ArticleWrapper>
-      </main>
+      <HeaderContentsWrapper>
+        <HeroImage />
+        <Wave />
+      </HeaderContentsWrapper>
+      <BodyWrapper id="blog-main__recently-post-list">
+        <TitleRootWrapper>
+          <TitleWrapper>
+            <UnderLineWaveIcon scale="3.25, 1" />
+          </TitleWrapper>
+          <BlogPostList>
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-1"}
+              scale="4.25, 1"
+              delay={0.25}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-2"}
+              width={4}
+              scale="7.25, 1"
+              delay={0.5}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-3"}
+              scale="7.25, 1"
+              delay={0.75}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-4"}
+              width={4}
+              scale="7.25, 1"
+              delay={1}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-5"}
+              scale="7.25, 1"
+              delay={0.25}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-6"}
+              width={4}
+              scale="7.25, 1"
+              delay={0.5}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-7"}
+              scale="7.25, 1"
+              delay={1}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-8"}
+              width={4}
+              scale="7.25, 1"
+              delay={0.25}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-9"}
+              scale="7.25, 1"
+              delay={0.5}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-10"}
+              width={4}
+              scale="7.25, 1"
+              delay={0.75}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-11"}
+              scale="7.25, 1"
+              delay={1}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-12"}
+              width={4}
+              scale="7.25, 1"
+              delay={0.25}
+            />
+            <UnderLineWaveIcon
+              key={"underline-loading-animation-13"}
+              scale="7.25, 1"
+              delay={0.5}
+            />
+          </BlogPostList>
+        </TitleRootWrapper>
+        <MainWrapper>
+          <RightSideWrapper></RightSideWrapper>
+        </MainWrapper>
+      </BodyWrapper>
     </>
   );
 }
+
+const BodyWrapper = styled.div`
+  padding-left: 64px;
+`;
+
+const TitleDot = styled.span`
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: calc(-1rem - 8px);
+  top: calc(1rem - 5px);
+  background: var(--color-text);
+  width: 2px;
+  height: 16px;
+  border-radius: 4px;
+
+  transition: all 250ms cubic-bezier(0.19, -0.49, 0.64, 1.48);
+`;
+
+const BlogPostList = styled.div`
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  flex-direction: column;
+  padding-left: 1rem;
+`;
+
+const TitleRootWrapper = styled.div`
+  grid-area: newest;
+  font-family: var(--nanum-round), serif;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  flex-direction: column;
+`;
+
+const HeaderContentsWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+const MainWrapper = styled.main`
+  display: grid;
+  position: relative;
+  grid-template:
+    "newest categories"
+    "newest tags" 1fr / 2fr 1fr;
+
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+
+  gap: 64px 96px;
+  padding-left: 48px;
+  padding-right: 48px;
+
+  @media screen and (max-width: 786px) {
+    grid-template:
+      "newest"
+      "newset" 1fr / 1fr;
+
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+`;
+
+const RightSideWrapper = styled.div`
+  position: sticky;
+  top: 4rem;
+  left: 0;
+
+  @media screen and (max-width: 786px) {
+    display: none;
+  }
+`;
