@@ -3,55 +3,20 @@ import { parentPort, workerData } from "worker_threads";
 import path from "path";
 import { readdir, stat } from "fs/promises";
 import { createReadStream } from "fs";
-import matter from "gray-matter";
-import { z } from "zod";
 export const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
 export const DAY_IN_SECONDS = 86400;
-const PostCategorySchema = z.union([
-    z.literal("web"),
-    z.literal("algorithm"),
-    z.literal("cs"),
-    z.literal("code"),
-]);
-const FrontMatterSchema = z.object({
-    title: z.string(),
-    date: z.date(),
-    tags: z.array(z.string()),
-    summary: z.string(),
-    slug: z.string(),
-    category: PostCategorySchema,
-    completed: z.boolean(),
-});
-const FRONTMATTER_REGEX = /^---\n([\s\S]*?)\n---\n([\s\S]*)/;
-function validateFrontMatter(data) {
-    return FrontMatterSchema.safeParse(data).success;
-}
 async function processFile(fullPath, file) {
     if (!parentPort)
         return;
     try {
-        let frontmatter = null;
         const slug = file.split(".")[0];
         const readStream = createReadStream(fullPath, { encoding: "utf-8" });
         for await (const chunk of readStream) {
-            if (!frontmatter && FRONTMATTER_REGEX.test(chunk)) {
-                const { data, content } = matter(chunk);
-                if (validateFrontMatter(data))
-                    frontmatter = data;
-                parentPort.postMessage({
-                    type: "data",
-                    slug,
-                    frontmatter,
-                    content,
-                });
-            }
-            else {
-                parentPort.postMessage({
-                    type: "data",
-                    slug,
-                    content: chunk,
-                });
-            }
+            parentPort.postMessage({
+                type: "data",
+                slug,
+                chunk,
+            });
         }
         parentPort.postMessage({
             type: "fileComplete",
@@ -100,26 +65,12 @@ async function readFile(filePath, slug) {
         return;
     try {
         const readStream = createReadStream(filePath, { encoding: "utf-8" });
-        let frontmatter = null;
         for await (const chunk of readStream) {
-            if (!frontmatter && FRONTMATTER_REGEX.test(chunk)) {
-                const { data, content: fileContent } = matter(chunk);
-                if (validateFrontMatter(data))
-                    frontmatter = data;
-                parentPort.postMessage({
-                    type: "data",
-                    frontmatter,
-                    content: fileContent,
-                    slug,
-                });
-            }
-            else {
-                parentPort.postMessage({
-                    type: "data",
-                    content: chunk,
-                    slug,
-                });
-            }
+            parentPort.postMessage({
+                type: "data",
+                chunk,
+                slug,
+            });
         }
         parentPort.postMessage({
             type: "fileComplete",

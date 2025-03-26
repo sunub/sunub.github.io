@@ -11,6 +11,7 @@ import {
   PostCategorySchema,
 } from "@/types/schema";
 import { debounce } from "@/shared/utils/debounce";
+import matter from "gray-matter";
 
 type WorkerList = {
   path: string;
@@ -56,6 +57,13 @@ const workerIdList: WorkerList[] = [
     tag: "web",
   },
 ];
+
+const FRONTMATTER_REGEX = /^---\n([\s\S]*?)\n---\n([\s\S]*)/;
+function validateFrontMatter(
+  data: any
+): data is z.infer<typeof FrontMatterSchema> {
+  return FrontMatterSchema.safeParse(data).success;
+}
 
 class Blog {
   #__workers: Map<PostCategory, Worker> = new Map();
@@ -225,11 +233,13 @@ class Blog {
         worker.on("message", (message: WorkerMessage) => {
           switch (message.type) {
             case "data":
-              if (message.frontmatter) {
-                frontmatter = message.frontmatter;
-              }
-              if (message.content) {
-                content.push(message.content);
+              const { chunk } = message;
+              if (!frontmatter && FRONTMATTER_REGEX.test(chunk)) {
+                const { data, content: fileContent } = matter(chunk);
+                if (validateFrontMatter(data)) frontmatter = data;
+                content.push(fileContent);
+              } else {
+                content.push(chunk);
               }
               break;
             case "fileComplete":
