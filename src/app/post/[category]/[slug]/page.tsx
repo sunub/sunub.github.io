@@ -12,7 +12,7 @@ import {
 } from "db/blog/api";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
-import CustomMDXRemote from "@/components/ui/customMdxRemote";
+import dynamic from "next/dynamic";
 
 export const revalidate = 86400;
 
@@ -63,6 +63,13 @@ export async function generateMetadata({ params }: { params: Params }) {
     },
   };
 }
+
+const CustomMDXRemoteComponents = dynamic(
+  () => import("@/components/ui/customMdxRemote"),
+  {
+    ssr: true,
+  }
+);
 
 async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
@@ -115,7 +122,7 @@ async function Page({ params }: { params: Params }) {
         </ArticleHeader>
         <ArticleWrapper id="blog-post__article">
           <Article>
-            <CustomMDXRemote source={source.join("\n")} />
+            <CustomMDXRemoteComponents source={source.join("\n")} />
           </Article>
         </ArticleWrapper>
       </main>
