@@ -5,14 +5,11 @@ import {
   ArticleWrapper,
   ArticleHeader,
 } from "./page.style";
-import {
-  getPostMetadataBySlug,
-  getAllPosts,
-  getPostContents,
-} from "db/blog/api";
+import { getPostMetadataBySlug, getAllPosts } from "db/blog/api";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
+import getBlogInstance from "db/blog/blog";
 
 export const revalidate = 86400;
 
@@ -36,7 +33,8 @@ export async function generateMetadata({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
 
-  const postData = await getPostMetadataBySlug(category, slug);
+  const blog = await getBlogInstance();
+  const postData = blog.getPostMetadataBySlug(category, slug);
   if (!postData) return notFound();
 
   const { title, summary, date, tags } = postData;
@@ -75,10 +73,10 @@ async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
 
-  const postMetadata = await getPostMetadataBySlug(category, slug);
+  const blog = await getBlogInstance();
+  const postMetadata = blog.getPostMetadataBySlug(category, slug);
   if (!postMetadata) return notFound();
   const { title, date } = postMetadata;
-  const source = await getPostContents(category, slug);
 
   return (
     <React.Fragment>
@@ -122,7 +120,7 @@ async function Page({ params }: { params: Params }) {
         </ArticleHeader>
         <ArticleWrapper id="blog-post__article">
           <Article>
-            <CustomMDXRemoteComponents source={source.join("\n")} />
+            <CustomMDXRemoteComponents category={category} slug={slug} />
           </Article>
         </ArticleWrapper>
       </main>

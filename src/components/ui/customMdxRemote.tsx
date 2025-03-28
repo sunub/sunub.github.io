@@ -3,6 +3,12 @@ import React, { Suspense } from "react";
 import { PostArticleComponents } from "./PostArticleComponents";
 import { ComponentSkeleton } from "../Skeletons";
 import { Readable, Transform, TransformCallback, Writable } from "node:stream";
+import { PostCategory } from "@/types/schema";
+
+const URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_BASE_URL
+    : "http://localhost:3000";
 
 function createSourceStream(
   source: string,
@@ -124,15 +130,28 @@ async function transformSource(source: string): Promise<string> {
 }
 
 const components = PostArticleComponents;
-async function CustomMDXRemote(props: MDXRemoteProps) {
-  const transformed = await transformSource(props.source as string);
+async function CustomMDXRemote({
+  category,
+  slug,
+}: {
+  category: PostCategory;
+  slug: string;
+}) {
+  console.log(category, slug);
+  const res = await fetch(URL + `/api/post/${category}/${slug}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+  });
+  const { content } = await res.json();
+  if (!content) throw new Error("컨텐츠를 가져오지 못했습니다.");
+  const transformed = await transformSource(content as string);
 
   return (
     <Suspense fallback={<ComponentSkeleton />}>
-      <MDXRemote
-        source={transformed}
-        components={{ ...components, ...(props.components || {}) }}
-      />
+      <MDXRemote source={transformed} components={{ ...components }} />
     </Suspense>
   );
 }
