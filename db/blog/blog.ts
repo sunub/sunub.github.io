@@ -4,7 +4,6 @@ import { z } from "zod";
 import chalk from "chalk";
 import path from "node:path";
 import chokidar from "chokidar";
-import { createReadStream } from "fs";
 import matter from "gray-matter";
 import {
   FrontMatter,
@@ -26,12 +25,6 @@ type PostCategory = z.infer<typeof PostCategorySchema>;
 type PostKey = `posts:${PostCategory}:${string}`;
 type PostContentKey = `posts:content:${PostCategory}:${string}`;
 
-function validateFrontMatter(
-  data: any
-): data is z.infer<typeof FrontMatterSchema> {
-  return FrontMatterSchema.safeParse(data).success;
-}
-
 const readMdxFile = cache(async (filePath: string) => {
   return await readFile(filePath, "utf8");
 });
@@ -48,9 +41,7 @@ const parseFrontMatter = cache((content: string) => {
 });
 
 class Blog {
-  // worker 관련 코드는 모두 제거되었습니다.
   #__updateLock: Promise<void> = Promise.resolve();
-  #__completedFiles: Set<string> = new Set();
 
   sortedPosts: PostData[] = [];
   blogContents: Map<PostContentKey, string[]> = new Map();
@@ -65,7 +56,6 @@ class Blog {
   private static initializationPromise: Promise<Blog> | null = null;
 
   constructor() {
-    // 파일 변경을 감지하여 직접 processFile 호출
     const watcher = chokidar.watch(ROOT_BLOG_PATH, {
       persistent: true,
       ignoreInitial: true,
@@ -180,31 +170,17 @@ class Blog {
     return Blog.initializationPromise;
   }
 
-  async #__storeResultByCategoryAndSlug(
-    category: PostCategory,
-    slug: string,
-    frontmatter: z.infer<typeof FrontMatterSchema>
-  ) {
-    const postKey = this.#__createPostKey(category, slug);
-    this[category].set(postKey, { ...frontmatter });
-
-    const post = { frontmatter, postKey };
-    this.insertPostSorted(post);
-  }
-
   async getPostsMetadataByCategory(category: PostCategory) {
     const targetPosts = this[category];
     return [...targetPosts.values()];
   }
 
-  // 특정 슬러그의 포스트 가져오기 (캐싱)
   getPostMetadataBySlug(category: PostCategory, slug: string) {
     const postKey = this.#__createPostKey(category, slug);
     return this[category].get(postKey);
   }
 
   async initialize(): Promise<void> {
-    console.time("Blog Initialization");
     const categories: PostCategory[] = ["algorithm", "code", "cs", "web"];
     await Promise.all(
       categories.map((category) => this.processCategory(category))
@@ -216,8 +192,6 @@ class Blog {
         new Date(a.frontmatter.date).getTime()
       );
     });
-
-    console.timeEnd("Blog Initialization");
   }
 
   private async processCategory(category: PostCategory): Promise<void> {
@@ -239,36 +213,6 @@ class Blog {
     }
   }
 
-  private async readDir(
-    category: PostCategory,
-    dirPath: string
-  ): Promise<void> {
-    let files: string[];
-    try {
-      files = await readdir(dirPath);
-    } catch (error: any) {
-      console.error(`디렉토리 ${dirPath} 읽는 중 오류 발생: ${error.message}`);
-      return;
-    }
-
-    for (const file of files) {
-      const fullPath = path.join(dirPath, file);
-      let fileStat;
-      try {
-        fileStat = await stat(fullPath);
-      } catch (error: any) {
-        console.error(`파일 상태 확인 실패 ${fullPath}: ${error.message}`);
-        continue;
-      }
-      if (fileStat.isDirectory()) {
-        await this.readDir(category, fullPath);
-      } else {
-        const slug = file.split(".")[0];
-        await this.processFile(category, fullPath, slug);
-      }
-    }
-  }
-
   private async processFile(
     category: PostCategory,
     filePath: string,
@@ -286,7 +230,7 @@ class Blog {
         this.sortedPosts.push({ frontmatter, postKey });
       }
     } catch (error) {
-      console.error(`Error processing file ${filePath}:`, error);
+      console.error(`파일 프로세싱 중 오류 발생 : ${filePath}:`, error);
     }
   }
 }
