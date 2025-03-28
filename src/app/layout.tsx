@@ -124,7 +124,7 @@ export default async function RootLayout({
               </ScrollHeader>
               <div className="blog-main__background-template" />
               <div className="blog-main__landing-page">{children}</div>
-              <Footer />
+              {/* <Footer /> */}
               <div id="mobile-nav-portal" />
             </div>
           </ThemeProvider>

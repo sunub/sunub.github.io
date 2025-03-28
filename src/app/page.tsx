@@ -10,13 +10,13 @@ import { NewestPostSkeleton } from "@/components/Skeletons";
 
 const categories = ["cs", "web", "code", "algorithm"];
 
-// const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
-//   loading: () => <NewestPostSkeleton />,
-//   ssr: true,
-// });
+const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
+  loading: () => <NewestPostSkeleton />,
+  ssr: true,
+});
 
 async function Page() {
-  // const recentPostsMetadata = await getRecentPostsMetadata(10);
+  const recentPostsMetadata = await getRecentPostsMetadata(10);
   return (
     <React.Fragment>
       <Styled.HeaderContentsWrapper>
