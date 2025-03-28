@@ -1,7 +1,5 @@
 .Wrapper {
   grid-area: main-content;
-
-  font-family: var(--nanum-square-neo), sans-serif;
   position: relative;
   width: 100%;
   max-width: 1100px;
@@ -28,7 +26,6 @@
 }
 
 .Header {
-  font-family: var(--bariol-serif), serif;
   text-align: center;
   padding: 82px 32px 96px 32px;
 

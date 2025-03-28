@@ -129,7 +129,6 @@ const BlogPostList = styled.div`
 
 const TitleRootWrapper = styled.div`
   grid-area: newest;
-  font-family: var(--nanum-round), serif;
 `;
 
 const TitleWrapper = styled.div`

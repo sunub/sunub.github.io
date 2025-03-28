@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export const RootWrapper = styled.div`
   grid-area: newest;
-  font-family: var(--nanum-round), serif;
 `;
 
 export const TitleWrapper = styled.div`
@@ -15,5 +14,4 @@ export const TitleWrapper = styled.div`
 
 export const Title = styled.h1`
   font-size: 1.75rem;
-  font-family: var(--nanum-round-bold);
 `;

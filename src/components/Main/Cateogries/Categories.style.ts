@@ -15,7 +15,6 @@ export const TitleWrapper = styled.div`
 
 export const Title = styled.h1`
   font-size: 1.75rem;
-  font-family: var(--nanum-round-bold);
 `;
 
 export const CategoryListWrapper = styled.div`

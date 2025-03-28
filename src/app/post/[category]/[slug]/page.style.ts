@@ -102,7 +102,6 @@ export const Article = styled.article`
         var(--color-frontWave),
         var(--color-codeBlock)
       );
-      font-family: var(--nanum-square-neo) !important;
       font-weight: 700;
       background-color: var(--color-codeBlock);
       padding: 0.15rem 0.35rem;

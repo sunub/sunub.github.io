@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
 import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
 import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
+import localFont from "next/font/local";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -38,6 +39,13 @@ export const metadata: Metadata = {
   },
 };
 
+const nanumFont = localFont({
+  src: "../../public/fonts/NanumSquareNeo-Variable.woff2",
+  display: "swap",
+  style: "normal",
+  variable: "--nanumSquareNeo",
+});
+
 export default async function RootLayout({
   children,
 }: {
@@ -50,6 +58,7 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
+      className={nanumFont.className}
       suppressHydrationWarning={true}
       data-color-theme={theme}
       style={themeColors as React.CSSProperties}
