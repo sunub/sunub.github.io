@@ -20,10 +20,10 @@ async function Page() {
   return (
     <React.Fragment>
       <Styled.HeaderContentsWrapper>
-        {/* <HeroImage /> */}
-        {/* <Wave /> */}
+        <HeroImage />
+        <Wave />
       </Styled.HeaderContentsWrapper>
-      {/* <div id="blog-main__recently-post-list">
+      <div id="blog-main__recently-post-list">
         <Styled.MainWrapper>
           <Suspense fallback={<NewestPostSkeleton />}>
             <NewestPost initialPosts={recentPostsMetadata} />
@@ -32,7 +32,7 @@ async function Page() {
             <Categories categories={categories} />
           </Styled.RightSideWrapper>
         </Styled.MainWrapper>
-      </div> */}
+      </div>
     </React.Fragment>
   );
 }

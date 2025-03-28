@@ -5,8 +5,6 @@ import React from "react";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import localFont from "next/font/local";
-import clsx from "clsx";
 import { cookies } from "next/headers";
 import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
 import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
@@ -40,27 +38,6 @@ export const metadata: Metadata = {
   },
 };
 
-const pretendard = localFont({
-  src: "../../public/fonts/PretendardVariable.woff2",
-  display: "swap",
-  style: "normal",
-  variable: "--pretendard",
-});
-
-const nanumRound = localFont({
-  src: "../../public/fonts/NanumSquareRoundR.woff2",
-  display: "swap",
-  style: "normal",
-  variable: "--nanum-round",
-});
-
-const nanumRoundBold = localFont({
-  src: "../../public/fonts/NanumSquareRoundB.woff2",
-  display: "swap",
-  style: "normal",
-  variable: "--nanum-round-bold",
-});
-
 export default async function RootLayout({
   children,
 }: {
@@ -73,11 +50,6 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
-      className={clsx([
-        nanumRoundBold.variable,
-        nanumRound.variable,
-        pretendard.variable,
-      ])}
       suppressHydrationWarning={true}
       data-color-theme={theme}
       style={themeColors as React.CSSProperties}
@@ -90,11 +62,6 @@ export default async function RootLayout({
           content="width=device-width, initial-scale=1, user-scalable=1"
         />
         <meta name="theme-color" content="" />
-        <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet preload"
-          as="style"
-        />
         <link
           rel="icon"
           type="image/x-icon"
@@ -124,7 +91,7 @@ export default async function RootLayout({
               </ScrollHeader>
               <div className="blog-main__background-template" />
               <div className="blog-main__landing-page">{children}</div>
-              {/* <Footer /> */}
+              <Footer />
               <div id="mobile-nav-portal" />
             </div>
           </ThemeProvider>
