@@ -7,7 +7,7 @@ import { PostCategory } from "@/types/schema";
 
 const URL =
   process.env.NODE_ENV === "production"
-    ? process.env.NEXT_PUBLIC_BASE_URL
+    ? "https://sunub.vercel.app"
     : "http://localhost:3000";
 
 function createSourceStream(
