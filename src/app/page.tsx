@@ -21,7 +21,7 @@ async function Page() {
     <React.Fragment>
       <Styled.HeaderContentsWrapper>
         {/* <HeroImage /> */}
-        <Wave />
+        {/* <Wave /> */}
       </Styled.HeaderContentsWrapper>
       {/* <div id="blog-main__recently-post-list">
         <Styled.MainWrapper>
