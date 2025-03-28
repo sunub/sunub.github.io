@@ -2,8 +2,7 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 import { PrismaClient } from "@prisma/client";
-import CopyPlugin from "copy-webpack-plugin";
-import path from "path";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 const nextConfig: NextConfig = {
   basePath: "",
@@ -159,8 +158,12 @@ const securityHeaders = [
   },
 ];
 
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+})(nextConfig);
+
 const withMDX = createMDX({
   extension: /\.mdx?$/,
 });
 
-export default withMDX(nextConfig);
+export default withMDX(withBundleAnalyzer);
