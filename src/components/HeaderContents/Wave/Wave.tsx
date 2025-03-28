@@ -8,7 +8,7 @@ import WaveBird from "./WaveBird";
 function Wave() {
   return (
     <Styled.WaveWrapper>
-      <WaveSvg id="blog-main__wave-svg-img" />
+      <WaveSvg />
       <WaveBird />
     </Styled.WaveWrapper>
   );

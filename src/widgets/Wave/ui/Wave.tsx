@@ -36,23 +36,6 @@ const Svg = styled.svg`
   width: 106%;
 `;
 
-const WaveBirdSvg = styled.svg`
-  grid-area: wave-image;
-  min-width: 600px;
-  max-width: unset;
-  width: 106%;
-`;
-
-const WaveBirdMirroredSvg = styled.svg`
-  position: absolute;
-  bottom: 0.75em;
-  min-width: 600px;
-  max-width: unset;
-  opacity: 0.4;
-  filter: blur(3.75px);
-  transform: scaleY(-1) translateY(-80%) scaleY(0.3);
-`;
-
 function WaveSvg() {
   return (
     <SvgWrapper key={"light-wave-svg"} id="blog-main__wave-svg-img">
