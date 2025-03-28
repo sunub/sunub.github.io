@@ -54,15 +54,3 @@ export const getPostMetadataBySlug = unstable_cache(
     tags: ["posts"],
   }
 );
-
-export const getPostContents = unstable_cache(
-  async (category: PostCategory, slug: string) => {
-    const blog = await getBlogInstance();
-    return blog.getPostContent(category, slug);
-  },
-  ["post-contents"],
-  {
-    revalidate: DAY_IN_SECONDS,
-    tags: ["posts"],
-  }
-);

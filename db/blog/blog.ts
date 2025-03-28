@@ -4,61 +4,26 @@ import { z } from "zod";
 import chalk from "chalk";
 import path from "node:path";
 import chokidar from "chokidar";
-import { Worker } from "node:worker_threads";
+import { readdir, stat } from "fs/promises";
+import { createReadStream } from "fs";
+import matter from "gray-matter";
 import {
   FrontMatter,
   FrontMatterSchema,
   PostCategorySchema,
 } from "@/types/schema";
 import { debounce } from "@/shared/utils/debounce";
-import matter from "gray-matter";
 
-type WorkerList = {
-  path: string;
-  tag: PostCategory;
-};
+const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
 
 type PostData = {
   frontmatter: z.infer<typeof FrontMatterSchema>;
-  content: string[];
-};
-
-type PostMetadata = z.infer<typeof FrontMatterSchema>;
-
-type WorkerMessage = {
-  type: "data" | "fileComplete" | "done" | "error" | "change";
-  chunk: string;
-  content?: string;
-  slug: string;
-  frontmatter: PostMetadata;
 };
 
 type PostCategory = z.infer<typeof PostCategorySchema>;
-const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
-
 type PostKey = `posts:${PostCategory}:${string}`;
 type PostContentKey = `posts:content:${PostCategory}:${string}`;
 
-const workerIdList: WorkerList[] = [
-  {
-    path: path.resolve(process.cwd(), "./dist/db/workers/algorithm.worker.js"),
-    tag: "algorithm",
-  },
-  {
-    path: path.resolve(process.cwd(), "./dist/db/workers/code.worker.js"),
-    tag: "code",
-  },
-  {
-    path: path.resolve(process.cwd(), "./dist/db/workers/cs.worker.js"),
-    tag: "cs",
-  },
-  {
-    path: path.resolve(process.cwd(), "./dist/db/workers/web.worker.js"),
-    tag: "web",
-  },
-];
-
-const FRONTMATTER_REGEX = /^---\n([\s\S]*?)\n---\n([\s\S]*)/;
 function validateFrontMatter(
   data: any
 ): data is z.infer<typeof FrontMatterSchema> {
@@ -66,7 +31,7 @@ function validateFrontMatter(
 }
 
 class Blog {
-  #__workers: Map<PostCategory, Worker> = new Map();
+  // worker 관련 코드는 모두 제거되었습니다.
   #__updateLock: Promise<void> = Promise.resolve();
   #__completedFiles: Set<string> = new Set();
 
@@ -83,6 +48,7 @@ class Blog {
   private static initializationPromise: Promise<Blog> | null = null;
 
   constructor() {
+    // 파일 변경을 감지하여 직접 processFile 호출
     const watcher = chokidar.watch(ROOT_BLOG_PATH, {
       persistent: true,
       ignoreInitial: true,
@@ -93,9 +59,8 @@ class Blog {
   }
 
   private insertPostSorted(post: {
-    cacheKey: string;
+    postKey: string;
     frontmatter: z.infer<typeof FrontMatterSchema>;
-    content: string[];
   }) {
     const postDate = new Date(post.frontmatter.date).getTime();
     let low = 0,
@@ -115,16 +80,12 @@ class Blog {
     this.sortedPosts.splice(low, 0, post);
   }
 
-  getPostContent(category: PostCategory, slug: string): string[] {
-    const postKey = this.#__createPostContentKey(category, slug);
-    return this.blogContents.get(postKey) || [];
-  }
-
   async handleFileChange(changeFilePath: string) {
-    this.#__withLock(async () => {
-      const splitedPath = changeFilePath.split("/");
-      let [category, slug] = splitedPath.slice(-2);
-      slug = slug.split(".")[0];
+    await this.#__withLock(async () => {
+      const pathParts = changeFilePath.split(path.sep);
+      const fileName = pathParts[pathParts.length - 1];
+      const category = pathParts[pathParts.length - 2];
+      const slug = fileName.split(".")[0];
       const parsedCategory = PostCategorySchema.safeParse(category);
       if (!parsedCategory.success) {
         console.error(
@@ -134,12 +95,8 @@ class Blog {
         );
         return;
       }
-      const worker = this.#__workers.get(parsedCategory.data);
-      worker?.postMessage({
-        type: "change",
-        content: changeFilePath,
-        slug,
-      });
+      // 변경된 파일은 즉시 스트림을 통해 읽어 처리합니다.
+      await this.processFile(parsedCategory.data, changeFilePath, slug);
     });
   }
 
@@ -157,19 +114,8 @@ class Blog {
     }
   }
 
-  #__createCacheKey(category: PostCategory, slug: string): string {
-    return `cache:${category}:${slug}`;
-  }
-
   #__createPostKey(category: PostCategory, slug: string): PostKey {
     return `posts:${category}:${slug}`;
-  }
-
-  #__createPostContentKey(
-    category: PostCategory,
-    slug: string
-  ): PostContentKey {
-    return `posts:content:${category}:${slug}`;
   }
 
   static async getInstance(): Promise<Blog> {
@@ -202,17 +148,12 @@ class Blog {
   async #__storeResultByCategoryAndSlug(
     category: PostCategory,
     slug: string,
-    frontmatter: z.infer<typeof FrontMatterSchema>,
-    content: string[]
+    frontmatter: z.infer<typeof FrontMatterSchema>
   ) {
-    const cacheKey = this.#__createCacheKey(category, slug);
     const postKey = this.#__createPostKey(category, slug);
-    const PostContentKey = this.#__createPostContentKey(category, slug);
-
     this[category].set(postKey, { ...frontmatter });
-    this.blogContents.set(PostContentKey, content);
 
-    const post = { frontmatter, content, cacheKey };
+    const post = { frontmatter, postKey };
     this.insertPostSorted(post);
   }
 
@@ -222,74 +163,77 @@ class Blog {
   }
 
   async initialize(): Promise<void> {
-    const workerPromises = workerIdList.map(({ path, tag }) => {
-      return new Promise<void>((resolve, reject) => {
-        let frontmatter: z.infer<typeof FrontMatterSchema> | null = null;
-        let content: string[] = [];
-        const worker = new Worker(path, {
-          workerData: { tag },
-        });
-        this.#__workers.set(tag, worker);
+    // 각 카테고리에 대해 스트림으로 파일을 읽어 처리합니다.
+    const categories: PostCategory[] = ["algorithm", "code", "cs", "web"];
+    const promises = categories.map((category) =>
+      this.processCategory(category)
+    );
+    await Promise.all(promises);
+  }
 
-        worker.postMessage(tag);
-        worker.on("message", (message: WorkerMessage) => {
-          const fileKey = `${tag}-${message.slug}`;
-          if (this.#__completedFiles.has(fileKey)) return;
+  private async processCategory(category: PostCategory): Promise<void> {
+    const categoryPath = path.join(ROOT_BLOG_PATH, category);
+    await this.readDir(category, categoryPath);
+  }
 
-          switch (message.type) {
-            case "data":
-              const { chunk } = message;
-              if (!frontmatter && FRONTMATTER_REGEX.test(chunk)) {
-                const { data, content: fileContent } = matter(chunk);
-                if (validateFrontMatter(data)) frontmatter = data;
-                content.push(fileContent);
-              } else {
-                content.push(chunk);
-              }
-              break;
-            case "fileComplete":
-              if (this.#__completedFiles.has(fileKey)) return;
-              if (frontmatter && content.length) {
-                this.#__storeResultByCategoryAndSlug(
-                  tag,
-                  message.slug,
-                  frontmatter,
-                  content
-                );
-              }
-              this.#__completedFiles.add(fileKey);
-              frontmatter = null;
-              content = [];
-              break;
-            case "done":
-              console.log(
-                chalk.greenBright(
-                  `${message.content} 작업이 모두 완료 되었습니다.`
-                )
-              );
-              resolve();
-              break;
-            case "error":
-              console.error(message.content);
-              break;
+  private async readDir(
+    category: PostCategory,
+    dirPath: string
+  ): Promise<void> {
+    let files: string[];
+    try {
+      files = await readdir(dirPath);
+    } catch (error: any) {
+      console.error(`디렉토리 ${dirPath} 읽는 중 오류 발생: ${error.message}`);
+      return;
+    }
+
+    for (const file of files) {
+      const fullPath = path.join(dirPath, file);
+      let fileStat;
+      try {
+        fileStat = await stat(fullPath);
+      } catch (error: any) {
+        console.error(`파일 상태 확인 실패 ${fullPath}: ${error.message}`);
+        continue;
+      }
+      if (fileStat.isDirectory()) {
+        await this.readDir(category, fullPath);
+      } else {
+        const slug = file.split(".")[0];
+        await this.processFile(category, fullPath, slug);
+      }
+    }
+  }
+
+  private async processFile(
+    category: PostCategory,
+    fullPath: string,
+    slug: string
+  ): Promise<void> {
+    const fileKey = `${category}-${slug}`;
+    if (this.#__completedFiles.has(fileKey)) return;
+
+    try {
+      const readStream = createReadStream(fullPath, { encoding: "utf8" });
+      let frontmatter: z.infer<typeof FrontMatterSchema> | null = null;
+      // 파일의 첫 청크를 읽어 frontmatter 파싱 (gray-matter 사용)
+      for await (const chunk of readStream) {
+        if (chunk.startsWith("---")) {
+          const { data } = matter(chunk);
+          if (validateFrontMatter(data)) {
+            frontmatter = data;
           }
-        });
-
-        worker.on("error", (error) => {
-          console.error(`Worker error for tag ${tag}:`, error);
-          reject(error);
-        });
-
-        worker.on("exit", (code) => {
-          if (code !== 0) {
-            const errMsg = `Worker for tag ${tag} stopped with exit code ${code}`;
-            console.error(errMsg);
-            reject(new Error(errMsg));
-          }
-        });
-      });
-    });
-    await Promise.all(workerPromises);
+          break;
+        }
+      }
+      this.#__completedFiles.add(fileKey);
+      if (frontmatter) {
+        await this.#__storeResultByCategoryAndSlug(category, slug, frontmatter);
+      }
+    } catch (error) {
+      console.error(`파일 처리 중 오류 ${fullPath}: ${error}`);
+    }
   }
 
   async getPostsMetadataByCategory(category: PostCategory) {
