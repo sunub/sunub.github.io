@@ -2,55 +2,37 @@
 
 import getBlogInstance from "./blog";
 import { type PostCategory } from "@/types/schema";
-import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 const DAY_IN_SECONDS = 86400;
 
-export const getRecentPostsMetadata = unstable_cache(
-  async (count: number = 10) => {
-    const blog = await getBlogInstance();
-    return blog.sortedPosts.slice(0, count).map((post) => post.frontmatter);
-  },
-  ["recent-posts-metadata"],
-  {
-    revalidate: DAY_IN_SECONDS,
-    tags: ["posts"],
-  }
-);
+export const getRecentPostsMetadata = cache(async (count: number = 10) => {
+  const blog = await getBlogInstance();
+  return blog.sortedPosts.slice(0, count).map((post) => post.frontmatter);
+});
 
-export const getAllPosts = unstable_cache(
-  async () => {
-    const blog = await getBlogInstance();
-    return blog.sortedPosts.map((post) => post.frontmatter);
-  },
-  ["all-posts"],
-  {
-    revalidate: DAY_IN_SECONDS,
-    tags: ["posts"],
-  }
-);
+export const getAllPosts = cache(async () => {
+  const blog = await getBlogInstance();
+  return blog.sortedPosts.map((post) => post.frontmatter);
+});
 
-export const getPostsMetadataByCategory = unstable_cache(
+export const getPostsMetadataByCategory = cache(
   async (category: PostCategory) => {
     const blog = await getBlogInstance();
-    const targetPosts = blog[category];
-    return [...targetPosts.values()];
-  },
-  ["posts-metadata-by-category"],
-  {
-    revalidate: DAY_IN_SECONDS,
-    tags: ["posts"],
+    return await blog.getPostsMetadataByCategory(category);
   }
 );
 
-export const getPostMetadataBySlug = unstable_cache(
+export const getPostMetadataBySlug = cache(
   async (category: PostCategory, slug: string) => {
     const blog = await getBlogInstance();
     return blog.getPostMetadataBySlug(category, slug);
-  },
-  ["post-metadata-by-slug"],
-  {
-    revalidate: DAY_IN_SECONDS,
-    tags: ["posts"],
+  }
+);
+
+export const getPostContent = cache(
+  async (category: PostCategory, slug: string) => {
+    const blog = await getBlogInstance();
+    return await blog.getPostContent(category, slug);
   }
 );

@@ -4,7 +4,6 @@ import { z } from "zod";
 import chalk from "chalk";
 import path from "node:path";
 import chokidar from "chokidar";
-import { readdir, stat } from "fs/promises";
 import { createReadStream } from "fs";
 import matter from "gray-matter";
 import {
@@ -13,11 +12,14 @@ import {
   PostCategorySchema,
 } from "@/types/schema";
 import { debounce } from "@/shared/utils/debounce";
+import { cache } from "react";
+import { readFile, readdir, stat } from "fs/promises";
 
 const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
 
 type PostData = {
   frontmatter: z.infer<typeof FrontMatterSchema>;
+  postKey: string;
 };
 
 type PostCategory = z.infer<typeof PostCategorySchema>;
@@ -29,6 +31,21 @@ function validateFrontMatter(
 ): data is z.infer<typeof FrontMatterSchema> {
   return FrontMatterSchema.safeParse(data).success;
 }
+
+const readMdxFile = cache(async (filePath: string) => {
+  return await readFile(filePath, "utf8");
+});
+
+const parseFrontMatter = cache((content: string) => {
+  const { data, content: mdxContent } = matter(content);
+  if (FrontMatterSchema.safeParse(data).success) {
+    return {
+      frontmatter: data as z.infer<typeof FrontMatterSchema>,
+      content: mdxContent,
+    };
+  }
+  return null;
+});
 
 class Blog {
   // worker 관련 코드는 모두 제거되었습니다.
@@ -95,7 +112,6 @@ class Blog {
         );
         return;
       }
-      // 변경된 파일은 즉시 스트림을 통해 읽어 처리합니다.
       await this.processFile(parsedCategory.data, changeFilePath, slug);
     });
   }
@@ -111,6 +127,25 @@ class Blog {
       return await fn();
     } finally {
       release!();
+    }
+  }
+
+  async getPostContent(
+    category: PostCategory,
+    slug: string
+  ): Promise<string | null> {
+    try {
+      const filePath = path.join(ROOT_BLOG_PATH, category, `${slug}.mdx`);
+      const content = await readMdxFile(filePath);
+      if (!content) {
+        console.error(`파일을 읽는 중 오류 발생: ${filePath}`);
+        return null;
+      }
+      const parsed = parseFrontMatter(content);
+      return parsed?.content || null;
+    } catch (error) {
+      console.error(`Error reading post content: ${error}`);
+      return null;
     }
   }
 
@@ -157,23 +192,51 @@ class Blog {
     this.insertPostSorted(post);
   }
 
+  async getPostsMetadataByCategory(category: PostCategory) {
+    const targetPosts = this[category];
+    return [...targetPosts.values()];
+  }
+
+  // 특정 슬러그의 포스트 가져오기 (캐싱)
   getPostMetadataBySlug(category: PostCategory, slug: string) {
     const postKey = this.#__createPostKey(category, slug);
     return this[category].get(postKey);
   }
 
   async initialize(): Promise<void> {
-    // 각 카테고리에 대해 스트림으로 파일을 읽어 처리합니다.
+    console.time("Blog Initialization");
     const categories: PostCategory[] = ["algorithm", "code", "cs", "web"];
-    const promises = categories.map((category) =>
-      this.processCategory(category)
+    await Promise.all(
+      categories.map((category) => this.processCategory(category))
     );
-    await Promise.all(promises);
+
+    this.sortedPosts.sort((a, b) => {
+      return (
+        new Date(b.frontmatter.date).getTime() -
+        new Date(a.frontmatter.date).getTime()
+      );
+    });
+
+    console.timeEnd("Blog Initialization");
   }
 
   private async processCategory(category: PostCategory): Promise<void> {
-    const categoryPath = path.join(ROOT_BLOG_PATH, category);
-    await this.readDir(category, categoryPath);
+    try {
+      const categoryPath = path.join(ROOT_BLOG_PATH, category);
+      const files = await readdir(categoryPath);
+
+      const mdxFiles = files.filter((file) => file.endsWith(".mdx"));
+
+      await Promise.all(
+        mdxFiles.map((file) => {
+          const slug = file.replace(".mdx", "");
+          const filePath = path.join(categoryPath, file);
+          return this.processFile(category, filePath, slug);
+        })
+      );
+    } catch (error) {
+      console.error(`Error processing category ${category}:`, error);
+    }
   }
 
   private async readDir(
@@ -208,37 +271,23 @@ class Blog {
 
   private async processFile(
     category: PostCategory,
-    fullPath: string,
+    filePath: string,
     slug: string
   ): Promise<void> {
-    const fileKey = `${category}-${slug}`;
-    if (this.#__completedFiles.has(fileKey)) return;
-
     try {
-      const readStream = createReadStream(fullPath, { encoding: "utf8" });
-      let frontmatter: z.infer<typeof FrontMatterSchema> | null = null;
-      // 파일의 첫 청크를 읽어 frontmatter 파싱 (gray-matter 사용)
-      for await (const chunk of readStream) {
-        if (chunk.startsWith("---")) {
-          const { data } = matter(chunk);
-          if (validateFrontMatter(data)) {
-            frontmatter = data;
-          }
-          break;
-        }
-      }
-      this.#__completedFiles.add(fileKey);
-      if (frontmatter) {
-        await this.#__storeResultByCategoryAndSlug(category, slug, frontmatter);
+      const content = await readMdxFile(filePath);
+      const parsed = parseFrontMatter(content);
+
+      if (parsed) {
+        const { frontmatter } = parsed;
+        const postKey = this.#__createPostKey(category, slug);
+
+        this[category].set(postKey, frontmatter);
+        this.sortedPosts.push({ frontmatter, postKey });
       }
     } catch (error) {
-      console.error(`파일 처리 중 오류 ${fullPath}: ${error}`);
+      console.error(`Error processing file ${filePath}:`, error);
     }
-  }
-
-  async getPostsMetadataByCategory(category: PostCategory) {
-    const targetPosts = this[category];
-    return [...targetPosts.values()];
   }
 }
 
@@ -246,12 +295,13 @@ declare global {
   var __BLOG_INSTANCE__: Blog | undefined;
 }
 
-const getBlogInstance = async () => {
+const getBlogInstance = cache(async () => {
   if (global.__BLOG_INSTANCE__ && global.__BLOG_INSTANCE__.isInitialized) {
     return global.__BLOG_INSTANCE__;
   }
+
   global.__BLOG_INSTANCE__ = await Blog.getInstance();
   return global.__BLOG_INSTANCE__;
-};
+});
 
 export default getBlogInstance;

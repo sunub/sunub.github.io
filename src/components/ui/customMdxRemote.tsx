@@ -1,32 +1,9 @@
-import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
-import React, { Suspense } from "react";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import React, { Suspense, cache } from "react";
 import { PostArticleComponents } from "./PostArticleComponents";
 import { ComponentSkeleton } from "../Skeletons";
-import { Readable, Transform, TransformCallback, Writable } from "node:stream";
 import { PostCategory } from "@/types/schema";
-
-const URL =
-  process.env.NODE_ENV === "production"
-    ? "https://sunub.vercel.app"
-    : "http://localhost:3000";
-
-function createSourceStream(
-  source: string,
-  chunkSize: number = 1024
-): Readable {
-  let currentIndex = 0;
-  return new Readable({
-    read() {
-      if (currentIndex >= source.length) {
-        this.push(null);
-      } else {
-        const chunk = source.slice(currentIndex, currentIndex + chunkSize);
-        currentIndex += chunkSize;
-        this.push(chunk);
-      }
-    },
-  });
-}
+import { getPostContent } from "./utils/getPostContent";
 
 function convertTableBlockToHTML(tableLines: string[]): string {
   if (tableLines.length < 2) return tableLines.join("\n");
@@ -60,76 +37,41 @@ function convertTableBlockToHTML(tableLines: string[]): string {
   return `<table cellPadding="0" cellSpacing="0">${thead}${tbody}</table>`;
 }
 
-class MarkdownTableTransform extends Transform {
-  private bufferedData: string = "";
-  private inTable: boolean = false;
-  private tableLines: string[] = [];
+const transformMarkdownTables = cache((content: string): string => {
+  const lines = content.split("\n");
+  const result = [];
 
-  constructor(options?: any) {
-    super(options);
-  }
-
-  _transform(
-    chunk: Buffer | string,
-    encoding: string,
-    callback: TransformCallback
-  ) {
-    let data = chunk.toString();
-    data = this.bufferedData + data;
-    let lines = data.split("\n");
-
-    if (!data.endsWith("\n")) {
-      this.bufferedData = lines.pop() || "";
-    } else {
-      this.bufferedData = "";
-    }
-
-    for (let line of lines) {
-      if (line.trim().startsWith("|")) {
-        this.inTable = true;
-        this.tableLines.push(line);
-      } else {
-        if (this.inTable) {
-          const htmlTable = convertTableBlockToHTML(this.tableLines);
-          this.push(htmlTable + "\n");
-          this.inTable = false;
-          this.tableLines = [];
-        }
-        this.push(line + "\n");
+  let i = 0;
+  while (i < lines.length) {
+    const codeBlockRegexp = /^(`{3,}|~{3,})([a-zA-Z0-9+-]*)?/g;
+    if (codeBlockRegexp.test(lines[i])) {
+      // 코드 블록은 그대로 유지
+      result.push(lines[i]);
+      i++;
+      while (i < lines.length && !codeBlockRegexp.test(lines[i])) {
+        result.push(lines[i]);
+        i++;
       }
+      if (i < lines.length) {
+        result.push(lines[i]);
+        i++;
+      }
+    } else if (lines[i].trim().startsWith("|")) {
+      const tableLines = [];
+      while (i < lines.length && lines[i].trim().startsWith("|")) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      const htmlTable = convertTableBlockToHTML(tableLines);
+      result.push(htmlTable);
+    } else {
+      result.push(lines[i]);
+      i++;
     }
-    callback();
   }
+  return result.join("\n");
+});
 
-  _flush(callback: TransformCallback) {
-    if (this.inTable && this.tableLines.length > 0) {
-      const htmlTable = convertTableBlockToHTML(this.tableLines);
-      this.push(htmlTable + "\n");
-    }
-    if (this.bufferedData) {
-      this.push(this.bufferedData);
-    }
-    callback();
-  }
-}
-
-async function transformSource(source: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    let result = "";
-    const readable = createSourceStream(source, 1024);
-    const transformer = new MarkdownTableTransform();
-    const writable = new Writable({
-      write(chunk, encoding, callback) {
-        result += chunk.toString();
-        callback();
-      },
-    });
-    writable.on("finish", () => resolve(result));
-    readable.pipe(transformer).pipe(writable);
-  });
-}
-
-const components = PostArticleComponents;
 async function CustomMDXRemote({
   category,
   slug,
@@ -137,23 +79,41 @@ async function CustomMDXRemote({
   category: PostCategory;
   slug: string;
 }) {
-  console.log(category, slug);
-  const res = await fetch(URL + `/api/post/${category}/${slug}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-  });
-  const { content } = await res.json();
-  if (!content) throw new Error("컨텐츠를 가져오지 못했습니다.");
-  const transformed = await transformSource(content as string);
+  try {
+    const content = await getPostContent(category, slug);
+    const transformedContent = transformMarkdownTables(content);
 
+    return (
+      <MDXRemote
+        source={transformedContent}
+        components={PostArticleComponents}
+        options={{
+          parseFrontmatter: false,
+        }}
+      />
+    );
+  } catch (error) {
+    console.error("MDX 콘텐츠를 불러오는 중 오류가 발생했습니다:", error);
+    return (
+      <div className="text-red-500 p-4 border border-red-300 rounded">
+        <h3>콘텐츠를 불러올 수 없습니다</h3>
+        <p>죄송합니다. 요청하신 콘텐츠를 불러오는 중 오류가 발생했습니다.</p>
+      </div>
+    );
+  }
+}
+
+// 외부로 내보내기
+export default async function MDXWrapper({
+  category,
+  slug,
+}: {
+  category: PostCategory;
+  slug: string;
+}) {
   return (
     <Suspense fallback={<ComponentSkeleton />}>
-      <MDXRemote source={transformed} components={{ ...components }} />
+      <CustomMDXRemote category={category} slug={slug} />
     </Suspense>
   );
 }
-
-export default CustomMDXRemote;

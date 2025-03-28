@@ -1,17 +1,18 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   Article,
   PostTitle,
   ArticleWrapper,
   ArticleHeader,
 } from "./page.style";
-import { getPostMetadataBySlug, getAllPosts } from "db/blog/api";
+import { getAllPosts } from "db/blog/api";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
 import dynamic from "next/dynamic";
 import getBlogInstance from "db/blog/blog";
+import { ComponentSkeleton } from "@/components/Skeletons";
 
-export const revalidate = 86400;
+export const revalidate = 43200;
 
 type Category = "code" | "web" | "cs" | "algorithm";
 
@@ -106,25 +107,46 @@ async function Page({ params }: { params: Params }) {
             }),
           }}
         />
-        <ArticleHeader>
-          <PostTitle>{title}</PostTitle>
-          <React.Suspense fallback={<div>...</div>}>
-            <p>
-              {new Intl.DateTimeFormat("ko-KR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }).format(new Date(date))}
-            </p>
-          </React.Suspense>
-        </ArticleHeader>
+        <HeaderSection category={category} slug={slug} />
         <ArticleWrapper id="blog-post__article">
           <Article>
-            <CustomMDXRemoteComponents category={category} slug={slug} />
+            <Suspense fallback={<ComponentSkeleton />}>
+              <CustomMDXRemoteComponents category={category} slug={slug} />
+            </Suspense>
           </Article>
         </ArticleWrapper>
       </main>
     </React.Fragment>
+  );
+}
+
+async function HeaderSection({
+  category,
+  slug,
+}: {
+  category: Category;
+  slug: string;
+}) {
+  const blog = await getBlogInstance();
+  const postMetadata = blog.getPostMetadataBySlug(category, slug);
+
+  if (!postMetadata) return null;
+
+  const { title, date } = postMetadata;
+
+  return (
+    <ArticleHeader>
+      <PostTitle>{title}</PostTitle>
+      <React.Suspense fallback={<div>...</div>}>
+        <p>
+          {new Intl.DateTimeFormat("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(date))}
+        </p>
+      </React.Suspense>
+    </ArticleHeader>
   );
 }
 
