@@ -45,7 +45,6 @@ const transformMarkdownTables = cache((content: string): string => {
   while (i < lines.length) {
     const codeBlockRegexp = /^(`{3,}|~{3,})([a-zA-Z0-9+-]*)?/g;
     if (codeBlockRegexp.test(lines[i])) {
-      // 코드 블록은 그대로 유지
       result.push(lines[i]);
       i++;
       while (i < lines.length && !codeBlockRegexp.test(lines[i])) {
@@ -87,9 +86,6 @@ async function CustomMDXRemote({
       <MDXRemote
         source={transformedContent}
         components={PostArticleComponents}
-        options={{
-          parseFrontmatter: false,
-        }}
       />
     );
   } catch (error) {
@@ -103,7 +99,6 @@ async function CustomMDXRemote({
   }
 }
 
-// 외부로 내보내기
 export default async function MDXWrapper({
   category,
   slug,
