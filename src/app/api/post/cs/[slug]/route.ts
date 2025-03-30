@@ -15,8 +15,7 @@ export async function GET(
     chunks.push(chunk);
   }
 
-  const fileContent = chunks.join("");
-  const { content } = matter(fileContent);
+  const content = chunks.join("").replace(/---[\s\S]*?---/, "");
   return new Response(JSON.stringify({ content }), {
     status: 200,
     headers: { "Content-Type": "application/json" },

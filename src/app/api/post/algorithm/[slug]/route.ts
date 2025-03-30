@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const filePath = getPostPath("algorithm", slug);
+  const filePath = getPostPath("cs", slug);
   const readStream = createReadStream(filePath, { encoding: "utf-8" });
 
   const chunks: string[] = [];
@@ -15,8 +15,7 @@ export async function GET(
     chunks.push(chunk);
   }
 
-  const fileContent = chunks.join("");
-  const { content } = matter(fileContent);
+  const content = chunks.join("").replace(/---[\s\S]*?---/, "");
   return new Response(JSON.stringify({ content }), {
     status: 200,
     headers: { "Content-Type": "application/json" },
