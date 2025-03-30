@@ -78,8 +78,16 @@ async function CustomMDXRemote({
   category: PostCategory;
   slug: string;
 }) {
+  const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? process.env.NEXT_PUBLIC_BASE_URL
+      : "http://localhost:3000";
   try {
-    const content = await getPostContent(category, slug);
+    const res = await fetch(`${baseUrl}/api/post/${category}/${slug}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch post content");
+    }
+    const { content } = await res.json();
     const transformedContent = transformMarkdownTables(content);
 
     return (
