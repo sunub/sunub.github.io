@@ -41,11 +41,11 @@ export const metadata: Metadata = {
   },
 };
 
-const nanumFont = localFont({
-  src: "../../public/fonts/NanumSquareNeo-Variable.woff2",
+const pretendard = localFont({
+  src: "../../public/fonts/PretendardVariable.woff2",
   display: "swap",
   style: "normal",
-  variable: "--nanumSquareNeo",
+  variable: "--pretendard-font",
 });
 
 export default async function RootLayout({
@@ -60,7 +60,7 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
-      className={nanumFont.className}
+      className={pretendard.className}
       suppressHydrationWarning={true}
       data-color-theme={theme}
       style={themeColors as React.CSSProperties}
