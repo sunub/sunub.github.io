@@ -82,7 +82,7 @@ export const UnderLineWavePath = styled.path`
   transition: stroke-dashoffset 0.4s cubic-bezier(0.7, 0, 0.3, 1);
 `;
 
-export const BlogPostWrapper = styled.article`
+export const BlogPostWrapper = styled.div`
   display: flex;
   flex-direction: column;
   text-decoration: none;

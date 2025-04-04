@@ -59,9 +59,9 @@ function createHeadingComponent(level: number) {
         React.createElement(LinkIcon, { key: `${slug}-icon` }),
       ]),
       React.createElement(
-        "div",
+        "span",
         { key: `${slug}-content`, className: "post-heading-titles" },
-        children,
+        children
       ),
     ]);
   };

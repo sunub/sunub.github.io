@@ -24,6 +24,7 @@ async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
           month: "long",
           day: "numeric",
         }).format(new Date(date));
+        const webStandardDate = new Date(date).toISOString().split("T")[0];
 
         return (
           <Styled.BlogPostListItem key={`${category}-${slug}`}>
@@ -38,7 +39,7 @@ async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
               </Link>
             </Styled.BlogPostWrapper>
             <Styled.Footer>
-              <Styled.Date>{localeDate}</Styled.Date>
+              <Styled.Date dateTime={webStandardDate}>{localeDate}</Styled.Date>
             </Styled.Footer>
           </Styled.BlogPostListItem>
         );

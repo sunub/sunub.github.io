@@ -129,13 +129,13 @@ async function HeaderSection({
     <ArticleHeader>
       <PostTitle>{title}</PostTitle>
       <React.Suspense fallback={<div>...</div>}>
-        <p>
+        <time dateTime={new Date(date).toISOString()}>
           {new Intl.DateTimeFormat("ko-KR", {
             year: "numeric",
             month: "long",
             day: "numeric",
           }).format(new Date(date))}
-        </p>
+        </time>
       </React.Suspense>
     </ArticleHeader>
   );

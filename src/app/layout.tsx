@@ -67,7 +67,6 @@ export default async function RootLayout({
     >
       <head>
         <meta charSet="utf-8" />
-        <meta content="text/html" charSet="<characterset>" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, user-scalable=1"
@@ -78,7 +77,6 @@ export default async function RootLayout({
           type="image/x-icon"
           sizes="32x32"
           href="/assets/favicon.ico"
-          as="icon"
         />
       </head>
       <body>

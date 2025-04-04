@@ -39,7 +39,7 @@ export const ArticleWrapper = styled.div`
   gap: 2.25rem;
 `;
 
-export const Article = styled.article`
+export const Article = styled.div`
   width: 100%;
   height: 100%;
 

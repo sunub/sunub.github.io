@@ -45,8 +45,8 @@ function Navigation() {
         >
           카테고리들
           <UnderLineWaveIcon />
-          <PortalRef id="post-dropdown-portal" ref={portalRef} />
         </Button>
+        <PortalRef id="post-dropdown-portal" ref={portalRef} />
         {isOpen &&
           createPortal(
             <DropDownMenu toggleOpen={toggleOpen} />,
