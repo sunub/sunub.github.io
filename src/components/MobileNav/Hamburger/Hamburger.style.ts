@@ -5,18 +5,18 @@ import styled from "styled-components";
 export const Open = styled.g`
   transform-origin: center;
   transform: scale(1);
-  transition: all opacity 500ms ease;
+  transition: all 500ms ease;
 
-  & > #center {
+  & > #hambuer-btn-svg-center {
     transition: all 500ms ease;
     transform-origin: center;
     transform: scaleX(1);
   }
-  & > #bottom {
+  & > #hambuer-btn-svg-bottom {
     transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     stroke-width: 3px;
   }
-  & > #top {
+  & > #hambuer-btn-svg-top {
     transition: all 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
     stroke-width: 3px;
   }
@@ -94,21 +94,18 @@ export const Circle = styled.rect`
   }
 `;
 
-export const Btn = styled.button.attrs({
-  className: "hamburger-btn",
-})`
+export const Btn = styled.button<{ $isOpen: boolean }>`
   z-index: 10001;
-  /* position: absolute;
-  top: 60px;
-  right: 32px; */
-
+  position: ${({ $isOpen }) => ($isOpen ? "absolute" : "static")};
+  right: ${({ $isOpen }) => ($isOpen ? "7cqw" : "0")};
   width: 40px;
   height: 40px;
 
   padding: 0;
   cursor: pointer;
+
   &[aria-label="Open menu"] ${Open} {
-    #center {
+    #hambuer-btn-svg-center {
       transform: scaleX(1);
     }
   }
@@ -133,15 +130,15 @@ export const Btn = styled.button.attrs({
 
   &[aria-label="Close menu"] ${Open} {
     transform: scale(0.1);
-    #center {
+    #hambuer-btn-svg-center {
       transform: scaleX(0.5);
     }
 
-    #top {
+    #hambuer-btn-svg-top {
       transform: translateY(6.75px);
     }
 
-    #bottom {
+    #hambuer-btn-svg-bottom {
       transform: translateY(-6.75px);
     }
   }

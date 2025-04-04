@@ -66,18 +66,16 @@ export default async function RootLayout({
       style={themeColors as React.CSSProperties}
     >
       <head>
-        <meta charSet="utf-8" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, user-scalable=1"
-        />
-        <meta name="theme-color" content="" />
+        ></meta>
         <link
           rel="icon"
           type="image/x-icon"
           sizes="32x32"
           href="/assets/favicon.ico"
-        />
+        ></link>
       </head>
       <body>
         <script
@@ -91,7 +89,7 @@ export default async function RootLayout({
               description: "디자인과 개발을 좋아합니다.",
             }),
           }}
-        />
+        ></script>
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">

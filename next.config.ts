@@ -26,27 +26,22 @@ const nextConfig: NextConfig = {
       cssProp: false,
     },
   },
-  // next.config.ts
   webpack: (config, { isServer }) => {
     if (isServer) {
-      // Worker 파일을 번들링에 포함시키기
       config.optimization.moduleIds = "named";
 
-      // Worker 파일에서 사용하는 외부 패키지도 포함시키기
       config.externals = [
         ...config.externals,
         function (
           { context, request }: { context: any; request: string },
           callback: (error: Error | null, result: boolean | undefined) => void
         ) {
-          // Worker에서 사용되는 패키지는 제외하지 않음
           if (
             context.includes("workers") &&
             ["gray-matter", "zod"].includes(request)
           ) {
             return callback(null, false);
           }
-          // 기존 externals 설정 유지
           return callback(null, undefined);
         },
       ];

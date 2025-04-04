@@ -38,7 +38,9 @@ function Hamburger() {
   return (
     <div id="moblie-nav-trigger">
       <Styled.Btn
+        className="hamburger-btn"
         id="hamburger-btn"
+        $isOpen={isOpen}
         aria-label={isOpen ? "Close menu" : "Open menu"}
         onClick={() => {
           if (!pathStartRef.current) return;
@@ -80,22 +82,26 @@ function Icon() {
     >
       <Styled.Open>
         <path
-          id="top"
+          id="hambuer-btn-svg-top"
           d="M6.12 9.5L25.88 9.5"
           strokeWidth="3"
           strokeLinecap="round"
         />
         <path
-          id="bottom"
+          id="hambuer-btn-svg-bottom"
           d="M6.12 23H25.88"
           strokeWidth="3"
           strokeLinecap="round"
         />
-        <path id="center" d="M3 16H29" strokeWidth="4" strokeLinecap="round" />
+        <path
+          id="hambuer-btn-svg-center"
+          d="M3 16H29"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
       </Styled.Open>
       <Styled.Close>
         <Styled.Close
-          id="Rectangle 91"
           x="2.5"
           y="2.5"
           width="27"
@@ -104,13 +110,11 @@ function Icon() {
           strokeWidth="2"
         />
         <Styled.Cross1
-          id="cross2"
           d="M9 16H23.6601"
           strokeWidth="3"
           strokeLinecap="round"
         />
         <Styled.Cross2
-          id="cross1"
           d="M9 16H23.6601"
           strokeWidth="3"
           strokeLinecap="round"
