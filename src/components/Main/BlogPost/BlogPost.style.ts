@@ -30,7 +30,7 @@ export const Title = styled.span`
 `;
 
 export const Date = styled.time`
-  color: color-mix(in oklch, var(--color-text), transparent 70%);
+  color: var(--color-text);
 `;
 
 export const BlogPostTitle = styled.div`

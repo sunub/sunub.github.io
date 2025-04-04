@@ -5,6 +5,7 @@ import {
   Title,
   CategoryListWrapper,
 } from "./Categories.style";
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 
 function Categories({ categories }: { categories: string[] }) {
   return (
@@ -20,6 +21,9 @@ function Categories({ categories }: { categories: string[] }) {
             href={`/post/${category}`}
             key={category}
           >
+            <VisuallyHidden>
+              {`${category} 카테고리로 이동합니다.`}
+            </VisuallyHidden>
             {category}
           </Link>
         ))}

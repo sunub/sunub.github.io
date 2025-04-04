@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { Github, Mail } from "./Icons/Icons";
 import Link from "next/link";
 import Spacer from "../Spacer";
+import { VisuallyHidden } from "../VisuallyHidden";
 
 function Footer() {
   return (
@@ -17,12 +18,16 @@ function Footer() {
               aria-label={"Link to sunub github page"}
               href={"https://github.com/sunub"}
             >
+              <VisuallyHidden>
+                {"sunub의 github 페이지로 이동합니다."}
+              </VisuallyHidden>
               <Github />
             </Link>
             <Link
               aria-label={"Send email to sunub email"}
               href={"mailto:bsc5672@gmail.com"}
             >
+              <VisuallyHidden>{"sunub에게 이메일을 보냅니다."}</VisuallyHidden>
               <Mail />
             </Link>
           </IconsWrapper>
@@ -58,6 +63,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--color-text);
+  gap: 1rem;
 
   padding-top: 32px;
   padding-bottom: 32px;

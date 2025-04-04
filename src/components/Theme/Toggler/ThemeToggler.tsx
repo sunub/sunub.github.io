@@ -6,6 +6,7 @@ import { Theme } from "type";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { ThemeContext } from "@/components/Theme/ThemeProvider";
 import Cookies from "js-cookie";
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 
 export default function ThemeToggler({
   maskId,
@@ -44,6 +45,8 @@ export default function ThemeToggler({
       <Styled.ToggleBtn
         {...delegated}
         title="Toggles light & dark"
+        aria-labelledby="theme-toggler"
+        aria-describedby="theme-toggler"
         aria-label="auto"
         onClick={() => {
           const nextTheme = handleClick();
@@ -57,6 +60,9 @@ export default function ThemeToggler({
             );
         }}
       >
+        <VisuallyHidden>
+          {`홈페이지의 테마를 ${colorTheme}로 변경하는 버튼입니다.`}
+        </VisuallyHidden>
         <ThemeIcon colorTheme={colorTheme} maskId={maskId} />
       </Styled.ToggleBtn>
     )

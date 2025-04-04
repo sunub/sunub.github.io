@@ -1,8 +1,14 @@
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 import Link from "next/link";
 
 function Logo() {
   return (
-    <Link href={"/"}>
+    <Link
+      aria-label="Homepage link"
+      aria-labelledby={"Homepage link"}
+      href={"/"}
+    >
+      <VisuallyHidden>홈페이지</VisuallyHidden>
       <svg
         width="103"
         height="37"

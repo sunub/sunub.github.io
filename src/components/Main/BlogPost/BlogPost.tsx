@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { PostSkeleton } from "@/components/Skeletons";
 import { z } from "zod";
 import { FrontMatterSchema } from "@/types/schema";
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 
 type PostMetadata = z.infer<typeof FrontMatterSchema>;
 
@@ -30,6 +31,9 @@ async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
           <Styled.BlogPostListItem key={`${category}-${slug}`}>
             <Styled.BlogPostWrapper>
               <Link href={`/post/${category}/${slug}`} scroll={true}>
+                <VisuallyHidden>
+                  {`${title} 포스트로 이동합니다.`}
+                </VisuallyHidden>
                 <Styled.BlogPostTitle>
                   <Styled.Title>{title}</Styled.Title>
                   <Styled.TitleDot />

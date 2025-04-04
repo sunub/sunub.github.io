@@ -7,6 +7,7 @@ import useToggle from "@/hooks/use-toggle";
 import styled from "styled-components";
 import { createPortal } from "react-dom";
 import { CpuIcon, GlobeIcon, BinaryIcon, PiIcon } from "lucide-react";
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 
 function Navigation() {
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -43,6 +44,7 @@ function Navigation() {
           ref={buttonRef}
           className="select-none"
         >
+          <VisuallyHidden>카테고리에 관한 링크</VisuallyHidden>
           카테고리들
           <UnderLineWaveIcon />
         </Button>
@@ -61,18 +63,22 @@ function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
   return (
     <DropDownMenuWrapper>
       <LinkTag href={"/post/cs"} onClick={toggleOpen}>
+        <VisuallyHidden>CS 카데고리로 이동하는 링크</VisuallyHidden>
         <CpuIcon size={16} />
         cs
       </LinkTag>
       <LinkTag href={"/post/web"} onClick={toggleOpen}>
+        <VisuallyHidden>Web 카데고리로 이동하는 링크</VisuallyHidden>
         <GlobeIcon size={16} />
         web
       </LinkTag>
       <LinkTag href={"/post/code"} onClick={toggleOpen}>
+        <VisuallyHidden>Code 카데고리로 이동하는 링크</VisuallyHidden>
         <BinaryIcon size={16} />
         code
       </LinkTag>
       <LinkTag href={"/post/algorithm"} onClick={toggleOpen}>
+        <VisuallyHidden>Algorithm 카데고리로 이동하는 링크</VisuallyHidden>
         <PiIcon size={16} />
         algorithm
       </LinkTag>
