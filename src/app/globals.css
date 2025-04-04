@@ -332,6 +332,37 @@ li.active > a {
   #moblie-nav-portal {
     display: none;
   }
+
+  #moblie-nav-trigger {
+    display: none;
+  }
+}
+
+@container (width <= 786px) {
+  #blog-main__categories {
+    display: none;
+  }
+
+  #blog-main__post-navigation {
+    display: none;
+  }
+
+  #blog-main__recently-post-list-wrapper {
+    grid-template:
+      "newest"
+      "newset" 1fr / 1fr;
+
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  #blog-main__header-wrapper {
+    padding-top: 30px;
+  }
+
+  .blog-main__landing-page {
+    padding-top: 65px;
+  }
 }
 
 @media (orientation: landscape) {
@@ -403,7 +434,6 @@ li.active > a {
   }
 }
 
-/* 다크 모드 전환을 위한 스타일 */
 html[data-color-theme="dark"] .shiki,
 html[data-color-theme="dark"] .shiki span {
   color: var(--shiki-dark) !important;
@@ -413,7 +443,6 @@ html[data-color-theme="dark"] .shiki span {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
-/* 코드 블록 스타일링 */
 .shiki {
   overflow-x: auto;
   border-radius: 0.75rem;

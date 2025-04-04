@@ -163,7 +163,7 @@ const MainWrapper = styled.main`
   padding-left: 48px;
   padding-right: 48px;
 
-  @media screen and (max-width: 786px) {
+  @container root (width <= 786px) {
     grid-template:
       "newest"
       "newset" 1fr / 1fr;

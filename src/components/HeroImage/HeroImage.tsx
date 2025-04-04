@@ -6,6 +6,65 @@ import * as Styled from "./HeroImage.style";
 import styled from "styled-components";
 import Image from "next/image";
 
+function LightHeroImage() {
+  return (
+    <LightHeroImageWapper>
+      <Clouds $url="/assets/clouds.avif" $opacity="--color-light-heroimage" />
+      <Bridge $url="/assets/bridge.avif" $opacity="--color-light-heroimage" />
+      <Cars $url="/assets/cars.avif" $opacity="--color-light-heroimage" />
+      <Moon
+        src={"/assets/hero-image__light-moon.avif"}
+        width={2000}
+        height={966}
+        alt={"clouds"}
+        sizes="100vw"
+        quality={70}
+        priority={true}
+        $opacity="--color-light-heroimage"
+      />
+      <LightShadow $opacity="--color-light-heroimage" />
+    </LightHeroImageWapper>
+  );
+}
+
+function DarkHeroImage() {
+  return (
+    <DrakHeroImageWapper>
+      <Clouds
+        $url="/assets/dark_clouds.avif"
+        $opacity="--color-dark-heroimage"
+      />
+      <Bridge
+        $url="/assets/dark_bridge.avif"
+        $opacity="--color-dark-heroimage"
+      />
+      <Cars $url="/assets/dark_cars.avif" $opacity="--color-dark-heroimage" />
+      <Moon
+        src={"/assets/dark_moon.avif"}
+        width={2000}
+        height={966}
+        alt={"clouds"}
+        sizes="100vw"
+        quality={70}
+        priority={true}
+        $opacity="--color-dark-heroimage"
+      />
+      <DarkShadow $opacity="--color-dark-heroimage" />
+    </DrakHeroImageWapper>
+  );
+}
+
+function HeroImage() {
+  return (
+    <Styled.RootWrapper suppressHydrationWarning={true}>
+      <Styled.HeroImageWrapper>
+        <LightHeroImage />
+        <DarkHeroImage />
+      </Styled.HeroImageWrapper>
+    </Styled.RootWrapper>
+  );
+}
+
 const Bridge = styled.span<{ $url: string; $opacity: string }>`
   display: inline-block;
   width: 100dvw;
@@ -99,64 +158,5 @@ const DrakHeroImageWapper = styled.div`
 const LightHeroImageWapper = styled.div`
   grid-area: hero-image;
 `;
-
-function LightHeroImage() {
-  return (
-    <LightHeroImageWapper>
-      <Clouds $url="/assets/clouds.avif" $opacity="--color-light-heroimage" />
-      <Bridge $url="/assets/bridge.avif" $opacity="--color-light-heroimage" />
-      <Cars $url="/assets/cars.avif" $opacity="--color-light-heroimage" />
-      <Moon
-        src={"/assets/hero-image__light-moon.avif"}
-        width={2000}
-        height={966}
-        alt={"clouds"}
-        sizes="100vw"
-        quality={70}
-        priority={true}
-        $opacity="--color-light-heroimage"
-      />
-      <LightShadow $opacity="--color-light-heroimage" />
-    </LightHeroImageWapper>
-  );
-}
-
-function DarkHeroImage() {
-  return (
-    <DrakHeroImageWapper>
-      <Clouds
-        $url="/assets/dark_clouds.avif"
-        $opacity="--color-dark-heroimage"
-      />
-      <Bridge
-        $url="/assets/dark_bridge.avif"
-        $opacity="--color-dark-heroimage"
-      />
-      <Cars $url="/assets/dark_cars.avif" $opacity="--color-dark-heroimage" />
-      <Moon
-        src={"/assets/dark_moon.avif"}
-        width={2000}
-        height={966}
-        alt={"clouds"}
-        sizes="100vw"
-        quality={70}
-        priority={true}
-        $opacity="--color-dark-heroimage"
-      />
-      <DarkShadow $opacity="--color-dark-heroimage" />
-    </DrakHeroImageWapper>
-  );
-}
-
-function HeroImage() {
-  return (
-    <Styled.RootWrapper suppressHydrationWarning={true}>
-      <Styled.HeroImageWrapper>
-        <LightHeroImage />
-        <DarkHeroImage />
-      </Styled.HeroImageWrapper>
-    </Styled.RootWrapper>
-  );
-}
 
 export default HeroImage;

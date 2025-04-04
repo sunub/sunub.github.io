@@ -36,38 +36,36 @@ function Hamburger() {
   };
 
   return (
-    <React.Fragment>
-      <Styled.RootWrapper>
-        <Styled.Btn
-          id="hamburger-btn"
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          onClick={() => {
-            if (!pathStartRef.current) return;
+    <div id="moblie-nav-trigger">
+      <Styled.Btn
+        id="hamburger-btn"
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+        onClick={() => {
+          if (!pathStartRef.current) return;
 
-            toggleOpen();
-            const openTimeline = getMoblieOpenAnimationTimeline(refObjects);
-            const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
-            if (isOpen) {
-              closeTimeline.play();
-            } else {
-              openTimeline.play();
-            }
-          }}
-        >
-          <Icon />
-        </Styled.Btn>
-        {isOpen &&
-          createPortal(
-            <MobileNav
-              isOpen={isOpen}
-              toggleOpen={toggleOpen}
-              refObjects={refObjects}
-            />,
-            document.getElementById("mobile-nav-portal") as HTMLDivElement,
-          )}
-      </Styled.RootWrapper>
+          toggleOpen();
+          const openTimeline = getMoblieOpenAnimationTimeline(refObjects);
+          const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
+          if (isOpen) {
+            closeTimeline.play();
+          } else {
+            openTimeline.play();
+          }
+        }}
+      >
+        <Icon />
+      </Styled.Btn>
+      {isOpen &&
+        createPortal(
+          <MobileNav
+            isOpen={isOpen}
+            toggleOpen={toggleOpen}
+            refObjects={refObjects}
+          />,
+          document.getElementById("mobile-nav-portal") as HTMLDivElement
+        )}
       <UnfilledSVG refObjects={refObjects} />
-    </React.Fragment>
+    </div>
   );
 }
 

@@ -19,10 +19,10 @@ function Header() {
             <Styled.ThemeWrapper>
               <ThemeToggler maskId="desktop-header-theme-toggler" />
             </Styled.ThemeWrapper>
+            <Hamburger />
           </Styled.Header>
         </Styled.HeaderWrapper>
       </Styled.RootWrapper>
-      <Hamburger />
       <div id="blog-main__header-scroll-trigger" />
     </React.Fragment>
   );

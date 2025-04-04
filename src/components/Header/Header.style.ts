@@ -58,8 +58,8 @@ export const NavigationItem = styled.li`
 `;
 
 export const PostNaviation = styled.div`
-  display: flex;
-  align-items: baseline;
+  /* display: flex;
+  align-items: baseline; */
 `;
 
 export const ThemeWrapper = styled.div`

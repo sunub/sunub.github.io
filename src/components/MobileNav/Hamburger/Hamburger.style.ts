@@ -97,10 +97,10 @@ export const Circle = styled.rect`
 export const Btn = styled.button.attrs({
   className: "hamburger-btn",
 })`
-  position: absolute;
   z-index: 10001;
+  /* position: absolute;
   top: 60px;
-  right: 32px;
+  right: 32px; */
 
   width: 40px;
   height: 40px;

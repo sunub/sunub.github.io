@@ -35,30 +35,25 @@ function Navigation() {
   }, [isOpen]);
 
   return (
-    <React.Fragment>
-      <nav className="pl-4">
-        <Styled.NavigationWrapper>
-          <Styled.NavigationItem>
-            <Styled.PostNaviation>
-              <Button
-                onClick={toggleOpen}
-                ref={buttonRef}
-                className="select-none"
-              >
-                카테고리들
-                <UnderLineWaveIcon />
-              </Button>
-              <PortalRef id="post-dropdown-portal" ref={portalRef} />
-              {isOpen &&
-                createPortal(
-                  <DropDownMenu toggleOpen={toggleOpen} />,
-                  portalRef.current!
-                )}
-            </Styled.PostNaviation>
-          </Styled.NavigationItem>
-        </Styled.NavigationWrapper>
-      </nav>
-    </React.Fragment>
+    <NavigationWrapper id="blog-main__post-navigation" className="pl-4">
+      <Styled.PostNaviation>
+        <Button
+          disabled={isOpen}
+          onClick={toggleOpen}
+          ref={buttonRef}
+          className="select-none"
+        >
+          카테고리들
+          <UnderLineWaveIcon />
+          <PortalRef id="post-dropdown-portal" ref={portalRef} />
+        </Button>
+        {isOpen &&
+          createPortal(
+            <DropDownMenu toggleOpen={toggleOpen} />,
+            portalRef.current!
+          )}
+      </Styled.PostNaviation>
+    </NavigationWrapper>
   );
 }
 
@@ -85,6 +80,10 @@ function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
   );
 }
 
+const NavigationWrapper = styled.nav`
+  font-size: 1.25rem;
+`;
+
 const UnderLineWaveIcon = memo(
   ({
     width = 3,
@@ -100,7 +99,7 @@ const UnderLineWaveIcon = memo(
     return (
       <UnderLineWaveSVG
         xmlns="http://www.w3.org/2000/svg"
-        width="700"
+        width="100"
         height="11"
         fill="none"
       >
@@ -117,9 +116,9 @@ const UnderLineWaveIcon = memo(
 );
 
 const UnderLineWaveSVG = styled.svg`
-  position: absolute;
+  /* position: absolute;
   top: 35px;
-  left: -5px;
+  left: -5px; */
 
   stroke: var(--color-text);
   stroke-width: 2.5;
@@ -148,7 +147,6 @@ const Button = styled.button`
 
 const PortalRef = styled.div`
   position: absolute;
-  top: calc(40px + 1rem);
   z-index: 1000;
 `;
 

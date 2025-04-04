@@ -16,7 +16,7 @@ const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
 });
 
 async function Page() {
-  const recentPostsMetadata = await getRecentPostsMetadata(10);
+  const recentPostsMetadata = await getRecentPostsMetadata(30);
   return (
     <React.Fragment>
       <Styled.HeaderContentsWrapper>
@@ -24,11 +24,11 @@ async function Page() {
         <Wave />
       </Styled.HeaderContentsWrapper>
       <div id="blog-main__recently-post-list">
-        <Styled.MainWrapper>
+        <Styled.MainWrapper id="blog-main__recently-post-list-wrapper">
           <Suspense fallback={<NewestPostSkeleton />}>
             <NewestPost initialPosts={recentPostsMetadata} />
           </Suspense>
-          <Styled.RightSideWrapper>
+          <Styled.RightSideWrapper id="blog-main__categories">
             <Categories categories={categories} />
           </Styled.RightSideWrapper>
         </Styled.MainWrapper>
