@@ -75,7 +75,43 @@ export default async function RootLayout({
           type="image/x-icon"
           sizes="32x32"
           href="/assets/favicon.ico"
-        ></link>
+        />
+        <link
+          rel="preload"
+          href="/assets/clouds.avif"
+          as="image"
+          type="image/avif"
+        />
+        <link
+          rel="preload"
+          href="/assets/bridge.avif"
+          as="image"
+          type="image/avif"
+        />
+        <link
+          rel="preload"
+          href="/assets/cars.avif"
+          as="image"
+          type="image/avif"
+        />
+        <link
+          rel="preload"
+          href="/assets/dark_clouds.avif"
+          as="image"
+          type="image/avif"
+        />
+        <link
+          rel="preload"
+          href="/assets/dark_bridge.avif"
+          as="image"
+          type="image/avif"
+        />
+        <link
+          rel="preload"
+          href="/assets/dark_cars.avif"
+          as="image"
+          type="image/avif"
+        />
       </head>
       <body>
         <script
