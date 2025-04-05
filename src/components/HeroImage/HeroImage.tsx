@@ -14,13 +14,19 @@ import {
 } from "./HeroImage.style";
 import { useContext } from "react";
 import { ThemeContext } from "../Theme/ThemeProvider";
+import LightCloudImage from "@/public/assets/clouds.avif";
+import DarckCloudImage from "@/public/assets/dark_clouds.avif";
+import LightBridgeImage from "@/public/assets/bridge.avif";
+import DarkBridgeImage from "@/public/assets/dark_bridge.avif";
+import LightCarsImage from "@/public/assets/cars.avif";
+import DarkCarsImage from "@/public/assets/dark_cars.avif";
 
 function LightHeroImage() {
   return (
     <LightHeroImageWapper>
-      <Clouds $url="/assets/clouds.avif" $opacity="--color-light-heroimage" />
-      <Bridge $url="/assets/bridge.avif" $opacity="--color-light-heroimage" />
-      <Cars $url="/assets/cars.avif" $opacity="--color-light-heroimage" />
+      <Clouds $url={LightCloudImage} $opacity="--color-light-heroimage" />
+      <Bridge $url={LightBridgeImage} $opacity="--color-light-heroimage" />
+      <Cars $url={LightCarsImage} $opacity="--color-light-heroimage" />
       <Moon
         src={"/assets/hero-image__light-moon.avif"}
         width={2000}
@@ -39,15 +45,9 @@ function LightHeroImage() {
 function DarkHeroImage() {
   return (
     <DrakHeroImageWapper>
-      <Clouds
-        $url="/assets/dark_clouds.avif"
-        $opacity="--color-dark-heroimage"
-      />
-      <Bridge
-        $url="/assets/dark_bridge.avif"
-        $opacity="--color-dark-heroimage"
-      />
-      <Cars $url="/assets/dark_cars.avif" $opacity="--color-dark-heroimage" />
+      <Clouds $url={DarckCloudImage} $opacity="--color-dark-heroimage" />
+      <Bridge $url={DarkBridgeImage} $opacity="--color-dark-heroimage" />
+      <Cars $url={DarkCarsImage} $opacity="--color-dark-heroimage" />
       <Moon
         src={"/assets/dark_moon.avif"}
         width={2000}

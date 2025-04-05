@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 export const RootWrapper = styled.div`
   position: relative;
@@ -30,21 +30,21 @@ export const HeroImageWrapper = styled.div`
   justify-items: center;
 `;
 
-export const Bridge = styled.span<{ $url: string; $opacity: string }>`
+export const Bridge = styled.span<{ $url: StaticImageData; $opacity: string }>`
   display: inline-block;
   width: 100dvw;
   height: 120px;
-  background-image: url(${(props) => props.$url});
+  background-image: url(${(props) => props.$url.src});
   background-size: contain;
   background-repeat: repeat-x;
   opacity: var(${(props) => props.$opacity});
 `;
 
-export const Clouds = styled.span<{ $url: string; $opacity: string }>`
+export const Clouds = styled.span<{ $url: StaticImageData; $opacity: string }>`
   display: inline-block;
   width: 100%;
   height: 262px;
-  background-image: url(${(props) => props.$url});
+  background-image: url(${(props) => props.$url.src});
   background-repeat: repeat-x;
   opacity: var(${(props) => props.$opacity});
 
@@ -68,8 +68,8 @@ export const Moon = styled(Image)<{ $opacity: string }>`
   opacity: var(${(props) => props.$opacity});
 `;
 
-export const Cars = styled.span<{ $url: string; $opacity: string }>`
-  background-image: url(${(props) => props.$url});
+export const Cars = styled.span<{ $url: StaticImageData; $opacity: string }>`
+  background-image: url(${(props) => props.$url.src});
   background-repeat: repeat-x;
   position: absolute;
   z-index: -1;
