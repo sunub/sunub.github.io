@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "pnpm run build:workers && next build",
+    "build": "next build",
     "build:workers": "tsc -p tsconfig.worker.json",
     "start": "pnpm run build && next start -p 4004",
     "lint": "next lint",
@@ -15,15 +15,6 @@
     "seed": "bun run ./prisma/seed.ts"
   },
   "dependencies": {
-    "@codemirror/commands": "^6.8.0",
-    "@codemirror/lang-javascript": "^6.2.3",
-    "@codemirror/lang-markdown": "^6.3.2",
-    "@codemirror/language": "^6.10.8",
-    "@codemirror/language-data": "^6.5.1",
-    "@codemirror/state": "^6.5.2",
-    "@codemirror/theme-one-dark": "^6.1.2",
-    "@codemirror/view": "^6.36.4",
-    "@lezer/highlight": "^1.2.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/bundle-analyzer": "^13.5.8",
@@ -43,7 +34,6 @@
     "chokidar": "^4.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "codemirror": "^6.0.1",
     "cross-env": "^7.0.3",
     "date-fns": "^3.3.1",
     "dotenv": "^16.4.1",
@@ -56,7 +46,6 @@
     "gsap": "^3.12.5",
     "inquirer": "^12.0.1",
     "js-cookie": "^3.0.5",
-    "lru-cache": "^11.0.2",
     "lucide-react": "^0.477.0",
     "marked": "^5.1.0",
     "next": "^15.0.4",
@@ -84,8 +73,6 @@
     "ts-node": "^10.9.1",
     "unified": "^11.0.4",
     "vercel": "latest",
-    "web-push": "^3.6.7",
-    "web-vitals": "^3.5.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
