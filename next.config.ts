@@ -26,29 +26,6 @@ const nextConfig: NextConfig = {
       cssProp: false,
     },
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.optimization.moduleIds = "named";
-
-      config.externals = [
-        ...config.externals,
-        function (
-          { context, request }: { context: any; request: string },
-          callback: (error: Error | null, result: boolean | undefined) => void
-        ) {
-          if (
-            context.includes("workers") &&
-            ["gray-matter", "zod"].includes(request)
-          ) {
-            return callback(null, false);
-          }
-          return callback(null, undefined);
-        },
-      ];
-    }
-    return config;
-  },
-
   compress: true,
   output: "standalone",
   redirects: async () => {
