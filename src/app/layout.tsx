@@ -136,6 +136,7 @@ export default async function RootLayout({
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
               <div id="mobile-nav-portal" />
+              <div id="blog-search__input-area" />
             </div>
           </ThemeProvider>
         </StyledComponentsRegistry>

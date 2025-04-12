@@ -90,7 +90,7 @@ const NavigationWrapper = styled.nav`
   font-size: 1.25rem;
 `;
 
-const UnderLineWaveIcon = memo(
+export const UnderLineWaveIcon = memo(
   ({
     width = 3,
     scale = "1.25, 1",

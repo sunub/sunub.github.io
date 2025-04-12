@@ -1,10 +1,10 @@
 import * as Styled from "./Header.style";
-import Spacer from "@/components/Spacer";
 import ThemeToggler from "@/components/Theme/Toggler/ThemeToggler";
 import Logo from "./Logo";
 import Navigation from "./Navigation";
 import React from "react";
 import Hamburger from "../MobileNav/Hamburger";
+import { Search } from "@/widgets/Search";
 
 function Header() {
   return (
@@ -12,13 +12,17 @@ function Header() {
       <Styled.RootWrapper>
         <Styled.HeaderWrapper id="blog-main__header-contents">
           <Styled.Header>
-            <Styled.LogoAndNavWrapper>
+            <Styled.HeaderLeftSideWrapper>
               <Logo />
               <Navigation />
-            </Styled.LogoAndNavWrapper>
-            <Styled.ThemeWrapper>
-              <ThemeToggler maskId="desktop-header-theme-toggler" />
-            </Styled.ThemeWrapper>
+            </Styled.HeaderLeftSideWrapper>
+
+            <Styled.HeaderRightSideWrapper>
+              <Search />
+              <Styled.ThemeWrapper>
+                <ThemeToggler maskId="desktop-header-theme-toggler" />
+              </Styled.ThemeWrapper>
+            </Styled.HeaderRightSideWrapper>
             <Hamburger />
           </Styled.Header>
         </Styled.HeaderWrapper>
