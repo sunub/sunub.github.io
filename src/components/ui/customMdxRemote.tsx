@@ -110,9 +110,5 @@ export default async function MDXWrapper({
   category: PostCategory;
   slug: string;
 }) {
-  return (
-    <Suspense fallback={<ComponentSkeleton />}>
-      <CustomMDXRemote category={category} slug={slug} />
-    </Suspense>
-  );
+  return <CustomMDXRemote category={category} slug={slug} />;
 }

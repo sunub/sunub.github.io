@@ -1,8 +1,6 @@
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
 import { getRecentPostsMetadata } from "db/blog/api";
-import { Suspense } from "react";
-import { PostSkeleton } from "@/components/Skeletons";
 import { z } from "zod";
 import { FrontMatterSchema } from "@/types/schema";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
@@ -68,17 +66,12 @@ function UnderLineWaveSVG() {
   );
 }
 
-// Suspense 지원 래퍼 컴포넌트
 function BlogPostWithSuspense({
   initialPosts,
 }: {
   initialPosts?: PostMetadata[];
 }) {
-  return (
-    <Suspense fallback={<PostSkeleton />}>
-      <BlogPost initialPosts={initialPosts} />
-    </Suspense>
-  );
+  return <BlogPost initialPosts={initialPosts} />;
 }
 
 export default BlogPostWithSuspense;
