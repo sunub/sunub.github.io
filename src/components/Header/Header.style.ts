@@ -30,12 +30,19 @@ export const HeaderWrapper = styled.div`
   z-index: 1000;
 `;
 
+export const HeaderRightSideWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  align-items: center;
+`;
+
 export const Header = styled.header`
   display: flex;
   justify-content: space-between;
 `;
 
-export const LogoAndNavWrapper = styled.div`
+export const HeaderLeftSideWrapper = styled.div`
   display: flex;
   align-items: baseline;
 `;
