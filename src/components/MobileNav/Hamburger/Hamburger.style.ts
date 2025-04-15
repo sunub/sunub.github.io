@@ -97,7 +97,8 @@ export const Circle = styled.rect`
 export const Btn = styled.button<{ $isOpen: boolean }>`
   z-index: 10001;
   position: ${({ $isOpen }) => ($isOpen ? "absolute" : "static")};
-  right: ${({ $isOpen }) => ($isOpen ? "7cqw" : "0")};
+  right: ${({ $isOpen }) => ($isOpen ? "55px" : "0")};
+  top: ${({ $isOpen }) => ($isOpen ? "30px" : "0")};
   width: 40px;
   height: 40px;
 

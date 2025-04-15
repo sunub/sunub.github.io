@@ -19,6 +19,7 @@ export const UnderLineWaveIcon = memo(
   }: UnderLineWaveIconProps) => {
     return (
       <UnderLineWaveSVG
+        id="search-input_underline-wave"
         xmlns="http://www.w3.org/2000/svg"
         width="470"
         height="11"

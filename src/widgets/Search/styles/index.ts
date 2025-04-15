@@ -19,8 +19,8 @@ export const SearchOverlay = styled.div`
 export const SearchContainer = styled.div`
   position: absolute;
   top: calc(50cqh - 25cqh);
-  left: calc(50cqw - 25cqw);
-  width: 50cqw;
+  left: calc(50cqw - 35cqw);
+  width: 70cqw;
   max-height: 60cqh;
   display: flex;
   align-items: center;
@@ -64,6 +64,7 @@ export const ClearIconButton = styled.button`
 
 // UnderLineWaveIcon 스타일
 export const UnderLineWaveSVG = styled.svg`
+  width: 100%;
   position: absolute;
   top: 3.4rem;
   stroke: var(--color-text);

@@ -22,8 +22,8 @@ function Header() {
               <Styled.ThemeWrapper>
                 <ThemeToggler maskId="desktop-header-theme-toggler" />
               </Styled.ThemeWrapper>
+              <Hamburger />
             </Styled.HeaderRightSideWrapper>
-            <Hamburger />
           </Styled.Header>
         </Styled.HeaderWrapper>
       </Styled.RootWrapper>

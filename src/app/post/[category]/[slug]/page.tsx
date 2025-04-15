@@ -1,15 +1,16 @@
 import React, { Suspense } from "react";
 import {
+  Main,
   Article,
   PostTitle,
   ArticleWrapper,
   ArticleHeader,
+  ArticleRootWrapper,
 } from "./page.style";
 import { getAllPosts } from "db/blog/api";
 import { Wave } from "@/widgets/Wave";
 import { notFound } from "next/navigation";
 import getBlogInstance from "db/blog/blog";
-import { ComponentSkeleton } from "@/components/Skeletons";
 import CustomMDXRemoteComponents from "@/components/ui/customMdxRemote";
 
 export const revalidate = 43200;
@@ -75,7 +76,7 @@ async function Page({ params }: { params: Params }) {
   return (
     <React.Fragment>
       <Wave />
-      <main className="bg-base">
+      <Main>
         <script
           type="application/ld+json"
           suppressHydrationWarning
@@ -100,13 +101,15 @@ async function Page({ params }: { params: Params }) {
             }),
           }}
         />
-        <HeaderSection category={category} slug={slug} />
-        <ArticleWrapper id="blog-post__article">
-          <Article>
-            <CustomMDXRemoteComponents category={category} slug={slug} />
-          </Article>
-        </ArticleWrapper>
-      </main>
+        <ArticleRootWrapper id="blog-post__article-root">
+          <HeaderSection category={category} slug={slug} />
+          <ArticleWrapper id="blog-post__article">
+            <Article>
+              <CustomMDXRemoteComponents category={category} slug={slug} />
+            </Article>
+          </ArticleWrapper>
+        </ArticleRootWrapper>
+      </Main>
     </React.Fragment>
   );
 }
@@ -128,13 +131,15 @@ async function HeaderSection({
   return (
     <ArticleHeader>
       <PostTitle>{title}</PostTitle>
-      <time dateTime={new Date(date).toISOString()}>
-        {new Intl.DateTimeFormat("ko-KR", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }).format(new Date(date))}
-      </time>
+      <React.Suspense fallback={<div>...</div>}>
+        <time dateTime={new Date(date).toISOString()}>
+          {new Intl.DateTimeFormat("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(date))}
+        </time>
+      </React.Suspense>
     </ArticleHeader>
   );
 }

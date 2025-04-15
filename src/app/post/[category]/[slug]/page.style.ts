@@ -2,6 +2,18 @@
 
 import styled from "styled-components";
 
+export const Main = styled.main`
+  background-color: var(--color-background);
+`;
+
+export const ArticleRootWrapper = styled.div`
+  max-width: 45rem;
+  width: 100cqw;
+
+  margin-left: auto;
+  margin-right: auto;
+`;
+
 export const ArticleHeader = styled.div`
   display: flex;
   flex-direction: column;
@@ -21,7 +33,7 @@ export const ArticleHeader = styled.div`
 
 export const PostTitle = styled.h1`
   font-weight: 900;
-  font-size: 3rem;
+  font-size: 2.5rem;
   line-height: 3.5rem;
   margin-bottom: 2rem;
   padding-left: 2rem;
