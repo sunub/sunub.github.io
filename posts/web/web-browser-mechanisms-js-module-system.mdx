@@ -1,0 +1,303 @@
+---
+title: 웹 브라우저의 동작 원리와 JavaScript 모듈 시스템
+date: 2025-04-13
+tags: [web, commonjs, esmodule]
+summary: 클라이언트가 브라우저를 통해 사이트에 접속해서 일어나는 일과 JavaScript 모듈 시스템에 대한 설명입니다.
+slug: web-browser-mechanisms-js-module-system
+category: web
+completed: true
+---
+
+## 0 단계 : 네트워크 연결
+
+DHCP(Dyncamic Host Configuration Protocol) 네트워크에 연결된 장치에 IP 주소를 자동으로 할당하는 프로토콜입니다.
+
+DHCP는 클라이언트, 컴퓨터나 핸드폰과 같은 기기가 네트워크에 연결되자마자 IP 주소와 함께 DNS 서버의 주소를 포함한 네트워크 설정을 할당합니다. DHCP는 연결이 되자마자 IP 주소, 서브넷 마스크, 기본 게이트웨이, DNS 서버 주소에 대한 정보를 제공합니다.
+
+이렇게 얻은 정보를 운영체제 내의 설정 파일, `/etc/network/interface` 와 같은 위치에 네트워크 관련 정보들이 저장될 수 있습니다. 그리고 현재 사용 중인 네트워크 설정은 일반적으로 장치의 RAM에 로드되어서 네트워크 통신에 활동됩니다.
+
+일부 정보들은 재사용 메커니즘을 사용하기 위하여 SSD와 같은 영구 저장 장치에 기록이 됩니다. 장치가 부팅되면 운영체제는 이전에 DHCP로부터 받은 네트워크 설정을 확인하고, 유효하다면 자동으로 네트워크 인터페이스에 적용하여 네트워크 연결을 시도합니다.
+
+Wi-Fi 네트워크를 변경하거나 유선 네트워크를 연결/해제할 때, 장치는 새로운 DHCP 과정을 거쳐 새로운 네트워크 설정을 받게 됩니다. 이때 이전 설정은 더 이상 사용되지 않거나, 필요에 따라 보관될 수 있습니다.
+
+이 정보를 제공하고 저장하는 것으로 DHCP의 역할은 종료가 됩니다.
+
+## 1 단계 : URL에 접속한다.
+
+사용자가 브라우저에 URL을 입력 혹은 Link를 클릭하게 되었을 경우에 브라우저는 빠르게 해당 URL을 파싱하는 과정을 갖습니다. 이 과정에서 브라우저는 접속하고자 하는 주소가 어떻게 되는지 파악합니다. 이 주소를 통해 HTTP나 HTTPS 중 어떤 프로토콜을 파악합니다. 또한 주소에 어떤 search query를 포함하고 있는지, 어떤 local file을 필요로 하는지에 대한 정보를 얻습니다.
+
+## 2 단계 : DNS Resolution
+
+![web-browser-mechanisms-js-module-system1](/images/web/web-browser-mechanisms-js-module-system1.png)
+
+브라우저가 서버에 데이터를 요청하기 위해서는 실제 서버가 존재하는 위치가 어디인지 알 수 있는 정보인 IP 주소를 알아야 합니다. 이 주소를 얻기 위하여 DNS 조회 과정을 DNS Lookup 이라고 합니다.
+
+### DNS
+
+DNS(Domain Name System)은 인터넷 전화번호부입니다. DNS는 브라우저가 인터넷 자원을 로드할 수 있도록 도메인 이름을 IP 주소로 변환합니다. 이러한 작업은 **DNS Resolver** 를 통해서 작업이 수행됩니다.
+
+DNS Resolver가 **로컬 DNS 캐시**에 현재 접속한 주소, DNS에 대한 IP 주소가 캐싱되어 있는지 확인합니다. 캐싱되어 있는 주소가 있을 경우 즉시 IP 주소를 반환합니다. 이 후에는 로컬에 위치한 **Host File** 을 확인합니다. Host File에 매핑되어 있는 주소가 있다면 즉시 IP 주소를 반환합니다.
+
+이 과정에서 IP 주소를 발견하지 못했다면 운영체제에 구성된 DNS 서버에 쿼리를 보내는데 이 때 전송하는 DNS 서버를 **DNS Recursive Resolver, DNS 리커서**라고 합니다.
+
+**DNS 리커서**는 도서관의 어딘가에서 특정한 책을 찾아달라고 요청받는 사서로 생각할 수 있습니다. DNS 리커서는 웹 브라우저 등의 애플리케이션을 통해 클라이언트 컴퓨터로부터 쿼리를 받도록 고안된 서버입니다. 일반적으로, 리커서는 클라이언트의 DNS 쿼리를 충족시키기 위해 추가 요청을 수행합니다
+
+**루트 이름 서버**는 사람이 읽을 수 있는 호스트 이름을 IP 주소로 변환하는 첫 번째 단계입니다. 이 단계에서는 도서관에서 책장의 위치를 가리키는 색인을 반환하여 특정한 위치에 대해 구체화 시켜줍니다.
+
+이후에 탐색을 수행하는 서버는 **TLD(최상위 도메인) 네임서버**입니다. TLD 서버는 도서관의 특정 책장으로 생각할 수 있습니다. 이 이름 서버는 특정 IP 주소 검색의 다음 단계이며 호스트 이름의 마지막 부분을 호스팅합니다(example.com에서 TLD 서버는 “com”입니다)
+
+마지막으로 탐색을 수행하는 서버는 **권한 있는 이름 서버**입니다. 최종 이름 서버로서, 책장에 있는 사전처럼 특정 이름을 해당 정의로 변환합니다. 권한있는 이름 서버는 이름 서버 쿼리의 종착점입니다. 권한있는 이름 서버가 요청한 레코드에 대한 액세스 권한이 있다면, 요청한 호스트 이름의 IP 주소를 초기 요청을 한 DNS 리커서(사서)에게 돌려 보냅니다.
+
+이 과정에서 IP 주소를 발견하지 못했을 경우 해당 사이트에 대한 주소가 잘못되었다는 에러와 함께 해당 사이트에 접속할 수 없습니다. 반대로 이러한 과정을 거쳐서 IP 주소를 얻어낸 경우 사용자는 웹사이트에 접속할 수 있게 됩니다.
+
+## 3 단계 : 페이지 요청 및 자원 로드
+
+![web-browser-mechanisms-js-module-system2](/images/web/web-browser-mechanisms-js-module-system2.png)
+
+IP가 확인되면 브라우저와 서버 간에 TCP 연결(HTTPS인 경우 TLS 핸드셰이크도 함께 진행)이 이루어집니다. 그 후, 해당 서버 IP로 HTTP 요청(예: GET 요청)을 보내 HTML 문서를 받게 됩니다.
+
+HTML 구문을 Parsing 하며 웹페이지를 구성하기 위한 의미있는 단위로 이루어진 DOM Node로 구성이 되고 부모-자식 관계의 계층 구조로 이루어진 **DOM(Document Object Model) Tree**를 생성합니다.
+
+이 Parsing 과정에서 `<link rel="stylesheet" href="*/**.css" />` 와 같은 CSS 요청을 발견할 경우 병렬적으로 CSS 파일을 다운로드 및 Parsing을 통해 **CSSOM(CSS Object Model)** 을 생성합니다. 이때 DOM 파싱 자체는 계속 진행되지만, 화면에 렌더링되는 시점은 CSS가 모두 로드되어야만 이루어지므로 CSS는 **Render Blocking 특성**을 지닌 자원이라는 것을 아는 것이 중요합니다. CSS 자원의 다운로드의 경우 DOM Parsing과 함께 병렬적으로 이루어지지만 렌더링(화면에 그리는 것)이 CSSOM 구축 완료까지 지연됩니다.
+
+렌더 트리는 화면에 표시되는 요소만 포함하며, 각 요소의 스타일 정보를 포함하고 있습니다. 이후 Layout 과정에서 화면에 표시될 각 요소의 정확한 크기와 위치를 계산하는 과정입니다. 각 Node의 박스모델을 계산하고 `position` 속성에 따른 뷰포트 내에서 각 요소의 정확한 위치를 결정합니다. 이외에도 우리가 알고 있는 `FlexBox`나 `Grid` 레이이아웃과 같이 Node들의 위치를 결정하는 작업들이 이 단계에서 수행되어 개발자가 의도한 위치에 Node들이 위치하게 됩니다.
+
+Reflow가 수행하는 작업은 Layout과 동일한 작업을 수행합니다. 하지만 Reflow는 이미 만들어진 Render Tree에서 일부를 수정하는 작업을 수행합니다. Reflow는 성능에 큰 영향을 미치는 무거운 작업입니다. 왜냐하면 하나의 요소가 변경되면 그 자식 요소와 때로는 형제 요소에도 영향을 주어 연쇄적으로 다시 계산을 해야하는 상황이 발생하기 때문입니다. Reflow는 다음과 같은 작업으로 인해 발생할 수 있습니다.
+
+- DOM 요소 추가, 제거 또는 변경
+- CSS 속성 변경 (특히 크기나 위치 관련 속성)
+- 클래스 추가/제거로 인한 레이아웃 변경
+- 윈도우 크기 조정
+- 폰트 변경
+- 계산된 스타일 정보 요청 (offsetWidth, offsetHeight 등)
+- 스크롤 작업
+
+위의 작업들이 Composite이 이루어진 이 후 수행된다면 Reflow 작업이 발생하고 다시 Node의 위치들을 계산하고 Paint의 Compsite 하는 과정을 거치기 때문에 성능에 좋지 못한 영향을 줍니다.
+
+## 4단계 : Script 요청 처리
+
+엄밀히 따지자면 `<script>` 태그를 만났을 경우의 단계가 따로 존재하지는 않습니다. 하지만 JavaScript는 웹 성능에 많은 영향을 주는 요소이며 중요한 자원이기 때문에 정확히 파악하고 있는 것이 좋을 것 같아 별도의 단계로 구분하여 다루게 되었습니다.
+
+JavaScript는 기본적으로 앞서 설명한 CSS와 같이 **Blocking Rendering** 자원입니다. 하지만 CSS와 다른 점은 다른 **DOM Tree와 CSSOM, 모든 Parsing 작업** 또한 제한한다는 점입니다. 이러한 특징은 오류를 최소화하기 위함입니다.
+
+JavaScript 코드들을 실행하게 될 경우 일부 DOM 요소들은 JS 코드로 인해서 기존의 위치와 다른 위치에 위치하게 될 수 있고 기존에 있었던 위치에서 삭제가 되었을 수 있습니다. 이렇듯 JavaScript가 동적으로 DOM이나 CSSOM을 변경하면, 브라우저는 변경된 부분에 대해 Layout(배치)을 다시 계산하거나 Paint를 다시 수행(Reflow, Repaint)해야 하므로 성능에 영향을 줄 수 있기 때문에 다른 작업들을 유예 시키는 과정이 필요합니다.
+
+하지만 JavaScript를 다운로드 받고 실행시키는 과정에서 모든 작업을 중단할 경우 사용자가 실제 페이지를 보기까지는 오랜시간이 걸린다는 단점이 존재합니다. 그래서 이러한 문제를 해결하기 위해 `defer`와 `async` 속성을 script에 추가가 가능해졌습니다.
+
+`defer` 속성의 경우 JavaScript 코드의 다운로드를 DOM Parsing 과정과 함께 병렬적으로 수행할 수 있게합니다. 하지만 JavaScript 코드를 실행 시키는 시점은 Layout 작업이 모두 이루어진 후인 `DOMContentLoad` 이벤트가 발생할 시점에 JavaScript를 실행시킴으로 미룰 수 있는 속성입니다.
+
+`async` 속성의 경우 앞선 `defer`와 같이 JavaScript 파일을 병렬적으로 다운로드를 수행합니다. 단, `defer` 와 달리 다운로드가 완료되는 즉시 HTML 파싱을 중단하고 JavaScript 코드를 실행합니다. JavaScript 실행이 완료되면 다시 HTML 파싱을 중단합니다. 하지만 `async` 사용시 주의해햐할 점은 DOMContentLoaded 이벤트 발생 순서를 보장하지 않는다는점입니다.
+
+`DOMContentLoaded` 이벤트는 초기 HTML 문서가 완전히 파싱되고 DOM 트리가 구축되었을 때 발생합니다. 이때 CSS 와 같은 외부 리소스의 다운로드는 완료되지 않았을 수 있습니다. 이는 JavaScript 코드 또한 마찬가지입니다. 이러한 속도의 차이는 네트워크의 속도와 같은 환경에 의해서 영향을 받고 이러한 외부적인 요인으로 인해서 기존의 작성되어 있던 HTML의 순서대로 작동하지 않고 먼저 다운로드가 완료되는 순으로 실행이 되기 떄문에 순서를 보장할 수 없는 것입니다.
+
+이외에 최근들어 우리가 반드시 알아야 하는 속성은 `type="module"` 속성입니다. `<script type="module">` 태그를 사용하여 HTML에서 JavaScript 파일을 로드하는 것은 브라우저에게 해당 스크립트의 내용을 **ECMAScript Modules (ESM) 형식**으로 해석하고 처리하도록 지시하는 것입니다.
+
+이를 이해하기 위해 우선 CommonJS에 대해서 간단하게 정리해보겠습니다.
+
+### 4.1 CommonJS
+
+`type="module"`이 미치는 영향에 대해서 이야기하기전에 CommonJS에 대해서 간단하게 어떠한 특징이 있는지에 대해서 이야기하고 넘어가겠습니다. CommonJS는 비록 오늘 날의 트렌드와 어울리지는 않지만 많은 legacy 코드가 이미 많이 작성되어 있기 때문에 간단히 어떠한 특징을 갖고 있는지에 대해서 이야기 하겠습니다.
+
+```js
+(function (exports, require, module, __filename, __dirname) {
+  // 내부 모듈 코드는 실제로 여기에 들어갑니다.
+});
+```
+
+CommonJS는 `module wrapper`라는 함수를 사용하고 있습니다. 위의 작성한 코드처럼 require 한 모듈들을 개별 함수 클로저에 의해 래핑되어서 실행된다는 특징을 갖고 있습니다. 이러한 점이 문제가되는 예시는 다음과 같습니다.
+
+```js
+// test.js
+module.exports = {
+  [globalThis.hello]: "world",
+};
+```
+
+```js
+// index.js
+const hello = "hello";
+globalThis[hello] = hello;
+const test = require("./test.js");
+console.log(test[hello]);
+```
+
+위의 결과, `console.log`는 어떤 값이 출력이 될까요? `world`가 출력 됩니다. CommonJS는 동적으로 실행이 되고 같은 개별 클로저에서 실행이 되기 떄문입니다.
+
+```js
+// message.js
+const greeting = "Welcome!";
+module.exports = { content: greeting };
+
+// main.js
+const msg = require("./message");
+console.log(msg.content); // 출력: Welcome!
+```
+
+또한 `module.exports` 에 할당되는 변수, 값들은 하나의 객체로써 다루어집니다. 앞서 설명한 방법들이 CommonJS에서 모듈을 다루는 방법들이었습니다.
+
+앞서 설명한 CommonJS의 특징, `module wrapper`로 인해 불러온 모듈에 대한 클로저가 매번 생성 참조된다는 것은 성능상의 문제를 만들었습니다.
+
+많은 수의 클로저가 생성되고, 각각이 외부 스코프의 큰 객체나 변수를 참조하게 되면, 이러한 외부 변수들은 더 이상 필요하지 않더라도 **가비지 컬렉션(Garbage Collection, GC)** 의 대상이 되지 못하고 계속 메모리에 남아있게 되기 때문입니다.
+
+### 4.2 ES Module
+
+**ES Modules, ECMAScript Modules**에 대해서 자세하게 이야기하기 전에 먼저 **CommonJS** 와 어떤 차이가 있는지에 대해서 먼저 이야기 해보겠습니다.
+
+```js
+// CommonJS
+const fs = require("fs);
+
+module.export = {...};
+
+// ES Module
+import fs from "fs";
+
+export { ... };
+```
+
+CommonJS와 ES Module의 차이점을 이야기할 경우 가장 많이 사용되는 예시는 모듈을 Export할 경우와 Import 할 경우에 대한 차이를 가장 많이 이야기 합니다. 우선 결론부터 이야기를 하자면 **CommonJs의 경우 동기로 실행이 된다**는 특징과 **ES Module은 정적으로 실행이 된다**는 차이가 큰 차이를 만들어 냅니다. 우선 이 부분부터 짚고 가보겠습니다.
+
+```js
+// module1.cjs
+
+console.log("모듈1 로드");
+
+setTimeout(() => console.log("모듈1 시작"), 2000);
+
+console.log("모듈1 종료");
+```
+
+위의 코드는 Event Loop에 대해서 공부하셨다면 많이 보셨을 것이라고 생각합니다. 흔히 물어보는 실행 순서가 어떻게 되는지에 대한 문제입니다. 위 코드를 실행시킬 경우 우리는 코드의 실행 순서에 맞춰서 결과가 출력된다는 것을 알 수 있습니다.
+
+```js
+console.log("시작");
+const module1 = require("./module1.js");
+console.log("모듈들 실행 중");
+const module2 = require("./module2.js");
+console.log("모듈들 모두 실행 완료");
+```
+
+그렇다면 위의 코드는 어떤 결과가 출력될까요?
+
+```plaintext
+시작
+모듈1 도르
+모듈1 종료
+모듈들 실행 중
+모듈2 로드
+모듈2 종료
+모듈들 모두 실행 완료
+모듈1 시작
+모듈2 시작
+```
+
+CommonJS는 require한 코드를 동기적으로 실행하기 때문에 위와 같은 결과를 반환합니다. 그렇다면 반대의 경우 ES Module에서 위와 같은 결과를 만들기 위해서는 어떻게 해야 할까요?
+
+```js
+// esmodule1.js
+
+console.log("모듈1 로드");
+
+setTimeout(() => console.log("모듈1 시작"), 2000);
+
+console.log("모듈1 종료");
+```
+
+ES Module에서 위와 같이 작성되어 있는 코드를 CommonJS와 같이 불러올 수 있을까요? 그렇지 않습니다.
+
+```js
+console.log("시작");
+import "./esmodule.js";
+console.log("Hello World");
+import "./esmodule2.js";
+```
+
+위와 같이 import 문을 실행하면 CommonJS와 동일한 결과가 출력이 될까요?
+
+```plaintext
+모듈1 로드
+모듈1 종료
+module2 로드
+module2 종료
+시작
+Hello World
+모듈1 시작
+module2 시작
+```
+
+결과는 전혀 그렇지 않습니다. 왜 CommonJS의 `require` 문을 사용했을 경우에는 작동하고 `import`문을 사용했을 경우에는 작동하지 않을까요? ES Module은 **정적 분석**을 기본적인 속성으로 갖기 때문입니다.
+
+ESM은 코드를 실행하기 전에 모듈 간의 의존 관계 import, export를 미리 파악할 수 있도록 설계가 되어있기 때문입니다. 그렇기 때문에 `import`와 `export`는 반드시 모듈의 최상위 레벨에 작성되어야 하며, 동적인 조건문이나 함수 호출 내에서 사용할 수 없습니다.
+
+코드내의 console 코드가 작성되어 있더라도 ESM은 import 문을 가장 먼저 실행한 후 해당 코드로 인한 의존 관계를 파악해 모듈을 실행하기 전에 어떤 모듈이 어떤 값을 필요로 하는지 정확하게 **linking, 연결**하기 때문입니다.
+
+ES Module에 대한 자세한 설명은 다음 블로그 포스트에서 다루고 CommonJS와 ES Build 간의 성능차이가 왜 발생하는지에 대해서 더 다루어보겠습니다.
+
+### 4.3 Tree Shaking
+
+`module.exports`의 객체라는 특성 때문에, 빌드 타임에서는 모듈에서 어떠한 값을 불러와 어떻게 사용될 수 있을지를 가늠할 수 없습니다. 동적으로 실행이 되며 객체로 불러온 값이 언제 사용할 것인지 알 수 없기 때문입니다.
+
+트리 셰이킹을 통해서 불필요한 코드를 덜어내서 성능을 향상 시키기 위해서는 전체 모듈을 import 하는 것이 아닌 필요한 기능의 일부분을 로드하는 것이 중요합니다.
+
+```js
+// my-commonjs-module.cjs (CommonJS)
+module.exports = {
+  valueA: 10,
+  valueB: "hello",
+  myFunction: () => console.log("From CommonJS"),
+};
+
+// main.mjs (ES Module)
+import { valueA } from "./my-commonjs-module.cjs";
+console.log(valueA);
+```
+
+위의 코드는 CommonJS의 일부분을 명시적으로 불러오는 것 같지만 실제로는 모듈의 전체를 로드하고 있습니다. 이는 CommonJS의 동적인 특성 때문에 특정 부분만 선택적으로 사용하지 않고 전체 모듈을 불러오고 있습니다.
+
+```js
+// moduleA.mjs (ESM)
+export const PI = 3.14159;
+export function add(a, b) {
+  return a + b;
+}
+export function subtract(a, b) {
+  return a - b;
+}
+
+// main.mjs (ESM)
+import { PI, add } from "./moduleA.mjs";
+
+console.log(PI);
+console.log(add(5, 2));
+```
+
+반면 ESM은 일부 모듈만 명시적으로 불러오는 것이 가능합니다. 이는 ESM이 정적 분석을 속성으로 갖는 덕분입니다. ESM은 모듈의 로딩(다운로드 및 파싱)과 실행을 분리할 수 있습니다. 런타임은 의존성 그래프를 따라 필요한 모듈을 먼저 로드하고 파싱하지만, 모든 모듈을 즉시 실행하는 것이 아니라 연결 과정에서 필요한 부분만 활성화합니다.
+
+여기서 중요한 부분은 **코드를 실행하기 이전, 파싱 시점에 분석** 하여 번들러나 런타임은 이 `import` 선언과 해당 모듈의 `export` 선언을 **매칭**시켜 필요한 부분만 **연결(linking)** 한다는 것이 가장 중요한 부분입니다.
+
+### 4.4 Caching
+
+우선 웹에서 Caching이 어떤 것을 기준으로 이루어지는 지 알아야 합니다. 웹 브라우저는 성능 향상을 위해 요청한 리소스 HTML, CSS, JavaScript, Image 등을 **로컬 저장소, 캐시**에 저장합니다. 이후 동일한 URL에 대한 요청이 발생하면, 서버 대신 캐시된 리소스를 사용하여 빠르게 로딩하는 방법을 사용하고 있습니다.
+
+ESM은 각 모듈을 개별적인 파일로 취급하고 `import` 구문을 통해 필요한 모듈만 명시적으로 로드합니다. 이는 각 모듈이 고유한 URL을 가지게 되므로, 브라우저는 각 모듈 파일을 독립적으로 캐싱할 수 있다는 의미입니다.
+
+이러한 특징은 ESM이 웹 캐싱에 유리한 이유 중 하나로 **ETag를 더욱 효과적으로 활용할 수 있다는 점**을 들 수 있습니다. 파일 내용이 변경되지 않는 한, 해당 파일의 ETag는 계속 유지되기 때문에 캐싱 성능을 향상 시킬 수 있습니다.
+
+이러한 특징 덕분에 웹 페이지의 특정 부분만 변경되었을 때, 변경된 모듈 파일만 다시 다운로드하면 됩니다. 의존성이 있는 다른 모듈 파일은 캐시된 버전을 그대로 사용할 수 있어 불필요한 데이터의 전송을 줄이고 로딩 속도를 향상 시킬 수 있습니다.
+
+또한 ESM의 정적 분석이 가능하다는 특징 덕분에 HTML 파싱 단계에서 어떤 모듈 파일들이 필요한지 미리 파악할 수 있습니다. 이를 통해 브라우저는 필요한 모듈 파일들을 `pre-load` 하거나 우선순위를 높여 다운로드하는 등의 최적화를 진행할 수 있습니다.
+
+## 결론
+
+지금까지 브라우저가 웹 사이트에 접속하여 페이지를 렌더링하기까지의 주요 과정을 살펴보았습니다. 특히 JavaScript 모듈 시스템인 CommonJS와 ESM의 차이점과 ESM이 웹 성능에 미치는 긍정적인 영향에 대해 강조했습니다.
+
+CommonJS는 오랫동안 사용되어 왔고 여전히 많은 레거시 코드에서 찾아볼 수 있지만, 웹 환경의 성능 요구 사항과 ESM의 등장으로 인해 현대 웹 개발에서는 ESM을 적극적으로 채택하는 것이 권장됩니다.
+
+ESM은 정적 분석, 효율적인 의존성 관리, 그리고 트리 셰이킹과 같은 강력한 최적화 기능을 통해 더 빠르고 효율적인 웹 애플리케이션을 구축하는 데 핵심적인 역할을 합니다.
+
+따라서 웹 개발자는 ESM의 장점을 이해하고 새로운 프로젝트는 물론 기존 프로젝트에서도 ESM으로의 전환을 고려하여 사용자 경험과 애플리케이션 성능을 향상시키는 데 노력을 기울여야 합니다. 더 나아가 ESM과 관련된 빌드 도구(Webpack, Parcel, Rollup 등)의 활용과 최적화 전략에 대한 학습도 중요합니다.
+
+### 참고 자료
+
+- [https://yceffort.kr/2023/05/what-is-commonjs](https://yceffort.kr/2023/05/what-is-commonjs)
+- [https://yceffort.kr/2023/05/why-esmodule](https://yceffort.kr/2023/05/why-esmodule)
