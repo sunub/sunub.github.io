@@ -10,17 +10,17 @@ import {
   ClearIconButton,
 } from "../styles/index";
 
-interface SearchHeaderProps {
+interface SearchInputHeaderProps {
   query: string;
   onQueryChange: (value: string) => void;
   onClear: () => void;
 }
 
-export function SearchHeader({
+export function SearchInputHeader({
   query,
   onQueryChange,
   onClear,
-}: SearchHeaderProps) {
+}: SearchInputHeaderProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onQueryChange(e.target.value);
   };

@@ -2,7 +2,7 @@
 
 import useToggle from "@/hooks/use-toggle";
 import { SearchButton } from "./SearchButton";
-import { SearchInput } from "./SearchInput";
+import { SearchModal } from "./SearchModal";
 import { createPortal } from "react-dom";
 
 function Search() {
@@ -13,7 +13,7 @@ function Search() {
       <SearchButton isOpen={isOpen} toggleOpen={toggleOpen} />
       {isOpen &&
         createPortal(
-          <SearchInput toggleOpen={toggleOpen} />,
+          <SearchModal toggleOpen={toggleOpen} />,
           document.getElementById("blog-search__input-area")!
         )}
     </>

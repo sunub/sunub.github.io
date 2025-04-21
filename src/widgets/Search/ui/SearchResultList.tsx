@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchResult } from "../types/types";
+import { SearchResult } from "../types";
 import { ListIndicator } from "@/shared/style/List";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
 import {
@@ -34,7 +34,7 @@ export function SearchResultsList({
   }
 
   return (
-    <ResultsList>
+    <>
       {results.map(({ postKey, post }: SearchResult, index) => {
         const { frontmatter } = post;
         const url = `/post/${frontmatter.category}/${frontmatter.slug}`;
@@ -50,6 +50,6 @@ export function SearchResultsList({
           </ResultItem>
         );
       })}
-    </ResultsList>
+    </>
   );
 }

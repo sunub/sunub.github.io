@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { gsap } from "gsap";
 
-export function useAnimations(elementRef: React.RefObject<HTMLElement>) {
+export function useAnimations(elementRef: React.RefObject<HTMLElement | null>) {
   const initOpenAnimation = useCallback(() => {
     if (!elementRef.current) return;
 

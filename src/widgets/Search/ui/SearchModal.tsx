@@ -1,38 +1,36 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  Suspense,
-  useDeferredValue,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import ReactFocusLock from "react-focus-lock";
-import { SearchContainer, SearchOverlay } from "../styles";
-import { SearchHeader } from "./SearchHeader";
+import { ResultsList, SearchContainer, SearchOverlay } from "../styles";
+import { SearchInputHeader } from "./SearchInputHeader";
 import { useSearchResults } from "../hook/useSearchResults";
 import { useAnimations } from "../hook/useAnimations";
 import { useOutsideClick } from "../hook/useOutsideClick";
 import { useKeyPress } from "../hook/useKeyPress";
 import { SearchResultsList } from "./SearchResultList";
+import { LoadingComponent } from "./LoadingComponent";
 
-interface SearchInputProps {
+interface SearchModalProps {
   toggleOpen: () => void;
 }
 
-function SearchInput({ toggleOpen }: SearchInputProps) {
+function SearchModal({ toggleOpen }: SearchModalProps) {
   const [query, setQuery] = useState("");
-  const deferredQuery = useDeferredValue(query);
+  const [isLoading, setIsLoading] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { results, fetchResults, clearResults } = useSearchResults();
   const { initOpenAnimation, closeAnimation } = useAnimations(rootRef);
 
-  const handleQueryChange = (value: string) => {
-    setQuery(value);
-    fetchResults(value);
-  };
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      setQuery(value);
+      fetchResults(value, setIsLoading);
+    },
+    [query]
+  );
 
   const handleClear = () => {
     setQuery("");
@@ -46,6 +44,7 @@ function SearchInput({ toggleOpen }: SearchInputProps) {
   useOutsideClick(contentRef, handleClose);
   useKeyPress("Escape", handleClose);
 
+  // Modal 바깥 부분 스크롤이 불가능하게끔 처리
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -61,18 +60,25 @@ function SearchInput({ toggleOpen }: SearchInputProps) {
     <ReactFocusLock>
       <SearchOverlay ref={rootRef}>
         <SearchContainer id="search-input__content-wrapper" ref={contentRef}>
-          <SearchHeader
-            query={deferredQuery}
+          <SearchInputHeader
+            query={query}
             onQueryChange={handleQueryChange}
             onClear={handleClear}
           />
-          <Suspense fallback={<div>Loading...</div>}>
-            <SearchResultsList results={results} onResultClick={handleClose} />
-          </Suspense>
+          <ResultsList>
+            {isLoading ? (
+              <LoadingComponent />
+            ) : (
+              <SearchResultsList
+                results={results}
+                onResultClick={handleClose}
+              />
+            )}
+          </ResultsList>
         </SearchContainer>
       </SearchOverlay>
     </ReactFocusLock>
   );
 }
 
-export { SearchInput };
+export { SearchModal };

@@ -4,37 +4,6 @@ import styled, { keyframes } from "styled-components";
 import { memo } from "react";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
 
-const rotate = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-
-  50% {
-    transform: rotate(40deg);
-  }
-
-  80% {
-    transform  : rotate(-10deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
-  }
-`;
-
-const scale = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.95);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-`;
-
 function SearchButton({
   isOpen,
   toggleOpen,
@@ -73,6 +42,37 @@ const SearchIcon = memo(() => {
     </SearchSvg>
   );
 });
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(40deg);
+  }
+
+  80% {
+    transform  : rotate(-10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+`;
+
+const scale = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`;
 const SearchSvg = styled.svg``;
 
 const StyledSearchButton = styled.button`
