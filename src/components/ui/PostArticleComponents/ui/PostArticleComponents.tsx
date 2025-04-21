@@ -16,7 +16,7 @@ import { Blockquote } from "./BlockQuote";
 import { ListItem } from "./ListItem";
 import { UnOrderedList } from "./UnOrderedList";
 import { CustomLink } from "./CustomLink";
-import { MDXComponents } from "@/MDXComponents";
+import { MDXComponents } from "@/MDXContents";
 
 function LinkIcon() {
   return (
