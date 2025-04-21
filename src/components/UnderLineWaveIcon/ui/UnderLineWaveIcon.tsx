@@ -51,22 +51,18 @@ const UnderLineWavePath = styled.path<{ $delay: number }>`
   transition-duration: 200ms;
   stroke: color-mix(in oklch, var(--color-text), transparent);
 
-  animation: wave 3.5s cubic-bezier(0.8, 1, 0.7, 1) infinite;
-  animation-delay: ${(props) => props.$delay}s;
+  animation: wave 2s cubic-bezier(0.8, 1, 0.7, 1) infinite;
 
   @keyframes wave {
     0% {
-      stroke-dashoffset: 1;
-      opacity: 0;
+      opacity: 1;
     }
     50% {
-      stroke-dashoffset: 0;
-      opacity: 1;
+      opacity: 0.35;
     }
 
     100% {
-      stroke-dashoffset: 1;
-      opacity: 0;
+      opacity: 1;
     }
   }
 `;
