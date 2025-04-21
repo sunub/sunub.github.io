@@ -1,4 +1,4 @@
-export function isKr(char: string) {
+export function isKr(char: string): boolean {
   const c = char.charCodeAt(0);
   return (
     ("ㄱ".charCodeAt(0) <= c && c <= "ㅎ".charCodeAt(0)) ||
@@ -7,12 +7,12 @@ export function isKr(char: string) {
 }
 
 // Hangul syllable index relative to '가'
-export function krNum(s: string) {
+export function krNum(s: string): number {
   return s.charCodeAt(0) - "가".charCodeAt(0);
 }
 
 // Given a Korean char, return possible decomposed forms: syllable w/o jongseong, and leading consonant
-export function krList(s: string) {
+export function krList(s: string): string[] {
   const jaeumList = [
     "ㄱ",
     "ㄲ",
@@ -36,9 +36,9 @@ export function krList(s: string) {
   ];
   const res = [s];
   const k = krNum(s);
+
   if (k >= 0) {
     if (k % 28 !== 0) {
-      // syllable without jongseong
       res.push(
         String.fromCharCode(Math.floor(k / 28) * 28 + "가".charCodeAt(0))
       );
@@ -49,12 +49,15 @@ export function krList(s: string) {
   return res;
 }
 
-// direct equality or loose Hangul match
-export function eqKr(s: string, d: string) {
-  if (isKr(s) && isKr(d)) return krList(d).includes(s);
-  return s === d;
+// direct equality or loose Hangul match, plus case-insensitive for non-Korean
+export function eqKr(s: string, d: string): boolean {
+  if (isKr(s) && isKr(d)) {
+    return krList(d).includes(s);
+  }
+  return s.toLowerCase() === d.toLowerCase();
 }
-export function eqKrPos(s: string, d: string, dNext: string = "") {
+
+export function eqKrPos(s: string, d: string, dNext: string = ""): boolean {
   // 완성 음절 여부를 판별하는 함수 (ㄱ, ㅁ 등은 제외)
   const isFullSyllable = (ch: string) =>
     ch.charCodeAt(0) >= "가".charCodeAt(0) &&
@@ -67,7 +70,6 @@ export function eqKrPos(s: string, d: string, dNext: string = "") {
       (dNext === "" || isFullSyllable(dNext))
     )
   ) {
-    // 입력된 문자가 완성 음절이 아니라면 자세한 매칭을 하지 않고 false 반환
     return false;
   }
 
@@ -92,7 +94,7 @@ export function eqKrPos(s: string, d: string, dNext: string = "") {
     "ㅍ",
     "ㅎ",
   ];
-  const krPos = [
+  const krPos: [number, number][] = [
     [0, 0],
     [1, 0],
     [2, 1],
@@ -122,6 +124,7 @@ export function eqKrPos(s: string, d: string, dNext: string = "") {
     [26, 17],
     [27, 18],
   ];
+
   const num = krNum(s);
   const jong = num % 28;
   const [leadDiff, nextChoIdx] = krPos[jong];

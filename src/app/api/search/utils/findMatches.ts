@@ -1,19 +1,37 @@
-import { eqKr, eqKrPos } from "./preprocess";
+import { eqKr, eqKrPos, isKr, krList, krNum } from "./preprocess";
 
-export function findMatches(query: string, data: string) {
-  const results = [];
-  const ql = query.length,
-    dl = data.length;
+export function findMatches(query: string, data: string): string[] {
+  const qLower = query.toLowerCase();
+  const dLower = data.toLowerCase();
+
+  const results: string[] = [];
+  const ql = qLower.length;
+  const dl = dLower.length;
+
   for (let i = 0; i <= dl - ql; i++) {
     let ok = true;
     for (let j = 0; j < ql; j++) {
-      const qc = query[j],
-        dc = data[i + j];
+      const qc = qLower[j];
+      const dc = dLower[i + j];
+
       if (j === ql - 1) {
-        if (!eqKr(qc, dc)) {
-          if (i + j + 1 < dl && eqKrPos(qc, dc, data[i + j + 1])) continue;
-          ok = false;
-          break;
+        const origQc = query[j];
+        const origDc = data[i + j];
+        const origDcNext = data[i + j + 1] ?? "";
+
+        if (isKr(origQc) && isKr(origDc)) {
+          if (!eqKr(origQc, origDc)) {
+            if (eqKrPos(origQc, origDc, origDcNext)) {
+              continue;
+            }
+            ok = false;
+            break;
+          }
+        } else {
+          if (qc !== dc) {
+            ok = false;
+            break;
+          }
         }
       } else {
         if (qc !== dc) {
@@ -22,7 +40,10 @@ export function findMatches(query: string, data: string) {
         }
       }
     }
-    if (ok) results.push(data.slice(i, i + ql));
+    if (ok) {
+      results.push(data.slice(i, i + ql));
+    }
   }
+
   return results;
 }
