@@ -40,10 +40,32 @@ export const ArticleWrapper = styled.div`
 `;
 
 export const Article = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   width: 100%;
   height: 100%;
 
   max-width: 850px;
   font-size: 18px;
   line-height: calc(1.7rem + 0.8rem);
+`;
+
+export const ContentBlink = styled.div<{ $width: string }>`
+  display: inline-block;
+  width: ${(props) => props.$width};
+  height: 1.5rem;
+  background-color: color-mix(in oklch, var(--color-text) 20%, transparent);
+  border-radius: 0.25rem;
+  animation: blink 1.75s ease-in-out infinite;
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
 `;
