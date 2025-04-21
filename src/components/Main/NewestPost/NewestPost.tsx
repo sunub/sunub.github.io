@@ -1,14 +1,11 @@
 import BlogPost from "../BlogPost";
 import Spacer from "@/components/Spacer";
 import { RootWrapper, TitleWrapper, Title } from "./NewestPost.style";
-import { z } from "zod";
-import { FrontMatterSchema } from "@/types/schema";
+import { getRecentPostsMetadata } from "db/blog/api";
 
-function NewestPost({
-  initialPosts,
-}: {
-  initialPosts: z.infer<typeof FrontMatterSchema>[];
-}) {
+async function NewestPost() {
+  const recentPostsMetadata = await getRecentPostsMetadata(30);
+
   return (
     <RootWrapper>
       <TitleWrapper>
@@ -16,7 +13,7 @@ function NewestPost({
         <Title>최신 포스트들</Title>
       </TitleWrapper>
       <Spacer axis={"vertical"} size={32} />
-      <BlogPost initialPosts={initialPosts} />
+      <BlogPost initialPosts={recentPostsMetadata} />
     </RootWrapper>
   );
 }

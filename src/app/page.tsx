@@ -5,18 +5,15 @@ import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
-import { getRecentPostsMetadata } from "db/blog/api";
-import { NewestPostSkeleton } from "@/components/Skeletons";
+import { ContentLoading } from "@/components/Skeletons/ui/ContentLoading";
 
 const categories = ["cs", "web", "code", "algorithm"];
 
 const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
-  loading: () => <NewestPostSkeleton />,
   ssr: true,
 });
 
 async function Page() {
-  const recentPostsMetadata = await getRecentPostsMetadata(30);
   return (
     <React.Fragment>
       <Styled.HeaderContentsWrapper>
@@ -25,8 +22,8 @@ async function Page() {
       </Styled.HeaderContentsWrapper>
       <div id="blog-main__recently-post-list">
         <Styled.MainWrapper id="blog-main__recently-post-list-wrapper">
-          <Suspense fallback={<NewestPostSkeleton />}>
-            <NewestPost initialPosts={recentPostsMetadata} />
+          <Suspense fallback={<ContentLoading />}>
+            <NewestPost />
           </Suspense>
           <Styled.RightSideWrapper id="blog-main__categories">
             <Categories categories={categories} />
