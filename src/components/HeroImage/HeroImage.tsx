@@ -28,7 +28,8 @@ function LightHeroImage() {
         alt={"clouds"}
         sizes="100vw"
         quality={70}
-        priority={true}
+        priority
+        fetchPriority="high"
         $opacity="--color-light-heroimage"
       />
       <LightShadow $opacity="--color-light-heroimage" />
@@ -55,7 +56,8 @@ function DarkHeroImage() {
         alt={"clouds"}
         sizes="100vw"
         quality={70}
-        priority={true}
+        priority
+        fetchPriority="high"
         $opacity="--color-dark-heroimage"
       />
       <DarkShadow $opacity="--color-dark-heroimage" />

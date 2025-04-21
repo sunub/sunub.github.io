@@ -81,36 +81,42 @@ export default async function RootLayout({
           href="/assets/clouds.avif"
           as="image"
           type="image/avif"
+          fetchPriority="high"
         />
         <link
           rel="preload"
           href="/assets/bridge.avif"
           as="image"
           type="image/avif"
+          fetchPriority="high"
         />
         <link
           rel="preload"
           href="/assets/cars.avif"
           as="image"
           type="image/avif"
+          fetchPriority="high"
         />
         <link
           rel="preload"
           href="/assets/dark_clouds.avif"
           as="image"
           type="image/avif"
+          fetchPriority="high"
         />
         <link
           rel="preload"
           href="/assets/dark_bridge.avif"
           as="image"
           type="image/avif"
+          fetchPriority="high"
         />
         <link
           rel="preload"
           href="/assets/dark_cars.avif"
           as="image"
           type="image/avif"
+          fetchPriority="high"
         />
       </head>
       <body>
