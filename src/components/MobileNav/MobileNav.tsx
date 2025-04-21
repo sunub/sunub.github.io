@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import styled from "styled-components";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import { getMoblieCloseAnimationTimeline } from "./MoblieNav.helper";
@@ -27,15 +26,13 @@ const CATEGORIES = [
     href: "/post/algorithm",
   },
 ];
-
 export interface RefObjects {
-  pathStartRef: React.RefObject<SVGPathElement>;
-  pathMidRef: React.RefObject<SVGPathElement>;
-  pathEndRef: React.RefObject<SVGPathElement>;
-  gradientRef: React.RefObject<SVGLinearGradientElement>;
-  svgRef: React.RefObject<SVGSVGElement>;
+  pathStartRef: React.RefObject<SVGPathElement | null>;
+  pathMidRef: React.RefObject<SVGPathElement | null>;
+  pathEndRef: React.RefObject<SVGPathElement | null>;
+  gradientRef: React.RefObject<SVGLinearGradientElement | null>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 }
-
 interface Props {
   isOpen: boolean;
   toggleOpen: () => void;

@@ -2,11 +2,11 @@ import gsap from "gsap";
 import React from "react";
 
 interface RefObjects {
-  pathStartRef: React.RefObject<SVGPathElement>;
-  pathMidRef: React.RefObject<SVGPathElement>;
-  pathEndRef: React.RefObject<SVGPathElement>;
-  gradientRef: React.RefObject<SVGLinearGradientElement>;
-  svgRef: React.RefObject<SVGSVGElement>;
+  pathStartRef: React.RefObject<SVGPathElement | null>;
+  pathMidRef: React.RefObject<SVGPathElement | null>;
+  pathEndRef: React.RefObject<SVGPathElement | null>;
+  gradientRef: React.RefObject<SVGLinearGradientElement | null>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
 const paths = {
@@ -69,7 +69,7 @@ export const getMoblieOpenAnimationTimeline = (refObjects: RefObjects) => {
 
 const openInBetweenAnimation = (
   refObjects: RefObjects,
-  timeline: GSAPTimeline,
+  timeline: GSAPTimeline
 ) => {
   const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
     refObjects;
@@ -82,7 +82,7 @@ const openInBetweenAnimation = (
         ease: "sine.in",
         attr: { d: paths.step1.inBetween },
       },
-      0,
+      0
     )
     .to(
       pathMidRef.current,
@@ -91,7 +91,7 @@ const openInBetweenAnimation = (
         ease: "sine.in",
         attr: { d: paths.step2.inBetween },
       },
-      0,
+      0
     )
     .to(
       pathEndRef.current,
@@ -100,7 +100,7 @@ const openInBetweenAnimation = (
         ease: "sine.in",
         attr: { d: paths.step3.inBetween },
       },
-      0,
+      0
     )
     .to(
       gradientRef.current,
@@ -109,7 +109,7 @@ const openInBetweenAnimation = (
         ease: "sine.in",
         attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
       },
-      0,
+      0
     )
     .to(svgRef.current, {
       transform: "translateX(0)",
@@ -118,7 +118,7 @@ const openInBetweenAnimation = (
 
 const openFilledAnimation = (
   refObjects: RefObjects,
-  timeline: GSAPTimeline,
+  timeline: GSAPTimeline
 ) => {
   const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
     refObjects;
@@ -131,7 +131,7 @@ const openFilledAnimation = (
         ease: "sine.in",
         attr: { d: paths.step1.filled },
       },
-      "<",
+      "<"
     )
     .to(
       pathMidRef.current,
@@ -140,7 +140,7 @@ const openFilledAnimation = (
         ease: "sine.in",
         attr: { d: paths.step2.filled },
       },
-      "<",
+      "<"
     )
     .to(
       pathEndRef.current,
@@ -149,7 +149,7 @@ const openFilledAnimation = (
         ease: "sine.in",
         attr: { d: paths.step3.filled },
       },
-      "<",
+      "<"
     )
     .to(
       gradientRef.current,
@@ -158,7 +158,7 @@ const openFilledAnimation = (
         ease: "sine.in",
         attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
       },
-      "<",
+      "<"
     );
 };
 
@@ -186,7 +186,7 @@ export const getMoblieCloseAnimationTimeline = (refObjects: RefObjects) => {
 
 const closeInBetweenAnimation = (
   refObjects: RefObjects,
-  timeline: GSAPTimeline,
+  timeline: GSAPTimeline
 ) => {
   const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
 
@@ -198,7 +198,7 @@ const closeInBetweenAnimation = (
         ease: "sine.in",
         attr: { d: paths.step1.inBetween },
       },
-      0,
+      0
     )
     .to(
       pathMidRef.current,
@@ -207,7 +207,7 @@ const closeInBetweenAnimation = (
         ease: "power1",
         attr: { d: paths.step2.inBetween },
       },
-      0,
+      0
     )
     .to(
       pathEndRef.current,
@@ -216,7 +216,7 @@ const closeInBetweenAnimation = (
         ease: "sine.in",
         attr: { d: paths.step3.inBetween },
       },
-      0,
+      0
     )
     .to(
       gradientRef.current,
@@ -225,13 +225,13 @@ const closeInBetweenAnimation = (
         ease: "sine.in",
         attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
       },
-      0,
+      0
     );
 };
 
 const closeUnfilledAnimation = (
   refObjects: RefObjects,
-  timeline: GSAPTimeline,
+  timeline: GSAPTimeline
 ) => {
   const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
     refObjects;
@@ -244,7 +244,7 @@ const closeUnfilledAnimation = (
         ease: "sine.in",
         attr: { d: paths.step1.unfilled },
       },
-      "<",
+      "<"
     )
     .to(
       gradientRef.current,
@@ -253,7 +253,7 @@ const closeUnfilledAnimation = (
         ease: "sine.in",
         attr: { x1: paths.step1.x1, x2: paths.step1.x2 },
       },
-      "<",
+      "<"
     )
     .to(svgRef.current, {
       transform: "translateX(-100%)",

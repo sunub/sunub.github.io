@@ -11,11 +11,11 @@ import MobileNav from "../MobileNav";
 import { createPortal } from "react-dom";
 
 interface RefObjects {
-  pathStartRef: React.RefObject<SVGPathElement>;
-  pathMidRef: React.RefObject<SVGPathElement>;
-  pathEndRef: React.RefObject<SVGPathElement>;
-  gradientRef: React.RefObject<SVGLinearGradientElement>;
-  svgRef: React.RefObject<SVGSVGElement>;
+  pathStartRef: React.RefObject<SVGPathElement | null>;
+  pathMidRef: React.RefObject<SVGPathElement | null>;
+  pathEndRef: React.RefObject<SVGPathElement | null>;
+  gradientRef: React.RefObject<SVGLinearGradientElement | null>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
 function Hamburger() {
