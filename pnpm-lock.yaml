@@ -16,19 +16,19 @@ importers:
         version: 3.1.0(acorn@8.14.0)(webpack@5.98.0(@swc/core@1.10.18(@swc/helpers@0.5.15))(esbuild@0.14.47))
       '@mdx-js/react':
         specifier: ^3.1.0
-        version: 3.1.0(@types/react@18.2.12)(react@19.0.0)
+        version: 3.1.0(@types/react@19.1.2)(react@19.0.0)
       '@next/bundle-analyzer':
         specifier: ^13.5.8
         version: 13.5.8(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       '@next/mdx':
         specifier: ^15.0.4
-        version: 15.1.7(@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.98.0(@swc/core@1.10.18(@swc/helpers@0.5.15))(esbuild@0.14.47)))(@mdx-js/react@3.1.0(@types/react@18.2.12)(react@19.0.0))
+        version: 15.1.7(@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.98.0(@swc/core@1.10.18(@swc/helpers@0.5.15))(esbuild@0.14.47)))(@mdx-js/react@3.1.0(@types/react@19.1.2)(react@19.0.0))
       '@prisma/client':
         specifier: ^6.6.0
         version: 6.6.0(prisma@6.4.1(typescript@5.7.3))(typescript@5.7.3)
       '@radix-ui/react-slot':
         specifier: ^1.1.2
-        version: 1.1.2(@types/react@18.2.12)(react@19.0.0)
+        version: 1.1.2(@types/react@19.1.2)(react@19.0.0)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.14
@@ -38,12 +38,6 @@ importers:
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
-      '@types/react':
-        specifier: 18.2.12
-        version: 18.2.12
-      '@types/react-dom':
-        specifier: 18.2.5
-        version: 18.2.5
       '@types/web-push':
         specifier: ^3.6.4
         version: 3.6.4
@@ -115,7 +109,7 @@ importers:
         version: 15.1.7(@babel/core@7.26.9)(@playwright/test@1.51.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       next-mdx-remote:
         specifier: ^5.0.0
-        version: 5.0.0(@types/react@18.2.12)(acorn@8.14.0)(react@19.0.0)
+        version: 5.0.0(@types/react@19.1.2)(acorn@8.14.0)(react@19.0.0)
       ora:
         specifier: ^8.0.1
         version: 8.2.0
@@ -136,16 +130,16 @@ importers:
         version: 19.0.0(react@19.0.0)
       react-focus-lock:
         specifier: ^2.9.6
-        version: 2.13.6(@types/react@18.2.12)(react@19.0.0)
+        version: 2.13.6(@types/react@19.1.2)(react@19.0.0)
       react-intersection-observer:
         specifier: ^9.14.1
         version: 9.15.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-markdown:
         specifier: ^9.0.1
-        version: 9.1.0(@types/react@18.2.12)(react@19.0.0)
+        version: 9.1.0(@types/react@19.1.2)(react@19.0.0)
       react-remove-scroll:
         specifier: ^2.5.7
-        version: 2.6.3(@types/react@18.2.12)(react@19.0.0)
+        version: 2.6.3(@types/react@19.1.2)(react@19.0.0)
       rehype-sanitize:
         specifier: ^6.0.0
         version: 6.0.0
@@ -228,6 +222,12 @@ importers:
       '@types/node':
         specifier: ^20.3.1
         version: 20.17.19
+      '@types/react':
+        specifier: 19.1.2
+        version: 19.1.2
+      '@types/react-dom':
+        specifier: 19.1.2
+        version: 19.1.2(@types/react@19.1.2)
       '@types/styled-components':
         specifier: ^5.1.26
         version: 5.1.34
@@ -266,7 +266,7 @@ importers:
         version: 16.0.0
       html-react-parser:
         specifier: ^5.1.7
-        version: 5.2.2(@types/react@18.2.12)(react@19.0.0)
+        version: 5.2.2(@types/react@19.1.2)(react@19.0.0)
       jest-environment-jsdom:
         specifier: ^29.7.0
         version: 29.7.0(bufferutil@4.0.8)(utf-8-validate@6.0.3)
@@ -1862,20 +1862,19 @@ packages:
   '@types/pg@8.6.6':
     resolution: {integrity: sha512-O2xNmXebtwVekJDD+02udOncjVcMZQuTEQEMpKJ0ZRf5E7/9JJX3izhKUcUifBkyKpljyUM6BTgy2trmviKlpw==}
 
-  '@types/prop-types@15.7.14':
-    resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
-
   '@types/react-dom@18.2.5':
     resolution: {integrity: sha512-sRQsOS/sCLnpQhR4DSKGTtWFE3FZjpQa86KPVbhUqdYMRZ9FEFcfAytKhR/vUG2rH1oFbOOej6cuD7MFSobDRQ==}
 
-  '@types/react@18.2.12':
-    resolution: {integrity: sha512-ndmBMLCgn38v3SntMeoJaIrO6tGHYKMEBohCUmw8HoLLQdRMOIGXfeYaBTLe2lsFaSB3MOK1VXscYFnmLtTSmw==}
+  '@types/react-dom@19.1.2':
+    resolution: {integrity: sha512-XGJkWF41Qq305SKWEILa1O8vzhb3aOo3ogBlSmiqNko/WmRb6QIaweuZCXjKygVDXpzXb5wyxKTSOsmkuqj+Qw==}
+    peerDependencies:
+      '@types/react': ^19.0.0
+
+  '@types/react@19.1.2':
+    resolution: {integrity: sha512-oxLPMytKchWGbnQM9O7D67uPa9paTNxO7jVoNMXgkkErULBPhPARCfkKL9ytcIJJRGjbsVwW4ugJzyFFvm/Tiw==}
 
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
-
-  '@types/scheduler@0.23.0':
-    resolution: {integrity: sha512-YIoDCTH3Af6XM5VuwGG/QL/CJqga1Zm3NkU3HZ4ZHK2fRMPYP1VczsTUqtsf43PH/iJNVlPHAo2oWX7BSdB2Hw==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -8324,10 +8323,10 @@ snapshots:
       - acorn
       - supports-color
 
-  '@mdx-js/react@3.1.0(@types/react@18.2.12)(react@19.0.0)':
+  '@mdx-js/react@3.1.0(@types/react@19.1.2)(react@19.0.0)':
     dependencies:
       '@types/mdx': 2.0.13
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
       react: 19.0.0
 
   '@mole-inc/bin-wrapper@8.0.1':
@@ -8358,12 +8357,12 @@ snapshots:
     dependencies:
       glob: 7.1.7
 
-  '@next/mdx@15.1.7(@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.98.0(@swc/core@1.10.18(@swc/helpers@0.5.15))(esbuild@0.14.47)))(@mdx-js/react@3.1.0(@types/react@18.2.12)(react@19.0.0))':
+  '@next/mdx@15.1.7(@mdx-js/loader@3.1.0(acorn@8.14.0)(webpack@5.98.0(@swc/core@1.10.18(@swc/helpers@0.5.15))(esbuild@0.14.47)))(@mdx-js/react@3.1.0(@types/react@19.1.2)(react@19.0.0))':
     dependencies:
       source-map: 0.7.4
     optionalDependencies:
       '@mdx-js/loader': 3.1.0(acorn@8.14.0)(webpack@5.98.0(@swc/core@1.10.18(@swc/helpers@0.5.15))(esbuild@0.14.47))
-      '@mdx-js/react': 3.1.0(@types/react@18.2.12)(react@19.0.0)
+      '@mdx-js/react': 3.1.0(@types/react@19.1.2)(react@19.0.0)
 
   '@next/swc-darwin-arm64@15.1.7':
     optional: true
@@ -8440,18 +8439,18 @@ snapshots:
     dependencies:
       '@prisma/debug': 6.4.1
 
-  '@radix-ui/react-compose-refs@1.1.1(@types/react@18.2.12)(react@19.0.0)':
+  '@radix-ui/react-compose-refs@1.1.1(@types/react@19.1.2)(react@19.0.0)':
     dependencies:
       react: 19.0.0
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
-  '@radix-ui/react-slot@1.1.2(@types/react@18.2.12)(react@19.0.0)':
+  '@radix-ui/react-slot@1.1.2(@types/react@19.1.2)(react@19.0.0)':
     dependencies:
-      '@radix-ui/react-compose-refs': 1.1.1(@types/react@18.2.12)(react@19.0.0)
+      '@radix-ui/react-compose-refs': 1.1.1(@types/react@19.1.2)(react@19.0.0)
       react: 19.0.0
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
   '@rollup/pluginutils@5.1.4':
     dependencies:
@@ -8686,7 +8685,7 @@ snapshots:
 
   '@types/hoist-non-react-statics@3.3.6':
     dependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
       hoist-non-react-statics: 3.3.2
 
   '@types/http-cache-semantics@4.0.4': {}
@@ -8750,23 +8749,21 @@ snapshots:
       pg-protocol: 1.7.1
       pg-types: 2.2.0
 
-  '@types/prop-types@15.7.14': {}
-
   '@types/react-dom@18.2.5':
     dependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
-  '@types/react@18.2.12':
+  '@types/react-dom@19.1.2(@types/react@19.1.2)':
     dependencies:
-      '@types/prop-types': 15.7.14
-      '@types/scheduler': 0.23.0
+      '@types/react': 19.1.2
+
+  '@types/react@19.1.2':
+    dependencies:
       csstype: 3.1.3
 
   '@types/responselike@1.0.3':
     dependencies:
       '@types/node': 20.17.19
-
-  '@types/scheduler@0.23.0': {}
 
   '@types/semver@7.5.8': {}
 
@@ -8775,7 +8772,7 @@ snapshots:
   '@types/styled-components@5.1.34':
     dependencies:
       '@types/hoist-non-react-statics': 3.3.6
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
       csstype: 3.1.3
 
   '@types/tough-cookie@4.0.5': {}
@@ -11225,7 +11222,7 @@ snapshots:
     dependencies:
       whatwg-encoding: 2.0.0
 
-  html-react-parser@5.2.2(@types/react@18.2.12)(react@19.0.0):
+  html-react-parser@5.2.2(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       domhandler: 5.0.3
       html-dom-parser: 5.0.13
@@ -11233,7 +11230,7 @@ snapshots:
       react-property: 2.0.2
       style-to-js: 1.1.16
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
   html-tags@2.0.0: {}
 
@@ -12314,11 +12311,11 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  next-mdx-remote@5.0.0(@types/react@18.2.12)(acorn@8.14.0)(react@19.0.0):
+  next-mdx-remote@5.0.0(@types/react@19.1.2)(acorn@8.14.0)(react@19.0.0):
     dependencies:
       '@babel/code-frame': 7.26.2
       '@mdx-js/mdx': 3.1.0(acorn@8.14.0)
-      '@mdx-js/react': 3.1.0(@types/react@18.2.12)(react@19.0.0)
+      '@mdx-js/react': 3.1.0(@types/react@19.1.2)(react@19.0.0)
       react: 19.0.0
       unist-util-remove: 3.1.1
       vfile: 6.0.3
@@ -13147,17 +13144,17 @@ snapshots:
       react: 19.0.0
       scheduler: 0.25.0
 
-  react-focus-lock@2.13.6(@types/react@18.2.12)(react@19.0.0):
+  react-focus-lock@2.13.6(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       '@babel/runtime': 7.26.9
       focus-lock: 1.3.6
       prop-types: 15.8.1
       react: 19.0.0
       react-clientside-effect: 1.2.7(react@19.0.0)
-      use-callback-ref: 1.3.3(@types/react@18.2.12)(react@19.0.0)
-      use-sidecar: 1.1.3(@types/react@18.2.12)(react@19.0.0)
+      use-callback-ref: 1.3.3(@types/react@19.1.2)(react@19.0.0)
+      use-sidecar: 1.1.3(@types/react@19.1.2)(react@19.0.0)
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
   react-intersection-observer@9.15.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
@@ -13171,11 +13168,11 @@ snapshots:
 
   react-is@18.3.1: {}
 
-  react-markdown@9.1.0(@types/react@18.2.12)(react@19.0.0):
+  react-markdown@9.1.0(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.3
       html-url-attributes: 3.0.1
@@ -13191,32 +13188,32 @@ snapshots:
 
   react-property@2.0.2: {}
 
-  react-remove-scroll-bar@2.3.8(@types/react@18.2.12)(react@19.0.0):
+  react-remove-scroll-bar@2.3.8(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       react: 19.0.0
-      react-style-singleton: 2.2.3(@types/react@18.2.12)(react@19.0.0)
+      react-style-singleton: 2.2.3(@types/react@19.1.2)(react@19.0.0)
       tslib: 2.8.1
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
-  react-remove-scroll@2.6.3(@types/react@18.2.12)(react@19.0.0):
+  react-remove-scroll@2.6.3(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       react: 19.0.0
-      react-remove-scroll-bar: 2.3.8(@types/react@18.2.12)(react@19.0.0)
-      react-style-singleton: 2.2.3(@types/react@18.2.12)(react@19.0.0)
+      react-remove-scroll-bar: 2.3.8(@types/react@19.1.2)(react@19.0.0)
+      react-style-singleton: 2.2.3(@types/react@19.1.2)(react@19.0.0)
       tslib: 2.8.1
-      use-callback-ref: 1.3.3(@types/react@18.2.12)(react@19.0.0)
-      use-sidecar: 1.1.3(@types/react@18.2.12)(react@19.0.0)
+      use-callback-ref: 1.3.3(@types/react@19.1.2)(react@19.0.0)
+      use-sidecar: 1.1.3(@types/react@19.1.2)(react@19.0.0)
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
-  react-style-singleton@2.2.3(@types/react@18.2.12)(react@19.0.0):
+  react-style-singleton@2.2.3(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       get-nonce: 1.0.1
       react: 19.0.0
       tslib: 2.8.1
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
   react@19.0.0: {}
 
@@ -14530,20 +14527,20 @@ snapshots:
       querystringify: 2.2.0
       requires-port: 1.0.0
 
-  use-callback-ref@1.3.3(@types/react@18.2.12)(react@19.0.0):
+  use-callback-ref@1.3.3(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       react: 19.0.0
       tslib: 2.8.1
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
-  use-sidecar@1.1.3(@types/react@18.2.12)(react@19.0.0):
+  use-sidecar@1.1.3(@types/react@19.1.2)(react@19.0.0):
     dependencies:
       detect-node-es: 1.1.0
       react: 19.0.0
       tslib: 2.8.1
     optionalDependencies:
-      '@types/react': 18.2.12
+      '@types/react': 19.1.2
 
   use-sync-external-store@1.4.0(react@19.0.0):
     dependencies:
