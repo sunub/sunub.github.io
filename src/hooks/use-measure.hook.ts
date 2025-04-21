@@ -1,19 +1,19 @@
 import React, { RefObject } from "react";
 
 interface ReturnValue {
-	ref: RefObject<HTMLDivElement>;
-	locInfo: DOMRect;
+  ref: RefObject<HTMLDivElement | null>;
+  locInfo: DOMRect | null;
 }
 
 function useMeasure(isMounted: boolean): ReturnValue {
-	const ref = React.useRef<HTMLDivElement>(null);
-	let locInfo: DOMRect | any;
+  const ref = React.useRef<HTMLDivElement>(null);
+  let locInfo: DOMRect | null = null;
 
-	if (isMounted) {
-		locInfo = ref.current?.getBoundingClientRect();
-	}
+  if (isMounted && ref.current) {
+    locInfo = ref.current.getBoundingClientRect();
+  }
 
-	return { ref, locInfo };
+  return { ref, locInfo };
 }
 
 export default useMeasure;
