@@ -15,7 +15,7 @@ import {
 import { useContext } from "react";
 import { ThemeContext } from "../Theme/ThemeProvider";
 
-function LightHeroImage() {
+function LightHeroImage({ isDarkTheme }: { isDarkTheme: boolean }) {
   return (
     <LightHeroImageWapper>
       <Clouds $url="/assets/clouds.avif" $opacity="--color-light-heroimage" />
@@ -29,7 +29,7 @@ function LightHeroImage() {
         sizes="100vw"
         quality={70}
         priority
-        fetchPriority="high"
+        fetchPriority={!isDarkTheme ? "high" : "auto"}
         $opacity="--color-light-heroimage"
       />
       <LightShadow $opacity="--color-light-heroimage" />
@@ -37,7 +37,7 @@ function LightHeroImage() {
   );
 }
 
-function DarkHeroImage() {
+function DarkHeroImage({ isDarkTheme }: { isDarkTheme: boolean }) {
   return (
     <DrakHeroImageWapper>
       <Clouds
@@ -57,7 +57,7 @@ function DarkHeroImage() {
         sizes="100vw"
         quality={70}
         priority
-        fetchPriority="high"
+        fetchPriority={isDarkTheme ? "high" : "auto"}
         $opacity="--color-dark-heroimage"
       />
       <DarkShadow $opacity="--color-dark-heroimage" />
@@ -72,7 +72,11 @@ function HeroImage() {
   return (
     <RootWrapper suppressHydrationWarning={true}>
       <HeroImageWrapper>
-        {isDarkTheme ? <DarkHeroImage /> : <LightHeroImage />}
+        {isDarkTheme ? (
+          <DarkHeroImage isDarkTheme={isDarkTheme} />
+        ) : (
+          <LightHeroImage isDarkTheme={isDarkTheme} />
+        )}
       </HeroImageWrapper>
     </RootWrapper>
   );
