@@ -3,12 +3,16 @@ import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 import { PrismaClient } from "@prisma/client";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import path from "path";
 
 const nextConfig: NextConfig = {
   basePath: "",
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+  turbopack: {
+    root: path.join(__dirname, ".."),
+  },
 
   images: {
     formats: ["image/avif", "image/webp"],
@@ -79,7 +83,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
+            value: "public, max-age=0, s-maxage=86400, stale-while-revalidate",
           },
         ],
       },

@@ -3,15 +3,13 @@ import * as Styled from "./page.style";
 import Categories from "@/components/Main/Cateogries/Categories";
 import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { ContentLoading } from "@/components/Skeletons/ui/ContentLoading";
+import NewestPost from "@/components/Main/NewestPost";
 
 const categories = ["cs", "web", "code", "algorithm"];
 
-const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
-  ssr: true,
-});
+export const dynamic = "force-static";
 
 async function Page() {
   return (
