@@ -8,27 +8,24 @@ import { Search } from "@/widgets/Search";
 
 function Header() {
   return (
-    <React.Fragment>
-      <Styled.RootWrapper>
-        <Styled.HeaderWrapper id="blog-main__header-contents">
-          <Styled.Header>
-            <Styled.HeaderLeftSideWrapper>
-              <Logo />
-              <Navigation />
-            </Styled.HeaderLeftSideWrapper>
+    <Styled.RootWrapper>
+      <Styled.HeaderWrapper id="blog-main__header-contents">
+        <Styled.Header>
+          <Styled.HeaderLeftSideWrapper>
+            <Logo />
+            <Navigation />
+          </Styled.HeaderLeftSideWrapper>
 
-            <Styled.HeaderRightSideWrapper>
-              <Search />
-              <Styled.ThemeWrapper>
-                <ThemeToggler maskId="desktop-header-theme-toggler" />
-              </Styled.ThemeWrapper>
-              <Hamburger />
-            </Styled.HeaderRightSideWrapper>
-          </Styled.Header>
-        </Styled.HeaderWrapper>
-      </Styled.RootWrapper>
-      <div id="blog-main__header-scroll-trigger" />
-    </React.Fragment>
+          <Styled.HeaderRightSideWrapper>
+            <Search />
+            <Styled.ThemeWrapper>
+              <ThemeToggler maskId="desktop-header-theme-toggler" />
+            </Styled.ThemeWrapper>
+            <Hamburger />
+          </Styled.HeaderRightSideWrapper>
+        </Styled.Header>
+      </Styled.HeaderWrapper>
+    </Styled.RootWrapper>
   );
 }
 

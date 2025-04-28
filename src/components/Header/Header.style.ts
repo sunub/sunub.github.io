@@ -5,6 +5,7 @@ import styled from "styled-components";
 export const RootWrapper = styled.div`
   transition: all 350ms ease 0s;
   background: var(--color-headerBackground);
+  padding-top: 1rem;
 `;
 
 export const DemoWrapper = styled.div`
