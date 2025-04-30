@@ -11,6 +11,18 @@ export const getRecentPostsMetadata = cache(async (count: number = 10) => {
   return blog.sortedPosts.slice(0, count).map((post) => post.frontmatter);
 });
 
+export const getRecentPostsMetadataInRange = cache(
+  async (start: number, end: number) => {
+    const blog = await getBlogInstance();
+    return {
+      totalCount: blog.sortedPosts.length,
+      frontmattters: blog.sortedPosts
+        .slice(start, end)
+        .map((post) => post.frontmatter),
+    };
+  }
+);
+
 export const getAllPosts = cache(async () => {
   const blog = await getBlogInstance();
   return blog.sortedPosts.map((post) => post.frontmatter);
