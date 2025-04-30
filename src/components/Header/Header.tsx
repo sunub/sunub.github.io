@@ -5,27 +5,30 @@ import Navigation from "./Navigation";
 import React from "react";
 import Hamburger from "../MobileNav/Hamburger";
 import { Search } from "@/widgets/Search";
+import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
 
 function Header() {
   return (
-    <Styled.RootWrapper>
-      <Styled.HeaderWrapper id="blog-main__header-contents">
-        <Styled.Header>
-          <Styled.HeaderLeftSideWrapper>
-            <Logo />
-            <Navigation />
-          </Styled.HeaderLeftSideWrapper>
+    <ScrollHeader>
+      <Styled.RootWrapper>
+        <Styled.HeaderWrapper id="blog-main__header-contents">
+          <Styled.Header>
+            <Styled.HeaderLeftSideWrapper>
+              <Logo />
+              <Navigation />
+            </Styled.HeaderLeftSideWrapper>
 
-          <Styled.HeaderRightSideWrapper>
-            <Search />
-            <Styled.ThemeWrapper>
-              <ThemeToggler maskId="desktop-header-theme-toggler" />
-            </Styled.ThemeWrapper>
-            <Hamburger />
-          </Styled.HeaderRightSideWrapper>
-        </Styled.Header>
-      </Styled.HeaderWrapper>
-    </Styled.RootWrapper>
+            <Styled.HeaderRightSideWrapper>
+              <Search />
+              <Styled.ThemeWrapper>
+                <ThemeToggler maskId="desktop-header-theme-toggler" />
+              </Styled.ThemeWrapper>
+              <Hamburger />
+            </Styled.HeaderRightSideWrapper>
+          </Styled.Header>
+        </Styled.HeaderWrapper>
+      </Styled.RootWrapper>
+    </ScrollHeader>
   );
 }
 

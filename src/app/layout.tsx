@@ -135,9 +135,7 @@ export default async function RootLayout({
         <StyledComponentsRegistry>
           <ThemeProvider>
             <div id="__next">
-              <ScrollHeader>
-                <Header />
-              </ScrollHeader>
+              <Header />
               <div className="blog-main__background-template" />
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
