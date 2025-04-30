@@ -26,7 +26,7 @@ function LoadingAnimation() {
   );
 }
 
-function ContentLoading() {
+function ContentListLoading() {
   return (
     <RootWrapper>
       <TitleWrapper>
@@ -41,7 +41,17 @@ function ContentLoading() {
   );
 }
 
-export { ContentLoading };
+function FrontMatterLoading({ length }: { length: number }) {
+  return (
+    <RootWrapper>
+      {Array.from({ length }, (_, index) => (
+        <LoadingAnimation key={`${index}-content-loading-animation`} />
+      ))}
+    </RootWrapper>
+  );
+}
+
+export { ContentListLoading, FrontMatterLoading };
 
 const ContentBlink = styled.div<{ $width: number }>`
   display: inline-block;
@@ -62,6 +72,7 @@ const ContentBlink = styled.div<{ $width: number }>`
 `;
 
 const RootWrapper = styled.div`
+  margin-top: 2.5rem;
   grid-area: newest;
 `;
 
