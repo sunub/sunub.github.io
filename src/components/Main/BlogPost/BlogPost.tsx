@@ -1,22 +1,80 @@
+"use client";
+
 import * as Styled from "./BlogPost.style";
 import Link from "next/link";
-import { getRecentPostsMetadata } from "db/blog/api";
 import { z } from "zod";
 import { FrontMatterSchema } from "@/types/schema";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
+import { use, useEffect, useRef, useState, useTransition } from "react";
+import { getAdditionalPost } from "./utils";
+import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
+import throttle from "lodash.throttle";
 
 type PostMetadata = z.infer<typeof FrontMatterSchema>;
+type PublishedPost = {
+  totalCount: number;
+  frontmattters: PostMetadata[];
+};
 
-async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
-  const recentlyPublished = initialPosts || (await getRecentPostsMetadata(10));
+export function BlogPost({
+  initialPosts,
+}: {
+  initialPosts: Promise<PublishedPost>;
+}) {
+  const recentlyPublished = use(initialPosts);
+  const MAX_POST_COUNT = recentlyPublished.totalCount;
+  const [publishedPost, setPublishedPost] =
+    useState<PublishedPost>(recentlyPublished);
+  const scrollBottomRef = useRef<HTMLDivElement | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  if (!recentlyPublished || recentlyPublished.length === 0) {
+  let start = 0,
+    end = 10;
+  const incrementPostRange = (end: number) => [end, end + 10];
+
+  useEffect(() => {
+    if (!scrollBottomRef.current) return;
+
+    const onIntersect = throttle(
+      async ([entry]: IntersectionObserverEntry[]) => {
+        if (entry.isIntersecting) {
+          if (end >= MAX_POST_COUNT) return;
+          startTransition(async () => {
+            [start, end] = incrementPostRange(end);
+            const additionalPost = await getAdditionalPost(start, end);
+            setPublishedPost((prev) => ({
+              ...prev,
+              frontmattters: [
+                ...prev.frontmattters,
+                ...additionalPost.frontmattters,
+              ],
+            }));
+          });
+        }
+      }
+    );
+
+    const observer = new IntersectionObserver(onIntersect, {
+      rootMargin: "200px",
+    });
+
+    observer.observe(scrollBottomRef.current);
+    return () => {
+      if (!scrollBottomRef.current) return;
+      observer.unobserve(scrollBottomRef.current);
+    };
+  }, [scrollBottomRef]);
+
+  if (
+    !publishedPost.frontmattters ||
+    publishedPost.frontmattters.length === 0
+  ) {
     return <div>현재 표시할 포스트가 없습니다.</div>;
   }
 
   return (
     <Styled.BlogPostList>
-      {recentlyPublished.map((post) => {
+      {publishedPost.frontmattters.map((post) => {
         const { slug, title, summary, category, date } = post;
         const localeDate = new Intl.DateTimeFormat("ko-KR", {
           year: "numeric",
@@ -46,6 +104,8 @@ async function BlogPost({ initialPosts }: { initialPosts?: PostMetadata[] }) {
           </Styled.BlogPostListItem>
         );
       })}
+      {isPending && <FrontMatterLoading length={2} />}
+      <Styled.ScrollTrigger ref={scrollBottomRef} />
     </Styled.BlogPostList>
   );
 }
@@ -65,13 +125,3 @@ function UnderLineWaveSVG() {
     </Styled.UnderLineWaveSVG>
   );
 }
-
-function BlogPostWithSuspense({
-  initialPosts,
-}: {
-  initialPosts?: PostMetadata[];
-}) {
-  return <BlogPost initialPosts={initialPosts} />;
-}
-
-export default BlogPostWithSuspense;

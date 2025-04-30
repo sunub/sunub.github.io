@@ -1,11 +1,11 @@
-import BlogPost from "../BlogPost";
+import { BlogPost } from "../BlogPost";
 import Spacer from "@/components/Spacer";
 import { RootWrapper, TitleWrapper, Title } from "./NewestPost.style";
-import { getRecentPostsMetadata } from "db/blog/api";
+import { getRecentPostsMetadataInRange } from "db/blog/api";
+import { Suspense } from "react";
+import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 
-async function NewestPost() {
-  const recentPostsMetadata = await getRecentPostsMetadata(30);
-
+function NewestPost() {
   return (
     <RootWrapper>
       <TitleWrapper>
@@ -13,7 +13,9 @@ async function NewestPost() {
         <Title>최신 포스트들</Title>
       </TitleWrapper>
       <Spacer axis={"vertical"} size={32} />
-      <BlogPost initialPosts={recentPostsMetadata} />
+      <Suspense fallback={<FrontMatterLoading length={5} />}>
+        <BlogPost initialPosts={getRecentPostsMetadataInRange(0, 10)} />
+      </Suspense>
     </RootWrapper>
   );
 }

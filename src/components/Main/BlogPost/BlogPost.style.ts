@@ -8,6 +8,7 @@ export const ScrollTrigger = styled.div`
 
   height: 1px;
   width: 100cqw;
+  background-color: red;
 `;
 
 export const TitleDot = styled.span`
@@ -74,6 +75,11 @@ export const UnderLineWaveSVG = styled.svg`
   stroke: var(--color-text);
   stroke-width: 2.5;
   stroke-linecap: round;
+`;
+
+export const ScrollEndIndicator = styled.div`
+  width: 100%;
+  height: 1px;
 `;
 
 export const UnderLineWavePath = styled.path`
