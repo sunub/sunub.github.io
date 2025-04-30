@@ -21,7 +21,7 @@ const HeaderWrapper = styled.div<{ $isDarkTheme: boolean }>`
   background-color: color-mix(
     in oklch,
     var(--color-background),
-    transparent ${({ $isDarkTheme }) => ($isDarkTheme ? "100%" : "80%")}
+    transparent ${({ $isDarkTheme }) => ($isDarkTheme ? "100%" : "75%")}
   );
   backdrop-filter: blur(16px);
 `;
