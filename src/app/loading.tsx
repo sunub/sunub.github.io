@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
-import { ContentLoading } from "@/components/Skeletons/ui/ContentLoading";
+import { ContentListLoading } from "@/components/Skeletons/ui/ContentLoading";
 
 export default function Loading() {
   return (
@@ -14,7 +14,7 @@ export default function Loading() {
       </HeaderContentsWrapper>
       <BodyWrapper id="blog-main__recently-post-list">
         <TitleRootWrapper>
-          <ContentLoading />
+          <ContentListLoading />
         </TitleRootWrapper>
         <MainWrapper>
           <RightSideWrapper></RightSideWrapper>

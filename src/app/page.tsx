@@ -3,8 +3,6 @@ import * as Styled from "./page.style";
 import Categories from "@/components/Main/Cateogries/Categories";
 import HeroImage from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
-import { Suspense } from "react";
-import { ContentLoading } from "@/components/Skeletons/ui/ContentLoading";
 import NewestPost from "@/components/Main/NewestPost";
 
 const categories = ["cs", "web", "code", "algorithm"];
@@ -20,9 +18,7 @@ async function Page() {
       </Styled.HeaderContentsWrapper>
       <div id="blog-main__recently-post-list">
         <Styled.MainWrapper id="blog-main__recently-post-list-wrapper">
-          <Suspense fallback={<ContentLoading />}>
-            <NewestPost />
-          </Suspense>
+          <NewestPost />
           <Styled.RightSideWrapper id="blog-main__categories">
             <Categories categories={categories} />
           </Styled.RightSideWrapper>
