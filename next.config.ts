@@ -10,9 +10,6 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   skipTrailingSlashRedirect: true,
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
-  turbopack: {
-    root: path.join(__dirname, ".."),
-  },
 
   images: {
     formats: ["image/avif", "image/webp"],
