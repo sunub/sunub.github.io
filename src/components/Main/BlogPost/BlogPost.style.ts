@@ -8,7 +8,6 @@ export const ScrollTrigger = styled.div`
 
   height: 1px;
   width: 100cqw;
-  background-color: red;
 `;
 
 export const TitleDot = styled.span`
