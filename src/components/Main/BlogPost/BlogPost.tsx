@@ -23,52 +23,74 @@ export function BlogPost({
 }) {
   const recentlyPublished = use(initialPosts);
   const MAX_POST_COUNT = recentlyPublished.totalCount;
-  const [publishedPost, setPublishedPost] =
-    useState<PublishedPost>(recentlyPublished);
-  const scrollBottomRef = useRef<HTMLDivElement | null>(null);
-  const [isPending, startTransition] = useTransition();
 
-  let start = 0,
-    end = 10;
-  const incrementPostRange = (end: number) => [end, end + 10];
+  const uniqueInitialPosts = (() => {
+    const seen = new Set<string>();
+    const filtered: PostMetadata[] = [];
+    for (const post of recentlyPublished.frontmattters) {
+      const key = `${post.category}-${post.slug}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        filtered.push(post);
+      }
+    }
+    return filtered;
+  })();
+
+  const [publishedPost, setPublishedPost] = useState<PublishedPost>({
+    totalCount: MAX_POST_COUNT,
+    frontmattters: uniqueInitialPosts,
+  });
+
+  const [isPending, startTransition] = useTransition();
+  const scrollBottomRef = useRef<HTMLDivElement | null>(null);
+
+  const loadMore = throttle(async () => {
+    const current = publishedPost.frontmattters;
+    if (current.length >= MAX_POST_COUNT) return;
+
+    startTransition(async () => {
+      const nextEnd = current.length + 10;
+      const additional = await getAdditionalPost(current.length, nextEnd);
+
+      const seen = new Set(current.map((p) => `${p.category}-${p.slug}`));
+
+      const filteredNew = additional.frontmattters.filter((p) => {
+        const key = `${p.category}-${p.slug}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      if (filteredNew.length === 0) {
+        return;
+      }
+
+      setPublishedPost((prev) => ({
+        ...prev,
+        frontmattters: [...prev.frontmattters, ...filteredNew],
+      }));
+    });
+  }, 500);
 
   useEffect(() => {
     if (!scrollBottomRef.current) return;
-
-    const onIntersect = throttle(
-      async ([entry]: IntersectionObserverEntry[]) => {
-        if (entry.isIntersecting) {
-          if (end >= MAX_POST_COUNT) return;
-          startTransition(async () => {
-            [start, end] = incrementPostRange(end);
-            const additionalPost = await getAdditionalPost(start, end);
-            setPublishedPost((prev) => ({
-              ...prev,
-              frontmattters: [
-                ...prev.frontmattters,
-                ...additionalPost.frontmattters,
-              ],
-            }));
-          });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
         }
-      }
+      },
+      { rootMargin: "200px" }
     );
-
-    const observer = new IntersectionObserver(onIntersect, {
-      rootMargin: "200px",
-    });
-
     observer.observe(scrollBottomRef.current);
     return () => {
-      if (!scrollBottomRef.current) return;
-      observer.unobserve(scrollBottomRef.current);
+      observer.disconnect();
+      loadMore.cancel();
     };
-  }, [scrollBottomRef]);
+  }, [publishedPost.frontmattters.length, MAX_POST_COUNT]);
 
-  if (
-    !publishedPost.frontmattters ||
-    publishedPost.frontmattters.length === 0
-  ) {
+  if (publishedPost.frontmattters.length === 0) {
     return <div>현재 표시할 포스트가 없습니다.</div>;
   }
 
@@ -104,6 +126,7 @@ export function BlogPost({
           </Styled.BlogPostListItem>
         );
       })}
+
       {isPending && <FrontMatterLoading length={2} />}
       <Styled.ScrollTrigger ref={scrollBottomRef} />
     </Styled.BlogPostList>
