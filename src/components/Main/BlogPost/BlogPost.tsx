@@ -106,7 +106,7 @@ export function BlogPost({
         const webStandardDate = new Date(date).toISOString().split("T")[0];
 
         return (
-          <Styled.BlogPostListItem key={`${category}-${slug}`}>
+          <Styled.BlogPostListItem key={`${category}-${slug}-${date}`}>
             <Styled.BlogPostWrapper>
               <Link href={`/post/${category}/${slug}`} scroll={true}>
                 <VisuallyHidden>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Header from "../Header/Header";
-import HeroImage from "../HeroImage";
+import { HeroImage } from "../HeroImage";
 import * as Styled from "./HeaderContents.style";
 import Wave from "./Wave";
 import { ThemeContext } from "@/components/Theme/ThemeProvider";
@@ -15,8 +15,8 @@ function HeaderContents() {
   React.useLayoutEffect(() => {
     setPortalRef(
       document.getElementById(
-        "blog-header__hero-image-portal",
-      ) as HTMLDivElement,
+        "blog-header__hero-image-portal"
+      ) as HTMLDivElement
     );
   }, []);
 

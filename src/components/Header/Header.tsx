@@ -1,13 +1,23 @@
 import * as Styled from "./Header.style";
-import ThemeToggler from "@/components/Theme/Toggler/ThemeToggler";
+import { ThemeToggler } from "@/components/Theme/Toggler/ThemeToggler";
 import Logo from "./Logo";
 import Navigation from "./Navigation";
 import React from "react";
 import Hamburger from "../MobileNav/Hamburger";
 import { Search } from "@/widgets/Search";
 import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
+import { cookies } from "next/headers";
+import type { Theme } from "type";
 
-function Header() {
+function themeGuard(theme: unknown): asserts theme is Theme {
+  if (theme !== "light" && theme !== "dark") {
+    throw new Error("Invalid theme value. Expected 'light' or 'dark'.");
+  }
+}
+
+async function Header() {
+  const savedTheme = (await cookies()).get("color-theme")?.value;
+  themeGuard(savedTheme);
   return (
     <ScrollHeader>
       <Styled.RootWrapper>
@@ -21,9 +31,9 @@ function Header() {
             <Styled.HeaderRightSideWrapper>
               <Search />
               <Styled.ThemeWrapper>
-                <ThemeToggler maskId="desktop-header-theme-toggler" />
+                <ThemeToggler theme={savedTheme} />
               </Styled.ThemeWrapper>
-              <Hamburger />
+              <Hamburger theme={savedTheme} />
             </Styled.HeaderRightSideWrapper>
           </Styled.Header>
         </Styled.HeaderWrapper>
