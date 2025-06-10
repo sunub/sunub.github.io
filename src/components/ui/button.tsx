@@ -2,7 +2,6 @@ import { Slot } from "@radix-ui/react-slot";
 import React from "react";
 import styled, { css } from "styled-components";
 
-// Define the base styles and variant styles
 const baseButtonStyles = css`
   position: relative;
   display: inline-flex;
@@ -41,7 +40,6 @@ const baseButtonStyles = css`
   }
 `;
 
-// Variant styles
 const variantStyles = {
   default: css`
     background-color: var(--button-default-bg, #e5e7eb);
@@ -71,7 +69,6 @@ const variantStyles = {
   `,
 };
 
-// Size styles
 const sizeStyles = {
   default: css`
     width: fit-content;
@@ -101,7 +98,6 @@ const sizeStyles = {
   `,
 };
 
-// Create the styled component
 interface StyledButtonProps {
   $variant?: keyof typeof variantStyles;
   $size?: keyof typeof sizeStyles;
@@ -136,14 +132,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Create custom CSS for additional className styles
     const customStyles = className
       ? css`
           ${className}
         `
       : "";
 
-    // Use Slot or button based on asChild prop
     const Comp = asChild ? Slot : StyledButton;
 
     const commonProps = {
@@ -170,7 +164,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 Button.displayName = "Button";
 
-// Export button variants as an object for external use
 export const buttonVariants = {
   variant: Object.keys(variantStyles),
   size: Object.keys(sizeStyles),

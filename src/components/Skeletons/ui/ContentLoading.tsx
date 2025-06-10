@@ -72,7 +72,6 @@ const ContentBlink = styled.div<{ $width: number }>`
 `;
 
 const RootWrapper = styled.div`
-  margin-top: 2.5rem;
   grid-area: newest;
 `;
 

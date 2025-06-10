@@ -76,10 +76,14 @@ const scale = keyframes`
 const SearchSvg = styled.svg``;
 
 const StyledSearchButton = styled.button`
+  position: relative;
+  z-index: 10000;
+
   width: fit-content;
   height: fit-content;
   outline: none;
   outline-offset: 2px;
+  color: var(--color-text);
 
   :hover {
     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);

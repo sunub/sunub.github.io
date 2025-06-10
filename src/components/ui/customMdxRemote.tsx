@@ -25,14 +25,7 @@ function convertTableBlockToHTML(tableLines: string[]): string {
     .map((header) => `<th>${header}</th>`)
     .join("")}</tr></thead>`;
   const tbody = `<tbody>${rows
-    .map(
-      (row) =>
-        `<tr>${row
-          .map(
-            (cell) => `<td className="p-4 text-[.95rem] border-b">${cell}</td>`
-          )
-          .join("")}</tr>`
-    )
+    .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`)
     .join("")}</tbody>`;
   return `<table cellPadding="0" cellSpacing="0">${thead}${tbody}</table>`;
 }
@@ -78,10 +71,6 @@ async function CustomMDXRemote({
   category: PostCategory;
   slug: string;
 }) {
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_BASE_URL
-      : "http://localhost:3000";
   try {
     const content = await getPostContent(category, slug);
     const transformedContent = transformMarkdownTables(content);
@@ -95,7 +84,7 @@ async function CustomMDXRemote({
   } catch (error) {
     console.error("MDX 콘텐츠를 불러오는 중 오류가 발생했습니다:", error);
     return (
-      <div className="text-red-500 p-4 border border-red-300 rounded">
+      <div className="warning">
         <h3>콘텐츠를 불러올 수 없습니다</h3>
         <p>죄송합니다. 요청하신 콘텐츠를 불러오는 중 오류가 발생했습니다.</p>
       </div>
