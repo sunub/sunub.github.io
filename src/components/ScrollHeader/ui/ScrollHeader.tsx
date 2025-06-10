@@ -1,27 +1,29 @@
-"use client";
+import type { Theme } from "type";
+import { cookies } from "next/headers";
+import { HeaderWrapper } from "../style";
+import { ScrollTrigger } from "./ScrollTrigger";
 
-import styled from "styled-components";
-import { useContext } from "react";
-import { ThemeContext } from "@/components/Theme/ThemeProvider";
-
-export function ScrollHeader({ children }: { children: React.ReactNode }) {
-  const { colorTheme } = useContext(ThemeContext);
-  const isDarkTheme = colorTheme === "dark";
-
-  return <HeaderWrapper $isDarkTheme={isDarkTheme}>{children}</HeaderWrapper>;
+function themeGuard(theme: unknown): asserts theme is Theme {
+  if (theme !== "light" && theme !== "dark") {
+    throw new Error("Invalid theme value. Expected 'light' or 'dark'.");
+  }
 }
 
-const HeaderWrapper = styled.div<{ $isDarkTheme: boolean }>`
-  position: sticky;
-  top: 0px;
-  z-index: 10000;
+export async function ScrollHeader({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const savedTheme = (await cookies()).get("color-theme")?.value;
+  themeGuard(savedTheme);
+  const isDarkTheme = savedTheme === "dark";
 
-  margin-top: calc(60px - 1rem);
-  transition: padding-top 300ms ease-in-out;
-  background-color: color-mix(
-    in oklch,
-    var(--color-background),
-    transparent ${({ $isDarkTheme }) => ($isDarkTheme ? "100%" : "75%")}
+  return (
+    <HeaderWrapper
+      className="blog-main__scroll-header"
+      $isDarkTheme={isDarkTheme}
+    >
+      <ScrollTrigger>{children}</ScrollTrigger>
+    </HeaderWrapper>
   );
-  backdrop-filter: blur(16px);
-`;
+}

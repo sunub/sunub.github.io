@@ -1,6 +1,47 @@
 "use client";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const scaleInOut = keyframes`
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+const pendulumAnimation = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-40deg);
+  }
+
+  80% {
+    transform: rotate(20deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+`;
+
+export const Moon = styled.mask<{ $colorTheme: string }>`
+  transform-origin: center center;
+
+  & > circle {
+    transition: transform 0.4s ease-in-out;
+    transform: ${(props) =>
+      props.$colorTheme === "dark"
+        ? "translate(-7px, -16px)"
+        : "translate(0px, 0px)"};
+  }
+`;
 
 export const ToggleBtn = styled.button`
   --toggle-size: var(--size-6);
@@ -25,10 +66,6 @@ export const ToggleBtn = styled.button`
     block-size: 100%;
     stroke-linecap: round;
   }
-
-  @media (hover: none) {
-    --toggle-size: 48px;
-  }
 `;
 
 export const Sun = styled.circle<{ $colorTheme: string }>`
@@ -43,10 +80,7 @@ export const Sun = styled.circle<{ $colorTheme: string }>`
 export const SunAndBeams = styled.g<{ $colorTheme: string }>`
   transform-origin: center center;
   stroke: var(--icon-fill);
-  transition:
-    transform 0.3s ease-in,
-    opacity 0.1s ease-in,
-    scale 0.2s ease-in;
+  transition: transform 0.3s ease-in, opacity 0.1s ease-in, scale 0.2s ease-in;
 
   opacity: ${(props) => (props.$colorTheme === "dark" ? "0" : "1")};
   transform: ${(props) =>
@@ -70,19 +104,9 @@ export const SunAndMoon = styled.svg<{ $colorTheme: string }>`
   &:hover,
   :focus-visible {
     ${SunAndBeams} {
-      transform: rotate(90deg);
+      animation: ${scaleInOut} 0.4s ease-in-out;
     }
-  }
-`;
 
-export const Moon = styled.mask<{ $colorTheme: string }>`
-  transform-origin: center center;
-
-  & > circle {
-    transition: transform 0.4s ease-in-out;
-    transform: ${(props) =>
-      props.$colorTheme === "dark"
-        ? "translate(-7px, -16px)"
-        : "translate(0px, 0px)"};
+    animation: ${pendulumAnimation} 0.4s ease-in-out;
   }
 `;
