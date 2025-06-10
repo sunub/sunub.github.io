@@ -46,6 +46,7 @@ export const Header = styled.header`
 export const HeaderLeftSideWrapper = styled.div`
   display: flex;
   align-items: baseline;
+  gap: 2rem;
 `;
 
 export const NavigationWrapper = styled.ul`
