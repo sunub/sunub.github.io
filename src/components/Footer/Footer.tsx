@@ -10,7 +10,6 @@ import { VisuallyHidden } from "../VisuallyHidden";
 function Footer() {
   return (
     <React.Fragment>
-      <Spacer size={126} axis={"vertical"} />
       <Container role="contentinfo">
         <Wrapper>
           <IconsWrapper>
@@ -38,7 +37,6 @@ function Footer() {
           </CopyRightWrapper>
         </Wrapper>
       </Container>
-      <Spacer size={32} axis={"vertical"} />
     </React.Fragment>
   );
 }

@@ -64,6 +64,36 @@ export async function generateMetadata({ params }: { params: Params }) {
   };
 }
 
+async function HeaderSection({
+  category,
+  slug,
+}: {
+  category: Category;
+  slug: string;
+}) {
+  const blog = await getBlogInstance();
+  const postMetadata = blog.getPostMetadataBySlug(category, slug);
+
+  if (!postMetadata) return null;
+
+  const { title, date } = postMetadata;
+
+  return (
+    <ArticleHeader>
+      <PostTitle>{title}</PostTitle>
+      <React.Suspense fallback={<div>...</div>}>
+        <time dateTime={new Date(date).toISOString()}>
+          {new Intl.DateTimeFormat("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }).format(new Date(date))}
+        </time>
+      </React.Suspense>
+    </ArticleHeader>
+  );
+}
+
 async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
   const { category, slug } = resolvedParams;
@@ -111,36 +141,6 @@ async function Page({ params }: { params: Params }) {
         </ArticleRootWrapper>
       </Main>
     </React.Fragment>
-  );
-}
-
-async function HeaderSection({
-  category,
-  slug,
-}: {
-  category: Category;
-  slug: string;
-}) {
-  const blog = await getBlogInstance();
-  const postMetadata = blog.getPostMetadataBySlug(category, slug);
-
-  if (!postMetadata) return null;
-
-  const { title, date } = postMetadata;
-
-  return (
-    <ArticleHeader>
-      <PostTitle>{title}</PostTitle>
-      <React.Suspense fallback={<div>...</div>}>
-        <time dateTime={new Date(date).toISOString()}>
-          {new Intl.DateTimeFormat("ko-KR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }).format(new Date(date))}
-        </time>
-      </React.Suspense>
-    </ArticleHeader>
   );
 }
 

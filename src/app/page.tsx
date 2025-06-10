@@ -1,13 +1,8 @@
 import React from "react";
 import * as Styled from "./page.style";
-import Categories from "@/components/Main/Cateogries/Categories";
-import HeroImage from "@/components/HeroImage";
+import { HeroImage } from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
 import NewestPost from "@/components/Main/NewestPost";
-
-const categories = ["cs", "web", "code", "algorithm"];
-
-export const dynamic = "force-static";
 
 async function Page() {
   return (
@@ -19,9 +14,6 @@ async function Page() {
       <div id="blog-main__recently-post-list">
         <Styled.MainWrapper id="blog-main__recently-post-list-wrapper">
           <NewestPost />
-          <Styled.RightSideWrapper id="blog-main__categories">
-            <Categories categories={categories} />
-          </Styled.RightSideWrapper>
         </Styled.MainWrapper>
       </div>
     </React.Fragment>

@@ -65,28 +65,6 @@ class Blog {
     );
   }
 
-  private insertPostSorted(post: {
-    postKey: string;
-    frontmatter: z.infer<typeof FrontMatterSchema>;
-  }) {
-    const postDate = new Date(post.frontmatter.date).getTime();
-    let low = 0,
-      high = this.sortedPosts.length;
-    while (low < high) {
-      const mid = Math.floor((low + high) / 2);
-      const midDate = new Date(
-        this.sortedPosts[mid].frontmatter.date
-      ).getTime();
-
-      if (postDate > midDate) {
-        high = mid;
-      } else {
-        low = mid + 1;
-      }
-    }
-    this.sortedPosts.splice(low, 0, post);
-  }
-
   async handleFileChange(changeFilePath: string) {
     await this.#__withLock(async () => {
       const pathParts = changeFilePath.split(path.sep);
