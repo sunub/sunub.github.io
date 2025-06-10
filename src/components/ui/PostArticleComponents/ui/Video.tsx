@@ -3,8 +3,44 @@
 import React from "react";
 import styled from "styled-components";
 
+const VideoWrapper = styled.div<{ maxWidth: number }>`
+  position: relative;
+  padding-bottom: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  outline: 1px solid var(--color-content-outline);
+  max-width: ${(props) => props.maxWidth}px;
+  width: 100%;
+`;
+
+const StyledVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const OverlayButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const VideoSvgContainer = styled.div`
   position: relative;
+
   &::before {
     content: "";
     position: absolute;
@@ -14,7 +50,6 @@ const VideoSvgContainer = styled.div`
     height: 64px;
     border-radius: 50%;
     aspect-ratio: 1 / 1;
-
     background-color: rgba(0, 0, 0, 0.55);
   }
 
@@ -24,56 +59,6 @@ const VideoSvgContainer = styled.div`
     color: white;
   }
 `;
-
-const Video = ({
-  src,
-  caption,
-  maxWidth = 528,
-}: {
-  src: string;
-  caption: string;
-  maxWidth: number;
-  aspectRatio: string;
-}) => {
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-
-  const togglePlay = () => setIsPlaying((prev) => !prev);
-
-  React.useEffect(() => {
-    if (!videoRef.current) return;
-    isPlaying ? videoRef.current.play() : videoRef.current.pause();
-  }, [isPlaying]);
-
-  return (
-    <div
-      className="relative pb-6"
-      style={
-        {
-          "--max-width": `${maxWidth}px`,
-          outline: "1px solid var(--color-content-outline)",
-        } as React.CSSProperties
-      }
-    >
-      <video
-        loop
-        muted
-        playsInline
-        src={src}
-        className="w-full h-full object-cover"
-        ref={videoRef}
-      >
-        <source src={src} type="video/mp4" />
-      </video>
-      <button
-        className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 hover:opacity-100 transition-opacity"
-        onClick={togglePlay}
-      >
-        {isPlaying ? <PauseSvg /> : <PlaySvg />}
-      </button>
-    </div>
-  );
-};
 
 function PlaySvg() {
   return (
@@ -88,9 +73,8 @@ function PlaySvg() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="feather feather-play"
       >
-        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        <polygon points="5 3 19 12 5 21 5 3" />
       </svg>
     </VideoSvgContainer>
   );
@@ -109,13 +93,48 @@ function PauseSvg() {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="feather feather-pause"
       >
-        <rect x="6" y="4" width="4" height="16"></rect>
-        <rect x="14" y="4" width="4" height="16"></rect>
+        <rect x="6" y="4" width="4" height="16" />
+        <rect x="14" y="4" width="4" height="16" />
       </svg>
     </VideoSvgContainer>
   );
 }
+
+const Video = ({
+  src,
+  caption,
+  maxWidth = 528,
+}: {
+  src: string;
+  caption: string;
+  maxWidth?: number;
+  aspectRatio?: string;
+}) => {
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+
+  const togglePlay = () => setIsPlaying((prev) => !prev);
+
+  React.useEffect(() => {
+    if (!videoRef.current) return;
+    isPlaying ? videoRef.current.play() : videoRef.current.pause();
+  }, [isPlaying]);
+
+  return (
+    <VideoWrapper maxWidth={maxWidth}>
+      <StyledVideo loop muted playsInline src={src} ref={videoRef}>
+        <source src={src} type="video/mp4" />
+      </StyledVideo>
+
+      <OverlayButton
+        onClick={togglePlay}
+        aria-label={isPlaying ? "Pause video" : "Play video"}
+      >
+        {isPlaying ? <PauseSvg /> : <PlaySvg />}
+      </OverlayButton>
+    </VideoWrapper>
+  );
+};
 
 export { Video };

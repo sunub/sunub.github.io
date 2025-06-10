@@ -87,6 +87,9 @@ function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
 }
 
 const NavigationWrapper = styled.nav`
+  position: relative;
+  z-index: 10000;
+
   font-size: 1.25rem;
 `;
 
@@ -122,10 +125,6 @@ export const UnderLineWaveIcon = memo(
 );
 
 const UnderLineWaveSVG = styled.svg`
-  /* position: absolute;
-  top: 35px;
-  left: -5px; */
-
   stroke: var(--color-text);
   stroke-width: 2.5;
   stroke-linecap: round;
@@ -143,6 +142,10 @@ const UnderLineWavePath = styled.path<{ $delay: number }>`
 `;
 
 const Button = styled.button`
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+
   :hover {
     ${UnderLineWavePath} {
       stroke-dashoffset: 0;

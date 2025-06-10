@@ -122,6 +122,7 @@ export const BlogPostList = styled.ul`
 `;
 
 export const BlogPostListItem = styled.li`
+  width: fit-content;
   &:not(:first-of-type) {
     margin-top: 2rem;
   }

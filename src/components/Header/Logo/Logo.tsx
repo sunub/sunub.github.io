@@ -1,9 +1,12 @@
-import { VisuallyHidden } from "@/components/VisuallyHidden";
+"use client";
+
 import Link from "next/link";
+import styled from "styled-components";
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 
 function Logo() {
   return (
-    <Link
+    <StyledLink
       aria-label="Homepage link"
       aria-labelledby={"Homepage link"}
       href={"/"}
@@ -51,8 +54,13 @@ function Logo() {
           fill="var(--color-navlink)"
         />
       </svg>
-    </Link>
+    </StyledLink>
   );
 }
+
+const StyledLink = styled(Link)`
+  position: relative;
+  z-index: 10000;
+`;
 
 export default Logo;

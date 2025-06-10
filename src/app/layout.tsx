@@ -7,7 +7,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { cookies } from "next/headers";
 import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
-import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
 import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -136,7 +135,6 @@ export default async function RootLayout({
           <ThemeProvider>
             <div id="__next">
               <Header />
-              <div className="blog-main__background-template" />
               <div className="blog-main__landing-page">{children}</div>
               <Footer />
               <div id="mobile-nav-portal" />

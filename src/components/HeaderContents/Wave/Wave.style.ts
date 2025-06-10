@@ -17,7 +17,6 @@ export const WaveWrapper = styled.div`
   grid: [wave-image] 1fr / [wave-image] 1fr;
   position: relative;
   overflow: hidden;
-  top: -65px;
   left: 0px;
   right: 0px;
   width: 100%;

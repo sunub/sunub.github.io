@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "styled-components";
-import HeroImage from "@/components/HeroImage";
+import { HeroImage } from "@/components/HeroImage";
 import Wave from "@/components/HeaderContents/Wave";
 import { ContentListLoading } from "@/components/Skeletons/ui/ContentLoading";
 
@@ -30,16 +30,6 @@ const BodyWrapper = styled.div`
 
 const TitleRootWrapper = styled.div`
   grid-area: newest;
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 1rem;
-  flex-direction: column;
 `;
 
 const HeaderContentsWrapper = styled.div`

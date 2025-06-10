@@ -5,6 +5,7 @@ import Image from "next/image";
 
 export const RootWrapper = styled.div`
   position: relative;
+  top: 65px;
 
   @media screen and (max-width: 768px) {
     display: none;
@@ -43,7 +44,7 @@ export const Bridge = styled.span<{ $url: string; $opacity: string }>`
 export const Clouds = styled.span<{ $url: string; $opacity: string }>`
   display: inline-block;
   width: 100%;
-  height: 262px;
+  height: 200px;
   background-image: url(${(props) => props.$url});
   background-repeat: repeat-x;
   opacity: var(${(props) => props.$opacity});
@@ -73,7 +74,7 @@ export const Cars = styled.span<{ $url: string; $opacity: string }>`
   background-repeat: repeat-x;
   position: absolute;
   z-index: -1;
-  top: 304px;
+  top: 240px;
   left: 0px;
   width: 100%;
   height: 100%;

@@ -10,11 +10,8 @@ export const HeaderContentsWrapper = styled.div`
 `;
 
 export const MainWrapper = styled.main`
-  display: grid;
+  display: flex;
   position: relative;
-  grid-template:
-    "newest categories"
-    "newest tags" 1fr / 2fr 1fr;
 
   max-width: 1100px;
   margin-left: auto;

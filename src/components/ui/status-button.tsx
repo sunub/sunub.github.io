@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Button, type ButtonProps } from "./button";
-import styled from "styled-components";
-import { cn } from "@/utils/misc";
+import styled, { keyframes } from "styled-components";
 
 const COLORS = [
   "oklch(92.86% 0.036 289.07)",
@@ -11,15 +10,34 @@ const COLORS = [
   "oklch(87.45% 0.064 286.931)",
 ];
 
+const pendingAnimation = keyframes`
+  0%, 100% {
+    background-color: oklch(87.45% 0.064 286.931);
+    box-shadow: 0 6px 4px 0 oklch(76.64% 0.13 292.01 / 80%);
+  }
+  50% {
+    background-color: oklch(92.86% 0.036 289.07);
+    box-shadow: 0 4px 4px 0 oklch(76.64% 0.13 292.01 / 20%);
+  }
+`;
+
+const StyledStatusButton = styled(Button)<{ status: string }>`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  height: fit-content;
+  padding: ${({ status }) => (status === "pending" ? "0" : "0.5rem 1rem")};
+`;
+
 export const StatusButton = React.forwardRef<
   HTMLButtonElement,
   ButtonProps & { status: "pending" | "success" | "error" | "idle" }
->(({ status = "idle", className, children, ...props }, ref) => {
+>(({ status = "idle", children, ...props }, ref) => {
   const companion = {
     pending: (
       <PendingWrapper>
         {COLORS.map((color, i) => (
-          <PendingBlock key={`${i}th-pending-block`} $bg={color} $delay={i} />
+          <PendingBlock key={i} $bg={color} $delay={i} />
         ))}
       </PendingWrapper>
     ),
@@ -28,22 +46,16 @@ export const StatusButton = React.forwardRef<
     idle: null,
   }[status];
 
-  const padding = status !== "pending" ? "px-4 py-2" : "p-0";
-
   return (
-    <Button
-      ref={ref}
-      className={cn("flex justify-center gap-4 h-fit", className, padding)}
-      {...props}
-    >
-      {status === "idle" ? <React.Fragment>{children}</React.Fragment> : null}
+    <StyledStatusButton ref={ref} status={status} {...props}>
+      {status === "idle" && children}
       {companion}
-      {status !== "idle" ? <PendingBtm /> : null}
-    </Button>
+      {status !== "idle" && <PendingBtm />}
+    </StyledStatusButton>
   );
 });
 
-StatusButton.displayName = "Button";
+StatusButton.displayName = "StatusButton";
 
 const PendingWrapper = styled.div`
   position: relative;
@@ -92,7 +104,7 @@ const PendingBlock = styled.span<{ $bg: string; $delay: number }>`
   height: 100%;
   width: 20px;
   will-change: background-color, box-shadow;
-  animation: pending 1.5s ease-in infinite;
+  animation: ${pendingAnimation} 1.5s ease-in infinite;
   animation-delay: ${({ $delay }) => ($delay + 0.1) * 0.195}s;
   transform: translate3d(0, 0, 0);
 
@@ -107,17 +119,5 @@ const PendingBlock = styled.span<{ $bg: string; $delay: number }>`
     position: absolute;
     top: calc(50% - 4px);
     left: calc(50% - 4px);
-  }
-
-  @keyframes pending {
-    0%,
-    100% {
-      background-color: oklch(87.45% 0.064 286.931);
-      box-shadow: 0 6px 4px 0 oklch(76.64% 0.13 292.01 / 80%);
-    }
-    50% {
-      background-color: oklch(92.86% 0.036 289.07);
-      box-shadow: 0 4px 4px 0 oklch(76.64% 0.13 292.01 / 20%);
-    }
   }
 `;

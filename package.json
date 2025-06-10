@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "build:workers": "tsc -p tsconfig.worker.json",
     "start": "pnpm run build && next start -p 4004",
@@ -62,8 +62,6 @@
     "sharp": "^0.32.6",
     "styled-components": "^5.3.11",
     "swr": "^2.2.4",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.1",
     "unified": "^11.0.4",
     "vercel": "latest",
@@ -102,7 +100,6 @@
     "stylelint-config-standard": "^16.0.0",
     "sugar-high": "^0.6.0",
     "swc-loader": "^0.2.3",
-    "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2"
   },
   "prisma": {

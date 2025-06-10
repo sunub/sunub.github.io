@@ -9,6 +9,7 @@ import {
 import useToggle from "@/hooks/use-toggle";
 import MobileNav from "../MobileNav";
 import { createPortal } from "react-dom";
+import type { Theme } from "type";
 
 interface RefObjects {
   pathStartRef: React.RefObject<SVGPathElement | null>;
@@ -18,7 +19,7 @@ interface RefObjects {
   svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
-function Hamburger() {
+function Hamburger({ theme }: { theme: Theme }) {
   const [isOpen, toggleOpen] = useToggle(false);
 
   const pathStartRef = React.useRef<SVGPathElement>(null);
@@ -60,6 +61,7 @@ function Hamburger() {
       {isOpen &&
         createPortal(
           <MobileNav
+            theme={theme}
             isOpen={isOpen}
             toggleOpen={toggleOpen}
             refObjects={refObjects}

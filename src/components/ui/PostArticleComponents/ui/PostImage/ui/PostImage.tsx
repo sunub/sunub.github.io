@@ -7,6 +7,7 @@ import { useInView } from "react-intersection-observer";
 import styled, { keyframes } from "styled-components";
 import { isImageLoaded, markImageAsLoaded } from "../model/cache";
 import Image from "next/image";
+import { Caption, Skeleton, StyledImage } from "../style";
 
 type ImageLayout = "default" | "wide" | "full" | "float-left" | "float-right";
 
@@ -48,7 +49,7 @@ const CustomImage = memo(
     priority?: boolean;
   }) => {
     return (
-      <Image
+      <StyledImage
         src={src}
         alt={alt}
         {...(type === "responsive"
@@ -61,9 +62,9 @@ const CustomImage = memo(
         className={`
             object-contain
             transition-opacity duration-300
-            ${isLoading ? "opacity-0" : "opacity-100"}
-            ${additionalStyle ?? ""}
           `}
+        $isLoading={isLoading}
+        $zoomed={type === "wide"}
         loading={priority ? "eager" : "lazy"}
         priority={priority}
         quality={quality}
@@ -138,9 +139,7 @@ const PostImage = memo(
           <ImageWrapper ref={imageRef}>
             {(inView || priority) && (
               <>
-                {isLoading && (
-                  <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-                )}
+                {isLoading && <Skeleton />}
                 {/* priority를 inView와 결합하여 전달 */}
                 <CustomImage
                   src={src}
@@ -152,11 +151,7 @@ const PostImage = memo(
               </>
             )}
           </ImageWrapper>
-          {caption && (
-            <figcaption className="text-center text-sm text-gray-600 mt-2">
-              {caption}
-            </figcaption>
-          )}
+          {caption && <Caption>{caption}</Caption>}
         </Figure>
         {isZoomIn &&
           createPortal(
@@ -169,7 +164,6 @@ const PostImage = memo(
                   setIsLoading={setIsLoading}
                   type="wide"
                   additionalStyle="cursor-zoom-out z-[10000]"
-                  // zoomed image는 별도의 priority 처리가 필요하지 않음
                 />
               </ZoomedImage>
               <BlurredBackground />

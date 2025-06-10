@@ -4,9 +4,10 @@ import React from "react";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import { getMoblieCloseAnimationTimeline } from "./MoblieNav.helper";
-import ThemeToggler from "@/components/Theme/Toggler/ThemeToggler";
+import ThemeToggler from "@/components/Theme/Toggler/ThemeTogglerButton";
 import * as Styled from "./MoblieNav.style";
 import gsap from "gsap";
+import type { Theme } from "type";
 
 const CATEGORIES = [
   {
@@ -37,6 +38,7 @@ interface Props {
   isOpen: boolean;
   toggleOpen: () => void;
   refObjects: RefObjects;
+  theme: Theme;
 }
 
 function MobileNav(props: Props) {
@@ -87,7 +89,10 @@ function MobileNav(props: Props) {
             </Styled.ListWrapper>
 
             <Styled.ThemeWrapper className="mobile-nav__link-items">
-              <ThemeToggler maskId="mobile-nav__theme-toggler" />
+              <ThemeToggler
+                theme={props.theme}
+                maskId="mobile-nav__theme-toggler"
+              />
             </Styled.ThemeWrapper>
           </Styled.Wrapper>
         </Styled.NavigationWrapper>

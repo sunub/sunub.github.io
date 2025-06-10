@@ -8,12 +8,13 @@ import {
   Article,
   ContentBlink,
 } from "./loading.style";
+import styled from "styled-components";
 
 export default function Loading() {
   return (
     <>
       <Wave />
-      <main className="bg-base">
+      <Main>
         <ArticleHeader>
           <PostTitle>
             <ContentBlink $width={"30rem"} />
@@ -33,7 +34,11 @@ export default function Loading() {
             <ContentBlink $width={"90%"} />
           </Article>
         </ArticleWrapper>
-      </main>
+      </Main>
     </>
   );
 }
+
+const Main = styled.main`
+  background-color: var(--color-background);
+`;
