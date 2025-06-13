@@ -1,44 +1,114 @@
 "use client";
 
 import {
-  Cars,
-  Clouds,
-  LightHeroImageWapper,
-  DrakHeroImageWapper,
   DarkShadow,
   Bridge,
   LightShadow,
   RootWrapper,
   HeroImageWrapper,
+  AnimatedImage,
+  AnimatedCarImage,
+  CloudWrapper,
+  HeroImageWapper,
 } from "./HeroImage.style";
 import { memo, useContext } from "react";
 import { ThemeContext } from "../Theme/ThemeProvider";
+import LightCloudImage from "@/public/assets/clouds.avif";
+import LightCarImage from "@/public/assets/cars.avif";
+import DarkCloudImage from "@/public/assets/dark_clouds.avif";
+import DarkCarImage from "@/public/assets/dark_cars.avif";
+
+const LIGHT_CLOUD_WIDTH = 1039;
+const LIGHT_CAR_WIDTH = 1554;
 
 const LightHeroImage = memo(() => {
   return (
-    <LightHeroImageWapper>
-      <Clouds $url="/assets/clouds.avif" $opacity="--color-light-heroimage" />
+    <HeroImageWapper>
+      <CloudWrapper>
+        <AnimatedImage
+          src={LightCloudImage}
+          alt="Animated light clouds"
+          $opacity="--color-light-heroimage"
+          $imageWidth={LIGHT_CLOUD_WIDTH}
+          priority
+          style={{ left: "0px" }}
+        />
+        <AnimatedImage
+          src={LightCloudImage}
+          alt="Animated light clouds2"
+          $opacity="--color-light-heroimage"
+          $imageWidth={LIGHT_CLOUD_WIDTH}
+          priority
+          style={{ left: `${LIGHT_CLOUD_WIDTH}px` }}
+        />
+      </CloudWrapper>
+
+      <AnimatedCarImage
+        src={LightCarImage}
+        alt="Animated light car"
+        $opacity="--color-light-heroimage"
+        $imageWidth={LIGHT_CAR_WIDTH}
+        priority
+        style={{ left: "0px" }}
+      />
+      <AnimatedCarImage
+        src={LightCarImage}
+        alt="Animated light car2"
+        $opacity="--color-light-heroimage"
+        $imageWidth={LIGHT_CAR_WIDTH}
+        priority
+        style={{ left: `-${LIGHT_CAR_WIDTH}px` }}
+      />
       <Bridge $url="/assets/bridge.avif" $opacity="--color-light-heroimage" />
-      <Cars $url="/assets/cars.avif" $opacity="--color-light-heroimage" />
       <LightShadow $opacity="--color-light-heroimage" />
-    </LightHeroImageWapper>
+    </HeroImageWapper>
   );
 });
 
 const DarkHeroImage = memo(() => {
   return (
-    <DrakHeroImageWapper>
-      <Clouds
-        $url="/assets/dark_clouds.avif"
+    <HeroImageWapper>
+      <CloudWrapper>
+        <AnimatedImage
+          src={DarkCloudImage}
+          alt="Animated dark clouds"
+          $opacity="--color-dark-heroimage"
+          $imageWidth={LIGHT_CLOUD_WIDTH}
+          priority
+          style={{ left: "0px" }}
+        />
+        <AnimatedImage
+          src={DarkCloudImage}
+          alt="Animated dark clouds2"
+          $opacity="--color-dark-heroimage"
+          $imageWidth={LIGHT_CLOUD_WIDTH}
+          priority
+          style={{ left: `${LIGHT_CLOUD_WIDTH}px` }}
+        />
+      </CloudWrapper>
+
+      <AnimatedCarImage
+        src={DarkCarImage}
+        alt="Animated dark car"
         $opacity="--color-dark-heroimage"
+        $imageWidth={LIGHT_CAR_WIDTH}
+        priority
+        style={{ left: "0px" }}
+      />
+      <AnimatedCarImage
+        src={DarkCarImage}
+        alt="Animated dark car2"
+        $opacity="--color-dark-heroimage"
+        $imageWidth={LIGHT_CAR_WIDTH}
+        priority
+        style={{ left: `-${LIGHT_CAR_WIDTH}px` }}
       />
       <Bridge
         $url="/assets/dark_bridge.avif"
         $opacity="--color-dark-heroimage"
       />
-      <Cars $url="/assets/dark_cars.avif" $opacity="--color-dark-heroimage" />
       <DarkShadow $opacity="--color-dark-heroimage" />
-    </DrakHeroImageWapper>
+    </HeroImageWapper>
   );
 });
 

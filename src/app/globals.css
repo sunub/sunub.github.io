@@ -53,6 +53,7 @@ html {
     0 50px 62.9px -2.5px color-mix(in oklch, var(--color-highlight) 9.5%, transparent);
   display: block;
   scroll-behavior: smooth;
+  --error-pattern: "url('/error-pattern.svg')";
 }
 
 html,

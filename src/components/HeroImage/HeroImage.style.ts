@@ -1,6 +1,6 @@
 "use client";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Image from "next/image";
 
 export const RootWrapper = styled.div`
@@ -117,10 +117,59 @@ export const DarkShadow = styled.span<{ $opacity: string }>`
   opacity: var(${(props) => props.$opacity});
 `;
 
-export const DrakHeroImageWapper = styled.div`
-  grid-area: hero-image;
+const panAnimation = (imageWidth: number) => keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(${imageWidth}px);
+  }
 `;
 
-export const LightHeroImageWapper = styled.div`
+export const HeroImageWapper = styled.div`
   grid-area: hero-image;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+`;
+
+export const CloudWrapper = styled.div`
+  position: relative;
+  height: 200px;
+`;
+
+export const AnimatedImage = styled(Image)<{
+  $opacity: string;
+  $imageWidth: number;
+}>`
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  opacity: var(${(props) => props.$opacity});
+
+  animation: ${(props) => panAnimation(-props.$imageWidth)} 100s linear infinite;
+  will-change: transform;
+
+  @keyframes pan {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-1039px);
+    }
+  }
+`;
+
+export const AnimatedCarImage = styled(Image)<{
+  $opacity: string;
+  $imageWidth: number;
+}>`
+  position: absolute;
+  z-index: -1;
+  top: 232px;
+  left: 0;
+  opacity: var(${(props) => props.$opacity});
+  animation: ${(props) => panAnimation(props.$imageWidth)} 50s linear infinite;
+  will-change: transform;
 `;

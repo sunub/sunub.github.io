@@ -59,19 +59,42 @@ const Outer = styled.div`
   );
 `;
 
+const panTransform = keyframes`
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, -50%, 0);
+  }
+`;
+
 const PatternLayer = styled.div`
+  position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background-color: #fecaca;
-  background-image: var(--error-pattern);
-  animation: ${pan} 10s linear infinite;
-  background-position: 10%;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-image: url("/error_page.svg");
+    background-repeat: repeat;
+    will-change: transform;
+    animation: ${panTransform} 60s linear infinite;
+  }
 `;
 
 const Content = styled.div`
+  position: relative;
+  z-index: 1;
   background-color: #f1f5f9;
   padding: 3rem;
   display: flex;
