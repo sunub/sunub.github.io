@@ -33,14 +33,6 @@ const LightHeroImage = memo(() => {
           priority
           style={{ left: "0px" }}
         />
-        <AnimatedImage
-          src={LightCloudImage}
-          alt="Animated light clouds2"
-          $opacity="--color-light-heroimage"
-          $imageWidth={LIGHT_CLOUD_WIDTH}
-          priority
-          style={{ left: `${LIGHT_CLOUD_WIDTH}px` }}
-        />
       </CloudWrapper>
 
       <AnimatedCarImage
@@ -50,14 +42,6 @@ const LightHeroImage = memo(() => {
         $imageWidth={LIGHT_CAR_WIDTH}
         priority
         style={{ left: "0px" }}
-      />
-      <AnimatedCarImage
-        src={LightCarImage}
-        alt="Animated light car2"
-        $opacity="--color-light-heroimage"
-        $imageWidth={LIGHT_CAR_WIDTH}
-        priority
-        style={{ left: `-${LIGHT_CAR_WIDTH}px` }}
       />
       <Bridge $url="/assets/bridge.avif" $opacity="--color-light-heroimage" />
       <LightShadow $opacity="--color-light-heroimage" />
@@ -77,14 +61,6 @@ const DarkHeroImage = memo(() => {
           priority
           style={{ left: "0px" }}
         />
-        <AnimatedImage
-          src={DarkCloudImage}
-          alt="Animated dark clouds2"
-          $opacity="--color-dark-heroimage"
-          $imageWidth={LIGHT_CLOUD_WIDTH}
-          priority
-          style={{ left: `${LIGHT_CLOUD_WIDTH}px` }}
-        />
       </CloudWrapper>
 
       <AnimatedCarImage
@@ -94,14 +70,6 @@ const DarkHeroImage = memo(() => {
         $imageWidth={LIGHT_CAR_WIDTH}
         priority
         style={{ left: "0px" }}
-      />
-      <AnimatedCarImage
-        src={DarkCarImage}
-        alt="Animated dark car2"
-        $opacity="--color-dark-heroimage"
-        $imageWidth={LIGHT_CAR_WIDTH}
-        priority
-        style={{ left: `-${LIGHT_CAR_WIDTH}px` }}
       />
       <Bridge
         $url="/assets/dark_bridge.avif"
