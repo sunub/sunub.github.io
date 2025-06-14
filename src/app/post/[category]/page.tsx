@@ -1,15 +1,28 @@
 import Wave from "@/components/HeaderContents/Wave";
 import Spacer from "@/components/Spacer";
-import { FrontmatterWrapper } from "./page.style";
+import {
+  FrontmatterWrapper,
+  RootContainer,
+  Title,
+  TitleContainer,
+} from "./page.style";
 import Card from "@/components/Card";
 import { getPostsMetadataByCategory } from "db/blog/api";
 import { Suspense } from "react";
 import { CardsSkeleton } from "@/components/Skeletons";
+import { Crafty_Girls } from "next/font/google";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
 type Params = Promise<{
   category: Cateogry;
 }>;
+
+const craftyGirls = Crafty_Girls({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--crafty-girls-font",
+  display: "swap",
+});
 
 export default async function Page({ params }: { params: Params }) {
   const resolvedParams = await params;
@@ -29,20 +42,22 @@ export default async function Page({ params }: { params: Params }) {
 
   return (
     <section>
-      <div className="w-full max-w-[1000px] flex justify-center mt-16 mb-12 ml-auto mr-auto text-base">
-        <h1 className="text-5xl">{`${title[category]}`}</h1>
-      </div>
+      <TitleContainer>
+        <Title
+          className={`${craftyGirls.className}`}
+        >{`${title[category]}`}</Title>
+      </TitleContainer>
       <Wave />
-      <div className="bg-base relative top-[-64px] px-8">
+      <RootContainer>
         <Spacer size={48} axis={"vertical"} />
         <Suspense fallback={<CardsSkeleton />}>
-          <FrontmatterWrapper>
+          <FrontmatterWrapper id="frontmatter-cards">
             {postMetadata.map((frontmatter) => (
               <Card key={frontmatter.slug} frontMatter={frontmatter} />
             ))}
           </FrontmatterWrapper>
         </Suspense>
-      </div>
+      </RootContainer>
     </section>
   );
 }

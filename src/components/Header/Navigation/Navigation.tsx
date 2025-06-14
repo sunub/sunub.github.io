@@ -13,6 +13,7 @@ function Navigation() {
   const buttonRef = React.useRef<HTMLButtonElement | null>(null);
   const portalRef = React.useRef<HTMLDivElement | null>(null);
   const [isOpen, toggleOpen] = useToggle(false);
+  const [isScroll, setIsScroll] = React.useState(false);
 
   React.useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -35,6 +36,16 @@ function Navigation() {
     return () => window.removeEventListener("click", handleClick);
   }, [isOpen]);
 
+  React.useEffect(() => {
+    function scrollHandler() {
+      const scrollTop = document.documentElement.scrollTop;
+      setIsScroll(scrollTop >= 100);
+    }
+
+    window.addEventListener("scroll", scrollHandler);
+    return () => window.removeEventListener("scroll", scrollHandler);
+  }, []);
+
   return (
     <NavigationWrapper id="blog-main__post-navigation" className="pl-4">
       <Styled.PostNaviation>
@@ -48,13 +59,17 @@ function Navigation() {
           카테고리들
           <UnderLineWaveIcon />
         </Button>
-        <PortalRef id="post-dropdown-portal" ref={portalRef} />
-        {isOpen &&
-          createPortal(
-            <DropDownMenu toggleOpen={toggleOpen} />,
-            portalRef.current!
-          )}
+        <PortalRef
+          id="post-dropdown-portal"
+          ref={portalRef}
+          $isScroll={isScroll}
+        />
       </Styled.PostNaviation>
+      {isOpen &&
+        createPortal(
+          <DropDownMenu toggleOpen={toggleOpen} />,
+          portalRef.current!
+        )}
     </NavigationWrapper>
   );
 }
@@ -154,13 +169,15 @@ const Button = styled.button`
   }
 `;
 
-const PortalRef = styled.div`
-  position: absolute;
+const PortalRef = styled.div<{ $isScroll: boolean }>`
+  position: fixed;
   z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+  transform: translateY(${({ $isScroll }) => $isScroll && "-35px"});
 `;
 
 const DropDownMenuWrapper = styled.div`
-  z-index: 1000;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px 32px;

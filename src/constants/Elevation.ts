@@ -2,32 +2,32 @@ type Distance = "short" | "mid" | "long";
 type Usage = "logo" | "other";
 
 function getBoxShadow(distance: string) {
-	let boxShadow: string;
-	switch (distance) {
-		case "short":
-			boxShadow = "--short-shadow";
-			break;
-		case "mid":
-			boxShadow = "--mid-shadow";
-			break;
-		case "long":
-			boxShadow = "--mid-shadow";
-			break;
-		default:
-			boxShadow = "--none-shadow";
-			break;
-	}
-	return boxShadow;
+  let boxShadow: string;
+  switch (distance) {
+    case "short":
+      boxShadow = "--short-shadow";
+      break;
+    case "mid":
+      boxShadow = "--mid-shadow";
+      break;
+    case "long":
+      boxShadow = "--mid-shadow";
+      break;
+    default:
+      boxShadow = "--none-shadow";
+      break;
+  }
+  return boxShadow;
 }
 
 function Elevation(
-	width: number,
-	height: number,
-	border: number,
-	distance: Distance,
-	usage: Usage
+  width: number,
+  height: number,
+  border: number,
+  distance: Distance,
+  usage: Usage
 ) {
-	return `
+  return `
 	width: ${width}px;
 	height: ${height}px;
 
@@ -35,8 +35,6 @@ function Elevation(
 		var(${usage === "logo" ? "--color-bird" : "--default-border-color"});
 
 	border-radius: ${border}px;
-	background: var(--color-elevation);
-
 	box-shadow: var(${getBoxShadow(distance)});
 
 	display: flex;
