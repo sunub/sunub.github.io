@@ -16,7 +16,7 @@ function themeGuard(theme: unknown): asserts theme is Theme {
 }
 
 async function Header() {
-  const savedTheme = (await cookies()).get("color-theme")?.value;
+  const savedTheme = (await cookies()).get("color-theme")?.value || "light";
   themeGuard(savedTheme);
   return (
     <ScrollHeader>

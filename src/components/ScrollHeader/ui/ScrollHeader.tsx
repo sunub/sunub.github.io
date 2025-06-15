@@ -14,7 +14,7 @@ export async function ScrollHeader({
 }: {
   children: React.ReactNode;
 }) {
-  const savedTheme = (await cookies()).get("color-theme")?.value;
+  const savedTheme = (await cookies()).get("color-theme")?.value || "light";
   themeGuard(savedTheme);
   const isDarkTheme = savedTheme === "dark";
 
