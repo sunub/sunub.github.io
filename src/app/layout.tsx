@@ -10,6 +10,8 @@ import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
 import localFont from "next/font/local";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
+import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sunub.vercel.app"),
@@ -117,6 +119,9 @@ export default async function RootLayout({
           type="image/avif"
           fetchPriority="high"
         />
+        <Script id="theme-script" strategy="beforeInteractive">
+          {`(${initSetColorsByThemeFn})()`}
+        </Script>
       </head>
       <body>
         <script
