@@ -123,6 +123,8 @@ export const BlogPostList = styled.ul`
 
 export const BlogPostListItem = styled.li`
   width: fit-content;
+  text-wrap: pretty;
+  word-break: keep-all;
   &:not(:first-of-type) {
     margin-top: 2rem;
   }
