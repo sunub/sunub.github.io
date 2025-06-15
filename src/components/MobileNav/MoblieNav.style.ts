@@ -24,7 +24,7 @@ export const NavigationWrapper = styled.nav`
   top: 0;
   left: 0;
   padding-bottom: 3rem;
-  padding-top: 6rem;
+  padding-top: 8rem;
   height: 100cqh;
 
   @media screen and (min-width: 768px) {
@@ -74,12 +74,12 @@ export const ListWrapper = styled.ul`
   gap: clamp(1rem, 2.5dvh, 2rem);
 
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 400;
 `;
 
 export const List = styled.li`
   width: fit-content;
-  color: var(--color-text);
+  color: color-mix(in oklch, var(--color-text), var(--color-bird) 30%);
 `;
 
 export const Item = styled(Link)``;

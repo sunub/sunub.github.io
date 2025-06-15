@@ -97,8 +97,8 @@ export const Circle = styled.rect`
 export const Btn = styled.button<{ $isOpen: boolean }>`
   z-index: 10001;
   position: ${({ $isOpen }) => ($isOpen ? "absolute" : "static")};
-  right: ${({ $isOpen }) => ($isOpen ? "55px" : "0")};
-  top: ${({ $isOpen }) => ($isOpen ? "30px" : "0")};
+  right: ${({ $isOpen }) => ($isOpen ? "13px" : "0")};
+  top: ${({ $isOpen }) => ($isOpen ? "16px" : "0")};
   width: 40px;
   height: 40px;
 
@@ -198,7 +198,7 @@ export const Svg = styled.svg`
 
 export const FloodSVG = styled.svg`
   z-index: 1000;
-  position: absolute;
+  position: fixed;
   height: 100%;
   top: 0px;
   left: 0px;
