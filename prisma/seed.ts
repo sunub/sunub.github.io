@@ -1,31 +1,25 @@
-// prisma/seed.ts
-
-import { PrismaClient } from "@prisma/client";
-import { getPostsMetadataByCategory } from "db/blog/api";
 import chalk from "chalk";
 import ora from "ora";
 import { z } from "zod";
-import { CacheDataSchema } from "@/types/schema";
-import getBlogInstance from "db/blog/blog";
+import { PrismaClient } from "@prisma/client";
+import { CacheDataSchema } from "../src/types/schema";
+import { getPostsMetadataByCategory } from "../db/blog/api";
 
 interface RedirectPath {
   source: string;
   destination: string;
 }
 
-const blog = await getBlogInstance();
-type CategoryPostData = Awaited<
-  ReturnType<typeof blog.getPostsMetadataByCategory>
->;
+type CategoryPostData = Awaited<ReturnType<typeof getPostsMetadataByCategory>>;
 
 const prisma = new PrismaClient();
 type MDXFile = z.infer<typeof CacheDataSchema>;
 
 // Blog 인스턴스 생성 및 각 카테고리의 포스트 가져오기
-const allWebPosts = await blog.getPostsMetadataByCategory("web");
-const allCSPosts = await blog.getPostsMetadataByCategory("cs");
-const allCodePosts = await blog.getPostsMetadataByCategory("code");
-const allAlgorithmPosts = await blog.getPostsMetadataByCategory("algorithm");
+const allWebPosts = await getPostsMetadataByCategory("web");
+const allCSPosts = await getPostsMetadataByCategory("cs");
+const allCodePosts = await getPostsMetadataByCategory("code");
+const allAlgorithmPosts = await getPostsMetadataByCategory("algorithm");
 
 /**
  * MDX 파일로부터 추출된 포스트 데이터를 Prisma의 Post 모델에 맞게 변환해 저장합니다.
