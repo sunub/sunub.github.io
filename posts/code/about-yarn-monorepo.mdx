@@ -1,0 +1,567 @@
+---
+title: 패키지 매니저를 Yarn으로 변경하며 발생한 문제
+date: 2025-06-10
+tags: [package manager, yarn, monorepo]
+summary: 패키지 매니저만 변경 했는데 알 수 없는 오류가 발생했다.
+slug: about-yarn-monorepo
+category: code
+completed: true
+---
+
+## 겪었던 문제
+
+```ts
+import express from "express";
+
+const app = express();
+```
+
+위와 같이 단순히 패키지를 import 할 경우에 Typescript가 타입 추론을 정상적으로 수행하지 못한다는 문제가 발생 했습니다. 단순히 패키지 매니저를 `yarn`으로 변경하였을 뿐인데 이런 문제가 발생한다는 것이 당황스러웠습니다.
+
+그래서 이 과정에서 내가 타입스크립트 설정을 제대로 설정하지 않았나? 필요로 하는 타입 패키지들도 설치를 했는데 왜 이런 문제가 발생하는지를 이해할 수 없었습니다.
+
+저는 주로 `pnpm`이나 `npm`을 사용했을 때는 전혀 발생하지 않던 문제라 왜 이런 문제가 발생하는지에 대해서 판단하지 못했습니다. 그래서 이 문제가 왜 발생하는 것이니 파악해보기로 했습니다.
+
+이 과정에서 겪었던 혼란인 TypeScript 설정 또한 조금 더 확실하게 알기 위해서 어떠한 설정들이 있고 어떤 설정을 해야하는지에 대해서 다루어 보겠습니다.
+
+## tsconfig options
+
+### 1. target
+
+`target` 옵션은 언어와 환경을 설정하는 옵션의 일부입니다. `target`을 변경하면 JavaScript 기능이 다운 레벨링 되고 어떤 기능이 그대로 유지될지를 결정합니다. 예를 들어 ES6에서 사용이 가능한 `() => this` 와 같은 화살표 함수는 target이 ES5 이하일 경우 동등한 함수 표현식으로 변환됩니다.
+
+```ts
+type target = es3 | es5 | es6/es2015 | es2016 | es2017 | es2018 | es2019 | es2020 | es2021 | es2022 | es2023 | es2024 | esnext;
+
+function compile(opts: CompileOptions = {}) {
+  const target: JSTarget = opts.target ?? "es5"; // 기본 값은 ES5
+}
+```
+
+`target`을 변경하면 `lib`의 기본값도 변경됩니다. 원하는 경우 `target`과 `lib`를 혼합하여 설정할 수도 있지만, 편의상 `target`만 설정해도 됩니다.
+
+특별한 값인 `ESNext`는 현재 사용 중인 TypeScript 버전이 지원하는 가장 최신 버전을 의미합니다. 이 설정은 TypeScript 버전마다 의미가 달라질 수 있고, 업그레이드 시 예측 가능성을 떨어뜨릴 수 있으므로 주의해서 사용해야 합니다.
+
+### 2. `module`
+
+```ts
+type module =
+  | "preserve"
+  | "none"
+  | "nodenext"
+  | "commonjs"
+  | "node16"
+  | "node18"
+  | "esnext"
+  | "es2022"
+  | "es2020"
+  | "es6/es2015"
+  | "amd"
+  | "umd"
+  | "system";
+```
+
+`preserve` 로 module을 설정하면, 입력 파일에 작성된 ECMAScript의 import 및 export 문이 출력에서도 그대로 유지되며, CommonJS 스타일의 `import x = require("...")` 및 `export = ...` 문은 CommonJS의 `require` 및 `module.exports`로 출력됩니다. 즉, 전체 컴파일 또는 개별 파일에서 단일 포맷으로 강제 변환되는 대신, 각 `import/export` 문 자체의 포맷이 유지됩니다.
+
+Node.js 프로젝트에서는 `nodenext` 를 번들링될 코드에서는 `preserve` 또는 `esnext` 를 사용하는 것이 매우 유용합니다. `module` 을 변경하면 `moduleResolution`도 영향을 받습니다.
+
+앞서 설명한 target에서와 같이 nodenext 의 경우 최신 Node.js 버전과 함께 사용할 때 동작이 달라질 수 있다는 점을 주의해야 합니다.
+
+### 3. moduleResolution
+
+```ts
+type moduleResolution =
+  | "classic"
+  | "node/node10"
+  | "node16"
+  | "nodenext"
+  | "bundler"
+  | "node18";
+```
+
+`moduleResolution` 는 TypeScript가 import 또는 require 구문을 해석할 때, 어떤 방식으로 파일이나 패키지를 찾을지 결정하는 설정입니다. import 가 어떤 파일을 가리키는지 결정하는 모듈 탐색 알고리즘을 정의하는 설정 정의합니다.
+
+이 설정은 `module` 설정과 함께 고려해야 하는 사항입니다. module 설정은 어떤 모듈 형식으로 emit, 출력할지를 결정하는 옵션이고 moduleResolution 설정은 어떤 방식으로 import 된 경로를 찾을지 결정하는 것이기 때문입니다.
+
+| module 값               | 설명                                           | 적절한 moduleResolution    |
+| ----------------------- | ---------------------------------------------- | -------------------------- |
+| `"commonjs"`            | Node.js의 require 기반 모듈                    | `"node"` (기본값)          |
+| `"es2020"` / `"esnext"` | 최신 ESM 출력                                  | `"node"` 또는 `"nodenext"` |
+| `"nodenext"`            | Node.js의 ESM + CJS 자동 혼합                  | `"nodenext"`               |
+| `"node18"`              | Node 18 이상 + import attributes               | `"node18"`                 |
+| `"amd"`, `"system"`     | 브라우저 기반 로더 (구형 AMD)                  | `"classic"` 또는 `"node"`  |
+| `"bundler"`             | Vite, Webpack, Bun과 같은 번들러 기반 프로젝트 | `"bundler"`                |
+| `"preserve"`            | 혼합 모듈 방식 유지 (CJS + ESM 혼용)           | `"node"` 또는 `"bundler"`  |
+
+### 4. lib
+
+```ts
+type lib =
+  | "ES2020"
+  | "DOM"
+  | "DOM.Iterable"
+  | "ES2023"
+  | "WebWorker"
+  | "ScriptHost";
+```
+
+`lib` 설정은 코드가 실행되는 환경의 API를 타입 시스템에 알려주는 코드 설정입니다. 예를 들어 브라우저에서 코드가 실행 될 경우 `DOM` 설정을 해주어야 `NodeList` 가 `Iterable`로 설정이 되지 않을 수 있기 때문에 이러한 환경 설정은 중요합니다.
+
+예를 들어서 우리가 자주 사용하는 `vite`를 기준으로 어떻게 TypeScript 설정을 해야 하는지 이야기 해보겠습니다.
+
+```json
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+```
+
+`vite`를 이용해서 앱을 만들 경우 위와 같이 작성되어 있는 `tsconfig.json` 이 생성되는 것을 볼 수 있습니다. 두 가지 레퍼런스가 설정이 되어 있는 것을 확인하실 수 있습니다. `app`과 `node` 로 구분하는 것은 두 가지 상황에서 사용되는 설정이 명백히 다르기 때문입니다.
+
+`app` 을 사용하는 경우는 주로 브라우저에서 코드를 사용하기 때문에 ESModule을 사용할 것을 권장합니다. ESModule에 대한 글은 이 글에서 확인하실 수 있습니다.
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "skipLibCheck": true /* Bundler mode */,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler"
+  }
+}
+```
+
+`tsconfig.app.json` 설정은 위와 같이 설정이 되어 있는데 `lib` 환경 설정이 제한되어 있는 것을 알 수 있습니다. 또한 `moduleResolution`이 `bundler` 로 설정이 되어 있는데 이 설정이 어떤 것을 의미하는지 알아 봅시다.
+
+대표적인 번들러는 Webpack, Rollup, Vite 등이 대표적인 번들러입니다. 여러 개의 파일로 나눠진 소스 코드와 에셋을 하나 또는 여러 개의 최적화된 파일로 병합 해주는 도구입니다.
+
+moduleResolution 을 bundler로 설정한다는 것은 코드가 컴파일링 되는 과정을 번들러로 처리하겠다는 것을 의미합니다. 대표적으로 vite를 이용하여 코드를 처리할 경우 다음과 같은 구문들을 처리가 가능해집니다.
+
+```ts
+import x from "@/utils/x";
+import { foo } from "./foo";
+import "./global.css";
+```
+
+파일의 확장자 이름 없이 모듈을 import 하거나 TypeScript 파일에서 css 파일을 import 하여 사용하는 방식과 같이 다양한 리소스 사용하는 등의 확장이 가능하기 때문에 컴파일링을 번들러로 설정하여 성능을 향상 시킬 수 있습니다.
+
+### 5. noEmit
+
+noEmit 설정을 수행하면 컴파일러가 JavaScript 소스 코드를 생성할지 아닐지를 설정할 수 있습니다. 이 설정을 필요로 하는 것은 추가적인 최적화를 수행하기 위합입니다. 이 설정은 Babel이나 SWC 같은 다른 도구가 TypeScript 파일을 JavaScript 환경에서 실행 가능한 파일로 변환하도록 자리를 비워줍니다.
+
+### 6. allowImportingTsExtensions
+
+`.ts`, `.mts`, `.tsx` 와 같은 파일 확장자를 사용 가능하게끔 설정 해줍니다. 이 설정은 `noEmit` 설정이 true 로 설정이 되었을 경우 혹은 `emitDeclarationOnly`에만 사용이 가능한 설정입니다.
+
+확장자가 추가되는 경우는 JavaScript 런타임에서 자체적으로 처리가 불가능하기 때문에 noEmit을 true로 설정하여 추가적인 컴파일링이 가능하게끔 해주어야 합니다. 혹은 emitDeclarationOnly 설정을 사용할 경우인데 이 설정은 컴파일링은 이루어지지 않지만 `.d.ts` 파일만 생성이 되기 때문에 설정이 두 옵션 중 하나를 반드시 설정해야 합니다.
+
+### 7. esModuleInterop
+
+ES6 모듈 명세는 `import * as x`와 같은 네임스페이스 import는 **오직 객체여야만 한다고 명시**하고 있습니다. 하지만 TypeScript가 이를 `require("x")`처럼 처리함으로써, 해당 import를 **함수처럼 호출 가능한 객체**로 취급할 수 있게 허용했습니다. 이는 명세에 어긋납니다.
+
+CommonJS 모듈을 ES6 import 문법으로 안정적으로 사용할 수 있습니다. `import x from "commonjs-lib"` 형태가 작동하고 `import * as x from "lib"`도 정확히 동작 가능해집니다.
+
+### 8. skipLibCheck
+
+이 설정은 타입 시스템의 정확도를 어느 정도 희생하는 대신, 컴파일 시간을 단축할 수 있습니다. `skipLibCheck`를 활성화하면 TypeScript는 모든 `.d.ts` 파일을 완전히 검사하는 대신, **앱의 소스 코드에서 직접 참조한 코드만 타입 검사**를 수행합니다.
+
+`skipLibCheck`를 사용하고자 하는 **일반적인 사례**는 다음과 같습니다. `node_modules` 안에 동일한 라이브러리 타입이 두 개 존재하는 경우가 있습니다.
+
+예를 들어, `node_modules` 안에 동일한 라이브러리의 타입 정의가 중복되어 충돌하는 경우, `skipLibCheck`를 임시로 활성화하여 타입 검사 에러를 우회할 수 있습니다.  
+그러나 이런 상황에서는 우선적으로 `yarn`의 `"resolutions"` 기능이나 종속성 정리를 통해 의존성이 단 하나만 존재하도록 해결하는 것이 바람직합니다. `skipLibCheck`는 **근본적인 해결책이라기보다 일시적인 우회 수단**이라는 점을 유의해야 합니다.
+
+### 9. JSX
+
+이 옵션은 `.tsx` 파일에서 시작된 JS 파일의 JSX 구문이 JS로 어떻게 출력될지를 제어합니다.
+
+### 10. composite
+
+```ts
+type composite = boolean;
+```
+
+composite 옵션은 빌드 도구가 프로젝트가 이미 빌드되었는지 빠르게 판단할 수 있도록 특정 제약 조건들을 강제합니다.
+
+composite가 `true`로 설정이 될 경우 모든 구현 파일은 `includes` 패턴에 의해 매치되거나 `files` 배열에 명시되어 있어야 합니다. 또한 `declaration` 의 기본값이 `true` 으로 설정이 됩니다.
+
+### 11. declaration
+
+`declaration` 설정은 프로젝트 내의 모든 TypeScript 또는 JavaScript 파일에 대해 `.d.ts` 타입 정의 파일을 생성합니다.
+
+```ts
+export let helloWorld = "hi";
+```
+
+```ts
+export declare let helloWorld: string;
+```
+
+## Package.json
+
+package.json에서 가장 중요한 것은 name과 version 속성입니다. 이 두 속성은 개발자가 만들고자 하는 패키지의 정체성이기 때문에 name과 version은 결합되어 완전히 고유한 식별자로 간주됩니다. 패키지의 변경 사항이 생기면, 그에 따라 `version`도 변경되어야 합니다.
+
+### 1. name
+
+하지만 이런 이름에도 규칙이 존재하고 이 규칙은 아래와 같습니다.
+
+- 이름은 214자 이하이어야 합니다. 스코프가 있는 패키지라면 스코프를 포함한 길이 기준입니다.
+- 스코프가 있는 패키지의 이름은 마침표나 밑출로 시작할 수 있습니다. 스코프가 없을 경우에는 허용되지 않습니다.
+- 새로 만든 패키지의 이름에는 대문자를 사용할 수 없습니다.
+- 이름은 URL의 일부, 커맨드라인 인자, 폴더 이름 등으로 사용되므로, URL에 안전하지 않은 문자는 포함할 수 없습니다.
+
+스코프는 패키지 이름 앞에 붙는 소속 그룹 또는 네임스페이스입니다. 예를 들어 보겠습니다.
+
+```json
+{
+  "name": "@excalidraw/common"
+}
+```
+
+위와 같이 조직, 사용자의 단위를 구분하여 표기하는 방법을 의미하고 동일한 이름의 패키지도 서로 다른 스코프를 가지면 별개의 패키지로 간주됩니다. 예를 들어 `@toss/button`과 `@kako/button`은 이름이 같아도 완전히 다른 패키지입니다. 스코프는 이름 충돌을 방지하고, 협업 구조에 맞춰 패키지를 그룹화할 수 있기 때문에 많은 개발자들이 유용하게 사용하고 있습니다.
+
+`URL`에 안전하지 않은 문자란 웹 주소 안에서 특별한 의미를 가지거나, 일부 시스템에서 처리 중 오류를 일으킬 수 있어 그대로 사용할 수 없는 문자들을 말합니다. 이런 문자는 반드시 인코딩을 해야 하며, 일반적으로 URL에서는 사용이 제한됩니다.
+
+안전한 문자열은 다음과 같습니다.
+
+- 영문자 : `A-Z, a-z`
+- 숫자 : `0-9`
+- 특수문자 일부 : `-` (하이픈), `_` (언더스코어), `.` (마침표), `~` (틸드)
+
+안전하지 않은 문자열은 다음과 같습니다.
+
+| 문자                         | 이유                                               |
+| ---------------------------- | -------------------------------------------------- |
+| (공백)                       | 공백은 URL에 직접 쓸 수 없고 `%20`으로 인코딩      |
+| !, \*, ', (, )               | 일부 시스템에서 특별한 의미로 사용됨               |
+| ;, /, ?, :, @, &, =, +, $, , | URL 쿼리나 경로 구분 등에 사용됨                   |
+| #                            | 프래그먼트(앵커) 시작 지점 표시                    |
+| " < > \ ^                    | { } [ ]                                            |
+| %                            | 인코딩 문자이기 때문에 특별한 의미를 가짐 (%20 등) |
+
+### 2. version
+
+`version` 값은 `node-semver`로 파싱 가능한 형식이어야 하며, 이 모듈은 `npm`에 기본적으로 의존성으로 포함되어 있습니다.
+
+```plaintext
+MAJOR.MINOR.PATCH
+
+1.0.0
+2.3.4
+```
+
+각 버전의 경우 마침표`.`로 구분을 하며 주 버전, `MAJOR`는 호환되지 않는 API 변경 발생시 숫자가 증가해야 합니다. `MINOR` 부버전은 기능 추가시 증가가 되지만 하위 호환을 유지할 수 있습니다. `PATCH` 의 경우 버그를 수정하는 등의 작업이 이루어졌을 경우 숫자가 증가해야 하며 이 또한 하위 호환 유지가 가능합니다.
+
+이외에도 프리릴리즈, `pre-release` 를 통해서 확장이 가능해지며 `1.0.0-alpha`, `1.0.0-beta.2`와 같은 포맷으로 확장시킬 수 있습니다.
+
+### 3. private
+
+private을 `true`로 설정하면, npm은 해당 패키지를 publish 하는 것을 거부합니다. 이 설정은 비 공개 저장소가 실수로 개시되는 것을 방지하기 위한 방법입니다.
+
+특정 패키지가 오직 특정 레지스트리(예: 내부 전용 레지스트리)에만 게시되도록 보장하고 싶다면, 아래에서 설명하는 `publishConfig` 딕셔너리를 사용하여 게시 시점에 `registry` 설정 값을 덮어쓸 수 있습니다.
+
+### 4. publishConfig
+
+이 항목은 패키지를 개새할 때 사용될 설정될 값들의 집합입니다. 특히 `tag`, `registry`, `access` 등을 지정하고자 할 때 유용하며 이를 통해 특정 패키지가 `latest` 태그로 게시되지 않도록 하거나 글로벌 공개 레지스트리에 게시되지 않도록, 스코프가 있는 모듈을 기본적으로 private으로 게시하도록 설정할 수 있습니다.
+
+### 5. dependencies
+
+Dependencies는 패키지 이름을 버전 범위에 매핑하는 간단한 객체로 지정됩니다. 버전 범위는 하나 이상의 공백으로 구분된 설명자(descriptor)를 포함하는 문자열입니다. Dependencies는 tarball이나 git URL로도 식별할 수 있습니다. 버전의 범위는 아래와 같습니다.
+
+- `^1.2.3` : 1.2.3 이상의 버전이지만 2.0.0 미만인 버전
+- `~1.2.3` : 1.2.3 이상의 버전이지만 1.3.0 미만인 버전
+- `1.2.3` : 정확히 1.2.3 버전
+- `1.2.x` : 1.2.0 이상의 버전이지만 1.3.0 미만인 버전
+- `1.x` : 1.0.0 이상의 버전이지만 2.0.0 미만인 버전
+
+버전 1.1.65부터 GitHub URL을 `"foo": "user/foo-project"` 형태로 참조할 수 있습니다. git URL과 마찬가지로 `commit-ish` 접미사를 포함할 수 있습니다.
+
+```json
+{
+  "name": "foo",
+  "version": "0.0.0",
+  "dependencies": {
+    "express": "expressjs/express",
+    "mocha": "mochajs/mocha#4727d357ea",
+    "module": "npm/example-github-repo#feature/branch"
+  }
+}
+```
+
+### 6. devDependencies
+
+누군가가 여러분의 모듈을 다운로드해서 자신의 프로그램에서 사용하려는 경우, 그들은 여러분이 사용하는 외부 테스트 프레임워크나 문서화 프레임워크를 다운로드하거나 빌드하길 원하지 않을 수도 있습니다.
+
+이런 경우에는 `devDependencies` 객체에 매핑하는 것이 가장 좋습니다. 이 항목들은 패키지의 루트에서 `npm link` 또는 `npm install`을 수행할 때 설치되며, 다른 npm 구성 파라미터처럼 관리할 수 있습니다.
+
+위의 말이 의미하는 것은 `dependencies` 속성에 포함된 모든 패키지들은 항상 설치가 진행이되지만 `devDependencies` 속성의 경우 배포시에 기본적으로 포함이 되지 않습니다. 즉, 개발이 필요한 경우에만 설치가 이루어지기 때문에 라이브러리를 사용하는 사람에게는 불필요한 테스트 도구, 문서 생성기등은 설치가 되지 않아 용량을 줄이고 설치 속도도 증가 시킬 수 있다는 장점이 있습니다.
+
+### 7. **peerDependencies**
+
+어떤 경우에는, 여러분의 패키지가 특정 호스트 도구나 라이브러리와 호환됨을 표현하고 싶지만, 그 호스트를 직접 require 하지는 않는 경우가 있습니다. 이는 일반적으로 플러그인이라고 불립니다. 특히, 여러분의 모듈이 호스트의 문서에서 기대하고 명시한 특정 인터페이스를 제공할 수도 있습니다.
+
+```json
+// packages/react-button/package.json
+{
+  "name": "react-button",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}
+```
+
+예를 들어 `react-form` 패키지를 예시로 보겠습니다.
+
+```json
+{
+  "name": "react-hook-form",
+  "description": "Performant, flexible and extensible forms library for React Hooks",
+  "version": "7.57.0",
+  "devDependencies": {
+    "react": "^19.1.0"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17 || ^18 || ^19"
+  }
+}
+```
+
+`react-form`의 경우 react UI library 이기 때문에 당연히 react를 필요로 합니다. 하지만 react 도구이기 때문에 위와 같이 작성이 되어 있습니다.
+
+`peerDependencies` 설정이기 때문에 이건 라이브러리가 "나는 React 환경에서만 동작해. 정확히는 16.8.0 이상부터 19까지 호환 가능해."라고 **선언**하는 것입니다. 또한 React를 직접 번들에 포함하지 않고 호스트 앱들은 React를 공유하여야 하기 때문에 peerDependencies 선언하여 사용하고 있는 것입니다.
+
+`react-hook-form` 자체는 React 없이 존재할 수 없습니다. 하지만 개발 중에는, 예를 들어 유닛 테스트나 타입 테스트를 위해 React가 필요합니다. 그렇기 때문에 `devDependencies` 로 설치하여 개발 시점에서는 사용이 가능하게끔 하는 것입니다.
+
+### 8. workspaces
+
+로컬 파일 시스템 내의 여러 패키지를 하나의 최상위 루트 패키지 않에서 관리할 수 있도록 해주는 npm CLI의 기능 세트를 가리키는 일반적인 용어입니다. 이 기능 세트는 로컬 파일 시스템에서 연결된 패키지들을 보다 효율적으로 처리할 수 있도록 하며, `npm install` 과정에서 자동으로 링크 작업을 수행하여, 이전처럼 수동으로 `npm link`를 사용하여 `node_modules` 폴더 안에 패키지를 심볼릭 링크로 연결할 필요가 없게 됩니다.
+
+우리는 이러한 방식으로 `npm install` 시 자동으로 심볼릭 링크되는 패키지들을 하나의 워크스페이스(workspace) 라고 부르며, 이는 로컬 파일 시스템 내에 명시적으로 package.json의 workspaces 설정에 정의된 중첩된 패키지를 의미합니다.
+
+예를 들어
+
+```json
+{
+  "name": "my-workspaces-powered-project",
+  "workspaces": ["packages/a"]
+}
+```
+
+위와 같은 `package.json` 파일이 현재 작업 디렉토리 `.`에 존재하고, 그 안에 `packages/a`라는 폴더가 있으며 해당 폴더 안에 Node.js 패키지를 정의하는 `package.json`이 있다고 가정해 봅시다.
+
+```plaintext
+.
++-- package.json
+`-- packages
+    +-- a
+        `-- package.json
+```
+
+이 상태에서 현재 작업 디렉토리(`.`)에서 `npm install`을 실행하면, `packages/a` 폴더가 현재 디렉토리의 `node_modules` 폴더에 심볼릭 링크로 연결됩니다.
+
+이로 인해서 루트 레벨에서 `npm install`이나 `yarn install`을 수행할 경우 하위 패키지 폴더들을 감지하고 심볼릭 링크로 연결이 되어 있는 의존성들을 모두 설치할 수 있게 됩니다.
+
+이처럼 `workspaces` 속성은 패키지 경로→루트 **`node_modules` 심볼릭 링크**의 매핑을 자동화하여, 여러 하위 패키지를 하나의 리포지토리에서 유기적으로 개발·관리할 수 있는 모노레포 구조를 구성하게 해 줍니다.
+
+**`symbolic link`란 무엇일까?**
+
+심링크(symlink) 또는 심볼릭 링크(symbolic link)는 리눅스의 파일의 한 종류로, 컴퓨터의 다른 파일이나 폴더를 가리킵니다. 심링크는 윈도우 운영체제의 `바로가기`와 유사합니다.
+
+Yarn PnP는 전통적인 `node_modules` 폴더 대신 PnP 로더를 활용하지만, 워크스페이스 연동을 위해 내부적으로 동일하게 심볼릭 링크(또는 indirection 패키지)를 생성하여, IDE나 외부 툴이 PnP 로더를 인식하도록 돕습니다.
+
+## Yarn 은 뭘까?
+
+yarn이 등장하게 된 배경은 npm이 가지고 있던 일관성, 보안, 성능 문제 등을 해결하기 위한 새로운 패키지 매니저를 만들기 위한 목적으로 등장한 패키지 매니저입니다. 저도 이 글을 쓰면서 처음 알게 된 사실인데 yarn은 `Yet Another Resource Negotiator`의 약자 번역하면 `또 다른 자원 협상가` 라는 나름 직관적인 의미를 갖고 있었습니다.
+
+yarn은 기본적으로 설치한 모든 패키지를 캐시하고, 이를 머신 내의 다른 모든 프로젝트와 공유합니다. 이는 설치 속도와 디스크 용량 모두를 개선하며, 마치 하드링크를 사용하는 것과 유사합니다.
+
+yarn은 크게 `classic` 버전과 `berry` 버전으로 구분이 됩니다. yarn classic은 2020년 부터 유지보수 모드로 전환되었고 1.x 버전은 모두 레거시로 간주하고 yarn classic으로 이름이 바뀌었습니다. 현재는 yarn berry에서 개발과 개선이 이루어지고 있다.
+
+두 버전 모두 `package.lock.json` 파일이 생성되는 npm 과 달리`yarn.lock` 파일이 생성이 됩니다. lock 파일의 공통적인 목적에 대해서 간략하게 요약하면 다음과 같습니다.
+
+- **재현 가능한 설치** : 개발자들이 항상 동일한 버전의 패키지 트리를 설치하도록 보장하기 위한 목적으로 사용이 됩니다.
+- **의존성 트리 고정(Lock dependency tree)** : 직접 명시한 패키지 뿐만이 아니라 그 패키지에 포함이 되어 설치가 필요한 `dependency`의 `dependency` 까지 정확한 버전을 기록해, 나중에 `install`수행시 모두 동일하게 내려 받기 위함입니다.
+- **성능 최적화 & 오프라인 지원** : 이미 설치한`package cache` 저장소를 활용해 불필요한 네트워크 요청을 줄이고 오프라인에서도 설치가 가능하도록 돕기 위한 용도로 사용이 됩니다.
+
+처음부터 Yarn 잠금 파일인 `yarn.lock`은 동일한 저장소에서 반복적으로 실행해도 동일한 패키지가 생성되도록 보장합니다. 이는 개발 환경, 프로덕션 환경에서 배포할 때 모두 적용이 됩니다.
+
+yarn classic과 yarn berry의 가장 눈에 띄는 큰 차이점은 `node_modules` 가 생성이 되지 않는다는 점입니다. npm과 pnpm, yarn classic 은 전통적인 접근 방식인 `node_modules` 를 만들고, 그 안에 각 패키지와 그 하위 의존성을 설치해왔습니다.
+
+`yarn berry`의 PnP는 일반적인 **`node_modules`** 폴더 대신 단일 **Node.js 로더 파일**을 생성하도록 Yarn에 지시합니다. `.pnp.cjs`라는 이 로더 파일은 프로젝트의 모든 종속성 트리에 대한 정보를 포함하며, 도구에 디스크의 패키지 위치를 알려주고 `require` 및 `import` 호출은 `.pnp.loader.mjs` 을 사용하여 해결하는 방법을 알려줍니다.
+
+일반적으로 전통적인 `node_modules` 설치는 **고스트 종속성**의 위험성을 높인다는 문제가 있다는 단점이 있었습니다. 일반적인 `node_modules` 설치는 고스트 종속성의 위험을 높이는 대신 패키지를 호이스팅하여 결과 `node_modules` 크기를 최적화하려고 합니다. 다른 패키지 내의 중복되고 서로 다른 버전을 포함하고 있는 `dependency`에 대한 관리와 최적화가 어렵다는 문제를 갖고 있습니다.
+
+### 고스트 종속성
+
+고스트 종속성 문제는 현재 package.json에 명시적으로 사용하겠다고 선언이 되어 있지 않은 종속성이 연결이 됨으로써 발생하는 문제입니다. 예를 들어 보겠습니다.
+
+```json
+# /packages/transitive-lib/package.json
+{
+  "name": "transitive-lib",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
+
+```
+
+`transitive-lib`이 라는 패키지는 lodash를 사용하여 만들어진 패키지라고 가정해보겠습니다. 이 패키지는 lodash 만이 아닌 다른 기능들이 포함되어 있는 코드라고 가정하겠습니다.
+
+```json
+# /packages/consumer/package.json
+{
+  "name": "main-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "transitive-lib": "file:../transitive-lib"
+    // lodash를 직접 선언하지 않음!
+  }
+}
+```
+
+이 후이 `transitive-lib` 패키지를 사용할 경우 이 프로젝트의 package.json 에 직접적으로 lodash가 의존성이 추가가 되어 있지 않지만 `transitive-lib` 에서 lodash를 사용하고 있기 때문에 간접적으로 의존성이 추가되어 사용이 가능하게 됩니다.
+
+```js
+// consumer/index.js
+const { greet } = require("transitive-lib");
+// Ghost Dependency: lodash를 직접 설치하지 않았지만 동작한다!
+const _ = require("lodash");
+
+console.log(greet("hello")); // "Hello"
+console.log(_.camelCase("foo bar")); // "fooBar"
+```
+
+위의 코드를 npm을 사용한 경우와 yarn을 사용한 경우를 비교하여 설명해보겠습니다.
+
+```plaintext
+my-monorepo/
+├── package.json
+└── packages/
+    ├── transitive-lib/
+    │   ├── package.json
+    │   └── index.js
+    └── consumer/
+        ├── package.json
+        └── index.js
+```
+
+위와 같이 모노레포 환경을 구성하고 `consumer/index.js`파일을 실행 시켜보겠습니다.
+
+```bash
+npm --workspace=packages/consumer run start
+
+> consumer@1.0.0 start
+> node index.js
+
+Hello
+fooBar
+```
+
+npm 패키지의 경우 위와 같이 명령어를 실행 시킬 경우 결과물에 lodash가 의존성에 추가가 되어 있지 않음에도 불구하고 lodash가 의존성에 추가된 것과 같이 결과가 출력 되는 것을 확인할 수 있습니다.
+
+이러한 현상을 **고스트 종속성**이라고 하며 이러한 현상이 문제가 되는 것은 개발 중에는 눈에 띄지 않다가, 새로운 환경, 패키지 업데이트, 번들링 단게에서 예기치 않은 오류와 위험을 초래할 수 있다는 문제가 있기 때문에 내 코드에서 사용하는 모든 모듈들은 명시적 package.json으로 표시하는 것이 중요합니다.
+
+```bash
+yarn workspace consumer node index.js
+
+Error: Your application tried to access lodash, but it isn't declared in your dependencies; this makes the require call ambiguous and unsound.
+
+Required package: lodash
+Required by: /home/sunub/ghost-dependency/packages/consumer/
+```
+
+하지만 동일한 환경 동일한 조건에서 yarn berry을 사용하여 코드를 실행 시킬 경우 package.json에 명시적으로 lodash가 추가되어 있지 않기 때문에 위와 같이 명시적으로 의존성이 주입되어 있지 않다는 에러가 발생하는 것을 확인할 수 있습니다.
+
+yarn berry에서는 이런 문제가 발생하지 않는 이유는 yarn berry는**고스트 종속성 보호**를 기본으로 하기 때문입니다.
+
+Yarn은 모든 패키지와 해당 종속성 목록을 유지하므로 해결 중에 설명되지 않은 종속성에 대한 접근을 방지하여 문제가 코드베이스에 깊이 들어가 애플리케이션의 안정성을 위협하기 전에 신속하게 문제를 식별하고 수정할 수 있도록 합니다.
+
+이에 대한 증거로 다른 패키지 매니저들에 비해 종속성으로 인해 생기는 문제에 대한 로그를 더 자세하게 출력 해준다는 것을 확인할 수 있습니다.
+
+## Yarn 패키지 매니저 사용하기
+
+Yarn berry를 처음 사용하게 되면 당황스러운 순간들이 있습니다. yarn은 한번도 사용하지 않고 npm이나 pnpm 패키지 매니저들을 사용하다 넘어오면 코드를 모두 정상적으로 작성했음에도 동작하지 않는 문제를 확인할 수 있습니다. 재가 겪었던 문제에 대해서 이야기 해보겠습니다.
+
+```bash
+현재 위와 같은 import 문에서 'express' 모듈 또는 해당 형식 선언을 찾을 수 없습니다.ts(2307)
+```
+
+가장 먼저 TypeScript를 사용할 경우에 확인할 수 있는 에러에 대해서 이야기 하겠습니다. yarn을 사용할 경우 TypeScript을 사용할 때 필요한 모든 설정과 패키지들을 설치 했음에도 계속해서 타입 에러가 발생하는 것을 확인할 수 있습니다.
+
+```bash
+yarn dlx @yarnpkg/sdks vscode
+```
+
+이 문제는 위의 명령어를 이용해서 vscode에 필요한 SDKs를 생성함으로써 IDE가 loader를 읽을 수 있게 끔 추가적인 설정을 해주어야 합니다. 하지만 Yarn PnP는 Node.js 런타임에 주입되어야 하는 전용 로더를 생성하는 방식으로 동작하기 때문에 TypeScript 설정을 하더라도 Yarn을 위한 추가적인 설정을 수행하지 않을 경우 의도한 대로 작동하지 않게 됩니다.
+
+SDK는 **중간 패키지(indirection package)** 를 생성함으로써 이 문제를 해결합니다. **SDK(Software Development Kit)** 은 보통 특정 플랫폼이나 언어, 도구를 사용할 때 필요한 라이브러리·도구·설정 파일 등을 묶어 제공하는 개발 키트입니다. 필요할 때마다 이 중간 패키지가 로더를 자동으로 설정한 뒤, 실제 패키지로의 `require` 호출을 전달해 주는 방식입니다.
+
+기본적으로 TypeScript, ESLint, Prettier 등 주요 도구들의 SDK를 제공하며, 필요할 경우 추가적인 SDK(Flow, GraphQL 등)를 설정할 수도 있습니다.
+
+이러한 과정이 필요한 이유는 많은 IDE는 Prettier, Typescript등을 로더를 고려하지 않고 자신이 래핑한 패키지들을 직접 실행하고 있습니다.
+
+```bash
+npm install -g nodemon ts-node
+```
+
+저는 `nodemon`와 `ts-node`를 npm을 사용하여 globally 로 설치를 하고 오랜 시간이 이를 사용하여 코드를 테스트하고 실행시켜왔습니다. 하지만 yarn 환경에서 nodemon을 실행 시킬 경우 다음과 같은 에러를 보게 됩니다.
+
+```bash
+[3:33:33 PM] Starting compilation in watch mode...
+src/index.ts:1:21 - error TS2307: Cannot find module 'express' or its corresponding type declarations.
+
+1 import express from "express";
+```
+
+분명히 package.json 코드에서 모듈이 있음에도 불구하고 위와 같이 모듈을 찾을 수 없다는 에러가 발생하는 것을 확인하실 수 있을 것입니다. 이 이유는 우리가 사용하는 전통적인 nodemon, ts-node 등의 패키지들은 코드를 실행시키는 환경에서 필요한 종속성을`node_modules`에서 찾아 실행시킵니다.
+
+하지만 yarn berry 환경의 경우 `zero install` 을 기본으로 동작하기 때문에 `node_modules`가 생성이 되지 않기 때문에 코드 실행에 필요한 모듈을 찾을 수 없다는 에러가 발생하게 되는 것입니다.
+
+그렇다면 이러한 에러를 해결하기 위해서는 어떻게 해야 할까요? globally로 설치되어 있는 패키지를 yarn 환경에 추가 해줘야 합니다.
+
+```json
+{
+  "name": "backend",
+  "packageManager": "yarn@4.6.0",
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "scripts": {
+    "dev": "nodemon ./src/index.ts --exec ts-node"
+  }
+}
+```
+
+기존의 `ts-node`를 yarn 환경에 설치하고 터미널에서 수행하던 `nodemon` 을 `yarn dev` 명령어를 사용하여 실행할 경우 기존에 발생하던 오류가 발생하지 않는 것을 확인할 수 있습니다.
+
+추가적으로 Yarn 환경에서 Vite를 사용할 경우에 `node_modules` 가 생성이 되는 것을 확인하실 수 있습니다. 앞서 Yarn berry의 PnP는 zero install이라고 했음에도 불구하고 생성되는 node_modules 폴더는 vite.js에서 성능을 위해 미리 번들된 의존 파일이거나 vite에 의해 생성된 어떤 다른 파일의 캐시 파일을 저장해 놓는 폴더입니다.
+
+기본적으로 vite는 해당 캐시 파일을 node_modules/.vite에 저장해 두기 때문에 node_modules 폴더가 생기게 됩니다. 따라서 해당 이유로 생기는 node_modules 폴더는 그냥 신경 쓰지 않고 프로젝트를 진행하면 됩니다.
+
+## 마무리
+
+패키지 매니저인 Yarn을 다른 npm, pnpm 와 같이 생각하고 적용하였다가 많은 시간을 낭비 했습니다. 분명 기존의 알던 지식들로는 문제가 없고 제대로 설정이 되었다고 생각하였는데 발생하는 문제였기 때문에 시간을 더 허비 하였습니다.
+
+문제가 생겼을 때는 문제가 발생한 부분을 제대로 살펴보는 것이 중요하다는 것을 알게 되었습니다. 패키지 매니저 또한 학습이 필요한 영역이라는 것을 깨닫게 되었고 또한 공식 문서를 꼼꼼히 읽어 보는 것이 중요하다는 것을 알게 되었습니다.
+
+이럴 때 AI를 제대로 활용하지 않으면 위험하다는 문제를 깨닫게 되는 것 같습니다. 공식 문서를 천천히 읽었으면 금방 해결할 수 있었던 문제를 재가 가진 지식의 범위에서 AI에게 질문을 하다 보니 그 이상으로 넘어가지 못하고 같은 자리에서 맴돌아서 오랜 시간을 허비 했다고 생각하여 이를 개선해야 겠다고 생각 했습니다.
+
+---
+
+## 참고 자료
+
+- [TypeScript 공식 문서](https://www.typescriptlang.org/docs/)
+- [Yarn 공식 문서](https://yarnpkg.com/getting-started)
+- [Yarn PnP 공식 문서](https://yarnpkg.com/features/pnp)
+- [Yarn Workspaces 공식 문서](https://yarnpkg.com/features/workspaces)
+- [Yarn PnP SDKs 공식 문서](https://yarnpkg.com/features/pnp-sdk)
+- [package.json에 쌓여있는 개발 부채](https://yceffort.kr/2021/10/debt-of-package-json)
+- [npm, yarn, pnpm 비교해보기](https://yceffort.kr/2022/05/npm-vs-yarn-vs-pnpm)
