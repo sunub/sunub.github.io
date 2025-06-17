@@ -1,6 +1,8 @@
 import React from "react";
+import { codeFont } from "./Font";
 import { codeToHtml } from "shiki";
-import { CodeBlockWrapper, InlineCodeStyle } from "./CodeBlock.style";
+import { CodeBlockWrapper, InlineCodeStyle } from "../style";
+import { Clipboard } from "./Clipboard";
 
 const languageMap = {
   "language-html": "html",
@@ -38,14 +40,19 @@ async function CodeBlock({
       },
       lang: languageMap[className as LanguageKey] || "plaintext",
     });
-    return <CodeBlockWrapper dangerouslySetInnerHTML={{ __html: html }} />;
+    return (
+      <CodeBlockWrapper>
+        <div dangerouslySetInnerHTML={{ __html: html }} />
+        <Clipboard text={codeToString} />
+      </CodeBlockWrapper>
+    );
   } catch (error) {
     console.error(
       "Shiki를 사용하여 코드 하이라이팅을 변환하는 동안 오류가 발생했습니다.",
       error
     );
     return (
-      <pre className={className} {...props}>
+      <pre className={`${className} ${codeFont.className}`} {...props}>
         <code>{codeToString}</code>
       </pre>
     );
@@ -53,7 +60,9 @@ async function CodeBlock({
 }
 
 function InlineCode({ children }: { children: React.ReactNode }) {
-  return <InlineCodeStyle>{children}</InlineCodeStyle>;
+  return (
+    <InlineCodeStyle className={codeFont.className}>{children}</InlineCodeStyle>
+  );
 }
 
 export { CodeBlock, InlineCode };

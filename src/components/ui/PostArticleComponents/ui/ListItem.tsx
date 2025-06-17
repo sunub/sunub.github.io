@@ -40,6 +40,10 @@ const Li = styled.li`
 `;
 
 const SvgContainer = styled.span`
+  position: relative;
+  top: 2px;
+
+  display: flex;
   transform: translateX(0px) translateY(8px);
   & > svg {
     stroke: var(--color-highlight);
