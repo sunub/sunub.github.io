@@ -20,10 +20,9 @@ export const getRecentPostsMetadataInRange = cache(
     const blog = await getBlogInstance();
     return {
       totalCount: blog.sortedPosts.length,
-      frontmattters: fx(blog.sortedPosts)
+      frontmattters: blog.sortedPosts
         .slice(start, end)
-        .map((post) => post.frontmatter)
-        .toArray(),
+        .map((post) => post.frontmatter),
     };
   }
 );
