@@ -13,6 +13,9 @@ import {
 import { debounce } from "@/shared/utils/debounce";
 import { cache } from "react";
 import { readFile, readdir, stat } from "fs/promises";
+import { executeWithLimit } from "db/utils/async/executeWithLimit";
+import { fromAsync } from "db/utils/async/fromAsync";
+import { toAsync } from "db/utils/async/toAsync";
 
 const ROOT_BLOG_PATH = path.join(process.cwd(), "posts");
 
@@ -160,9 +163,26 @@ class Blog {
 
   async initialize(): Promise<void> {
     const categories: PostCategory[] = ["algorithm", "code", "cs", "web"];
-    await Promise.all(
-      categories.map((category) => this.processCategory(category))
+
+    const promisesOfTaskArrays = categories.map((category) =>
+      this.processCategory(category)
     );
+    const asyncIterableOfTaskArrays = toAsync(promisesOfTaskArrays);
+
+    async function* flattenAsync<T>(
+      iterable: AsyncIterable<T[] | undefined>
+    ): AsyncIterable<T> {
+      for await (const taskArray of iterable) {
+        if (taskArray) {
+          yield* taskArray;
+        }
+      }
+    }
+
+    const asyncIterableOfTasks = flattenAsync(asyncIterableOfTaskArrays);
+    const allTasks = await fromAsync(asyncIterableOfTasks);
+
+    await executeWithLimit(10, allTasks);
 
     this.sortedPosts.sort((a, b) => {
       return (
@@ -170,22 +190,31 @@ class Blog {
         new Date(a.frontmatter.date).getTime()
       );
     });
+    console.log(chalk.blueBright("블로그 초기화 및 포스트 정렬 완료!"));
   }
 
-  private async processCategory(category: PostCategory): Promise<void> {
+  private async processCategory(
+    category: PostCategory
+  ): Promise<(() => Promise<void>)[] | undefined> {
     try {
       const categoryPath = path.join(ROOT_BLOG_PATH, category);
       const files = await readdir(categoryPath);
 
       const mdxFiles = files.filter((file) => file.endsWith(".mdx"));
-
-      await Promise.all(
-        mdxFiles.map((file) => {
-          const slug = file.replace(".mdx", "");
-          const filePath = path.join(categoryPath, file);
+      const fileReadPromises = mdxFiles.map((file) => {
+        const slug = file.replace(".mdx", "");
+        const filePath = path.join(categoryPath, file);
+        return () => {
           return this.processFile(category, filePath, slug);
-        })
+        };
+      });
+
+      console.log(
+        chalk.greenBright(
+          `카테고리 ${category}의 포스트를 성공적으로 처리했습니다.`
+        )
       );
+      return fileReadPromises;
     } catch (error) {
       console.error(`Error processing category ${category}:`, error);
     }
@@ -225,5 +254,9 @@ const getBlogInstance = cache(async () => {
   global.__BLOG_INSTANCE__ = await Blog.getInstance();
   return global.__BLOG_INSTANCE__;
 });
+
+const blog = new Blog();
+
+blog.initialize();
 
 export default getBlogInstance;

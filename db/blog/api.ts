@@ -2,13 +2,17 @@
 
 import getBlogInstance from "./blog";
 import { type PostCategory } from "@/types/schema";
+import { fx } from "db/utils/fx";
 import { cache } from "react";
 
 const DAY_IN_SECONDS = 86400;
 
 export const getRecentPostsMetadata = cache(async (count: number = 10) => {
   const blog = await getBlogInstance();
-  return blog.sortedPosts.slice(0, count).map((post) => post.frontmatter);
+  return fx(blog.sortedPosts)
+    .take(count)
+    .map((post) => post.frontmatter)
+    .toArray();
 });
 
 export const getRecentPostsMetadataInRange = cache(
@@ -16,16 +20,19 @@ export const getRecentPostsMetadataInRange = cache(
     const blog = await getBlogInstance();
     return {
       totalCount: blog.sortedPosts.length,
-      frontmattters: blog.sortedPosts
+      frontmattters: fx(blog.sortedPosts)
         .slice(start, end)
-        .map((post) => post.frontmatter),
+        .map((post) => post.frontmatter)
+        .toArray(),
     };
   }
 );
 
 export const getAllPosts = cache(async () => {
   const blog = await getBlogInstance();
-  return blog.sortedPosts.map((post) => post.frontmatter);
+  return fx(blog.sortedPosts)
+    .map((post) => post.frontmatter)
+    .toArray();
 });
 
 export const getPostsMetadataByCategory = cache(
