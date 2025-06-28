@@ -209,11 +209,6 @@ class Blog {
         };
       });
 
-      console.log(
-        chalk.greenBright(
-          `카테고리 ${category}의 포스트를 성공적으로 처리했습니다.`
-        )
-      );
       return fileReadPromises;
     } catch (error) {
       console.error(`Error processing category ${category}:`, error);
@@ -254,9 +249,5 @@ const getBlogInstance = cache(async () => {
   global.__BLOG_INSTANCE__ = await Blog.getInstance();
   return global.__BLOG_INSTANCE__;
 });
-
-const blog = new Blog();
-
-blog.initialize();
 
 export default getBlogInstance;
