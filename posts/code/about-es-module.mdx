@@ -1,0 +1,276 @@
+---
+title: ESModule 에 대해 좀 더 알아봅시다
+date: 2025-07-18
+tags: [javascript, vite, setting]
+summary: 오늘날 ESModule이 어떤 기능을 제공하는지, 어떻게 발전 했는지에 대해 알아보겠습니다.
+slug: about-es-module
+category: code
+completed: true
+---
+
+## CommonJS
+
+`type="module"`이 미치는 영향에 대해서 이야기하기전에 CommonJS에 대해서 간단하게 어떠한 특징이 있는지에 대해서 이야기하고 넘어가겠습니다. CommonJS는 비록 오늘 날의 트렌드와 어울리지는 않지만 많은 legacy 코드가 이미 많이 작성되어 있기 때문에 간단히 어떠한 특징을 갖고 있는지에 대해서 이야기 하겠습니다.
+
+```js
+(function (exports, require, module, __filename, __dirname) {
+  // 내부 모듈 코드는 실제로 여기에 들어갑니다.
+});
+```
+
+CommonJS는 `module wrapper`라는 함수를 사용하고 있습니다. 위의 작성한 코드처럼 require 한 모듈들을 개별 함수 클로저에 의해 래핑되어서 실행된다는 특징을 갖고 있습니다. 이러한 점이 문제가되는 예시는 다음과 같습니다.
+
+```js
+// test.js
+module.exports = {
+  [globalThis.hello]: 'world',
+};
+```
+
+```js
+// index.js
+const hello = 'hello';
+globalThis[hello] = hello;
+const test = require('./test.js');
+console.log(test[hello]);
+```
+
+위의 결과, `console.log`는 어떤 값이 출력이 될까요? `world`가 출력 됩니다. CommonJS는 동적으로 실행이 되고 같은 개별 클로저에서 실행이 되기 떄문입니다.
+
+```js
+// message.js
+const greeting = 'Welcome!';
+module.exports = { content: greeting };
+
+// main.js
+const msg = require('./message');
+console.log(msg.content); // 출력: Welcome!
+```
+
+또한 `module.exports` 에 할당되는 변수, 값들은 하나의 객체로써 다루어집니다. 앞서 설명한 방법들이 CommonJS에서 모듈을 다루는 방법들이었습니다.
+
+앞서 설명한 CommonJS의 특징, `module wrapper`로 인해 불러온 모듈에 대한 클로저가 매번 생성 참조된다는 것은 성능상의 문제를 만들었습니다.
+
+많은 수의 클로저가 생성되고, 각각이 외부 스코프의 큰 객체나 변수를 참조하게 되면, 이러한 외부 변수들은 더 이상 필요하지 않더라도 **가비지 컬렉션(Garbage Collection, GC)** 의 대상이 되지 못하고 계속 메모리에 남아있게 되기 때문입니다.
+
+## ES Module과 CommonJS의 차이점점
+
+**ES Modules, ECMAScript Modules**에 대해서 자세하게 이야기하기 전에 먼저 **CommonJS** 와 어떤 차이가 있는지에 대해서 먼저 이야기 해보겠습니다.
+
+```js
+// CommonJS
+const fs = require("fs);
+
+module.export = {...};
+
+// ES Module
+import fs from "fs";
+
+export { ... };
+```
+
+CommonJS와 ES Module의 차이점을 이야기할 경우 가장 많이 사용되는 예시는 모듈을 Export할 경우와 Import 할 경우에 대한 차이를 가장 많이 이야기 합니다. 우선 결론부터 이야기를 하자면 **CommonJs의 경우 동기로 실행이 된다**는 특징과 **ES Module은 정적으로 실행이 된다**는 차이가 큰 차이를 만들어 냅니다. 우선 이 부분부터 짚고 가보겠습니다.
+
+```js
+// module1.cjs
+
+console.log('모듈1 로드');
+
+setTimeout(() => console.log('모듈1 시작'), 2000);
+
+console.log('모듈1 종료');
+```
+
+위의 코드는 Event Loop에 대해서 공부하셨다면 많이 보셨을 것이라고 생각합니다. 흔히 물어보는 실행 순서가 어떻게 되는지에 대한 문제입니다. 위 코드를 실행시킬 경우 우리는 코드의 실행 순서에 맞춰서 결과가 출력된다는 것을 알 수 있습니다.
+
+```js
+console.log('시작');
+const module1 = require('./module1.js');
+console.log('모듈들 실행 중');
+const module2 = require('./module2.js');
+console.log('모듈들 모두 실행 완료');
+```
+
+그렇다면 위의 코드는 어떤 결과가 출력될까요?
+
+```plaintext
+시작
+모듈1 로드
+모듈1 종료
+모듈들 실행 중
+모듈2 로드
+모듈2 종료
+모듈들 모두 실행 완료
+모듈1 시작
+모듈2 시작
+```
+
+CommonJS는 require한 코드를 동기적으로 실행하기 때문에 위와 같은 결과를 반환합니다. 그렇다면 반대의 경우 ES Module에서 위와 같은 결과를 만들기 위해서는 어떻게 해야 할까요?
+
+```js
+// esmodule1.js
+
+console.log('모듈1 로드');
+
+setTimeout(() => console.log('모듈1 시작'), 2000);
+
+console.log('모듈1 종료');
+```
+
+ES Module에서 위와 같이 작성되어 있는 코드를 CommonJS와 같이 불러올 수 있을까요? 그렇지 않습니다.
+
+```js
+console.log('시작');
+import './esmodule.js';
+console.log('Hello World');
+import './esmodule2.js';
+```
+
+위와 같이 import 문을 실행하면 CommonJS와 동일한 결과가 출력이 될까요?
+
+```plaintext
+모듈1 로드
+모듈1 종료
+module2 로드
+module2 종료
+시작
+Hello World
+모듈1 시작
+module2 시작
+```
+
+결과는 전혀 그렇지 않습니다. 왜 CommonJS의 `require` 문을 사용했을 경우에는 작동하고 `import`문을 사용했을 경우에는 작동하지 않을까요? ES Module은 **정적 분석**을 기본적인 속성으로 갖기 때문입니다.
+
+ESM은 코드를 실행하기 전에 모듈 간의 의존 관계 import, export를 미리 파악할 수 있도록 설계가 되어있기 때문입니다. 그렇기 때문에 `import`와 `export`는 반드시 모듈의 최상위 레벨에 작성되어야 하며, 동적인 조건문이나 함수 호출 내에서 사용할 수 없습니다.
+
+코드내의 console 코드가 작성되어 있더라도 ESM은 import 문을 가장 먼저 실행한 후 해당 코드로 인한 의존 관계를 파악해 모듈을 실행하기 전에 어떤 모듈이 어떤 값을 필요로 하는지 정확하게 **linking, 연결**하기 때문입니다. 이 **Linking**에 대해서는 아래의 주제와 함께 더 자세하게 설명 해보겠습니다.
+
+## Tree Shaking
+
+트리 셰이킹은 실제 코드 실행에 필요한 부분만을 번들에 포함시키고, 사용되지 않는 코드는 제거하여 최종 번들 크기를 최적화하는 과정을 의미합니다. 이는 **데드 코드 제거(Dead Code Elimination)** 의 한 형태로 볼 수 있습니다.
+
+`module.exports`의 객체라는 특성 때문에, 빌드 타임에서는 모듈에서 어떠한 값을 불러와 어떻게 사용될 수 있을지를 가늠할 수 없습니다. 동적으로 실행이 되며 객체로 불러온 값이 언제 사용할 것인지 알 수 없기 때문입니다.
+
+트리 셰이킹을 통해서 불필요한 코드를 덜어내서 성능을 향상 시키기 위해서는 전체 모듈을 import 하는 것이 아닌 필요한 기능의 일부분을 로드하는 것이 중요합니다.
+
+```js
+// my-commonjs-module.cjs (CommonJS)
+module.exports = {
+  valueA: 10,
+  valueB: 'hello',
+  myFunction: () => console.log('From CommonJS'),
+};
+
+// main.mjs (ES Module)
+import { valueA } from './my-commonjs-module.cjs';
+console.log(valueA);
+```
+
+위의 코드는 CommonJS의 일부분을 명시적으로 불러오는 것 같지만 실제로는 모듈의 전체를 로드하고 있습니다. 이는 CommonJS의 동적인 특성 때문에 특정 부분만 선택적으로 사용하지 않고 전체 모듈을 불러오고 있습니다.
+
+```js
+// moduleA.mjs (ESM)
+export const PI = 3.14159;
+export function add(a, b) {
+  return a + b;
+}
+export function subtract(a, b) {
+  return a - b;
+}
+
+// main.mjs (ESM)
+import { PI, add } from './moduleA.mjs';
+
+console.log(PI);
+console.log(add(5, 2));
+```
+
+반면 ESM은 일부 모듈만 명시적으로 불러오는 것이 가능합니다. 이는 ESM이 정적 분석을 속성으로 갖는 덕분입니다. ESM은 모듈의 로딩(다운로드 및 파싱)과 실행을 분리할 수 있습니다. 런타임은 의존성 그래프를 따라 필요한 모듈을 먼저 로드하고 파싱하지만, 모든 모듈을 즉시 실행하는 것이 아니라 연결 과정에서 필요한 부분만 활성화합니다.
+
+여기서 중요한 부분은 **코드를 실행하기 이전, 파싱 시점에 분석** 하여 번들러나 런타임은 이 `import` 선언과 해당 모듈의 `export` 선언을 **매칭**시켜 필요한 부분만 **연결(linking)** 한다는 것이 가장 중요한 부분입니다. 이러한 것이 가능한 것은 모듈의 일반적인 생명 주기와도 연관이 있습니다.
+
+1. **Parsing** : 소스 코드를 읽어 구문 분석 트리를 생성하고 모듈의 `import` 및 `export` 구문을 식별합니다.
+2. **Loading** : 파싱 단계에서 식별된 모든 종속성 모듈(ModuleRequest Record) 를 가져옵니다.
+3. **Linking** : 로드된 모든 모듈 간의 `import` 및 `export` 바인딩을 해석하고 연결합니다.
+4. **Evaluation** : 모듈의 실제 코드를 실행하고, `export` 된 값을 최종적으로 바인딩 합니다.
+
+이러한 생명주기 중 Linking에 대해서 조금 더 자세하게 설명 해보겠습니다. 이 단계의 주된 목적은 모듈 그래프 내의 모든 `import` 구문을 해당 `export` 구문과 연결하는 것입니다.
+
+Linking 과정에서 모듈은 자신의 `Module Environment Record` 를 생성하고 초기화 합니다. 이 환경 레코드는 모듈 내의 모든 변수, 함수, 클래스 선언 및 import 된 바인딩을 관리하는 역할을 합니다.
+
+이 과정에서 JavaScript 엔진은 추상 연산을 사용하여 해당 importName이 어떤 모듈의 어떤 BindingName에 연결되어야 하는지를 확인합니다. 이 과정에서 실제로 값을 복사하는 것이 아니라, 원본 내보내기 모듈의 환경 레코드에 있는 대상 바인딩을 **참조**합니다
+
+링킹이 진행됨에 따라 모듈의 `[[Status]]` 필드는 `unlinked`에서 `linking`으로, 그리고 성공적으로 완료되면 `linked`로 전환됩니다.
+
+`unlinked` 상태는 모듈의 `import` 구문이 해당 `export` 구문과 성공적으로 연결되지 못했음을 의미합니다. 이러한 모듈은 모듈 그래프의 일부로 완전히 통합되지 못했기 때문에, 자바스크립트 엔진은 이 모듈이 애플리케이션의 최종 번들에 필요하지 않다고 판단하여 Tree Shaking 의 대상이 되어 최종 번들에서 제외되게 됩니다.
+
+결론적으로, ESM의 **정적인 Linking 단계**는 CommonJS의 동적인 `module.exports` 방식과 명확히 차별화됩니다. 코드를 **실행하기 전에 필요한 부분만을 정확히 식별하고 연결**하는 이 능력은 번들러가 불필요한 코드를 효과적으로 제거(Tree Shaking)할 수 있도록 하며, 이는 곧 **애플리케이션의 번들 크기 감소와 로딩 성능 향상**으로 이어집니다. 따라서 ESM의 `import`/`export` 구문은 단순히 모듈을 가져오는 문법을 넘어, 웹 애플리케이션의 효율성을 극대화하는 핵심적인 기반을 제공한다고 할 수 있습니다.
+
+## Top-Level-Await
+
+Top-Level-Await은 ES2022 부터 사용이 가능해진 기능입니다. 이 기능이 의미하는 것이 무엇인지에 대해서 간단한 상황과 함께 이야기를 해보겠습니다.
+
+우리는 코드에서 특정 API를 사용하여 생성된 데이터를 `export` 하고자 합니다. 예를 들어 가장 유명한 API인 JSONPlaceholder에서 todo 데이터를 읽어오고 해당 todolist를 `export` 하려고 한다고 가정 해봅시다. 물론 Top-Level-Await 가 도입되기 이전의 상황에서 생각을 해보겠습니다.
+
+```js
+let todolist;
+
+(async () => {
+  const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+  const json = await response.json();
+  todolist = json;
+})();
+
+export { todolist };
+```
+
+JSONPlaceholder의 API 결과인 `todolist` 를 export 하기 위해서는 위와 같이 `IIFE` 를 활용하여 값을 todolist가 호출되는 즉시 API를 호출하고 값을 업데이트하는 방법이 있을 것입니다. 하지만 이 코드를 `import` 하여 결과를 출력하면 어떤 값이 출력이 될까요?
+
+```js
+import { todolist } from './todolist';
+
+console.log(todolist); //undefined
+```
+
+위의 `todolist`의 출력값은 `undefined` 가 출력이 됩니다. 이러한 이유는 무엇일까요? 순차적으로 자세하게 알아 보겠습니다.
+
+`import { todolist } from "./todolist"` 구문이 가장 먼저 실행이 됩니다. 구문이 실행이 되면 JavaScript 엔진은 파일을 즉시 평가하기 시작합니다. 이 초기 평가 단계에서 `todolist` 변수는 선언되었지만 어떠한 값도 할당 되지 않기 때문에 이 시점에서는`undefined` 로 평가가 이루어집니다.
+
+`export { todolist }` 는 현재의 바인딩을 `export` 합니다. 즉 `undefined`를 내보내게 됩니다. 아무리 `IIFE`로 비동기 작업을 통해서 API 의 결과 값을 todolist 의 값으로 업데이트하더라도 평가 단계에서 이 값은 반영이 되지 않습니다.
+
+비동기 함수로 작성이된 IIFE는 export 이후에 EventLoop의 `Job Queue`에서 스케줄링 처리가 되기 때문에 타이밍 문제가 발생하여 위와 같은 방법을 사용한다면 `undefined` 가 아닌 `todolist` 값은 `import` 할 수 없습니다.
+
+```js
+import { todolist } from "./todolist';
+
+setTimeout(() => {
+	console.log(todolist);
+}, 1000);
+```
+
+물론 위와 같이 타이밍 문제를 해결하기 위해 지연하여 값을 불러올 수 있겠지만 이는 조금의 네트워크 지연문제가 발생하면 금방 무용지물이 되는 단편적인 해결책이기 때문에 제외하겠습니다. 그렇다면 이 문제는 어떻게 해결해야 할까요?
+
+이 문제를 가장 우아하게 해결하는 방법은 `Top-Level-Await` 을 사용하는 것입니다!
+
+```js
+const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+const todoList = await response.json();
+
+export { todoList };
+```
+
+기존의 코드에 비해 가독성이 훨씬 향상 되었고 어떤 값이 `export` 가 될지 예상할 수 있게끔 코드가 변경 되었습니다. 이제 왜 `Top-Level-Await` 가 앞선 문제의 해결책이 될 수 있는지에 대해서 이야기 해보겠습니다.
+
+기존의 `await` 은 **반드시** `async` 함수 내부에서만 유용하다는 엄격한 규칙이 있었습니다. 하지만 ECMAScript 2022부터는 `await` 키워드가 Module의 최상위 레벨에서도 파싱될 수 있도록 허용되었습니다. 이는 모듈 코드 자체가 비동기 작업을 직접 **기다릴수 있음**을 의미합니다.
+
+이러한 동작이 가능해진 이유는 ECMAScript의 사양은 모듈의 메타 데이터를 추상화한 `Module Record`를 정의하는데 그 중에서도 `Source Text Module Record`는 JavaScript 코드로부터 파싱된 모듈을 나타냅니다.
+
+이러한 `Source Text Module Record` 에 Top-Level-await을 위한 내부 슬롯인 `[[HasTLA]]` 추가가 되었고 Top-Level-await 표현식이 존재할 경우 이 필드 값이 `true`로 설정이 됩니다.
+
+`[[HasTLA]]`가 설정이 된 모듈은 **비동기적으로 평가**됩니다. 이 후 비동기 평가를 위한 추상 연산이 수행되어 모듈의 코드 실행과 Promise의 resolve/reject를 연동시킵니다. 이로 인해 Top-Level `await`이 Promise의 결과를 기다리는 동안 모듈의 실행이 **일시 중지**될 수 있습니다.
+
+그렇기 때문에 Top-Level-Await 이 있는 모듈을 다른 모듈이 `import`할 경우 가져오는(`importing`) 모듈은 가져오는(`imported`) 모듈의 비동기 평가가 완료될때까지 자동으로 기다립니다.
+
+`await`가 코드 실행을 일시 중지할 때, 이는 메인 스레드를 차단하지 않습니다. 대신, Promise가 해결될 때까지 기다리는 동안 해당 작업의 나머지 부분은 **Job Queue**로 스케줄링되어 이벤트 루프를 통해 비동기적으로 처리됩니다. 이로써 Top-Level `await`은 전체 애플리케이션의 시작을 멈추지 않고 비동기 작업을 수행할 수 있습니다.
+
+클로저와 Binding에 대해서 조금 더 작성하기
