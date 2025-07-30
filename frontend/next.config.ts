@@ -2,7 +2,6 @@
 import createMDX from '@next/mdx';
 import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
-// import { PrismaClient } from '@prisma/client';
 
 const nextConfig: NextConfig = {
   basePath: '',
@@ -28,37 +27,6 @@ const nextConfig: NextConfig = {
   },
   compress: true,
   output: 'standalone',
-  // redirects: async () => {
-  //   if (process.env.POSTGRES_URL === undefined) {
-  //     return [];
-  //   }
-
-  //   try {
-  //     const prisma = new PrismaClient();
-  //     const redirects = await prisma.redirects.findMany({
-  //       select: {
-  //         source: true,
-  //         destination: true,
-  //       },
-  //       orderBy: {
-  //         createdAt: 'desc',
-  //       },
-  //       take: 100,
-  //     });
-
-  //     await prisma.$disconnect();
-
-  //     return redirects.map(({ source, destination }) => ({
-  //       source,
-  //       destination,
-  //       permanent: true,
-  //     }));
-  //   } catch (error) {
-  //     console.error('리다이렉트 로드 중 오류 발생:', error);
-  //     return [];
-  //   }
-  // },
-
   async headers() {
     return [
       {
