@@ -11,7 +11,10 @@
     "build:utils": "pnpm --filter fx_utils run build",
     "bench:stress": "node ./test/runBench.mjs",
     "bench": "vitest bench",
-    "test": "vitest --exclude \"**/*.bench.ts\""
+    "test": "vitest --exclude \"**/*.bench.ts\"",
+    "test:ci": "pnpm build:utils && pnpm test",
+    "dev:prepare": "pnpm build:utils",
+    "postinstall": "pnpm build:utils"
   },
   "dependencies": {
     "@types/node": "^24.1.0",
