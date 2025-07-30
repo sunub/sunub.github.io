@@ -1,0 +1,16 @@
+module.exports = {
+  arrowParens: 'avoid',
+  bracketSameLine: false,
+  bracketSpacing: true,
+  endOfLine: 'lf',
+  jsxSingleQuote: false,
+  printWidth: 120,
+  proseWrap: 'preserve',
+  quoteProps: 'as-needed',
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  importOrder: ['<THIRD_PARTY_MODULES>', '^@(.*)$', '^[.]/', '^[.]{2,}/'],
+  importOrderSortSpecifiers: true,
+  importOrderCaseInsensitive: true,
+};
