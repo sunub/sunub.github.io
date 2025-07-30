@@ -1,10 +1,4 @@
 {
-  "functions": {
-    "frontend/pages/api/**/*.js": {
-      "includeFiles": "node_modules/next/dist/compiled/ws/**"
-    }
-  },
-  "outputDirectory": ".next",
   "headers": [
     {
       "source": "/(.*)",

@@ -316,6 +316,9 @@ importers:
       vercel:
         specifier: latest
         version: 44.6.4(@swc/core@1.13.0)(rollup@4.45.1)
+      ws:
+        specifier: ^8.18.3
+        version: 8.18.3(bufferutil@4.0.8)(utf-8-validate@6.0.3)
       zod:
         specifier: ^3.23.8
         version: 3.25.76
