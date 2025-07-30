@@ -1,0 +1,47 @@
+{
+  "name": "fx_utils",
+  "version": "1.0.0",
+  "description": "멀티패러다임 프로그래밍을 위한 유틸리티 라이브러리",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build": "rm -rf dist && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types"
+  },
+  "keywords": [
+    "utility",
+    "typescript",
+    "multi-paradigm",
+    "functional",
+    "object-oriented",
+    "iterable"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.13.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sunub/sunub.github.io.git",
+    "directory": "fx_utils"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.8",
+    "gray-matter": "^4.0.3",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@fxts/core": "^1.15.0",
+    "ora": "^8.2.0"
+  }
+}

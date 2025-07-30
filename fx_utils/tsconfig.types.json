@@ -1,0 +1,18 @@
+{
+  "include": ["./src/"],
+  "compilerOptions": {
+    "lib": ["es2020", "dom"],
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist/types/",
+    "rootDir": "./src/",
+    "downlevelIteration": true,
+    "emitDeclarationOnly": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
