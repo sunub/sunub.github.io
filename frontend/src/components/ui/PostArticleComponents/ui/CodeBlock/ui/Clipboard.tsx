@@ -1,0 +1,27 @@
+"use client";
+
+import { useState } from "react";
+import { ClipboardIcon, ClipboardCheckIcon } from "lucide-react";
+import { ClipboardButton } from "../style";
+
+export function Clipboard({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (copied) return;
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
+  };
+
+  return (
+    <ClipboardButton onClick={handleCopy} aria-label="Copy to clipboard">
+      {copied ? (
+        <ClipboardCheckIcon className="text-green-500" />
+      ) : (
+        <ClipboardIcon className="text-gray-500" />
+      )}
+    </ClipboardButton>
+  );
+}
