@@ -1,0 +1,29 @@
+"use client";
+
+import styled from "styled-components";
+
+export const HeaderContentsWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const MainWrapper = styled.main`
+  display: flex;
+  position: relative;
+
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+
+  gap: 64px 96px;
+  padding-left: 48px;
+  padding-right: 48px;
+`;
+
+export const RightSideWrapper = styled.div`
+  position: sticky;
+  top: 4rem;
+  left: 0;
+`;

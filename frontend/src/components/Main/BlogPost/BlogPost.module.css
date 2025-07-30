@@ -1,0 +1,19 @@
+.landing-page__blog-post__wrapper {
+  @keyframes fadeIn-fadeOut {
+    entry 0% {
+      opacity: 0;
+    }
+
+    entry 100% {
+      opacity: 1;
+    }
+
+    exit 0% {
+      opacity: 1;
+    }
+
+    exit 100% {
+      opacity: 0;
+    }
+  }
+}
