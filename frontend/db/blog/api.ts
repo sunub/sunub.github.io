@@ -15,27 +15,32 @@ const getPostsDir = cache(async () => {
   return postPath;
 });
 
-const getJsonPath = async () => {
-  const frontendPath = (await findUpDir('frontend')) ?? '';
-  return join(frontendPath, 'public', 'posts.json');
-};
-
 const getAllJsonFrontMatter = cache(async () => {
-  const jsonPath = await getJsonPath();
-  try {
-    const fileContent = await fs.readFile(jsonPath, 'utf8');
-    const json = JSON.parse(fileContent);
+  const possiblePaths = [
+    join(process.cwd(), 'public', 'posts.json'),
+    join(process.cwd(), 'frontend', 'public', 'posts.json'),
+    join('/var/task', 'public', 'posts.json'), // Vercel 환경
+    join('/vercel/path0', 'frontend', 'public', 'posts.json'), // Vercel 빌드 환경
+  ];
 
-    const parsedJsonFrontMatter = JsonPostFrontMatterSchema.safeParse(json);
-    if (!parsedJsonFrontMatter.success) {
-      console.error(parsedJsonFrontMatter.error);
-      throw new Error(`posts.json 파일의 형식이 잘못되었습니다: ${jsonPath}`);
+  for (const filePath of possiblePaths) {
+    try {
+      const fileContent = await fs.readFile(filePath, 'utf8');
+      const json = JSON.parse(fileContent);
+
+      const parsedJsonFrontMatter = JsonPostFrontMatterSchema.safeParse(json);
+      if (!parsedJsonFrontMatter.success) {
+        console.error(parsedJsonFrontMatter.error);
+        throw new Error(`posts.json 파일의 형식이 잘못되었습니다: ${filePath}`);
+      }
+      return parsedJsonFrontMatter.data;
+    } catch (error) {
+      console.error(`posts.json 파일을 처리하는 중 오류가 발생했습니다: ${filePath}`);
+      continue;
     }
-    return parsedJsonFrontMatter.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error(`posts.json 파일을 처리하는 중 오류가 발생했습니다: ${jsonPath}`);
   }
+  console.error('모든 경로에서 posts.json 파일을 찾을 수 없습니다.');
+  throw new Error('posts.json 파일을 찾을 수 없습니다.');
 });
 
 export async function getAllPostsFrontmatter(): Promise<PostFrontMatter[]> {
