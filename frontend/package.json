@@ -10,16 +10,13 @@
     "build:workers": "tsc -p tsconfig.worker.json",
     "start": "pnpm run build && next start -p 4004",
     "lint": "next lint",
-    "analyze": "cross-env ANALYZE=true npm run build",
-    "test": "jest",
-    "seed": "pnpm exec tsx --tsconfig ./tsconfig.json ./prisma/seed.ts"
+    "analyze": "cross-env ANALYZE=true npm run build"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/bundle-analyzer": "^13.5.8",
     "@next/mdx": "^15.0.4",
-    "@prisma/client": "^6.9.0",
     "@radix-ui/react-slot": "^1.1.2",
     "@types/jest": "^29.5.5",
     "@types/marked": "^5.0.0",
@@ -97,28 +94,21 @@
     "postcss": "^8.4.38",
     "postcss-loader": "^8.0.0",
     "postcss-styled-syntax": "^0.4.0",
-    "prisma": "^6.9.0",
     "shiki": "^1.22.1",
     "stylelint": "^7.13.0",
     "stylelint-config-standard": "^16.0.0",
     "sugar-high": "^0.6.0",
     "swc-loader": "^0.2.3"
   },
-  "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
-  },
   "resolutions": {
     "postcss-selector-parser": "^6.0.10"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@prisma/client",
-      "@prisma/engines",
       "@swc/core",
       "@vercel/speed-insights",
       "bufferutil",
       "esbuild",
-      "prisma",
       "sharp",
       "unrs-resolver",
       "utf-8-validate"

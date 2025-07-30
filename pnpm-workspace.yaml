@@ -5,12 +5,9 @@ packages:
 
 onlyBuiltDependencies:
   - '@nestjs/core'
-  - '@prisma/client'
-  - '@prisma/engines'
   - '@swc/core'
   - '@vercel/speed-insights'
   - bufferutil
   - esbuild
-  - prisma
   - sharp
   - utf-8-validate
