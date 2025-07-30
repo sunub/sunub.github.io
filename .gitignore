@@ -10,6 +10,7 @@
 
 # next.js
 /.next/
+/frontend/.next/
 /out/
 
 # production
@@ -44,3 +45,5 @@ firestore.rules
 
 # contentlayer
 .contentlayer
+node_modules
+tmp
