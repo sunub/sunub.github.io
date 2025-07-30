@@ -46,34 +46,34 @@ async function processFile(fullPath: string, file: string) {
   if (!parentPort) return;
   try {
     let frontmatter: z.infer<typeof FrontMatterSchema> | null = null;
-    const slug = file.split(".")[0];
-    const readStream = createReadStream(fullPath, { encoding: "utf-8" });
+    const slug = file.split('.')[0];
+    const readStream = createReadStream(fullPath, { encoding: 'utf-8' });
     for await (const chunk of readStream) {
       if (!frontmatter && FRONTMATTER_REGEX.test(chunk)) {
         const { data, content } = matter(chunk);
         if (validateFrontMatter(data)) frontmatter = data;
 
         parentPort.postMessage({
-          type: "data",
+          type: 'data',
           slug,
           frontmatter,
           content,
         });
       } else {
         parentPort.postMessage({
-          type: "data",
+          type: 'data',
           slug,
           content: chunk,
         });
       }
     }
     parentPort.postMessage({
-      type: "fileComplete",
+      type: 'fileComplete',
       slug,
     });
   } catch (error) {
     parentPort.postMessage({
-      type: "error",
+      type: 'error',
       message: `${file} 파일을 읽는 중 오류가 발생했습니다.`,
     });
   }
@@ -148,19 +148,19 @@ iterable로 주어진 작업을 수행하는 과정에서 오류가 발생할 �
 Promise.all 메서드를 사용하여 작업을 수행하였을 경우의 총 수행 시간은 위의 그림과 같습니다. iterable 내의 작업 중 작업 처리 시간이 가장 긴 작업시간이 종료되기 이전에 Promise.all의 작업은 완료되지 않습니다. 또한 각각의 Promise 들은 다른 Promise의 진행 상황에 영향을 받지 않고 병렬적으로 작업이 처리가 됩니다.
 
 ```js
-import fs from "fs/promises";
-import path from "path";
+import fs from 'fs/promises';
+import path from 'path';
 
-const fileName = "longtext-files";
+const fileName = 'longtext-files';
 
 (async () => {
   const dirPath = path.join(process.cwd(), fileName);
   const files = await fs.readdir(dirPath);
-  console.time("Sequential readFile");
+  console.time('Sequential readFile');
   for (const file of files) {
     await fs.readFile(path.join(dirPath, file));
   }
-  console.timeEnd("Sequential readFile");
+  console.timeEnd('Sequential readFile');
 })();
 ```
 
@@ -182,17 +182,17 @@ Sequential readFile: 24.228s
 위의 결과는 모든 작업을 순차적으로 처리하기 때문에 앞으로 적용할 방법 중에서 가장 긴 처리 시간을 갖고 있습니다. 그럼 이제 이 작업을 Promise.all 을 사용하여 해결 해보겠습니다.
 
 ```js
-import fs from "fs/promises";
-import path from "path";
+import fs from 'fs/promises';
+import path from 'path';
 
-const fileName = "longtext-files";
+const fileName = 'longtext-files';
 (async () => {
   const dirPath = path.join(process.cwd(), fileName);
   const files = await fs.readdir(dirPath);
-  console.time("Concurrent readFile with Promise.all");
+  console.time('Concurrent readFile with Promise.all');
 
-  await Promise.all(files.map((file) => fs.readFile(path.join(dirPath, file))));
-  console.timeEnd("Concurrent readFile with Promise.all");
+  await Promise.all(files.map(file => fs.readFile(path.join(dirPath, file))));
+  console.timeEnd('Concurrent readFile with Promise.all');
 })();
 ```
 
@@ -214,20 +214,20 @@ Concurrent readFile with Promise.all: 12.241s
 위와 같이 처리시간이 많이 빨라진 것을 확인할 수 있습니다. 이러한 결과를 살펴보았을 때 여러개의 IO 작업을 처리할 경우에는 반드시 Promise.all 을 사용하는 것이 좋다고 이야기할 수 있을까요? 위의 결과만 보았을 경우에는 그렇게 말할 수 있지만 반드시 그런 것은 아닙니다.
 
 ```js
-import fs from "fs/promises";
-import path from "path";
+import fs from 'fs/promises';
+import path from 'path';
 
-const fileName = "longtext-files";
+const fileName = 'longtext-files';
 (async () => {
   const dirPath = path.join(process.cwd(), fileName);
   const files = await fs.readdir(dirPath);
-  console.time("10000개의 파일을 Promise.all");
+  console.time('10000개의 파일을 Promise.all');
   let count = 0;
-  files.map(async (file) => {
+  files.map(async file => {
     fs.readFile(path.join(dirPath, file)).then(() => {
       count++;
       if (count === 10000) {
-        console.timeEnd("10000개의 파일을 Promise.all");
+        console.timeEnd('10000개의 파일을 Promise.all');
       }
     });
   });
@@ -260,27 +260,22 @@ Promise.all 을 사용하였을 경우에는 병렬적으로 작업을 처리하
 ### Worker를 사용하여 작업을 처리하기
 
 ```js
-import { Worker } from "node:worker_threads";
-const workerFiles = [
-  getFile("1.js"),
-  getFile("2.js"),
-  getFile("3.js"),
-  getFile("4.js"),
-];
+import { Worker } from 'node:worker_threads';
+const workerFiles = [getFile('1.js'), getFile('2.js'), getFile('3.js'), getFile('4.js')];
 
 (async () => {
-  console.time("Worker 작업 수행 시간");
+  console.time('Worker 작업 수행 시간');
   let activateWorker = workerFiles.length;
   workerFiles.forEach((workerFile, i) => {
     const worker = new Worker(workerFile, {
       workerData: files,
     });
-    worker.on("message", (message) => {
-      if (message === "end") {
+    worker.on('message', message => {
+      if (message === 'end') {
         worker.terminate();
         activateWorker--;
         if (activateWorker === 0) {
-          console.timeEnd("Worker 작업 수행 시간");
+          console.timeEnd('Worker 작업 수행 시간');
         }
       }
     });
@@ -292,19 +287,17 @@ const workerFiles = [
 ```
 
 ```js
-import fs from "fs/promises";
-import path from "path";
-import { parentPort, workerData } from "node:worker_threads";
+import fs from 'fs/promises';
+import path from 'path';
+import { parentPort, workerData } from 'node:worker_threads';
 
-parentPort.on("message", async (message) => {
-  const [start, end] = message.split(" ").map(Number);
+parentPort.on('message', async message => {
+  const [start, end] = message.split(' ').map(Number);
   const filesToRead = workerData.slice(start, end);
   console.time(`Worker [${start} ~ ${end}] 파일 읽기`);
-  await Promise.all(
-    filesToRead.map((file) => fs.readFile(path.join(dirPath, file)))
-  );
+  await Promise.all(filesToRead.map(file => fs.readFile(path.join(dirPath, file))));
   console.timeEnd(`Worker [${start} ~ ${end}] 파일 읽기`);
-  parentPort.postMessage("end");
+  parentPort.postMessage('end');
 });
 ```
 
