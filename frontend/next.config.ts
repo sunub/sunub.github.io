@@ -27,7 +27,6 @@ const nextConfig: NextConfig = {
   },
   compress: true,
   output: 'standalone',
-  outputFileTracingRoot: process.cwd(),
   async headers() {
     return [
       {
