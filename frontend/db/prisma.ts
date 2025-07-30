@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import chalk from 'chalk';
 import { singleton } from '@/utils/singleton';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 const logThreshold = 0;
 
@@ -18,7 +18,7 @@ const prisma = singleton('prisma', () => {
       },
     },
   });
-  client.$on('query', async e => {
+  client.$on('query', async (e: Prisma.QueryEvent) => {
     if (e.duration < logThreshold) return;
     const color =
       e.duration < logThreshold * 1.1
