@@ -1,6 +1,6 @@
-import { cwd } from 'process';
 import { stat } from 'fs/promises';
 import path from 'path';
+import { cwd } from 'process';
 import { fileURLToPath } from 'url';
 
 type Options = {

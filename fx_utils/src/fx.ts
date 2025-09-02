@@ -1,13 +1,12 @@
+import { chunk, flatMap } from '@fxts/core';
 import { filter } from './filter';
+import { forEach } from './forEach';
 import { map } from './map';
 import { reduce } from './reduce';
 import { take } from './take';
 import { fromAsync } from './utils/fromAsync';
 import { isIterable } from './utils/isIterable';
 import { toAsync } from './utils/toAsync';
-import { forEach } from './forEach';
-
-import { chunk, flatMap } from '@fxts/core';
 
 class FxIterableSync<T> {
   constructor(private iterable: Iterable<T>) {}
