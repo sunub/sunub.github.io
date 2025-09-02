@@ -1,10 +1,4 @@
-import { FrontMatter } from "@/types/schema";
-
-export interface ItreiNode {
-  next: Record<string, number>;
-  fail: number;
-  output: number[];
-}
+import { FrontMatter } from '@/types/schema';
 
 export interface SearchResult {
   postKey: string;
