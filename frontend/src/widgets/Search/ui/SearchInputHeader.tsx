@@ -1,44 +1,38 @@
-"use client";
+'use client';
 
-import React from "react";
-import { VisuallyHidden } from "@/components/VisuallyHidden";
-import { Trash2 } from "lucide-react";
-import { UnderLineWaveIcon } from "./UnderLineWaveIcon";
-import {
-  ContentHeader,
-  SearchInput as StyledInput,
-  ClearIconButton,
-} from "../styles/index";
+import { Trash2 } from 'lucide-react';
+import { VisuallyHidden } from '@/components/VisuallyHidden';
+import { UnderLineWaveIcon } from './UnderLineWaveIcon';
+import { useSearch } from '../hook/useSearch';
+import { ClearIconButton, ContentHeader, SearchInput as StyledInput } from '../styles/index';
 
 interface SearchInputHeaderProps {
-  query: string;
-  onQueryChange: (value: string) => void;
-  onClear: () => void;
+  isExpanded: boolean;
+  listboxId: string;
 }
 
-export function SearchInputHeader({
-  query,
-  onQueryChange,
-  onClear,
-}: SearchInputHeaderProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onQueryChange(e.target.value);
-  };
+export function SearchInputHeader({ isExpanded, listboxId }: SearchInputHeaderProps) {
+  const { query, handleQueryChange, clearSearch } = useSearch();
 
   return (
-    <ContentHeader>
+    <ContentHeader data-slot="search-dialog-header">
       <VisuallyHidden>검색창</VisuallyHidden>
       <StyledInput
+        id="search-input"
+        aria-controls={listboxId}
+        role="combobox"
+        aria-expanded={isExpanded}
+        aria-label="검색창"
         type="text"
         placeholder="찾고 싶은 주제를 검색해주세요."
+        autoComplete="off"
         autoFocus
         value={query}
-        onChange={handleChange}
+        onChange={handleQueryChange}
       />
       <UnderLineWaveIcon />
-      <ClearIconButton onClick={onClear}>
-        <VisuallyHidden>검색어 지우기</VisuallyHidden>
-        <Trash2 />
+      <ClearIconButton aria-label="검색어 지우기" onClick={clearSearch}>
+        <Trash2 aria-hidden={true} />
       </ClearIconButton>
     </ContentHeader>
   );

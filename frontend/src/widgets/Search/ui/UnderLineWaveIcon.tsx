@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { memo } from "react";
-import { UnderLineWaveSVG, UnderLineWavePath } from "../styles/index";
+import { memo } from 'react';
+import { UnderLineWavePath, UnderLineWaveSVG } from '../styles/index';
 
 interface UnderLineWaveIconProps {
   width?: number;
@@ -11,12 +11,7 @@ interface UnderLineWaveIconProps {
 }
 
 export const UnderLineWaveIcon = memo(
-  ({
-    width = 3,
-    scale = "5, 1",
-    length = 0.6,
-    delay = 0.5,
-  }: UnderLineWaveIconProps) => {
+  ({ width = 3, scale = '5, 1', length = 0.6, delay = 0.5 }: UnderLineWaveIconProps) => {
     return (
       <UnderLineWaveSVG
         id="search-input_underline-wave"
@@ -37,4 +32,4 @@ export const UnderLineWaveIcon = memo(
   }
 );
 
-UnderLineWaveIcon.displayName = "UnderLineWaveIcon";
+UnderLineWaveIcon.displayName = 'UnderLineWaveIcon';
