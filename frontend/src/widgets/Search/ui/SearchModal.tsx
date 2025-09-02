@@ -1,80 +1,78 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import ReactFocusLock from "react-focus-lock";
-import { ResultsList, SearchContainer, SearchOverlay } from "../styles";
-import { SearchInputHeader } from "./SearchInputHeader";
-import { useSearchResults } from "../hook/useSearchResults";
-import { useAnimations } from "../hook/useAnimations";
-import { useOutsideClick } from "../hook/useOutsideClick";
-import { useKeyPress } from "../hook/useKeyPress";
-import { SearchResultsList } from "./SearchResultList";
-import { LoadingComponent } from "./LoadingComponent";
+import { useCallback, useRef } from 'react';
+import ReactFocusLock from 'react-focus-lock';
+import { LoadingComponent } from './LoadingComponent';
+import { NoResult } from './NoResult';
+import { SearchInputHeader } from './SearchInputHeader';
+import { SearchResultsList } from './SearchResultList';
+import { useAnimations } from '../hook/useAnimations';
+import { useKeyPress } from '../hook/useKeyPress';
+import { useModalEnterAnimation } from '../hook/useModalEnterAnimation';
+import { useOutsideClick } from '../hook/useOutsideClick';
+import { useHasSearchResultsAtom, useIsSearchLoadingAtom } from '../hook/useSearchAtoms';
+import { ResultsList, SearchContainer, SearchOverlay } from '../styles';
 
 interface SearchModalProps {
-  toggleOpen: () => void;
+  close: () => void;
 }
 
-function SearchModal({ toggleOpen }: SearchModalProps) {
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+function SearchModal({ close }: SearchModalProps) {
+  const isLoading = useIsSearchLoadingAtom();
+  const hasSearchResults = useHasSearchResultsAtom();
   const rootRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const { results, fetchResults, clearResults } = useSearchResults();
+  const isExpanded = true;
+  const listboxId = 'search-results-listbox';
+
   const { initOpenAnimation, closeAnimation } = useAnimations(rootRef);
 
-  const handleQueryChange = useCallback(
-    (value: string) => {
-      setQuery(value);
-      fetchResults(value, setIsLoading);
-    },
-    [query]
-  );
+  const handleClose = useCallback(async () => {
+    await closeAnimation();
+    close();
+  }, [closeAnimation, close]);
 
-  const handleClear = () => {
-    setQuery("");
-    clearResults();
-  };
-
-  const handleClose = () => {
-    closeAnimation().then(toggleOpen);
-  };
-
-  useOutsideClick(contentRef, handleClose);
-  useKeyPress("Escape", handleClose);
-
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    initOpenAnimation();
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      handleClear();
-    };
-  }, []);
+  useModalEnterAnimation(initOpenAnimation);
+  useOutsideClick(contentRef, close);
+  useKeyPress('Escape', (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      close();
+    }
+  });
 
   return (
     <ReactFocusLock>
-      <SearchOverlay ref={rootRef}>
-        <SearchContainer id="search-input__content-wrapper" ref={contentRef}>
-          <SearchInputHeader
-            query={query}
-            onQueryChange={handleQueryChange}
-            onClear={handleClear}
-          />
-          <ResultsList>
+      <SearchOverlay ref={rootRef} data-testid="search-modal__overlay">
+        <SearchContainer
+          role="dialog"
+          aria-label="검색 다이알로그 창"
+          id="search-input__content-wrapper"
+          ref={contentRef}
+          data-slot="search-modal"
+        >
+          <SearchInputHeader isExpanded={isExpanded} listboxId={listboxId} />
+          <ResultsList id={listboxId} role="listbox" aria-label={'검색 결과'} data-slot="search-dialog-results-list">
             {isLoading ? (
               <LoadingComponent />
+            ) : hasSearchResults ? (
+              <SearchResultsList onResultClick={handleClose} />
             ) : (
-              <SearchResultsList
-                results={results}
-                onResultClick={handleClose}
-              />
+              <NoResult />
             )}
           </ResultsList>
         </SearchContainer>
+        <div
+          data-testid={'search-modal__outside_position'}
+          style={{
+            position: 'absolute',
+            top: 100,
+            left: 100,
+            width: '1px',
+            height: '1px',
+            zIndex: 10000,
+          }}
+        />
       </SearchOverlay>
     </ReactFocusLock>
   );
