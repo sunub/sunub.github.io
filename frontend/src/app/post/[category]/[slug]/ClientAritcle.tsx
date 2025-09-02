@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { Article } from './page.style';
+/* eslint-disable */
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/all';
+import { useEffect, useRef } from 'react';
+import { Article } from './page.style';
 
 gsap.registerPlugin(CustomEase);
 
@@ -20,11 +21,6 @@ export function ClientArticle({ children }: { children: React.ReactNode }) {
     const animationTimer = setTimeout(() => {
       const elements = gsap.utils.toArray('#blog-post__article-content > *');
       if (elements.length === 0) return;
-
-      gsap.set(elements, {
-        x: -10,
-        opacity: 0,
-      });
 
       gsap.to(elements, {
         duration: 0.8,
