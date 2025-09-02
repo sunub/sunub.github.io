@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { useState, useContext, useMemo } from "react";
+import React, { useContext, useMemo, useState } from 'react';
 
 type SomeContextType = {
   count: number;
@@ -13,7 +13,7 @@ const SomeContext = React.createContext<SomeContextType | undefined>(undefined);
 
 function SomeProvider({ children }: { children: React.ReactNode }) {
   const [count, setCount] = useState(0);
-  const [text, setText] = useState("hello");
+  const [text, setText] = useState('hello');
 
   const contextValue = useMemo(
     () => ({
@@ -22,34 +22,34 @@ function SomeProvider({ children }: { children: React.ReactNode }) {
       text,
       setText,
     }),
-    [text, count],
+    [text, count]
   );
 
-  return (
-    <SomeContext.Provider value={contextValue}>{children}</SomeContext.Provider>
-  );
+  return <SomeContext.Provider value={contextValue}>{children}</SomeContext.Provider>;
 }
 
 const SomChildDisplay = React.memo(() => {
   const context = useContext(SomeContext);
   if (!context) {
-    throw new Error("SomChildDisplay must be used within a SomeProvider");
+    throw new Error('SomChildDisplay must be used within a SomeProvider');
   }
   const { count } = context;
   return <p>Count1: {count}</p>;
 });
 
+SomChildDisplay.displayName = 'SomChildDisplay';
+
 function SomeChildComponent() {
   const context = useContext(SomeContext);
   if (!context) {
-    throw new Error("SomeChildComponent must be used within a SomeProvider");
+    throw new Error('SomeChildComponent must be used within a SomeProvider');
   }
   const { setCount } = context;
   return (
     <div>
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={() => setCount((count) => count + 1)}
+        onClick={() => setCount(count => count + 1)}
       >
         Increment
       </button>
@@ -60,9 +60,7 @@ function SomeChildComponent() {
 function TextEditor() {
   const context = useContext(SomeContext);
   if (!context) {
-    throw new Error(
-      "DoNotRenderingComponent must be used within a SomeProvider",
-    );
+    throw new Error('DoNotRenderingComponent must be used within a SomeProvider');
   }
   const { setText } = context;
 
@@ -73,12 +71,7 @@ function TextEditor() {
   return (
     <div>
       <h3>Text Editor</h3>
-      <input
-        type="text"
-        value={context.text}
-        onChange={handleChange}
-        className="border-2 border-gray-500"
-      />
+      <input type="text" value={context.text} onChange={handleChange} className="border-2 border-gray-500" />
     </div>
   );
 }
