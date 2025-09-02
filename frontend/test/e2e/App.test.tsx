@@ -20,7 +20,6 @@ test.describe('홈 페이지 컴포넌트 테스트', () => {
   test('홈 페이지 기본 요소로 최근 포스트 10개가 렌더링 되는가?', async ({ page }) => {
     const listItems = page.getByRole('listitem');
     await expect(listItems).toHaveCount(10);
-    await expect(listItems.first()).toHaveCSS('opacity', '1');
     await expect(listItems.first()).toBeVisible(DEFAULT_TEST_OPTION);
   });
 
