@@ -1,20 +1,22 @@
-"use client";
+'use client';
 
-import useToggle from "@/hooks/use-toggle";
-import { SearchButton } from "./SearchButton";
-import { SearchModal } from "./SearchModal";
-import { createPortal } from "react-dom";
+import { Provider } from 'jotai';
+import { createPortal } from 'react-dom';
+import { SearchButton } from './SearchButton';
+import { SearchModal } from './SearchModal';
+import { useSearchModal } from '../hook/useSearchAtoms';
 
 function Search() {
-  const [isOpen, toggleOpen] = useToggle(false);
-
+  const { isOpen, open, close } = useSearchModal();
   return (
     <>
-      <SearchButton isOpen={isOpen} toggleOpen={toggleOpen} />
+      <SearchButton isOpen={isOpen} toggleOpen={open} />
       {isOpen &&
         createPortal(
-          <SearchModal toggleOpen={toggleOpen} />,
-          document.getElementById("blog-search__input-area")!
+          <Provider>
+            <SearchModal close={close} />
+          </Provider>,
+          document.getElementById('blog-search__input-area')!
         )}
     </>
   );
