@@ -1,11 +1,12 @@
-import Wave from '@/components/HeaderContents/Wave';
+import { getPostsMetadataByCategory } from 'db/blog/api';
+import { Crafty_Girls } from 'next/font/google';
+import { Suspense } from 'react';
+import Card from '@/components/Card';
+import { Wave } from '@/components/Header/Wave';
+import { CardsSkeleton } from '@/components/Skeletons';
 import Spacer from '@/components/Spacer';
 import { FrontmatterWrapper, RootContainer, Title, TitleContainer } from './page.style';
-import Card from '@/components/Card';
-import { getPostsMetadataByCategory } from 'db/blog/api';
-import { Suspense } from 'react';
-import { CardsSkeleton } from '@/components/Skeletons';
-import { Crafty_Girls } from 'next/font/google';
+import { RootLayout } from '@/features/RootLayout';
 
 type Cateogry = 'code' | 'web' | 'cs' | 'algorithm';
 type Params = Promise<{
@@ -36,7 +37,7 @@ export default async function Page({ params }: { params: Params }) {
   };
 
   return (
-    <section>
+    <RootLayout>
       <TitleContainer>
         <Title className={`${craftyGirls.className}`}>{`${title[category]}`}</Title>
       </TitleContainer>
@@ -51,6 +52,6 @@ export default async function Page({ params }: { params: Params }) {
           </FrontmatterWrapper>
         </Suspense>
       </RootContainer>
-    </section>
+    </RootLayout>
   );
 }
