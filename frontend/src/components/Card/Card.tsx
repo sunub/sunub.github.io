@@ -1,18 +1,14 @@
 'use client';
 
+import { FrontMatter } from 'db/blog/Schema';
+import Link from 'next/link';
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import Link from 'next/link';
 import Elevation from '@/constants/Elevation';
-import { FrontMatter } from 'db/blog/Schema';
 
 export default function Card({ frontMatter }: { frontMatter: FrontMatter }) {
-  if (!frontMatter) {
-    return null;
-  }
   const { title, date, slug, category } = frontMatter;
   const containerRef = useRef<HTMLDivElement>(null);
-
   const formattedDate = React.useMemo(() => {
     return new Intl.DateTimeFormat('ko-kr', {
       year: 'numeric',
@@ -41,6 +37,10 @@ export default function Card({ frontMatter }: { frontMatter: FrontMatter }) {
       el.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
+
+  if (!frontMatter) {
+    return null;
+  }
 
   return (
     <RootContainer ref={containerRef}>
@@ -73,9 +73,6 @@ const Wrapper = styled.div`
   &:hover {
     box-shadow: var(--long-shadow);
     outline: 4px solid color-mix(in oklch, var(--color-bird) 15%, transparent);
-  }
-  @media screen and (max-width: 320px) {
-    width: 120px;
   }
 `;
 
