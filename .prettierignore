@@ -1,0 +1,27 @@
+# Ignore artifacts:
+posts
+build
+coverage
+package-lock.json
+pnpm-lock.yaml
+pnpm-workspace.yaml
+node_modules
+README.md
+
+backend/dist
+backend/node_modules
+
+frontend/dist
+frontend/.next
+frontend/.vercel
+frontend/out
+frontend/.turbo
+frontend/.claude
+frontend/coverage
+frontend/.vscode
+frontend/test-results
+frontend/node_modules
+frontend/playwright-report
+
+fx_utils/node_modules
+fx_utils/dist
