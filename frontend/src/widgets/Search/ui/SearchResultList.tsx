@@ -1,37 +1,28 @@
-"use client";
+'use client';
 
-import { SearchResult } from "../types";
-import { ListIndicator } from "@/shared/style/List";
-import { VisuallyHidden } from "@/components/VisuallyHidden";
-import {
-  ResultsList,
-  ResultItem,
-  ResultLink,
-  ResultTitle,
-  ResultDescription,
-} from "../styles/index";
+import { useAtomValue } from 'jotai';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
+import { VisuallyHidden } from '@/components/VisuallyHidden';
+import { ListIndicator } from '@/shared/style/List';
+import { useKeyPress } from '../hook/useKeyPress';
+import { searchResultsAtom } from '../store/search.atom';
+import { ResultDescription, ResultItem, ResultLink, ResultTitle } from '../styles/index';
+import { SearchResult } from '../types';
+import { handleKeyArrowDown } from '../utils/handleKeyArrowDown';
+import { handleKeyUp } from '../utils/handleKeyArrowUp';
 
 interface SearchResultsListProps {
-  results: SearchResult[];
-  onResultClick: () => void;
+  onResultClick: () => Promise<void>;
 }
 
-export function SearchResultsList({
-  results,
-  onResultClick,
-}: SearchResultsListProps) {
-  if (results.length === 0) {
-    return (
-      <ResultsList>
-        <ResultItem key="no-results">
-          <VisuallyHidden>
-            {"어떠한 결과도 발견 되지 않았습니다."}
-          </VisuallyHidden>
-          {"어떠한 결과도 발견 되지 않았습니다."}
-        </ResultItem>
-      </ResultsList>
-    );
-  }
+export function SearchResultsList({ onResultClick }: SearchResultsListProps) {
+  const indexRef = useRef(-1);
+  const results = useAtomValue(searchResultsAtom);
+  const router = useRouter();
+
+  useKeyPress('ArrowDown', handleKeyArrowDown, indexRef, router);
+  useKeyPress('ArrowUp', handleKeyUp, indexRef, router);
 
   return (
     <>
@@ -40,10 +31,10 @@ export function SearchResultsList({
         const url = `/post/${frontmatter.category}/${frontmatter.slug}`;
 
         return (
-          <ResultItem key={`${postKey}-${index}`}>
+          <ResultItem role="option" key={`${postKey}-${index}`}>
             <VisuallyHidden>{`${frontmatter.title}로 이동하는 링크`}</VisuallyHidden>
             <ListIndicator />
-            <ResultLink href={url} onClick={onResultClick}>
+            <ResultLink href={url} onClick={() => onResultClick} tabIndex={0}>
               <ResultTitle>{frontmatter.title}</ResultTitle>
               <ResultDescription>{frontmatter.summary}</ResultDescription>
             </ResultLink>
