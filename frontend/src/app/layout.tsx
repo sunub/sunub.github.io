@@ -1,33 +1,33 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import StyledComponentsRegistry from "@/components/Resgistry/";
-import React from "react";
-import ThemeProvider from "@/components/Theme/ThemeProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { cookies } from "next/headers";
-import { LIGHT_COLORS, DARK_COLORS } from "@/constants/constants";
-import localFont from "next/font/local";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
-import Script from "next/script";
-import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import { cookies } from 'next/headers';
+import Script from 'next/script';
+import React from 'react';
+import { HeroImagePreload } from '@/components/HeroImage/HeroImagePreload';
+import StyledComponentsRegistry from '@/components/Resgistry/';
+import { initSetColorsByThemeFn } from '@/components/Theme/InitTheme/InitThemeValue';
+import ThemeProvider from '@/components/Theme/ThemeProvider';
+import { DARK_COLORS, LIGHT_COLORS } from '@/constants/constants';
+import { AnimatePresenceWrapper } from '@/features/AnimatePresenceWrapper';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sunub.vercel.app"),
+  metadataBase: new URL('https://sunub.vercel.app'),
   title: {
-    default: "sun_ub",
-    template: "%s | sun_ub",
+    default: 'sun_ub',
+    template: '%s | sun_ub',
   },
-  keywords: ["sunub", "sun_ub"],
-  description: "디자인과 개발을 좋아합니다.",
+  keywords: ['sunub', 'sun_ub'],
+  description: '디자인과 개발을 좋아합니다.',
   openGraph: {
-    title: "sun_ub",
-    description: "디자인과 개발을 좋아합니다.",
-    url: "https://sunub.vercel.app",
-    siteName: "sun_ub",
-    type: "website",
-    locale: "ko_KR",
+    title: 'sun_ub',
+    description: '디자인과 개발을 좋아합니다.',
+    url: 'https://sunub.vercel.app',
+    siteName: 'sun_ub',
+    type: 'website',
+    locale: 'ko_KR',
   },
   robots: {
     index: true,
@@ -35,28 +35,24 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
 };
 
 const pretendard = localFont({
-  src: "../../public/fonts/PretendardVariable.woff2",
-  display: "swap",
-  style: "normal",
-  variable: "--pretendard-font",
+  src: '../../public/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  style: 'normal',
+  variable: '--pretendard-font',
 });
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const saved = (await cookies()).get("color-theme");
-  const theme = saved?.value === "dark" ? "dark" : "light";
-  const themeColors = theme === "light" ? LIGHT_COLORS : DARK_COLORS;
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const saved = (await cookies()).get('color-theme');
+  const theme = saved?.value === 'dark' ? 'dark' : 'light';
+  const themeColors = theme === 'light' ? LIGHT_COLORS : DARK_COLORS;
 
   return (
     <html
@@ -67,60 +63,11 @@ export default async function RootLayout({
       style={themeColors as React.CSSProperties}
     >
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, user-scalable=1"
-        ></meta>
-        <link
-          rel="icon"
-          type="image/x-icon"
-          sizes="32x32"
-          href="/assets/favicon.ico"
-        />
-        <link
-          rel="preload"
-          href="/assets/clouds.avif"
-          as="image"
-          type="image/avif"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          href="/assets/bridge.avif"
-          as="image"
-          type="image/avif"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          href="/assets/cars.avif"
-          as="image"
-          type="image/avif"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          href="/assets/dark_clouds.avif"
-          as="image"
-          type="image/avif"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          href="/assets/dark_bridge.avif"
-          as="image"
-          type="image/avif"
-          fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          href="/assets/dark_cars.avif"
-          as="image"
-          type="image/avif"
-          fetchPriority="high"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1"></meta>
+        <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" />
+        <HeroImagePreload />
         <Script id="theme-script" strategy="beforeInteractive">
-          {`(${initSetColorsByThemeFn})()`}
+          {initSetColorsByThemeFn}
         </Script>
       </head>
       <body>
@@ -128,23 +75,19 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "sun_ub",
-              url: "https://sunub.vercel.app",
-              description: "디자인과 개발을 좋아합니다.",
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'sun_ub',
+              url: 'https://sunub.vercel.app',
+              description: '디자인과 개발을 좋아합니다.',
             }),
           }}
         ></script>
         <StyledComponentsRegistry>
           <ThemeProvider>
-            <div id="__next">
-              <Header />
-              <div className="blog-main__landing-page">{children}</div>
-              <Footer />
-              <div id="mobile-nav-portal" />
-              <div id="blog-search__input-area" />
-            </div>
+            <AnimatePresenceWrapper>{children}</AnimatePresenceWrapper>
+            <div id="mobile-nav-portal" />
+            <div id="blog-search__input-area" data-testid={'blog-search__input-area'} />
           </ThemeProvider>
         </StyledComponentsRegistry>
         <SpeedInsights />
