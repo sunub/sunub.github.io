@@ -1,75 +1,30 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
-import { HeroImage } from "@/components/HeroImage";
-import Wave from "@/components/HeaderContents/Wave";
-import { ContentListLoading } from "@/components/Skeletons/ui/ContentLoading";
+import styled from 'styled-components';
+import { LoadingAnimation } from '@/components/LoadingAnimation';
+import { BottomClouds } from '@/components/LoadingAnimation/ui/BottomClouds';
+import { FlyingBirdAnime } from '@/components/LoadingAnimation/ui/FlyingBird';
+import { TopClouds } from '@/components/LoadingAnimation/ui/TopCloud';
 
 export default function Loading() {
   return (
-    <>
-      <HeaderContentsWrapper>
-        <HeroImage />
-        <Wave />
-      </HeaderContentsWrapper>
-      <BodyWrapper id="blog-main__recently-post-list">
-        <TitleRootWrapper>
-          <ContentListLoading />
-        </TitleRootWrapper>
-        <MainWrapper>
-          <RightSideWrapper></RightSideWrapper>
-        </MainWrapper>
-      </BodyWrapper>
-    </>
+    <BodyWrapper data-testid="loading-screen">
+      <TopClouds />
+      <LoadingAnimation>
+        <FlyingBirdAnime />
+      </LoadingAnimation>
+      <BottomClouds />
+    </BodyWrapper>
   );
 }
 
 const BodyWrapper = styled.div`
-  padding-left: 64px;
-`;
-
-const TitleRootWrapper = styled.div`
-  grid-area: newest;
-`;
-
-const HeaderContentsWrapper = styled.div`
-  width: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-`;
-
-const MainWrapper = styled.main`
-  display: grid;
-  position: relative;
-  grid-template:
-    "newest categories"
-    "newest tags" 1fr / 2fr 1fr;
-
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
-
-  gap: 64px 96px;
-  padding-left: 48px;
-  padding-right: 48px;
-
-  @container root (width <= 786px) {
-    grid-template:
-      "newest"
-      "newset" 1fr / 1fr;
-
-    padding-left: 32px;
-    padding-right: 32px;
-  }
-`;
-
-const RightSideWrapper = styled.div`
-  position: sticky;
-  top: 4rem;
+  position: fixed;
+  top: 0;
   left: 0;
-
-  @media screen and (max-width: 786px) {
-    display: none;
-  }
+  z-index: 1000;
+  display: flex;
+  width: 100dvw;
+  height: 100dvh;
+  background: color-mix(in oklch, var(--color-background), var(--color-midStop) 10%);
 `;
