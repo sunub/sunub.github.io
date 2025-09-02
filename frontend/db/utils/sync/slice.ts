@@ -1,8 +1,4 @@
-export function* slice<A>(
-  start: number,
-  end: number,
-  iterable: Iterable<A>
-): Iterable<A> {
+export function* slice<A>(start: number, end: number, iterable: Iterable<A>): Iterable<A> {
   const iterator = iterable[Symbol.iterator]();
   let index = 0;
   while (index < start) {

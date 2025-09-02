@@ -1,4 +1,4 @@
-import { take } from "./take";
+import { take } from './take';
 
 export function* chunk<A>(size: number, iterable: Iterable<A>) {
   const iterator = iterable[Symbol.iterator]();

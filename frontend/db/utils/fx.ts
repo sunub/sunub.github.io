@@ -1,10 +1,10 @@
-import { filter } from "./sync/filter";
-import { map } from "./sync/map";
-import { reduce as baseReduce } from "./sync/reduce";
-import { take } from "./sync/take";
-import { chunk } from "./sync/chunk";
-import { slice } from "./sync/slice";
-import { isIterable } from "./isIterable";
+import { isIterable } from './isIterable';
+import { chunk } from './sync/chunk';
+import { filter } from './sync/filter';
+import { map } from './sync/map';
+import { reduce as baseReduce } from './sync/reduce';
+import { slice } from './sync/slice';
+import { take } from './sync/take';
 
 class FxIterable<A> {
   private _iterator?: Iterator<A> | null = null;
@@ -75,7 +75,5 @@ export function fx<A>(iterable: Iterable<A>): FxIterable<A>;
 export function fx<A>(asyncIterable: AsyncIterable<A>): FxAsyncIterable<A>;
 
 export function fx<A>(iterable: Iterable<A> | AsyncIterable<A>) {
-  return isIterable(iterable)
-    ? new FxIterable(iterable)
-    : new FxAsyncIterable(iterable);
+  return isIterable(iterable) ? new FxIterable(iterable) : new FxAsyncIterable(iterable);
 }

@@ -1,6 +1,4 @@
-export function toAsync<A>(
-  iterable: Iterable<A | Promise<A>>
-): AsyncIterable<Awaited<A>> {
+export function toAsync<A>(iterable: Iterable<A | Promise<A>>): AsyncIterable<Awaited<A>> {
   return {
     [Symbol.asyncIterator](): AsyncIterator<Awaited<A>> {
       const iterator = iterable[Symbol.iterator]();

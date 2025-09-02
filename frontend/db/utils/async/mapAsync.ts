@@ -1,7 +1,4 @@
-export function mapAsync<A, B>(
-  fn: (a: A | Promise<A>) => B,
-  iterable: AsyncIterable<A>
-): AsyncIterableIterator<B> {
+export function mapAsync<A, B>(fn: (a: A | Promise<A>) => B, iterable: AsyncIterable<A>): AsyncIterableIterator<B> {
   const asyncIterator = iterable[Symbol.asyncIterator]();
   return {
     async next() {
