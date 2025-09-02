@@ -1,22 +1,28 @@
 import React from 'react';
-import * as Styled from './page.style';
+import { Wave } from '@/components/Header/Wave';
 import { HeroImage } from '@/components/HeroImage';
-import Wave from '@/components/HeaderContents/Wave';
 import NewestPost from '@/components/Main/NewestPost';
+import { FeatherIcon } from '@/components/Main/NewestPost/FeatherIcon';
+import { RootLayout } from '@/features/RootLayout';
+import { HeaderContentsWrapper, MainWrapper, Title, TitleWrapper } from './page.style';
 
 async function Page() {
   return (
-    <React.Fragment>
-      <Styled.HeaderContentsWrapper>
+    <RootLayout>
+      <HeaderContentsWrapper>
         <HeroImage />
         <Wave />
-      </Styled.HeaderContentsWrapper>
-      <div id="blog-main__recently-post-list">
-        <Styled.MainWrapper id="blog-main__recently-post-list-wrapper">
+      </HeaderContentsWrapper>
+      <div id="blog-main-wrapper">
+        <MainWrapper id="blog-main__recently-post-list-wrapper">
+          <TitleWrapper>
+            <FeatherIcon />
+            <Title>최신 포스트들</Title>
+          </TitleWrapper>
           <NewestPost />
-        </Styled.MainWrapper>
+        </MainWrapper>
       </div>
-    </React.Fragment>
+    </RootLayout>
   );
 }
 
