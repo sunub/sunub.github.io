@@ -1,27 +1,8 @@
-"use client";
+'use client';
 
-import styled, { keyframes } from "styled-components";
-import { memo } from "react";
-import { VisuallyHidden } from "@/components/VisuallyHidden";
-
-function SearchButton({
-  isOpen,
-  toggleOpen,
-}: {
-  isOpen: boolean;
-  toggleOpen: () => void;
-}) {
-  return (
-    <StyledSearchButton
-      disabled={isOpen}
-      onClick={toggleOpen}
-      aria-label="Search"
-    >
-      <VisuallyHidden>검색 열기 버튼</VisuallyHidden>
-      <SearchIcon />
-    </StyledSearchButton>
-  );
-}
+import { memo } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { VisuallyHidden } from '@/components/VisuallyHidden';
 
 const SearchIcon = memo(() => {
   return (
@@ -42,6 +23,16 @@ const SearchIcon = memo(() => {
     </SearchSvg>
   );
 });
+SearchIcon.displayName = 'SearchIcon';
+
+function SearchButton({ isOpen, toggleOpen }: { isOpen: boolean; toggleOpen: () => void }) {
+  return (
+    <StyledSearchButton type="button" disabled={isOpen} onClick={toggleOpen} aria-label="검색">
+      <VisuallyHidden>검색</VisuallyHidden>
+      <SearchIcon />
+    </StyledSearchButton>
+  );
+}
 
 const rotate = keyframes`
   0% {
