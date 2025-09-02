@@ -1,29 +1,34 @@
 'use client';
 
 import React from 'react';
+import styled, { keyframes } from 'styled-components';
 import { Button } from '@/components/ui/button';
 import { goToHome } from '@/utils/redirect';
-import styled, { keyframes } from 'styled-components';
 
-export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function Error({ error }: { error: Error & { digest?: string }; reset: () => void }) {
   React.useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
-    <Outer>
+    <Outer data-testid="error-page">
       <PatternLayer>
         <Content>
-          <Title>{error.message}</Title>
-          <StackTrace>
+          <Title data-testid={'error-page__title'}>{error.message}</Title>
+          <StackTrace data-testid="error-page__stack-trace">
             <Pre>{error.stack?.split('\n')[0]}</Pre>
             <p>{error.digest}</p>
           </StackTrace>
           <ButtonGroup>
-            <Button variant="destructive" onClick={() => goToHome()}>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                // eslint-disable-next-line
+                goToHome();
+              }}
+            >
               홈으로 돌아가기
             </Button>
-            <Button onClick={reset}>다시 시도해주세요</Button>
           </ButtonGroup>
         </Content>
       </PatternLayer>
