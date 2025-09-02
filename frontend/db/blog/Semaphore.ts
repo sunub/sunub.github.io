@@ -11,7 +11,7 @@ export class Semaphore {
       return;
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.waitingQueue.push(resolve);
     });
   }

@@ -1,8 +1,7 @@
 import { createReadStream } from 'fs';
 import { MatterTransform } from './MatterTransform';
-import { Semaphore } from './Semaphore';
-
 import type { MatterTransformData } from './Schema';
+import { Semaphore } from './Semaphore';
 
 function isMatterTransformData(obj: unknown): obj is MatterTransformData {
   return (
@@ -76,7 +75,7 @@ export class FileProcessor {
             resolve(processedData);
           } catch (error) {
             cleanup();
-            reject(error);
+            reject(error as Error);
           }
         });
 

@@ -1,16 +1,16 @@
 'use server';
 
-import { z } from 'zod';
 import chalk from 'chalk';
-import path from 'node:path';
 import chokidar from 'chokidar';
-import matter from 'gray-matter';
-import { FrontMatter, FrontMatterSchema, PostCategorySchema } from '../../src/types/schema';
-import { debounce } from '../../src/shared/utils/debounce';
-import { cache } from 'react';
-import { readFile, readdir, stat } from 'fs/promises';
-import { executeWithLimit } from '../utils/async/executeWithLimit';
+import { readdir, readFile } from 'fs/promises';
 import { findUpDir, fromAsync, toAsync } from 'fx_utils';
+import matter from 'gray-matter';
+import path from 'node:path';
+import { cache } from 'react';
+import { z } from 'zod';
+import { debounce } from '../../src/shared/utils/debounce';
+import { FrontMatter, FrontMatterSchema, PostCategorySchema } from '../../src/types/schema';
+import { executeWithLimit } from '../utils/async/executeWithLimit';
 
 type PostData = {
   frontmatter: z.infer<typeof FrontMatterSchema>;
@@ -76,7 +76,7 @@ class Blog {
   }
 
   async #__withLock<T>(fn: () => Promise<T>): Promise<T> {
-    let previousLock: Promise<void> = this.#__updateLock;
+    const previousLock: Promise<void> = this.#__updateLock;
     let release: () => void;
     this.#__updateLock = new Promise<void>(resolve => {
       release = resolve;
@@ -101,7 +101,7 @@ class Blog {
       const parsed = parseFrontMatter(content);
       return parsed?.content || null;
     } catch (error) {
-      console.error(`Error reading post content: ${error}`);
+      console.error(`Error reading post content: ${error as string}`);
       return null;
     }
   }

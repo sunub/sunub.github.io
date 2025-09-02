@@ -1,14 +1,13 @@
-import matter from 'gray-matter';
-
-import { join } from 'path';
-import { chunk, filter, findUpDir, fx, pipe, map, concurrent, toArray, sort } from 'fx_utils';
 import { createReadStream } from 'fs';
 import { opendir } from 'fs/promises';
-import { FrontMatterSchema, PostCategory, PostFrontMatter } from './Schema';
+import { chunk, concurrent, filter, findUpDir, fx, map, pipe, toArray } from 'fx_utils';
+import matter from 'gray-matter';
 import ora from 'ora';
+import { cpus } from 'os';
+import { join } from 'path';
 import { createInterface } from 'readline';
 import { FileProcessor } from './fileProcessor';
-import { cpus } from 'os';
+import { FrontMatterSchema, PostCategory, PostFrontMatter } from './Schema';
 
 export class Post {
   processor: FileProcessor;
@@ -67,7 +66,7 @@ export class Post {
       if (dirIterable && !isClosed) {
         try {
           await dirIterable.close();
-        } catch (closeError) {
+        } catch {
           // 닫기 실패는 무시
         }
       }
@@ -83,7 +82,7 @@ export class Post {
         });
         const rl = createInterface({ input: stream });
 
-        let frontmatterLines: string[] = [];
+        const frontmatterLines: string[] = [];
         let isInsideFrontMatter = false;
         let isJobComplete = false;
         let lineCount = 0;
@@ -128,7 +127,7 @@ export class Post {
                 frontmatter: frontmatter.data,
                 filePath,
               });
-            } catch (error) {
+            } catch {
               resolve(null);
             }
           } else {
@@ -160,15 +159,11 @@ export class Post {
     filePath: 'web' | 'algorithm' | 'code' | 'cs' | '.' = '.',
     findRootPath: string = 'posts'
   ) {
-    try {
-      await this.ensureInitialized(findRootPath);
-      const spinner = ora('포스트의 Front Matter를 추출하는 중...').start();
-      const result = await this.processPostFrontMatter(filePath);
-      spinner.succeed('포스트의 Front Matter 추출 완료!');
-      return result;
-    } catch (error) {
-      throw error;
-    }
+    await this.ensureInitialized(findRootPath);
+    const spinner = ora('포스트의 Front Matter를 추출하는 중...').start();
+    const result = await this.processPostFrontMatter(filePath);
+    spinner.succeed('포스트의 Front Matter 추출 완료!');
+    return result;
   }
 
   async *postFrontMatterGenerator(batchSize: number = 10, filePath: 'web' | 'algorithm' | 'code' | 'cs' | '.' = '.') {
@@ -205,10 +200,12 @@ export class Post {
   }
 
   async _createFrontMatterIterator(filePath: 'web' | 'algorithm' | 'code' | 'cs' | '.' = '.') {
-    const concurrencyLevel = cpus().length > 0 ? cpus().length : 1;
+    const isTestEnvironment = process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST;
+    const maxConcurrency = isTestEnvironment ? 2 : Math.min(cpus().length || 1, 4);
+
     try {
       await this.ensureInitialized('posts');
-      const filePaths = fx(await this.getFileNames(join(this.rootPath, filePath))).filter(
+      const filePaths = fx(this.getFileNames(join(this.rootPath, filePath))).filter(
         filePath => filePath.endsWith('.mdx') || filePath.endsWith('.md')
       );
 
@@ -222,15 +219,17 @@ export class Post {
             }
             return null;
           } catch (error) {
-            console.error(`파일 처리 중 오류 발생: ${fileNames}`, error);
+            if (!isTestEnvironment) {
+              console.error(`파일 처리 중 오류 발생: ${fileNames}`, error);
+            }
             return null;
           }
         }),
-        concurrent(concurrencyLevel),
+        concurrent(maxConcurrency),
         filter(data => data !== null && data !== undefined)
       );
     } catch (error) {
-      throw new Error(`포스트 Front Matter 추출 중 오류 발생: ${error}`);
+      throw new Error(`포스트 Front Matter 추출 중 오류 발생: ${error as string}`);
     }
   }
 

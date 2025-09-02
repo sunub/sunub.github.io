@@ -1,7 +1,6 @@
-import { Transform, TransformCallback } from 'stream';
-
-import { FrontMatterSchema, type MatterTransformData } from './Schema';
 import matter from 'gray-matter';
+import { Transform, TransformCallback } from 'stream';
+import { FrontMatterSchema, type MatterTransformData } from './Schema';
 
 export class MatterTransform extends Transform {
   private chunks: Buffer[] = [];
@@ -74,13 +73,21 @@ export class MatterTransform extends Transform {
         };
 
         this.push(flushData);
-      } catch (error) {
+      } catch {
         const fullBuffer = Buffer.concat(this.chunks);
         const text = fullBuffer.toString('utf8');
 
         const errorData: MatterTransformData = {
           content: text,
-          frontmatter: {} as any,
+          frontmatter: {
+            title: 'Untitled',
+            date: new Date().toISOString(),
+            tags: [],
+            summary: '',
+            slug: '',
+            category: 'algorithm',
+            completed: false,
+          },
           contentLength: text.length,
           hasContent: text.length > 0,
         };
