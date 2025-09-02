@@ -1,0 +1,1 @@
+export { WaveSvg } from './WaveSvg';
