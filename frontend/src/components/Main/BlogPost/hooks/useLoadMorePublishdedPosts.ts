@@ -2,7 +2,7 @@ import throttle from 'lodash.throttle';
 import { useTransition } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { FrontMatter } from '@/db/blog/Schema';
-import { getAdditionalPost } from '../ui/utils';
+import { getAdditionalPost } from '../utils/utils'; 
 
 type PublishedPost = {
   totalCount: number;
