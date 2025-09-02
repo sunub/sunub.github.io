@@ -1,6 +1,10 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
+
+export const RootContainer = styled.div`
+  z-index: 10000;
+`;
 
 export const Open = styled.g`
   transform-origin: center;
@@ -96,21 +100,21 @@ export const Circle = styled.rect`
 
 export const Btn = styled.button<{ $isOpen: boolean }>`
   z-index: 10001;
-  position: ${({ $isOpen }) => ($isOpen ? "absolute" : "static")};
-  right: ${({ $isOpen }) => ($isOpen ? "13px" : "0")};
-  top: ${({ $isOpen }) => ($isOpen ? "16px" : "0")};
+  position: ${({ $isOpen }) => ($isOpen ? 'absolute' : 'static')};
+  right: ${({ $isOpen }) => ($isOpen ? '13px' : '0')};
+  top: ${({ $isOpen }) => ($isOpen ? '16px' : '0')};
   width: 40px;
   height: 40px;
 
   padding: 0;
   cursor: pointer;
 
-  &[aria-label="Open menu"] ${Open} {
+  &[aria-label='Open menu'] ${Open} {
     #hambuer-btn-svg-center {
       transform: scaleX(1);
     }
   }
-  &[aria-label="Open menu"] ${Close} {
+  &[aria-label='Open menu'] ${Close} {
     & > ${Circle} {
       stroke: none;
     }
@@ -129,7 +133,7 @@ export const Btn = styled.button<{ $isOpen: boolean }>`
     }
   }
 
-  &[aria-label="Close menu"] ${Open} {
+  &[aria-label='Close menu'] ${Open} {
     transform: scale(0.1);
     #hambuer-btn-svg-center {
       transform: scaleX(0.5);
@@ -143,7 +147,7 @@ export const Btn = styled.button<{ $isOpen: boolean }>`
       transform: translateY(-6.75px);
     }
   }
-  &[aria-label="Close menu"] ${Close} {
+  &[aria-label='Close menu'] ${Close} {
     & > ${Circle} {
       animation: circle-pop 600ms;
       animation-iteration-count: 1;

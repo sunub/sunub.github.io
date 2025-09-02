@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import styled from "styled-components";
+import Link from 'next/link';
+import styled from 'styled-components';
 
 export const RootWrapper = styled.div`
   display: none;
@@ -46,12 +46,9 @@ export const Backdrop = styled.button<{ $isOpen: boolean }>`
   padding-left: 3rem;
 
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
-  visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
-  user-select: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
+  visibility: ${({ $isOpen }) => ($isOpen ? 'visible' : 'hidden')};
+  user-select: ${({ $isOpen }) => ($isOpen ? 'auto' : 'none')};
   z-index: ${({ $isOpen }) => ($isOpen ? 999 : -1)};
-
-  background: color-mix(in oklch, var(--color-bakcgruond) 30%, transparent);
-  backdrop-filter: blur(8px);
 `;
 
 export const Wrapper = styled.div<{ $isOpen: boolean }>`
@@ -62,10 +59,8 @@ export const Wrapper = styled.div<{ $isOpen: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transform: ${({ $isOpen }) =>
-    $isOpen ? "translateX(0)" : "translateX(-100%)"};
-  transition: transform ${({ $isOpen }) => ($isOpen ? "600ms" : "100ms")}
-    ease-in-out;
+  transform: ${({ $isOpen }) => ($isOpen ? 'translateX(0)' : 'translateX(-100%)')};
+  transition: transform ${({ $isOpen }) => ($isOpen ? '600ms' : '100ms')} ease-in-out;
 `;
 
 export const ListWrapper = styled.ul`

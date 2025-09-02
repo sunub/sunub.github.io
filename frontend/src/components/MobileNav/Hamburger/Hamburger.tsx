@@ -1,15 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
-import * as Styled from "./Hamburger.style";
-import {
-  getMoblieOpenAnimationTimeline,
-  getMoblieCloseAnimationTimeline,
-} from "../MoblieNav.helper";
-import useToggle from "@/hooks/use-toggle";
-import MobileNav from "../MobileNav";
-import { createPortal } from "react-dom";
-import type { Theme } from "type";
+import React from 'react';
+import { createPortal } from 'react-dom';
+import type { Theme } from 'type';
+import useToggle from '@/hooks/use-toggle';
+import * as Styled from './Hamburger.style';
+import MobileNav from '../MobileNav';
+import { getMoblieCloseAnimationTimeline, getMoblieOpenAnimationTimeline } from '../MoblieNav.helper';
 
 interface RefObjects {
   pathStartRef: React.RefObject<SVGPathElement | null>;
@@ -37,12 +34,12 @@ function Hamburger({ theme }: { theme: Theme }) {
   };
 
   return (
-    <div id="moblie-nav-trigger">
+    <Styled.RootContainer id="moblie-nav-trigger">
       <Styled.Btn
         className="hamburger-btn"
         id="hamburger-btn"
         $isOpen={isOpen}
-        aria-label={isOpen ? "Close menu" : "Open menu"}
+        aria-label={isOpen ? 'Close menu' : 'Open menu'}
         onClick={() => {
           if (!pathStartRef.current) return;
 
@@ -60,75 +57,33 @@ function Hamburger({ theme }: { theme: Theme }) {
       </Styled.Btn>
       {isOpen &&
         createPortal(
-          <MobileNav
-            theme={theme}
-            isOpen={isOpen}
-            toggleOpen={toggleOpen}
-            refObjects={refObjects}
-          />,
-          document.getElementById("mobile-nav-portal") as HTMLDivElement
+          <MobileNav theme={theme} isOpen={isOpen} toggleOpen={toggleOpen} refObjects={refObjects} />,
+          document.getElementById('mobile-nav-portal') as HTMLDivElement
         )}
       <UnfilledSVG refObjects={refObjects} />
-    </div>
+    </Styled.RootContainer>
   );
 }
 
 function Icon() {
   return (
-    <Styled.Svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <Styled.Svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
       <Styled.Open>
-        <path
-          id="hambuer-btn-svg-top"
-          d="M6.12 9.5L25.88 9.5"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <path
-          id="hambuer-btn-svg-bottom"
-          d="M6.12 23H25.88"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <path
-          id="hambuer-btn-svg-center"
-          d="M3 16H29"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
+        <path id="hambuer-btn-svg-top" d="M6.12 9.5L25.88 9.5" strokeWidth="3" strokeLinecap="round" />
+        <path id="hambuer-btn-svg-bottom" d="M6.12 23H25.88" strokeWidth="3" strokeLinecap="round" />
+        <path id="hambuer-btn-svg-center" d="M3 16H29" strokeWidth="4" strokeLinecap="round" />
       </Styled.Open>
       <Styled.Close>
-        <Styled.Close
-          x="2.5"
-          y="2.5"
-          width="27"
-          height="27"
-          rx="13.5"
-          strokeWidth="2"
-        />
-        <Styled.Cross1
-          d="M9 16H23.6601"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-        <Styled.Cross2
-          d="M9 16H23.6601"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
+        <Styled.Close x="2.5" y="2.5" width="27" height="27" rx="13.5" strokeWidth="2" />
+        <Styled.Cross1 d="M9 16H23.6601" strokeWidth="3" strokeLinecap="round" />
+        <Styled.Cross2 d="M9 16H23.6601" strokeWidth="3" strokeLinecap="round" />
       </Styled.Close>
     </Styled.Svg>
   );
 }
 
 function UnfilledSVG({ refObjects }: { refObjects: RefObjects }) {
-  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
-    refObjects;
+  const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } = refObjects;
 
   return (
     <Styled.FloodSVG
