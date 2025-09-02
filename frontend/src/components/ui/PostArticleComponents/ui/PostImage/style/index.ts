@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import styled, { keyframes, css } from "styled-components";
+import Image from 'next/image';
+import styled, { keyframes, css } from 'styled-components';
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -106,5 +106,5 @@ export const CustomImageStyle = styled(Image)<{
   transition: opacity 0.3s ease;
   opacity: ${({ $isLoading }) => ($isLoading ? 0 : 1)};
 
-  ${({ $extraCss }) => $extraCss || ""}
+  ${({ $extraCss }) => $extraCss || ''}
 `;

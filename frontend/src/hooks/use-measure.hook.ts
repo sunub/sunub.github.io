@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import React, { RefObject } from 'react';
 
 interface ReturnValue {
   ref: RefObject<HTMLDivElement | null>;

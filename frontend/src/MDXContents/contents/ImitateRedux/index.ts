@@ -1,1 +1,1 @@
-export { ImitateRedux } from "./ui/ImitateRedux";
+export { ImitateRedux } from './ui/ImitateRedux';

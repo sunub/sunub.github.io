@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { FlexCenter } from "@/shared/style/Flex";
-import styled from "styled-components";
+import styled from 'styled-components';
+import { FlexCenter } from '@/shared/style/Flex';
 
 function NewestPostSkeleton() {
   return (
@@ -9,7 +9,7 @@ function NewestPostSkeleton() {
       <Skeleton />
       <SkeletonWrapper>
         <SkeletonContent>
-          {[...Array(5)].map((_, i) => (
+          {Array(5).map((_, i) => (
             <div key={i}>
               <SkeletonItem />
               <SkeletonItemShort />

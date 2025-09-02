@@ -1,5 +1,5 @@
-import React from "react";
-import { useReloadContext } from "../hook/useReload";
+import React from 'react';
+import { useReloadContext } from '../hook/useReload';
 
 export function ReloadContents({ children }: { children: React.ReactNode }) {
   const { key } = useReloadContext();

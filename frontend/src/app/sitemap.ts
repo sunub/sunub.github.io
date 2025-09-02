@@ -1,5 +1,5 @@
-import type { MetadataRoute } from 'next';
 import { getAllPosts } from 'db/blog/api';
+import type { MetadataRoute } from 'next';
 
 function updateCatetoryDate(allBlogPosts: Awaited<ReturnType<typeof getAllPosts>>) {
   const result = {
@@ -10,7 +10,7 @@ function updateCatetoryDate(allBlogPosts: Awaited<ReturnType<typeof getAllPosts>
   };
   allBlogPosts.forEach(({ frontmatter }) => {
     const postDate = new Date(frontmatter.date);
-    const category = frontmatter.category as keyof typeof result;
+    const category = frontmatter.category;
     if (postDate > result[category]) {
       result[category] = postDate;
     }

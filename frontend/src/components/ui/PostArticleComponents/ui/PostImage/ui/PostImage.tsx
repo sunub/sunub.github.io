@@ -1,15 +1,14 @@
-"use client";
+'use client';
 
-import useToggle from "@/hooks/use-toggle";
-import { Fragment, memo, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { useInView } from "react-intersection-observer";
-import styled, { keyframes } from "styled-components";
-import { isImageLoaded, markImageAsLoaded } from "../model/cache";
-import Image from "next/image";
-import { Caption, Skeleton, StyledImage } from "../style";
+import { Fragment, memo, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useInView } from 'react-intersection-observer';
+import styled, { keyframes } from 'styled-components';
+import useToggle from '@/hooks/use-toggle';
+import { isImageLoaded, markImageAsLoaded } from '../model/cache';
+import { Caption, Skeleton, StyledImage } from '../style';
 
-type ImageLayout = "default" | "wide" | "full" | "float-left" | "float-right";
+type ImageLayout = 'default' | 'wide' | 'full' | 'float-left' | 'float-right';
 
 const fadeIn = keyframes`
   from {
@@ -34,8 +33,7 @@ const CustomImage = memo(
     alt,
     isLoading,
     setIsLoading,
-    type = "responsive",
-    additionalStyle,
+    type = 'responsive',
     quality = 75,
     priority = false,
   }: {
@@ -43,7 +41,7 @@ const CustomImage = memo(
     alt: string;
     isLoading: boolean;
     setIsLoading: (value: boolean) => void;
-    type?: "responsive" | "wide";
+    type?: 'responsive' | 'wide';
     additionalStyle?: string;
     quality?: number;
     priority?: boolean;
@@ -52,11 +50,11 @@ const CustomImage = memo(
       <StyledImage
         src={src}
         alt={alt}
-        {...(type === "responsive"
+        {...(type === 'responsive'
           ? {
               width: 800,
               height: 500,
-              style: { width: "100%", height: "auto" },
+              style: { width: '100%', height: 'auto' },
             }
           : { fill: true })}
         className={`
@@ -64,8 +62,8 @@ const CustomImage = memo(
             transition-opacity duration-300
           `}
         $isLoading={isLoading}
-        $zoomed={type === "wide"}
-        loading={priority ? "eager" : "lazy"}
+        $zoomed={type === 'wide'}
+        loading={priority ? 'eager' : 'lazy'}
         priority={priority}
         quality={quality}
         sizes={`
@@ -98,82 +96,84 @@ const CustomImage = memo(
   }
 );
 
-const PostImage = memo(
-  ({ src, alt, priority = false, caption }: PostImageProps) => {
-    const [isLoading, setIsLoading] = useState(!isImageLoaded(src));
-    const { ref, inView } = useInView({
-      threshold: 0,
-      triggerOnce: true,
-      rootMargin: "200px 0px",
-    });
-    const [isZoomIn, toggleZoomStatus] = useToggle();
-    const imageRef = useRef<HTMLDivElement>(null);
+CustomImage.displayName = 'CustomImage';
 
-    useEffect(() => {
-      const handleScroll = () => {
-        if (isZoomIn) {
-          toggleZoomStatus();
-        }
-      };
+const PostImage = memo(({ src, alt, priority = false, caption }: PostImageProps) => {
+  const [isLoading, setIsLoading] = useState(!isImageLoaded(src));
+  const { ref, inView } = useInView({
+    threshold: 0,
+    triggerOnce: true,
+    rootMargin: '200px 0px',
+  });
+  const [isZoomIn, toggleZoomStatus] = useToggle();
+  const imageRef = useRef<HTMLDivElement>(null);
 
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape" && isZoomIn) {
-          toggleZoomStatus();
-        }
-      };
-
+  useEffect(() => {
+    const handleScroll = () => {
       if (isZoomIn) {
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-          window.removeEventListener("scroll", handleScroll);
-          window.removeEventListener("keydown", handleKeyDown);
-        };
+        toggleZoomStatus();
       }
-    }, [isZoomIn, toggleZoomStatus]);
+    };
 
-    return (
-      <Fragment>
-        <Figure ref={ref} onClick={toggleZoomStatus}>
-          <ImageWrapper ref={imageRef}>
-            {(inView || priority) && (
-              <>
-                {isLoading && <Skeleton />}
-                {/* priority를 inView와 결합하여 전달 */}
-                <CustomImage
-                  src={src}
-                  alt={alt}
-                  isLoading={isLoading}
-                  setIsLoading={setIsLoading}
-                  priority={priority && inView}
-                />
-              </>
-            )}
-          </ImageWrapper>
-          {caption && <Caption>{caption}</Caption>}
-        </Figure>
-        {isZoomIn &&
-          createPortal(
-            <ZoomImageContainer onClick={toggleZoomStatus}>
-              <ZoomedImage>
-                <CustomImage
-                  src={src}
-                  alt={alt}
-                  isLoading={isLoading}
-                  setIsLoading={setIsLoading}
-                  type="wide"
-                  additionalStyle="cursor-zoom-out z-[10000]"
-                />
-              </ZoomedImage>
-              <BlurredBackground />
-            </ZoomImageContainer>,
-            document.body
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isZoomIn) {
+        toggleZoomStatus();
+      }
+    };
+
+    if (isZoomIn) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('keydown', handleKeyDown);
+      };
+    }
+  }, [isZoomIn, toggleZoomStatus]);
+
+  return (
+    <Fragment>
+      <Figure ref={ref} onClick={toggleZoomStatus}>
+        <ImageWrapper ref={imageRef}>
+          {(inView || priority) && (
+            <>
+              {isLoading && <Skeleton />}
+              {/* priority를 inView와 결합하여 전달 */}
+              <CustomImage
+                src={src}
+                alt={alt}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                priority={priority && inView}
+              />
+            </>
           )}
-      </Fragment>
-    );
-  }
-);
+        </ImageWrapper>
+        {caption && <Caption>{caption}</Caption>}
+      </Figure>
+      {isZoomIn &&
+        createPortal(
+          <ZoomImageContainer onClick={toggleZoomStatus}>
+            <ZoomedImage>
+              <CustomImage
+                src={src}
+                alt={alt}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                type="wide"
+                additionalStyle="cursor-zoom-out z-[10000]"
+              />
+            </ZoomedImage>
+            <BlurredBackground />
+          </ZoomImageContainer>,
+          document.body
+        )}
+    </Fragment>
+  );
+});
+
+PostImage.displayName = 'PostImage';
 
 const Figure = styled.figure`
   margin-top: 1.5rem;

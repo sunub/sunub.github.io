@@ -1,16 +1,10 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 function WaveIcon({ ...props }: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="93"
-      height="5"
-      fill="none"
-      {...props}
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" width="93" height="5" fill="none" {...props}>
       <PATH
         id="write-pen-underline-wave"
         stroke="#484848"

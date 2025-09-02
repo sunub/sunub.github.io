@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 function UnOrderedList({ children }: { children: React.ReactNode }) {
   return <Ul>{children}</Ul>;

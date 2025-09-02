@@ -1,10 +1,7 @@
-"use client";
+'use client';
 
-import styled, { keyframes } from "styled-components";
-import {
-  ArticleHeader,
-  PostTitle,
-} from "@/app/post/[category]/[slug]/page.style";
+import styled, { keyframes } from 'styled-components';
+import { ArticleHeader } from '@/app/post/[category]/[slug]/page.style';
 
 const pulse = keyframes`
   0%, 100% { opacity: 0.6; }
@@ -20,7 +17,7 @@ export function PostSkeleton() {
       </ArticleHeader>
 
       <ContentSkeletonWrapper>
-        {[...Array(5)].map((_, i) => (
+        {Array(5).map((_, i) => (
           <ContentSkeleton key={i} delay={i * 0.1} />
         ))}
       </ContentSkeletonWrapper>
@@ -32,7 +29,7 @@ export function PostSkeleton() {
 export function ContentSkeletonOnly() {
   return (
     <ContentSkeletonWrapper>
-      {[...Array(3)].map((_, i) => (
+      {Array(3).map((_, i) => (
         <ContentSkeleton key={i} delay={i * 0.1} />
       ))}
     </ContentSkeletonWrapper>
@@ -73,5 +70,5 @@ const ContentSkeleton = styled.div<{ delay: number }>`
   border-radius: 0.25rem;
   width: ${() => Math.floor(70 + Math.random() * 30)}%;
   animation: ${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  animation-delay: ${(props) => props.delay}s;
+  animation-delay: ${props => props.delay}s;
 `;

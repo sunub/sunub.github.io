@@ -78,6 +78,11 @@ export const Article = styled.article`
   max-width: 850px;
   font-size: 18px;
   line-height: calc(1.7rem + 0.8rem);
+
+  & > * {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
   & > pre {
     background: var(--color-codeBlock);
     font-size: calc(0.9rem + 0.025rem);

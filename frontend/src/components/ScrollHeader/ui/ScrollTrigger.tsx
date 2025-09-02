@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export function ScrollTrigger({ children }: { children: React.ReactNode }) {
   function scrollHandler(e: Event) {
@@ -8,20 +8,20 @@ export function ScrollTrigger({ children }: { children: React.ReactNode }) {
       return;
     }
     const scrollTop = e.target.documentElement.scrollTop;
-    const header = document.querySelector(".blog-main__scroll-header");
+    const header = document.querySelector('.blog-main__scroll-header');
     if (header) {
       if (scrollTop > 120) {
-        header.setAttribute("data-is-scrolled", "true");
+        header.setAttribute('data-is-scrolled', 'true');
       } else {
-        header.setAttribute("data-is-scrolled", "false");
+        header.setAttribute('data-is-scrolled', 'false');
       }
     }
   }
 
   useEffect(() => {
-    window.addEventListener("scroll", scrollHandler);
+    window.addEventListener('scroll', scrollHandler);
     return () => {
-      window.removeEventListener("scroll", scrollHandler);
+      window.removeEventListener('scroll', scrollHandler);
     };
   }, []);
 

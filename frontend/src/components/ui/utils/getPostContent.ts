@@ -1,9 +1,9 @@
 'use server';
 
-import path from 'path';
 import { readFile } from 'fs/promises';
-import { cache } from 'react';
 import { findUpDir } from 'fx_utils';
+import path from 'path';
+import { cache } from 'react';
 
 export const getPostContent = cache(async (category: string, slug: string) => {
   const postsRootPath = (await findUpDir('posts')) ?? '';

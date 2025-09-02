@@ -1,7 +1,6 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import React, { Suspense, cache } from 'react';
+import React, { cache } from 'react';
 import { PostArticleComponents } from './PostArticleComponents';
-import { ComponentSkeleton } from '../Skeletons';
 
 function convertTableBlockToHTML(tableLines: string[]): string {
   if (tableLines.length < 2) return tableLines.join('\n');

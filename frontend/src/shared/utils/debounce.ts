@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 type Options = {
   leading?: boolean;
   trailing?: boolean;
@@ -7,15 +6,11 @@ type Options = {
 
 // isObject 함수는 value가 객체인지 판단하는데 funtion 또한 객체를 포함하고 있기 때문에 function도 객체로 판단합니다.
 function isObject(value: unknown): value is Record<string, unknown> {
-  return (
-    value !== null && (typeof value === "object" || typeof value === "function")
-  );
+  return value !== null && (typeof value === 'object' || typeof value === 'function');
 }
 
 interface DebouncedFunction<T extends (...args: any[]) => unknown> {
-  (this: ThisParameterType<T>, ...args: Parameters<T>):
-    | ReturnType<T>
-    | undefined;
+  (this: ThisParameterType<T>, ...args: Parameters<T>): ReturnType<T> | undefined;
   cancel: () => void;
   flush: () => ReturnType<T> | undefined;
 }
@@ -27,6 +22,7 @@ function debounce<Args extends any[], Return>(
 ): DebouncedFunction<(...args: Args) => Return> {
   const maxWait = Math.max(options.maxWait || 0, wait);
   let lastArgs: Args | undefined;
+  // eslint-disable-next-line
   let lastThis: ThisParameterType<(...args: Args) => Return> | undefined;
   let result: Return | undefined;
   let timerId: ReturnType<typeof setTimeout> | undefined;
@@ -36,13 +32,13 @@ function debounce<Args extends any[], Return>(
   let maxing = false;
   let trailing = true;
 
-  if (typeof func !== "function") {
-    throw new TypeError("함수 타입이 아닙니다.");
+  if (typeof func !== 'function') {
+    throw new TypeError('함수 타입이 아닙니다.');
   }
 
   if (isObject(options)) {
     leading = !!options.leading;
-    maxing = "maxWait" in options;
+    maxing = 'maxWait' in options;
     trailing = options.trailing ?? true; // trailing 옵션이 undefined일 경우 true를 기본값으로 사용
   }
 
@@ -53,6 +49,7 @@ function debounce<Args extends any[], Return>(
     lastArgs = lastThis = undefined;
     lastInvokeTime = time;
     // 여기서 func.apply의 반환값을 명시적으로 단언합니다.
+    // eslint-disable-next-line
     result = func.apply(thisArg, args) as Return;
     return result;
   }
@@ -60,19 +57,15 @@ function debounce<Args extends any[], Return>(
   // debounce 함수는 시간이 중요한 요소이기 때문에 초기 호출 시의 시간과 이후 timer 호출 시의 시간을 비교하여 시간을 계산합니다.
   // 현재 시간인 time을 받아와서 마지막 호출 시간인 lastCallTime과 마지막 호출 시간과 마지막 호출 시간인 lastInvokeTime을 비교하여 시간을 계산합니다.
   function remainingWait(time: number): number {
-    const timeSinceLastCall =
-      lastCallTime === undefined ? 0 : time - lastCallTime;
+    const timeSinceLastCall = lastCallTime === undefined ? 0 : time - lastCallTime;
     const timeSinceLastInvoke = time - lastInvokeTime;
     const timeWaiting = wait - timeSinceLastCall;
 
-    return maxing
-      ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
-      : timeWaiting;
+    return maxing ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting;
   }
 
   function shouldInvoke(time: number): boolean {
-    const timeSinceLastCall =
-      lastCallTime === undefined ? 0 : time - lastCallTime;
+    const timeSinceLastCall = lastCallTime === undefined ? 0 : time - lastCallTime;
     const timeSinceLastInvoke = time - lastInvokeTime;
 
     return (
@@ -129,10 +122,7 @@ function debounce<Args extends any[], Return>(
   // 4. timerExpired 함수는 wait 시간 이후에 호출되며, 다시 현재 시각과 저장된 시간을 비교한 후, 필요시 trailingEdge 함수를 통해
   //    마지막 저장된 인자(lastArgs)를 사용해 함수를 실행합니다.
   // 5. debounced 함수는 실행 결과(result)를 반환합니다.
-  function debounced(
-    this: ThisParameterType<(...args: Args) => Return>,
-    ...args: Args
-  ): Return | undefined {
+  function debounced(this: ThisParameterType<(...args: Args) => Return>, ...args: Args): Return | undefined {
     const time = Date.now();
     const isInvoking = shouldInvoke(time);
 

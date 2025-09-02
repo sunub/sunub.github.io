@@ -1,4 +1,4 @@
-import { eqKr, eqKrPos, isKr, krList, krNum } from "./preprocess";
+import { eqKr, eqKrPos, isKr } from './preprocess';
 
 export function findMatches(query: string, data: string): string[] {
   const qLower = query.toLowerCase();
@@ -17,7 +17,7 @@ export function findMatches(query: string, data: string): string[] {
       if (j === ql - 1) {
         const origQc = query[j];
         const origDc = data[i + j];
-        const origDcNext = data[i + j + 1] ?? "";
+        const origDcNext = data[i + j + 1] ?? '';
 
         if (isKr(origQc) && isKr(origDc)) {
           if (!eqKr(origQc, origDc)) {

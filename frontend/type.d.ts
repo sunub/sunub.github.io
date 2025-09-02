@@ -1,4 +1,4 @@
-import { POST_CATEGORY } from "@/utils/post/Post.constant";
+import { POST_CATEGORY } from '@/utils/post/Post.constant';
 
 type Category = (typeof POST_CATEGORY)[number];
 
@@ -15,7 +15,7 @@ type PostData = {
   content: string;
 };
 
-type Categories = "web" | "algorithm" | "cs" | "code";
+type Categories = 'web' | 'algorithm' | 'cs' | 'code';
 
 type Tag = (typeof POST_CATEGORY)[number];
 
@@ -40,7 +40,7 @@ type CTX = {
   setOpen: (value: boolean) => void;
 };
 
-type Theme = "light" | "dark";
+type Theme = 'light' | 'dark';
 
 interface BlogContent {
   category: Categories;

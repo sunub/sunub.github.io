@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const RootContainer = styled.div`
   position: relative;
@@ -52,7 +52,7 @@ export const FrontmatterWrapper = styled.div`
   }
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 3;
     top: 12px;
@@ -64,20 +64,16 @@ export const FrontmatterWrapper = styled.div`
       color-mix(in oklch, var(--color-background) 0%, transparent 100%) 0%,
       color-mix(in oklch, var(--color-background) 1%, transparent 99%) 8.1%,
       color-mix(in oklch, var(--color-background) 4.7%, transparent 95.3%) 15.5%,
-      color-mix(in oklch, var(--color-background) 10.6%, transparent 89.4%)
-        22.5%,
+      color-mix(in oklch, var(--color-background) 10.6%, transparent 89.4%) 22.5%,
       color-mix(in oklch, var(--color-background) 17.6%, transparent 82.4%) 29%,
       color-mix(in oklch, var(--color-background) 26%, transparent 74%) 35.3%,
-      color-mix(in oklch, var(--color-background) 35.3%, transparent 64.7%)
-        41.2%,
+      color-mix(in oklch, var(--color-background) 35.3%, transparent 64.7%) 41.2%,
       color-mix(in oklch, var(--color-background) 45%, transparent 55%) 47.1%,
       color-mix(in oklch, var(--color-background) 55%, transparent 45%) 52.9%,
-      color-mix(in oklch, var(--color-background) 64.7%, transparent 35.3%)
-        58.8%,
+      color-mix(in oklch, var(--color-background) 64.7%, transparent 35.3%) 58.8%,
       color-mix(in oklch, var(--color-background) 74%, transparent 26%) 64.7%,
       color-mix(in oklch, var(--color-background) 82.4%, transparent 17.6%) 71%,
-      color-mix(in oklch, var(--color-background) 89.4%, transparent 10.6%)
-        77.5%,
+      color-mix(in oklch, var(--color-background) 89.4%, transparent 10.6%) 77.5%,
       color-mix(in oklch, var(--color-background) 95.3%, transparent 4.7%) 84.5%,
       color-mix(in oklch, var(--color-background) 99%, transparent 1%) 91.9%,
       var(--color-background) 100%
@@ -85,7 +81,7 @@ export const FrontmatterWrapper = styled.div`
   }
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 3;
     bottom: 12px;
@@ -96,20 +92,16 @@ export const FrontmatterWrapper = styled.div`
       color-mix(in oklch, var(--color-background) 0%, transparent 100%) 0%,
       color-mix(in oklch, var(--color-background) 1%, transparent 99%) 8.1%,
       color-mix(in oklch, var(--color-background) 4.7%, transparent 95.3%) 15.5%,
-      color-mix(in oklch, var(--color-background) 10.6%, transparent 89.4%)
-        22.5%,
+      color-mix(in oklch, var(--color-background) 10.6%, transparent 89.4%) 22.5%,
       color-mix(in oklch, var(--color-background) 17.6%, transparent 82.4%) 29%,
       color-mix(in oklch, var(--color-background) 26%, transparent 74%) 35.3%,
-      color-mix(in oklch, var(--color-background) 35.3%, transparent 64.7%)
-        41.2%,
+      color-mix(in oklch, var(--color-background) 35.3%, transparent 64.7%) 41.2%,
       color-mix(in oklch, var(--color-background) 45%, transparent 55%) 47.1%,
       color-mix(in oklch, var(--color-background) 55%, transparent 45%) 52.9%,
-      color-mix(in oklch, var(--color-background) 64.7%, transparent 35.3%)
-        58.8%,
+      color-mix(in oklch, var(--color-background) 64.7%, transparent 35.3%) 58.8%,
       color-mix(in oklch, var(--color-background) 74%, transparent 26%) 64.7%,
       color-mix(in oklch, var(--color-background) 82.4%, transparent 17.6%) 71%,
-      color-mix(in oklch, var(--color-background) 89.4%, transparent 10.6%)
-        77.5%,
+      color-mix(in oklch, var(--color-background) 89.4%, transparent 10.6%) 77.5%,
       color-mix(in oklch, var(--color-background) 95.3%, transparent 4.7%) 84.5%,
       color-mix(in oklch, var(--color-background) 99%, transparent 1%) 91.9%,
       var(--color-background) 100%

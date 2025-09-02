@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ArticleHeader = styled.div`
   display: flex;
@@ -54,7 +54,7 @@ export const Article = styled.div`
 
 export const ContentBlink = styled.div<{ $width: string }>`
   display: inline-block;
-  width: ${(props) => props.$width};
+  width: ${props => props.$width};
   height: 1.5rem;
   background-color: color-mix(in oklch, var(--color-text) 20%, transparent);
   border-radius: 0.25rem;

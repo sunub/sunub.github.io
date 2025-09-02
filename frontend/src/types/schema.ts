@@ -1,11 +1,6 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-const PostCategorySchema = z.union([
-  z.literal("web"),
-  z.literal("algorithm"),
-  z.literal("cs"),
-  z.literal("code"),
-]);
+const PostCategorySchema = z.union([z.literal('web'), z.literal('algorithm'), z.literal('cs'), z.literal('code')]);
 
 const FrontMatterSchema = z.object({
   title: z.string(),

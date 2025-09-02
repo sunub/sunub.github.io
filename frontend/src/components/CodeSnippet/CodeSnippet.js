@@ -1,7 +1,7 @@
-import React from "react";
-import { Code } from "bright";
-import styles from "./CodeSnippet.module.css";
-import myTheme from "./my-theme.json";
+import { Code } from 'bright';
+import React from 'react';
+import styles from './CodeSnippet.module.css';
+import myTheme from './my-theme.json';
 
 Code.theme = myTheme;
 
@@ -11,7 +11,7 @@ function CodeSnippet(props) {
       {...props}
       className={styles.wrapper}
       style={{
-        maxWidth: "calc(100% + 64px)",
+        maxWidth: 'calc(100% + 64px)',
       }}
     />
   );

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { memo } from "react";
-import styled from "styled-components";
+import { memo } from 'react';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: grid;
@@ -38,7 +38,7 @@ const Svg = styled.svg`
 
 function WaveSvg() {
   return (
-    <SvgWrapper key={"light-wave-svg"} id="blog-main__wave-svg-img">
+    <SvgWrapper key={'light-wave-svg'} id="blog-main__wave-svg-img">
       <Svg
         preserveAspectRatio="none"
         width="938"
@@ -72,14 +72,7 @@ function WaveSvg() {
             <stop offset="0.457674" stopColor="var(--color-midStart)" />
             <stop offset="0.590708" stopColor="var(--color-midStop)" />
           </linearGradient>
-          <linearGradient
-            id="paint1_linear_103_748"
-            x1="720"
-            y1="46"
-            x2="720"
-            y2="196"
-            gradientUnits="userSpaceOnUse"
-          >
+          <linearGradient id="paint1_linear_103_748" x1="720" y1="46" x2="720" y2="196" gradientUnits="userSpaceOnUse">
             <stop offset="0.133996" stopColor="var(--color-endStart)" />
             <stop offset="0.690268" stopColor="var(--color-endStop)" />
           </linearGradient>
@@ -96,5 +89,7 @@ const Wave = memo(() => {
     </Wrapper>
   );
 });
+
+Wave.displayName = 'Wave';
 
 export { Wave };

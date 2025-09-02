@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { imporveLoopByTimeout } from "../utils/eventHandler";
-import { MDXCompoRoot } from "@/MDXContents/shared/components/MDXCompoRoot/ui/MDXCompoRoot";
-import { Content } from "./Content";
+import { MDXCompoRoot } from '@/MDXContents/shared/components/MDXCompoRoot/ui/MDXCompoRoot';
+import { Content } from './Content';
+import { imporveLoopByTimeout } from '../utils/eventHandler';
 
 function BlockingContent() {
   return (

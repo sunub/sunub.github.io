@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
-import { FeatherIcon } from "@/components/Main/NewestPost";
-import Spacer from "@/components/Spacer";
+import styled from 'styled-components';
+import { FeatherIcon } from '@/components/Main/NewestPost/FeatherIcon';
+import Spacer from '@/components/Spacer';
 
 function LoadingAnimation() {
   return (
@@ -33,7 +33,7 @@ function ContentListLoading() {
         <FeatherIcon />
         <RecentTitle>최신 포스트들</RecentTitle>
       </TitleWrapper>
-      <Spacer axis={"vertical"} size={32} />
+      <Spacer axis={'vertical'} size={32} />
       {Array.from({ length: 5 }, (_, index) => (
         <LoadingAnimation key={`${index}-content-loading-animation`} />
       ))}
@@ -43,7 +43,7 @@ function ContentListLoading() {
 
 function FrontMatterLoading({ length }: { length: number }) {
   return (
-    <RootWrapper>
+    <RootWrapper data-testid="blog-post__front-matter-loading">
       {Array.from({ length }, (_, index) => (
         <LoadingAnimation key={`${index}-content-loading-animation`} />
       ))}
@@ -55,7 +55,7 @@ export { ContentListLoading, FrontMatterLoading };
 
 const ContentBlink = styled.div<{ $width: number }>`
   display: inline-block;
-  width: ${(props) => props.$width}rem;
+  width: ${props => props.$width}rem;
   height: 1.5rem;
   background-color: color-mix(in oklch, var(--color-text) 20%, transparent);
   border-radius: 0.25rem;
@@ -83,14 +83,6 @@ const TitleWrapper = styled.div`
 
 const RecentTitle = styled.h1`
   font-size: 1.75rem;
-`;
-
-const ScrollTrigger = styled.div`
-  position: sticky;
-  bottom: 326px;
-
-  height: 1px;
-  width: 100cqw;
 `;
 
 const Title = styled.span`

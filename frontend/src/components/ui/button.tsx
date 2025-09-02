@@ -1,6 +1,6 @@
-import { Slot } from "@radix-ui/react-slot";
-import React from "react";
-import styled, { css } from "styled-components";
+import React from 'react';
+import styled, { css } from 'styled-components';
+import { Slot } from '@radix-ui/react-slot';
 
 const baseButtonStyles = css`
   position: relative;
@@ -48,10 +48,7 @@ const variantStyles = {
     &:hover {
       color: var(--button-active-foreground, #ffffff);
       background-color: var(--button-active-bg, #3b82a6);
-      box-shadow: var(
-        --shadow-button-active,
-        0 4px 6px rgba(59, 130, 246, 0.25)
-      );
+      box-shadow: var(--shadow-button-active, 0 4px 6px rgba(59, 130, 246, 0.25));
     }
   `,
   destructive: css`
@@ -59,10 +56,7 @@ const variantStyles = {
     color: var(--destructive-foreground, #ffffff);
 
     &:hover {
-      box-shadow: var(
-        --shadow-button-active,
-        0 4px 6px rgba(239, 68, 68, 0.25)
-      );
+      box-shadow: var(--shadow-button-active, 0 4px 6px rgba(239, 68, 68, 0.25));
       background-color: var(--destructive-active-bg, #b91c1c);
       color: var(--destructive-active-foreground, #ffffff);
     }
@@ -101,19 +95,17 @@ const sizeStyles = {
 interface StyledButtonProps {
   $variant?: keyof typeof variantStyles;
   $size?: keyof typeof sizeStyles;
-  $customStyles?: any;
+  $customStyles?: ReturnType<typeof css>;
 }
 
 const StyledButton = styled.button<StyledButtonProps>`
   ${baseButtonStyles}
-  ${(props) => variantStyles[props.$variant || "default"]}
-  ${(props) => sizeStyles[props.$size || "default"]}
-  ${(props) => props.$customStyles}
+  ${props => variantStyles[props.$variant || 'default']}
+  ${props => sizeStyles[props.$size || 'default']}
+  ${props => props.$customStyles}
 `;
 
-// Button component with forwarded ref
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof variantStyles;
   size?: keyof typeof sizeStyles;
   asChild?: boolean;
@@ -121,22 +113,12 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = "default",
-      size = "default",
-      asChild = false,
-      style,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, variant = 'default', size = 'default', asChild = false, style, ...props }, ref) => {
     const customStyles = className
       ? css`
           ${className}
         `
-      : "";
+      : undefined;
 
     const Comp = asChild ? Slot : StyledButton;
 
@@ -150,19 +132,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return <Comp {...commonProps} className={className} />;
     }
 
-    return (
-      <Comp
-        type="button"
-        $variant={variant}
-        $size={size}
-        $customStyles={customStyles}
-        {...commonProps}
-      />
-    );
+    return <Comp type="button" $variant={variant} $size={size} $customStyles={customStyles} {...commonProps} />;
   }
 );
 
-Button.displayName = "Button";
+Button.displayName = 'Button';
 
 export const buttonVariants = {
   variant: Object.keys(variantStyles),

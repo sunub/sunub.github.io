@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 
 function useColorTheme() {
-  const colorTheme = Cookies.get("color-theme");
+  const colorTheme = Cookies.get('color-theme');
   return colorTheme;
 }
 

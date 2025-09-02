@@ -1,5 +1,5 @@
-import { FeatherIcon } from "../NewestPost";
-import * as Styled from "./Tags.style";
+import * as Styled from './Tags.style';
+import { FeatherIcon } from '../NewestPost/FeatherIcon';
 
 async function Tags() {
   return (

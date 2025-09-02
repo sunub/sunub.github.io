@@ -1,1 +1,1 @@
-export { Wave } from "./ui/Wave";
+export { Wave } from './ui/Wave';

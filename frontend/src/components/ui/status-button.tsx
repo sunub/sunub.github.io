@@ -1,13 +1,13 @@
-import * as React from "react";
-import { Button, type ButtonProps } from "./button";
-import styled, { keyframes } from "styled-components";
+import * as React from 'react';
+import styled, { keyframes } from 'styled-components';
+import { Button, type ButtonProps } from './button';
 
 const COLORS = [
-  "oklch(92.86% 0.036 289.07)",
-  "oklch(94.48% 0.028 290.23)",
-  "oklch(92.86% 0.036 289.07)",
-  "oklch(90.93% 0.045 288.25)",
-  "oklch(87.45% 0.064 286.931)",
+  'oklch(92.86% 0.036 289.07)',
+  'oklch(94.48% 0.028 290.23)',
+  'oklch(92.86% 0.036 289.07)',
+  'oklch(90.93% 0.045 288.25)',
+  'oklch(87.45% 0.064 286.931)',
 ];
 
 const pendingAnimation = keyframes`
@@ -26,13 +26,13 @@ const StyledStatusButton = styled(Button)<{ status: string }>`
   justify-content: center;
   gap: 1rem;
   height: fit-content;
-  padding: ${({ status }) => (status === "pending" ? "0" : "0.5rem 1rem")};
+  padding: ${({ status }) => (status === 'pending' ? '0' : '0.5rem 1rem')};
 `;
 
 export const StatusButton = React.forwardRef<
   HTMLButtonElement,
-  ButtonProps & { status: "pending" | "success" | "error" | "idle" }
->(({ status = "idle", children, ...props }, ref) => {
+  ButtonProps & { status: 'pending' | 'success' | 'error' | 'idle' }
+>(({ status = 'idle', children, ...props }, ref) => {
   const companion = {
     pending: (
       <PendingWrapper>
@@ -48,14 +48,14 @@ export const StatusButton = React.forwardRef<
 
   return (
     <StyledStatusButton ref={ref} status={status} {...props}>
-      {status === "idle" && children}
+      {status === 'idle' && children}
       {companion}
-      {status !== "idle" && <PendingBtm />}
+      {status !== 'idle' && <PendingBtm />}
     </StyledStatusButton>
   );
 });
 
-StatusButton.displayName = "StatusButton";
+StatusButton.displayName = 'StatusButton';
 
 const PendingWrapper = styled.div`
   position: relative;
@@ -109,7 +109,7 @@ const PendingBlock = styled.span<{ $bg: string; $delay: number }>`
   transform: translate3d(0, 0, 0);
 
   &::before {
-    content: "";
+    content: '';
     width: 8px;
     height: 8px;
     border-radius: 50%;

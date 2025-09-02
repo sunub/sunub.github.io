@@ -1,12 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Store } from "../model/store";
+import { useEffect, useState } from 'react';
+import { Store } from '../model/store';
 
-export function useStoreSelector<State, Value>(
-  store: Store<State>,
-  selector: (state: State) => Value,
-) {
+export function useStoreSelector<State, Value>(store: Store<State>, selector: (state: State) => Value) {
   const [state, setState] = useState(() => selector(store.get()));
 
   useEffect(() => {

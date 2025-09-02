@@ -1,2 +1,2 @@
-export * from "./InitTheme";
-export { default } from "./InitTheme";
+export * from './InitTheme';
+export { default } from './InitTheme';

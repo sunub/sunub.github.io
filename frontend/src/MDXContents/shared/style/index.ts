@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const MDXComponentsRootContainer = styled.div`
   display: flex;
@@ -11,8 +11,11 @@ export const MDXComponentsRootContainer = styled.div`
 
   border-radius: 8px;
   background-color: var(--color-primary);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02),
-    0 8px 16px rgba(0, 0, 0, 0.02), 0 24px 48px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    0 2px 4px rgba(0, 0, 0, 0.02),
+    0 8px 16px rgba(0, 0, 0, 0.02),
+    0 24px 48px rgba(0, 0, 0, 0.05);
 
   padding-left: 1.5rem;
   padding-right: 1.5rem;

@@ -1,22 +1,22 @@
-import * as Styled from "./Header.style";
-import { ThemeToggler } from "@/components/Theme/Toggler/ThemeToggler";
-import Logo from "./Logo";
-import Navigation from "./Navigation";
-import React from "react";
-import Hamburger from "../MobileNav/Hamburger";
-import { Search } from "@/widgets/Search";
-import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
-import { cookies } from "next/headers";
-import type { Theme } from "type";
+import { cookies } from 'next/headers';
+import React from 'react';
+import type { Theme } from 'type';
+import { ScrollHeader } from '@/components/ScrollHeader/ui/ScrollHeader';
+import { ThemeToggler } from '@/components/Theme/Toggler/ThemeToggler';
+import { Search } from '@/widgets/Search';
+import * as Styled from './Header.style';
+import Logo from './Logo';
+import Navigation from './Navigation';
+import Hamburger from '../MobileNav/Hamburger';
 
 function themeGuard(theme: unknown): asserts theme is Theme {
-  if (theme !== "light" && theme !== "dark") {
+  if (theme !== 'light' && theme !== 'dark') {
     throw new Error("Invalid theme value. Expected 'light' or 'dark'.");
   }
 }
 
 async function Header() {
-  const savedTheme = (await cookies()).get("color-theme")?.value || "light";
+  const savedTheme = (await cookies()).get('color-theme')?.value || 'light';
   themeGuard(savedTheme);
   return (
     <ScrollHeader>

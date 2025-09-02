@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const VideoWrapper = styled.div<{ maxWidth: number }>`
   position: relative;
@@ -10,7 +10,7 @@ const VideoWrapper = styled.div<{ maxWidth: number }>`
   margin-bottom: 1.5rem;
 
   outline: 1px solid var(--color-content-outline);
-  max-width: ${(props) => props.maxWidth}px;
+  max-width: ${props => props.maxWidth}px;
   width: 100%;
 `;
 
@@ -42,7 +42,7 @@ const VideoSvgContainer = styled.div`
   position: relative;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     left: calc(50% - 32px);
     top: calc(50% - 32px);
@@ -101,24 +101,24 @@ function PauseSvg() {
   );
 }
 
-const Video = ({
-  src,
-  caption,
-  maxWidth = 528,
-}: {
-  src: string;
-  caption: string;
-  maxWidth?: number;
-  aspectRatio?: string;
-}) => {
+const Video = ({ src, maxWidth = 528 }: { src: string; caption: string; maxWidth?: number; aspectRatio?: string }) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
 
-  const togglePlay = () => setIsPlaying((prev) => !prev);
+  const togglePlay = () => setIsPlaying(prev => !prev);
 
   React.useEffect(() => {
-    if (!videoRef.current) return;
-    isPlaying ? videoRef.current.play() : videoRef.current.pause();
+    if (!videoRef.current) {
+      return;
+    }
+
+    if (isPlaying) {
+      videoRef.current.play().catch(error => {
+        console.error('영상을 플레이할 수 없습니다.', error);
+      });
+    } else {
+      videoRef.current.pause();
+    }
   }, [isPlaying]);
 
   return (
@@ -127,10 +127,7 @@ const Video = ({
         <source src={src} type="video/mp4" />
       </StyledVideo>
 
-      <OverlayButton
-        onClick={togglePlay}
-        aria-label={isPlaying ? "Pause video" : "Play video"}
-      >
+      <OverlayButton onClick={togglePlay} aria-label={isPlaying ? 'Pause video' : 'Play video'}>
         {isPlaying ? <PauseSvg /> : <PlaySvg />}
       </OverlayButton>
     </VideoWrapper>

@@ -1,13 +1,13 @@
 import React from 'react';
-import { LinkAnchor, LinkSVG, H1, H2, H3, H4, H5, H6, P } from './PostArticleComponents.style';
-import { PostImage } from './PostImage';
-import { Video } from './Video';
-import { CodeBlock, InlineCode } from './CodeBlock';
-import { Blockquote } from './BlockQuote';
-import { ListItem } from './ListItem';
-import { UnOrderedList } from './UnOrderedList';
-import { CustomLink } from './CustomLink';
 import { MDXComponents } from '@/MDXContents';
+import { Blockquote } from './BlockQuote';
+import { CodeBlock, InlineCode } from './CodeBlock';
+import { CustomLink } from './CustomLink';
+import { ListItem } from './ListItem';
+import { H1, H2, H3, H4, H5, H6, LinkAnchor, LinkSVG, P } from './PostArticleComponents.style';
+import { PostImage } from './PostImage';
+import { UnOrderedList } from './UnOrderedList';
+import { Video } from './Video';
 
 function LinkIcon() {
   return (
@@ -42,7 +42,7 @@ function getHeaderByLevel(level: number) {
 }
 
 function createHeadingComponent(level: number) {
-  return ({ children }: { children: string }) => {
+  const HeadingComponent = ({ children }: { children: string }) => {
     const slug = slugify(children);
     const header = getHeaderByLevel(level);
     return React.createElement(header, { id: slug }, [
@@ -52,6 +52,9 @@ function createHeadingComponent(level: number) {
       React.createElement('span', { key: `${slug}-content`, className: 'post-heading-titles' }, children),
     ]);
   };
+
+  HeadingComponent.displayName = `HeadingComponent${level}`;
+  return HeadingComponent;
 }
 
 type CodeProps = {
@@ -59,7 +62,7 @@ type CodeProps = {
   children: React.ReactNode;
 };
 
-const PostArticleComponents: any = {
+const PostArticleComponents = {
   h1: createHeadingComponent(1),
   h2: createHeadingComponent(2),
   h3: createHeadingComponent(3),

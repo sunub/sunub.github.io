@@ -1,40 +1,33 @@
-"use client";
+'use client';
 
-import * as Styled from "./ThemeToggler.style";
-import React from "react";
-import { Theme } from "type";
-import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
-import { ThemeContext } from "@/components/Theme/ThemeProvider";
-import Cookies from "js-cookie";
-import { VisuallyHidden } from "@/components/VisuallyHidden";
+import Cookies from 'js-cookie';
+import React from 'react';
+import { Theme } from 'type';
+import { ThemeContext } from '@/components/Theme/ThemeProvider';
+import { VisuallyHidden } from '@/components/VisuallyHidden';
+import { DARK_COLORS, LIGHT_COLORS } from '@/constants/constants';
+import * as Styled from './ThemeToggler.style';
 
-export default function ThemeTogglerButton({
-  maskId,
-  theme,
-  ...delegated
-}: {
-  theme: Theme;
-  maskId: string;
-}) {
+export default function ThemeTogglerButton({ maskId, theme, ...delegated }: { theme: Theme; maskId: string }) {
   const [colorTheme, rawSetColorTheme] = React.useState<Theme>(theme);
   const { setColorTheme } = React.useContext(ThemeContext);
 
   React.useEffect(() => {
     const root = window.document.documentElement;
-    const initColorTheme = root.getAttribute("data-color-theme") as Theme;
+    const initColorTheme = root.getAttribute('data-color-theme') as Theme;
     rawSetColorTheme(initColorTheme);
   }, []);
 
   function handleClick() {
     const root = document.documentElement;
-    const nextTheme = colorTheme === "light" ? "dark" : "light";
-    Cookies.set("color-theme", nextTheme);
-    const nextColor = nextTheme === "dark" ? DARK_COLORS : LIGHT_COLORS;
+    const nextTheme = colorTheme === 'light' ? 'dark' : 'light';
+    Cookies.set('color-theme', nextTheme);
+    const nextColor = nextTheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
 
     rawSetColorTheme(nextTheme);
-    root.setAttribute("data-color-theme", nextTheme);
+    root.setAttribute('data-color-theme', nextTheme);
     Object.entries(nextColor).forEach(([key, value]) => {
-      root.style.setProperty(key, value as any);
+      root.style.setProperty(key, value as string);
     });
     setColorTheme(nextTheme);
     return nextTheme;
@@ -44,39 +37,26 @@ export default function ThemeTogglerButton({
     colorTheme && (
       <Styled.ToggleBtn
         {...delegated}
-        id="theme-toggler"
-        title="Toggles light & dark"
-        aria-labelledby="theme-toggler"
-        aria-describedby="theme-toggler"
-        aria-label="auto"
+        title="테마 변경"
+        aria-label="theme-toggler-button"
+        data-testid="theme-toggler-button"
         onClick={() => {
           const nextTheme = handleClick();
           document
-            .querySelector("meta[name=theme-color]")
+            .querySelector('meta[name=theme-color]')
             ?.setAttribute(
-              "content",
-              nextTheme === "light"
-                ? "oklch(87.44% 0.067 30.96)"
-                : "oklch(43.81% 0.072 289.34)"
+              'content',
+              nextTheme === 'light' ? 'oklch(87.44% 0.067 30.96)' : 'oklch(43.81% 0.072 289.34)'
             );
         }}
       >
-        <VisuallyHidden>
-          {`홈페이지의 테마를 ${colorTheme}로 변경하는 버튼입니다.`}
-        </VisuallyHidden>
+        <VisuallyHidden>테마 변경 버튼</VisuallyHidden>
         <ThemeIcon colorTheme={colorTheme} maskId={maskId} />
       </Styled.ToggleBtn>
     )
   );
 }
-function ThemeIcon({
-  colorTheme,
-  maskId,
-  ...delegated
-}: {
-  colorTheme: string;
-  maskId: string;
-}) {
+function ThemeIcon({ colorTheme, maskId, ...delegated }: { colorTheme: string; maskId: string }) {
   return (
     <Styled.SunAndMoon
       {...delegated}
@@ -87,45 +67,22 @@ function ThemeIcon({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <Styled.Sun
-        $colorTheme={colorTheme}
-        cx="12"
-        cy="12"
-        r="5"
-        fill="#2D0D06"
-        mask={`url(#${maskId})`}
-      />
+      <Styled.Sun $colorTheme={colorTheme} cx="12" cy="12" r="5" fill="#2D0D06" mask={`url(#${maskId})`} />
       <Styled.SunAndBeams $colorTheme={colorTheme}>
         <path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
-        <path
-          d="M5.63604 5.63604L6.01039 6.01039"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
+        <path d="M5.63604 5.63604L6.01039 6.01039" strokeWidth="3" strokeLinecap="round" />
         <path d="M3 12L3.52941 12" strokeWidth="3" strokeLinecap="round" />
-        <path
-          d="M5.63604 18.364L6.01039 17.9896"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
+        <path d="M5.63604 18.364L6.01039 17.9896" strokeWidth="3" strokeLinecap="round" />
         <path d="M12 20.4706V21" strokeWidth="3" strokeLinecap="round" />
-        <path
-          d="M17.9896 17.9896L18.364 18.364"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
+        <path d="M17.9896 17.9896L18.364 18.364" strokeWidth="3" strokeLinecap="round" />
         <path d="M20.4706 12L21 12" strokeWidth="3" strokeLinecap="round" />
-        <path
-          d="M17.9896 6.01039L18.364 5.63604"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
+        <path d="M17.9896 6.01039L18.364 5.63604" strokeWidth="3" strokeLinecap="round" />
       </Styled.SunAndBeams>
       <Styled.Moon
         $colorTheme={colorTheme}
         id={maskId}
-        maskUnits={"userSpaceOnUse"}
-        maskContentUnits={"userSpaceOnUse"}
+        maskUnits={'userSpaceOnUse'}
+        maskContentUnits={'userSpaceOnUse'}
       >
         <rect x="0" y="0" width="100%" height="100%" fill="white" />
         <circle cx="24" cy="24" r="6" fill="black" />

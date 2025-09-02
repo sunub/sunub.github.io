@@ -1,6 +1,6 @@
 import { writeFile } from 'fs/promises';
-import { Post } from './blog/Posts';
 import { join } from 'path';
+import { Post } from './blog/Posts';
 
 const post = Post.getInstance();
 const allFrontMatters = await post.createProcessedFrontMatter();

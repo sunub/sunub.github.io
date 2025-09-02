@@ -1,2 +1,2 @@
-export * from "./NewestPost";
-export { default } from "./NewestPost";
+export * from './NewestPost';
+export { default } from './NewestPost';

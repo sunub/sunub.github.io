@@ -1,11 +1,5 @@
 const ALGORITHM = (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clipPath="url(#clip0_536_272)">
       <path
         fillRule="evenodd"
@@ -24,13 +18,7 @@ const ALGORITHM = (
 );
 
 const WEB = (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
       stroke="var(--color-icon)"
@@ -38,13 +26,7 @@ const WEB = (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <path
-      d="M2 12H22"
-      stroke="var(--color-icon)"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <path d="M2 12H22" stroke="var(--color-icon)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     <path
       d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z"
       stroke="var(--color-icon)"
@@ -56,13 +38,7 @@ const WEB = (
 );
 
 const CODE = (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M12.2563 7.87324L9.7179 5L0 16L9.7179 27L12.2563 24.1268L5.0767 16L12.2563 7.87324Z"
       fill="var(--color-icon)"
@@ -75,13 +51,7 @@ const CODE = (
 );
 
 const CS = (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M1.45455 30C1.04242 30 0.69697 29.8509 0.418182 29.5528C0.139394 29.2546 0 28.8852 0 28.4444C0 28.0037 0.139394 27.6343 0.418182 27.3361C0.69697 27.038 1.04242 26.8889 1.45455 26.8889H30.5455C30.9576 26.8889 31.303 27.038 31.5818 27.3361C31.8606 27.6343 32 28.0037 32 28.4444C32 28.8852 31.8606 29.2546 31.5818 29.5528C31.303 29.8509 30.9576 30 30.5455 30H1.45455ZM4.36364 25.3333C3.56364 25.3333 2.87879 25.0287 2.30909 24.4194C1.73939 23.8102 1.45455 23.0778 1.45455 22.2222V5.11111C1.45455 4.25556 1.73939 3.52315 2.30909 2.91389C2.87879 2.30463 3.56364 2 4.36364 2H27.6364C28.4364 2 29.1212 2.30463 29.6909 2.91389C30.2606 3.52315 30.5455 4.25556 30.5455 5.11111V22.2222C30.5455 23.0778 30.2606 23.8102 29.6909 24.4194C29.1212 25.0287 28.4364 25.3333 27.6364 25.3333H4.36364ZM4.36364 22.2222H27.6364V5.11111H4.36364V22.2222Z"
       fill="var(--color-icon)"

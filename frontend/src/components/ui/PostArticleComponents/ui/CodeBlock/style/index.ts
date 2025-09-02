@@ -16,7 +16,10 @@ export const ClipboardButton = styled.button`
   color: var(--color-bird);
   border: 2px solid color-mix(in oklch, var(--color-bird) 20%, transparent);
   opacity: 0;
-  transition: opacity 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+  transition:
+    opacity 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
   will-change: opacity, box-shadow, transform;
 
   &:hover {
@@ -53,7 +56,16 @@ export const CodeBlockWrapper = styled.div`
   }
   pre {
     border-radius: 0.5rem;
-    font-family: DM Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+    font-family:
+      DM Mono,
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      Liberation Mono,
+      Courier New,
+      monospace;
     border: 2px solid color-mix(in oklch, var(--color-bird) 30%, transparent);
     margin-top: 2rem;
     margin-bottom: 2rem;
@@ -77,6 +89,15 @@ export const InlineCodeStyle = styled.code`
   color: var(--color-text);
   font-size: 0.92em;
   font-weight: 500;
-  font-family: DM Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  font-family:
+    DM Mono,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    Liberation Mono,
+    Courier New,
+    monospace;
   display: inline-block;
 `;

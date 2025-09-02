@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { FlexRowCenter } from "@/shared/style/Flex";
-import { EmphasizedText, Title } from "@/MDXContents/shared/style";
-import React, { useEffect, useRef, useState } from "react";
-import { useReloadContext } from "@/shared/components/Reloadbutton";
-import { handleCount } from "../utils/eventHandler";
-import { type LoopCallbackProps } from "../type";
+import React, { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { EmphasizedText, Title } from '@/MDXContents/shared/style';
+import { useReloadContext } from '@/shared/components/Reloadbutton';
+import { FlexRowCenter } from '@/shared/style/Flex';
+import { type LoopCallbackProps } from '../type';
+import { handleCount } from '../utils/eventHandler';
 
 function Content({ loopCallback }: LoopCallbackProps) {
   const { key } = useReloadContext();
@@ -25,8 +25,7 @@ function Content({ loopCallback }: LoopCallbackProps) {
   return (
     <>
       <Title>
-        <EmphasizedText>루프 시작</EmphasizedText>을 누른 후{" "}
-        <EmphasizedText>카운트 버튼</EmphasizedText>을 눌러 보세요!
+        <EmphasizedText>루프 시작</EmphasizedText>을 누른 후 <EmphasizedText>카운트 버튼</EmphasizedText>을 눌러 보세요!
       </Title>
       <FlexRowCenter>
         <FlexRowCenter $gap="1rem">
@@ -36,10 +35,7 @@ function Content({ loopCallback }: LoopCallbackProps) {
           </div>
         </FlexRowCenter>
         <FlexRowCenter $gap="1rem">
-          <Button
-            onClick={() => loopCallback(disabled, setDisabled, timerRef)}
-            disabled={disabled}
-          >
+          <Button onClick={() => void loopCallback(disabled, setDisabled, timerRef)} disabled={disabled}>
             루프 시작
           </Button>
           <div>

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import styled, { css } from "styled-components";
+import styled, { css } from 'styled-components';
 
 export const ListIndicator = styled.span`
-  content: "";
+  content: '';
   display: inline-block;
   position: absolute;
   background: var(--color-text);
@@ -28,7 +28,7 @@ export const ListItemStyles = css`
 
   &:hover {
     ${ListIndicator} {
-      content: "";
+      content: '';
       display: inline-block;
       position: absolute;
       background: var(--color-highlight);

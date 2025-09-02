@@ -1,24 +1,14 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import styled from "styled-components";
-import { VisuallyHidden } from "@/components/VisuallyHidden";
+import Link from 'next/link';
+import styled from 'styled-components';
+import { VisuallyHidden } from '@/components/VisuallyHidden';
 
 function Logo() {
   return (
-    <StyledLink
-      aria-label="Homepage link"
-      aria-labelledby={"Homepage link"}
-      href={"/"}
-    >
+    <StyledLink aria-label="Homepage link" aria-labelledby={'Homepage link'} href={'/'}>
       <VisuallyHidden>홈페이지</VisuallyHidden>
-      <svg
-        width="103"
-        height="37"
-        viewBox="0 0 103 37"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width="103" height="37" viewBox="0 0 103 37" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M53.6386 9.99219C53.6386 11.1865 53.3191 12.2225 52.8551 12.9299C52.3845 13.6472 51.8519 13.9199 51.4125 13.9199C50.9732 13.9199 50.4406 13.6472 49.97 12.9299C49.506 12.2225 49.1865 11.1865 49.1865 9.99219C49.1865 8.79786 49.506 7.76199 49.97 7.05451C50.4406 6.33723 50.9732 6.06458 51.4125 6.06458C51.8519 6.06458 52.3845 6.33723 52.8551 7.05451C53.3191 7.76199 53.6386 8.79786 53.6386 9.99219Z"
           stroke="var(--color-navlink)"

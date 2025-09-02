@@ -180,4 +180,4 @@ function setColorsByTheme() {
   });
 }
 
-export const initSetColorsByThemeFn = String(setColorsByTheme);
+export const initSetColorsByThemeFn = `(function() {${String(setColorsByTheme)}})()`;
