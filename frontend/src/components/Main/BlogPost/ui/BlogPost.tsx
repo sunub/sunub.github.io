@@ -45,7 +45,7 @@ export function BlogPost({ recentlyPublished }: { recentlyPublished: PublishedPo
   }
 
   return (
-    <BlogPostList data-testid="blog-main__recently-post-list">
+    <BlogPostList id="blog-post__recently-post-list" data-testid="blog-main__recently-post-list">
       {publishedPost.frontmattters.map((post, index) => (
         <BlogPostItem
           key={`${post.category}-${post.slug}-${index}`}

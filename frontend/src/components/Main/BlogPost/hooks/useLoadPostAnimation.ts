@@ -4,6 +4,11 @@ import { useEffect } from 'react';
 export function useLoadPostAnimation() {
   useEffect(() => {
     const elements = gsap.utils.toArray('#blog-post__recently-post-list > *');
+    gsap.set(elements, {
+      y: -10,
+      opacity: 0,
+    });
+
     gsap.to(elements, {
       duration: 0.8,
       y: 0,
