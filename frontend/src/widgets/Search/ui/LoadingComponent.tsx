@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
-import React, { memo } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
-const LoadingComponent = memo(() => {
+function LoadingComponent() {
   return (
-    <Wrapper>
+    <Wrapper data-testid="search-modal__loading-component">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -34,7 +33,7 @@ const LoadingComponent = memo(() => {
       <Span $delay={600}>.</Span>
     </Wrapper>
   );
-});
+}
 
 const loadingAnimation = keyframes`
   0%, 100% {
@@ -67,7 +66,7 @@ const Wrapper = styled.li`
 const Path = styled.path<{ $duraction: number }>`
   fill: var(--color-text);
   animation: ${loadingAnimation} 1s linear infinite;
-  animation-delay: ${(props) => props.$duraction}ms;
+  animation-delay: ${props => props.$duraction}ms;
   transform-origin: center;
 `;
 
