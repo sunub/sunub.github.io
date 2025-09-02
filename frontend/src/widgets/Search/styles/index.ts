@@ -1,10 +1,9 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
-import Link from "next/link";
-import { ListItemStyles } from "@/shared/style/List";
+import styled from 'styled-components';
+import Link from 'next/link';
+import { ListItemStyles } from '@/shared/style/List';
 
-// SearchInput 스타일
 export const SearchOverlay = styled.div`
   position: absolute;
   top: 0;
@@ -43,9 +42,13 @@ export const ContentHeader = styled.div`
 export const SearchInput = styled.input`
   width: 100%;
   height: 40px;
-  padding: 0 16px;
+  padding: 8px 16px;
   border: none;
   outline: none;
+
+  &:focus-within {
+    outline: 2px solid color-mix(in oklch, var(--color-highlight) 40%, transparent);
+  }
 `;
 
 export const ClearIconButton = styled.button`
@@ -95,6 +98,11 @@ export const ResultsList = styled.ul`
   flex-direction: column;
   gap: 0.75rem;
   padding-right: 1rem;
+
+  padding-top: 24px;
+  padding-bottom: 24px;
+  scroll-padding-top: 24px;
+  scroll-padding-bottom: 24px;
 `;
 
 export const ResultItem = styled.li`
