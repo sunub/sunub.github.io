@@ -1,46 +1,64 @@
 'use server';
 
-import { type PostCategory } from '@/types/schema';
-import { cache } from 'react';
-import { Post } from './Posts';
-import { join } from 'path';
-import { FrontMatterSchema, JsonPostFrontMatterSchema, PostFrontMatter } from './Schema';
 import fs from 'fs/promises';
-import { chunk, findUpDir } from 'fx_utils';
+import { chunk } from 'fx_utils';
 import matter from 'gray-matter';
+import { join, resolve } from 'path';
+import { cwd } from 'process';
+import { cache } from 'react';
+import { type PostCategory } from '@/types/schema';
+import { Post } from './Posts';
+import { FrontMatterSchema, JsonPostFrontMatterSchema, PostFrontMatter } from './Schema';
 
-const getPostsDir = cache(async () => {
-  const postPath = await findUpDir('posts');
-  if (!postPath) throw new Error('posts 디렉터리를 찾을 수 없습니다.');
-  return postPath;
+const getPostsDir = cache(() => {
+  const projectRoot = resolve(cwd(), '..');
+  const postsPath = join(projectRoot, 'posts');
+
+  if (!postsPath) throw new Error('posts 디렉터리를 찾을 수 없습니다.');
+  return postsPath;
 });
 
 const getAllJsonFrontMatter = cache(async () => {
-  const possiblePaths = [
-    join(process.cwd(), 'public', 'posts.json'),
-    join(process.cwd(), 'frontend', 'public', 'posts.json'),
-    join('/var/task', 'public', 'posts.json'), // Vercel 환경
-    join('/vercel/path0', 'frontend', 'public', 'posts.json'), // Vercel 빌드 환경
-  ];
+  const getPathsByEnvironment = () => {
+    const cwd = process.cwd();
+
+    if (process.env.VERCEL || cwd.includes('/vercel/')) {
+      return [
+        join('/var/task', 'public', 'posts.json'),
+        join('/vercel/path0', 'frontend', 'public', 'posts.json'),
+        join(cwd, 'frontend', 'public', 'posts.json'),
+        join(cwd, 'public', 'posts.json'),
+      ];
+    }
+
+    return [join(cwd, 'public', 'posts.json'), join(cwd, 'frontend', 'public', 'posts.json')];
+  };
+
+  const possiblePaths = getPathsByEnvironment();
+  let lastError: Error | null = null;
 
   for (const filePath of possiblePaths) {
     try {
       const fileContent = await fs.readFile(filePath, 'utf8');
-      const json = JSON.parse(fileContent);
+      const json: unknown = JSON.parse(fileContent);
 
       const parsedJsonFrontMatter = JsonPostFrontMatterSchema.safeParse(json);
       if (!parsedJsonFrontMatter.success) {
-        console.error(parsedJsonFrontMatter.error);
-        throw new Error(`posts.json 파일의 형식이 잘못되었습니다: ${filePath}`);
+        lastError = new Error(`posts.json 파일의 형식이 잘못되었습니다: ${filePath}`);
+        console.error('JSON 스키마 검증 실패:', parsedJsonFrontMatter.error);
+        continue;
       }
+
       return parsedJsonFrontMatter.data;
     } catch (error) {
-      console.error(`posts.json 파일을 처리하는 중 오류가 발생했습니다: ${filePath}`);
-      continue;
+      lastError = error as Error;
+      console.error(`JSON 파일 처리 오류 (${filePath}):`, error);
     }
   }
-  console.error('모든 경로에서 posts.json 파일을 찾을 수 없습니다.');
-  throw new Error('posts.json 파일을 찾을 수 없습니다.');
+
+  // 모든 경로에서 실패한 경우
+  console.error('posts.json 파일을 찾을 수 없습니다. 시도한 경로:', possiblePaths);
+  throw lastError || new Error('posts.json 파일을 찾을 수 없습니다.');
 });
 
 export async function getAllPostsFrontmatter(): Promise<PostFrontMatter[]> {
@@ -101,7 +119,7 @@ export const getPostsMetadataByCategory = cache(async (category: PostCategory) =
     case 'cs':
       return getCSPostsFrontmatter();
     default:
-      throw new Error(`알 수 없는 카테고리: ${category}`);
+      throw new Error(`알 수 없는 카테고리: ${category as string}`);
   }
 });
 
@@ -122,7 +140,7 @@ export const getPostFrontMatterByCategoryAndSlug = cache(async (category: PostCa
         currFrontMatter = await getCSPostsFrontmatter();
         break;
       default:
-        throw new Error(`알 수 없는 카테고리: ${category}`);
+        throw new Error(`알 수 없는 카테고리: ${category as string}`);
     }
     const postData = currFrontMatter.find(post => post.frontmatter.slug === slug);
     if (!postData) {
@@ -138,11 +156,20 @@ export const getPostFrontMatterByCategoryAndSlug = cache(async (category: PostCa
   }
 });
 
+function readMDXContent(filePath: string): Promise<string> {
+  return fs.readFile(filePath, 'utf8');
+}
+
 export const getPostContentByCategoryAndSlug = cache(async (category: PostCategory, slug: string) => {
   try {
-    const postPath = await getPostsDir();
+    const postPath = getPostsDir();
     const filePath = join(postPath, category, `${slug}.mdx`);
-    const fileContent = await fs.readFile(filePath, 'utf8');
+
+    // const fileContent = await readMDXContent(filePath);
+    const [fileContent, _] = await Promise.all([
+      readMDXContent(filePath),
+      new Promise(resolve => setTimeout(resolve, 1000)),
+    ]);
 
     const { content, data } = matter(fileContent);
 
@@ -156,10 +183,7 @@ export const getPostContentByCategoryAndSlug = cache(async (category: PostCatego
       content,
       frontmatter: parsedFrontMatter.data,
     };
-  } catch (error: any) {
-    if (error.code === 'ENOENT') {
-      return null;
-    }
+  } catch (error: unknown) {
     console.error(`데이터 읽기 실패: category=${category}, slug=${slug}`, error);
     throw error;
   }
