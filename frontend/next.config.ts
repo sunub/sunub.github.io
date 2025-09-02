@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
-import createMDX from '@next/mdx';
 import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
+import createMDX from '@next/mdx';
 
 const nextConfig: NextConfig = {
   basePath: '',
@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 60 * 60 * 24,
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96],
     dangerouslyAllowSVG: true,
@@ -34,6 +34,19 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
+        source: '/assets/(bridge|clouds|cars|dark_bridge|dark_clouds|dark_cars)\\.(avif|webp)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'X-Priority',
+            value: 'high',
+          },
+        ],
+      },
+      {
         source: '/_next/image',
         headers: [
           {
@@ -52,6 +65,39 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            hero: {
+              name: 'hero',
+              test: /HeroImage/,
+              priority: 30,
+              reuseExistingChunk: true,
+            },
+            styles: {
+              name: 'styles',
+              test: /styled-components/,
+              priority: 20,
+              reuseExistingChunk: true,
+            },
+            commons: {
+              name: 'commons',
+              minChunks: 2,
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      };
+    }
+    return config;
   },
 };
 
