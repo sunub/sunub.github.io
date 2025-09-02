@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 type ScrollIndicatorProps = {
   source: string;
 };
 
 function ScrollIndicator({ source }: ScrollIndicatorProps) {
-  const headings = source.split("\n").filter((str) => str.startsWith("#"));
+  const headings = source.split('\n').filter(str => str.startsWith('#'));
   return (
     <StyledScrollIndicator>
-      {headings.map((heading) => {
-        const level = heading.split("#").length - 1;
-        const text = heading.replace(/#/g, "").trim();
+      {headings.map(heading => {
+        const level = heading.split('#').length - 1;
+        const text = heading.replace(/#/g, '').trim();
         return <StyledScrollIndicatorItem $level={level} key={text} />;
       })}
     </StyledScrollIndicator>
