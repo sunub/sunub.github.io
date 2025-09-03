@@ -320,6 +320,18 @@ li.active > a {
   padding-left: 2rem;
 }
 
+#blog-search__input-area {
+  container: search-modal / inline-size;
+}
+
+@container search-modal (width <= 375px) {
+  #search-input__content-wrapper {
+    width: 100cqw;
+    left: 0px;
+    padding: 8px 16px;
+  }
+}
+
 @container root (height < 812px) {
   .blog-main__background-template {
     height: 100%;
@@ -440,6 +452,11 @@ li.active > a {
   .blog-post__recently-post-item {
     width: 100%;
     max-width: 250px;
+  }
+
+  #search-input__content-wrapper {
+    left: 0px;
+    width: 100cqw;
   }
 }
 
