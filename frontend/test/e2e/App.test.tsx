@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { HomePage } from './HomePage';
 import { E2E_TEST_URL } from './constants';
+import { HomePage } from './HomePage';
 
 const DEFAULT_TIMEOUT_TIME = 35000;
 const DEFAULT_TEST_OPTION = { timeout: DEFAULT_TIMEOUT_TIME };
@@ -111,12 +111,10 @@ test.describe('블로그 포스트 링크 테스트', () => {
     await firstPostItem.click();
     await page.waitForURL('**/post/**', { waitUntil: 'domcontentloaded', timeout: DEFAULT_TIMEOUT_TIME });
 
-    await expect(async () => {
-      await expect(page.getByTestId('loading-screen')).toBeVisible(DEFAULT_TEST_OPTION);
-    }).toPass({ intervals: [2000, 3000, 4000], timeout: DEFAULT_TIMEOUT_TIME });
-    
-    await expect(async () => {
-      await expect(page.getByTestId('post-article__main-title')).toBeVisible(DEFAULT_TEST_OPTION);
-    }).toPass({ intervals: [2000, 3000, 4000], timeout: DEFAULT_TIMEOUT_TIME });
+    await expect(page.getByTestId('loading-screen')).toBeVisible(DEFAULT_TEST_OPTION);
+
+    await expect(page.getByTestId('loading-screen')).toBeHidden(DEFAULT_TEST_OPTION);
+
+    await expect(page.getByTestId('post-article__main-title')).toBeVisible(DEFAULT_TEST_OPTION);
   });
 });
