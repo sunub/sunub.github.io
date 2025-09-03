@@ -12,6 +12,10 @@ interface AnimatePresenceWrapperProps {
 export function AnimatePresenceWrapper({ children }: AnimatePresenceWrapperProps) {
   const pathname = usePathname();
 
+  if(process.env.NODE_ENV === 'test') {
+    return <div key="loading-while-waiting">{children}</div>
+  }
+
   return (
     <AnimatePresence key={pathname} mode="wait">
       <motion.div key="loading-while-waiting">{children}</motion.div>
