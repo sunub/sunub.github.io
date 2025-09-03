@@ -164,11 +164,12 @@ export const getPostContentByCategoryAndSlug = cache(async (category: PostCatego
   try {
     const postPath = getPostsDir();
     const filePath = join(postPath, category, `${slug}.mdx`);
+    const minimumTimeout = 1000;
 
     // const fileContent = await readMDXContent(filePath);
     const [fileContent, _] = await Promise.all([
       readMDXContent(filePath),
-      new Promise(resolve => setTimeout(resolve, 1000)),
+      new Promise(resolve => setTimeout(resolve, minimumTimeout)),
     ]);
 
     const { content, data } = matter(fileContent);
