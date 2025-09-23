@@ -21,7 +21,6 @@ export function handleKeyArrowDown(e: KeyboardEvent, indexRef: RefObject<number>
   }
 
   indexRef.current = (indexRef.current + 1) % listItems.length;
-  console.log(indexRef.current);
   
   const currentItem = listItems[indexRef.current];
   const link = currentItem.querySelector('a');

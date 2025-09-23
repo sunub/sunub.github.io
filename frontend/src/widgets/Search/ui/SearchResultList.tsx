@@ -11,6 +11,7 @@ import { ResultDescription, ResultItem, ResultLink, ResultTitle } from '../style
 import { SearchResult } from '../types';
 import { handleKeyArrowDown } from '../utils/handleKeyArrowDown';
 import { handleKeyUp } from '../utils/handleKeyArrowUp';
+import { handleKeyEnter } from '../utils/handleKeyEnter';
 
 interface SearchResultsListProps {
   onResultClick: () => Promise<void>;
@@ -23,6 +24,7 @@ export function SearchResultsList({ onResultClick }: SearchResultsListProps) {
 
   useKeyPress('ArrowDown', handleKeyArrowDown, indexRef, router);
   useKeyPress('ArrowUp', handleKeyUp, indexRef, router);
+  useKeyPress('Enter', handleKeyEnter, indexRef, router, onResultClick)
 
   return (
     <>

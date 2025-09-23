@@ -2,7 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 
-export function useKeyPress(targetKey: string, callback: (e: KeyboardEvent, ...rest: any[]) => void, ...args: any[]) {
+type Callback = (e: KeyboardEvent, ...rest: any[]) => void;
+type AsyncCallback = (e: KeyboardEvent, ...rest: any[]) => Promise<void>;
+
+export function useKeyPress(targetKey: string, callback: Callback | AsyncCallback, ...args: any[]) {
   const cbRef = useRef(callback);
   const argsRef = useRef(args);
 
