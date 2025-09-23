@@ -6,7 +6,7 @@ import { LoadingComponent } from './LoadingComponent';
 import { NoResult } from './NoResult';
 import { SearchInputHeader } from './SearchInputHeader';
 import { SearchResultsList } from './SearchResultList';
-import { useAnimations } from '../hook/useAnimations';
+import { useOpenCloseAnimations } from '../hook/useOpenCloseAnimations';
 import { useKeyPress } from '../hook/useKeyPress';
 import { useModalEnterAnimation } from '../hook/useModalEnterAnimation';
 import { useOutsideClick } from '../hook/useOutsideClick';
@@ -26,7 +26,7 @@ function SearchModal({ close }: SearchModalProps) {
   const isExpanded = true;
   const listboxId = 'search-results-listbox';
 
-  const { initOpenAnimation, closeAnimation } = useAnimations(rootRef);
+  const { initOpenAnimation, closeAnimation } = useOpenCloseAnimations(rootRef);
 
   const handleClose = useCallback(async () => {
     await closeAnimation();

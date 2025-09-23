@@ -25,6 +25,7 @@ function filteringUniquePosts(recentlyPublished: PublishedPost) {
 
 export function BlogPost({ recentlyPublished }: { recentlyPublished: PublishedPost }) {
   const MAX_POST_COUNT = recentlyPublished.totalCount;
+  const postListRef = useRef<HTMLUListElement>(null);
   const [publishedPost, setPublishedPost] = useState<PublishedPost>({
     totalCount: MAX_POST_COUNT,
     frontmattters: filteringUniquePosts(recentlyPublished),
@@ -38,14 +39,14 @@ export function BlogPost({ recentlyPublished }: { recentlyPublished: PublishedPo
   const scrollBottomRef = useRef<HTMLDivElement | null>(null);
 
   useScrollAction(scrollBottomRef, loadMorePublishedPost);
-  useLoadPostAnimation();
+  useLoadPostAnimation(postListRef);
 
   if (publishedPost.frontmattters.length === 0) {
     return <div>현재 표시할 포스트가 없습니다.</div>;
   }
 
   return (
-    <BlogPostList id="blog-post__recently-post-list" data-testid="blog-main__recently-post-list">
+    <BlogPostList ref={postListRef} id="blog-post__recently-post-list" data-testid="blog-main__recently-post-list">
       {publishedPost.frontmattters.map((post, index) => (
         <BlogPostItem
           key={`${post.category}-${post.slug}-${index}`}
