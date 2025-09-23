@@ -24,7 +24,7 @@ test.describe('홈 페이지 컴포넌트 테스트', () => {
   });
 
   test('테마 전환 기능이 적절하게 작동하는지 확인', async ({ page }) => {
-    const themeToggle = page.getByTestId('theme-toggler-button');
+    const themeToggle = page.getByTestId('desktop-theme-toggler-button');
     await expect(themeToggle).toBeVisible(DEFAULT_TEST_OPTION);
 
     await themeToggle.click();
