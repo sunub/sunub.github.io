@@ -84,7 +84,7 @@ function MobileNav(props: Props) {
             </Styled.ListWrapper>
 
             <Styled.ThemeWrapper className="mobile-nav__link-items">
-              <ThemeToggler theme={props.theme} maskId="mobile-nav__theme-toggler" />
+              <ThemeToggler theme={props.theme} maskId="mobile-nav__theme-toggler" data-testid="mobile-theme-toggler-button" />
             </Styled.ThemeWrapper>
           </Styled.Wrapper>
         </Styled.NavigationWrapper>

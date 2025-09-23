@@ -8,7 +8,16 @@ import { VisuallyHidden } from '@/components/VisuallyHidden';
 import { DARK_COLORS, LIGHT_COLORS } from '@/constants/constants';
 import * as Styled from './ThemeToggler.style';
 
-export default function ThemeTogglerButton({ maskId, theme, ...delegated }: { theme: Theme; maskId: string }) {
+export default function ThemeTogglerButton({
+  maskId,
+  theme,
+  'data-testid': dataTestId = 'theme-toggler-button',
+  ...delegated
+}: {
+  theme: Theme;
+  maskId: string;
+  'data-testid'?: string;
+}) {
   const [colorTheme, rawSetColorTheme] = React.useState<Theme>(theme);
   const { setColorTheme } = React.useContext(ThemeContext);
 
@@ -39,7 +48,7 @@ export default function ThemeTogglerButton({ maskId, theme, ...delegated }: { th
         {...delegated}
         title="테마 변경"
         aria-label="theme-toggler-button"
-        data-testid="theme-toggler-button"
+        data-testid={dataTestId}
         onClick={() => {
           const nextTheme = handleClick();
           document
