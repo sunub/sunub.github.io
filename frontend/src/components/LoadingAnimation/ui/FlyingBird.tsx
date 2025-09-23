@@ -1,53 +1,30 @@
 'use client';
 
-import { motion, useAnimation } from 'motion/react';
-import React from 'react';
+import { motion, TargetAndTransition } from 'motion/react';
 import styled from 'styled-components';
 
+const wingAnimation: TargetAndTransition = {
+  rotate: ['-17deg', '15deg', '-17deg'],
+  transition: {
+    duration: 1,
+    ease: 'easeInOut',
+    repeat: Infinity,
+    repeatType: 'reverse',
+  },
+};
+
+const bodyAnimation: TargetAndTransition = {
+  scale: [0.8, 0.75, 0.8],
+  y: [10, -5, 10],
+  transition: {
+    duration: 1,
+    ease: 'easeInOut',
+    repeat: Infinity,
+    repeatType: 'reverse',
+  },
+};
+
 export function FlyingBirdAnime({ onAnimationCompleteAction }: { onAnimationCompleteAction?: () => void }) {
-  const wingControls = useAnimation();
-  const bodyControls = useAnimation();
-
-  React.useEffect(() => {
-    let count = 0;
-    const animateWings = async () => {
-      while (true) {
-        await wingControls.start({
-          rotate: ['-17deg', '15deg', '-17deg', '-17deg', '15deg', '-17deg'],
-          transition: {
-            duration: 1,
-            ease: [0.4, 0.0, 0.6, 1],
-            times: [0, 0.5, 1, 1.5, 2, 2.5],
-          },
-        });
-        count += 1;
-        if (count === 2) {
-          console.log('애니메이션 완료');
-          if (onAnimationCompleteAction) {
-            onAnimationCompleteAction();
-          }
-        }
-      }
-    };
-
-    const animateBody = async () => {
-      while (true) {
-        await bodyControls.start({
-          scale: [0.8, 0.75, 0.8, 0.8, 0.75, 0.8],
-          y: [10, -5, 10],
-          transition: {
-            duration: 1,
-            ease: [0.4, 0.0, 0.6, 1],
-            times: [0, 0.5, 1, 1.5, 2, 2.5],
-          },
-        });
-      }
-    };
-
-    void animateWings();
-    void animateBody();
-  }, [wingControls, bodyControls, onAnimationCompleteAction]);
-
   return (
     <Container
       initial={{ x: -100, opacity: 0 }}
@@ -57,12 +34,13 @@ export function FlyingBirdAnime({ onAnimationCompleteAction }: { onAnimationComp
         ease: [0.4, 0.0, 0.2, 1],
         delay: 0.2,
       }}
+      onAnimationComplete={onAnimationCompleteAction}
     >
       <motion.svg
         style={{
           transform: 'scale(0.75)',
         }}
-        animate={bodyControls}
+        animate={bodyAnimation}
         width="130"
         height="80"
         viewBox="0 0 130 67"
@@ -82,8 +60,7 @@ export function FlyingBirdAnime({ onAnimationCompleteAction }: { onAnimationComp
         <motion.path
           d="M0.762284 26.1696C-0.781094 24.7303 0.167958 22.1432 2.27597 22.0433L56.9867 19.4514C67.4876 18.9539 76.685 26.4277 78.3464 36.8083C78.7577 39.3782 77.3218 41.8871 74.8978 42.8344L71.1378 44.3036C68.5245 45.3248 65.8094 46.0634 63.0389 46.5068L57.029 47.4687C39.0256 50.3501 20.6998 44.7632 7.3659 32.3281L0.762284 26.1696Z"
           fill="#6E7E89"
-          initial={{ rotate: '-17deg' }}
-          animate={wingControls}
+          animate={wingAnimation}
           style={{
             transformOrigin: 'center',
           }}

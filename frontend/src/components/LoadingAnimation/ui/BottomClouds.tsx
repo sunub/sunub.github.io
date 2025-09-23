@@ -3,23 +3,6 @@
 import { motion } from 'motion/react';
 import styled from 'styled-components';
 
-export function BottomClouds() {
-  return (
-    <CloudWrapper
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{
-        duration: 0.8,
-        ease: [0.4, 0.0, 0.2, 1],
-        delay: 0.2,
-      }}
-    >
-      <Cloud minWidth={5120} fillFront="var(--color-endStart)" fillBack="var(--color-midStart)" />
-      <Wrapper $backgroundColor="var(--color-midStart)" />
-    </CloudWrapper>
-  );
-}
-
 function Cloud({ minWidth, fillFront, fillBack }: { minWidth?: number; fillFront?: string; fillBack?: string }) {
   return (
     <SVG
@@ -40,6 +23,23 @@ function Cloud({ minWidth, fillFront, fillBack }: { minWidth?: number; fillFront
         d="M2741.5 299.5c10-1.428 20.5-71 203.5-91.5s216 49 226.5 49 56.5-74 240-49 189 86 199 84.5 49-63.5 226-71 207 63 216 63 71.5-55 243-27.5 181.5 74 195.5 73.5-8.5-102 199-139 247.5 30.5 262 30 85.5-103.5 245-58.5 0 194 0 194H-92s-72-149.5 0-177.5S1 208 12 208s42.5-98.5 250.5-100.5S511 206.5 518 208s97-68 269-34.5 194 134 203 138 88.5-24 256.5-12 186 47.5 192.5 47.5 50.5-66 204.5-65.5 193 51 202 52 68.5-27.5 248-22 215 35.5 226.5 35.5c11.5.001 38-67.142 204-79 166-11.857 207.5 32.929 217.5 31.5z"
       />
     </SVG>
+  );
+}
+
+export function BottomClouds() {
+  return (
+    <CloudWrapper
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{
+        duration: 0.8,
+        ease: [0.4, 0.0, 0.2, 1],
+        delay: 0.2,
+      }}
+    >
+      <Cloud minWidth={5120} fillFront="var(--color-endStart)" fillBack="var(--color-midStart)" />
+      <Wrapper $backgroundColor="var(--color-midStart)" />
+    </CloudWrapper>
   );
 }
 
