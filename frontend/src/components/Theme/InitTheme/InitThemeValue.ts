@@ -80,8 +80,14 @@ function setColorsByTheme() {
     );`,
   };
 
+  function setColorThemeCookie(name: string, value: string, days: number) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${value};${expires};path=/`;
+  }
+
   function getInitialColorMode() {
-    // 쿠키에서 직접 접근하는 방식으로 변경
     const getCookie = (name: string): string | undefined => {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
@@ -91,43 +97,21 @@ function setColorsByTheme() {
       }
       return undefined;
     };
-
-    const persistedLocalItems = getCookie('color-theme');
-    // const persistedLocalItems = window.localStorage.getItem("color-theme");
-
-    if (persistedLocalItems === 'light' || persistedLocalItems === 'dark') {
-      return persistedLocalItems;
+    const persistedTheme = getCookie('color-theme');
+    if (persistedTheme === 'light' || persistedTheme === 'dark') {
+      return persistedTheme;
     }
-
     const mql = window.matchMedia('(prefers-color-scheme: dark)');
     const hasMediaQueryPreference = typeof mql.matches === 'boolean';
     if (hasMediaQueryPreference) {
-      if (mql.matches) {
-        setLocalStorage('dark');
-        return 'dark';
-      }
-      setLocalStorage('light');
-      return 'light';
+      const newTheme = mql.matches ? 'dark' : 'light';
+      setColorThemeCookie('color-theme', newTheme, 1000);
+      return newTheme;
     }
-
     return 'light';
   }
 
-  function setLocalStorage(data: 'light' | 'dark') {
-    // 쿠키를 직접 설정하는 방식으로 변경
-    const setCookie = (name: string, value: string, days: number) => {
-      const date = new Date();
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-      const expires = `expires=${date.toUTCString()}`;
-      document.cookie = `${name}=${value};${expires};path=/`;
-    };
-
-    setCookie('color-theme', data, 1000);
-    // window.localStorage.setItem("color-theme", data);
-  }
-
   const colorMode = getInitialColorMode();
-
   const root = document.documentElement;
   const COLORS = colorMode === 'light' ? LIGHT_COLORS : DARK_COLORS;
 
@@ -135,49 +119,17 @@ function setColorsByTheme() {
   Object.entries(COLORS).forEach(([key, value]) => {
     root.style.setProperty(key, value as string);
   });
-  const themeColorMeta = document.querySelector('meta[name=theme-color]');
-  if (themeColorMeta) {
-    themeColorMeta.setAttribute(
-      'content',
-      `${colorMode === 'light' ? 'oklch(87.44% 0.067 30.96)' : 'oklch(43.81% 0.072 289.34)'}`
-    );
-  }
 
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({ matches: isDark }) => {
-    const root = document.documentElement;
-    const nextColorMode = isDark === true ? 'dark' : 'light';
-    const nextColor = nextColorMode === 'light' ? LIGHT_COLORS : DARK_COLORS;
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    const nextColorMode = e.matches ? 'dark' : 'light';
+    const nextColors = nextColorMode === 'light' ? LIGHT_COLORS : DARK_COLORS;
 
     root.setAttribute('data-color-theme', nextColorMode);
-    root.setAttribute('data-color-theme', colorMode);
-    Object.entries(nextColor).forEach(([key, value]) => {
+    Object.entries(nextColors).forEach(([key, value]) => {
       root.style.setProperty(key, value as string);
     });
-
-    const themeColorMeta = document.querySelector('meta[name=theme-color]');
-    if (themeColorMeta) {
-      themeColorMeta.setAttribute(
-        'content',
-        `${colorMode === 'light' ? 'oklch(87.44% 0.067 30.96)' : 'oklch(43.81% 0.072 289.34)'}`
-      );
-    }
-  });
-
-  window.addEventListener('pageshow', event => {
-    if (event.persisted) {
-      console.log('This page was restored from the bfcache.');
-    } else {
-      console.log('This page was loaded normally.');
-    }
-  });
-
-  window.addEventListener('pagehide', event => {
-    if (event.persisted) {
-      console.log('This page *might* be entering the bfcache.');
-    } else {
-      console.log('This page will unload normally and be discarded.');
-    }
+    setColorThemeCookie('color-theme', nextColorMode, 1000);
   });
 }
 
-export const initSetColorsByThemeFn = `(function() {${String(setColorsByTheme)}})()`;
+export const initSetColorsByThemeFn = `(${String(setColorsByTheme)})()`;
