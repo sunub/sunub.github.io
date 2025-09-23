@@ -87,6 +87,7 @@ export default defineConfig({
     cwd: '.',
     env: {
       NODE_ENV: 'test',
+      PORT: '4004',
     },
   },
 

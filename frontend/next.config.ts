@@ -26,7 +26,6 @@ const nextConfig: NextConfig = {
     },
   },
   compress: true,
-  output: 'standalone',
   async headers() {
     return [
       {
