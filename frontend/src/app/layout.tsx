@@ -1,8 +1,10 @@
+import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { cookies } from 'next/headers';
 import Script from 'next/script';
 import React from 'react';
+import { Theme } from 'type';
 import { HeroImagePreload } from '@/components/HeroImage/HeroImagePreload';
 import StyledComponentsRegistry from '@/components/Resgistry/';
 import { initSetColorsByThemeFn } from '@/components/Theme/InitTheme/InitThemeValue';
@@ -50,8 +52,8 @@ const pretendard = localFont({
 });
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const saved = (await cookies()).get('color-theme');
-  const theme = saved?.value === 'dark' ? 'dark' : 'light';
+  const savedTheme = (await cookies()).get('color-theme')?.value || 'light';
+  const theme: Theme = savedTheme === 'dark' ? 'dark' : 'light';
   const themeColors = theme === 'light' ? LIGHT_COLORS : DARK_COLORS;
 
   return (
@@ -84,10 +86,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         ></script>
         <StyledComponentsRegistry>
-          <ThemeProvider>
-            <AnimatePresenceWrapper>{children}</AnimatePresenceWrapper>
-            <div id="mobile-nav-portal" />
-            <div id="blog-search__input-area" data-testid={'blog-search__input-area'} />
+          <ThemeProvider initialTheme={theme}>
+            <Provider>
+              <AnimatePresenceWrapper>{children}</AnimatePresenceWrapper>
+              <div id="mobile-nav-portal" />
+              <div id="blog-search__input-area" data-testid={'blog-search__input-area'} />
+            </Provider>
           </ThemeProvider>
         </StyledComponentsRegistry>
         <SpeedInsights />
