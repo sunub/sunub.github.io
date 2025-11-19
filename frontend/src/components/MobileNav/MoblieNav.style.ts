@@ -21,10 +21,10 @@ export const UnfilledSVG = styled.svg`
 
 export const NavigationWrapper = styled.nav`
   position: absolute;
+  display: flex;
   top: 0;
   left: 0;
-  padding-bottom: 3rem;
-  padding-top: 8rem;
+  padding: 3rem 0;
   height: 100cqh;
 
   @media screen and (min-width: 768px) {
@@ -68,7 +68,7 @@ export const ListWrapper = styled.ul`
   flex-direction: column;
   gap: clamp(1rem, 2.5dvh, 2rem);
 
-  font-size: 32px;
+  font-size: 1.5rem;
   font-weight: 400;
 `;
 

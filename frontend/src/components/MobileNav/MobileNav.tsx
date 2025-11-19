@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import React from 'react';
 import FocusLock from 'react-focus-lock';
 import { RemoveScroll } from 'react-remove-scroll';
-import type { Theme } from 'type';
 import ThemeToggler from '@/components/Theme/Toggler/ThemeTogglerButton';
 import { getMoblieCloseAnimationTimeline } from './MoblieNav.helper';
 import * as Styled from './MoblieNav.style';
@@ -38,7 +37,6 @@ interface Props {
   isOpen: boolean;
   toggleOpen: () => void;
   refObjects: RefObjects;
-  theme: Theme;
 }
 
 function MobileNav(props: Props) {
@@ -51,6 +49,7 @@ function MobileNav(props: Props) {
     toggleOpen();
     closeTimeline.play();
   }
+  
   React.useEffect(() => {
     const listItemTimeline = gsap
       .timeline({ paused: true })
@@ -75,6 +74,10 @@ function MobileNav(props: Props) {
       <RemoveScroll>
         <Styled.NavigationWrapper>
           <Styled.Wrapper $isOpen={isOpen}>
+            <Styled.ThemeWrapper className="mobile-nav__link-items">
+              <ThemeToggler maskId="mobile-nav__theme-toggler" data-testid="mobile-theme-toggler-button" />
+            </Styled.ThemeWrapper>
+
             <Styled.ListWrapper id="moblie-nav__link-wrapper">
               <Item name="latest" href={'/'} onClick={handleClick} />
               <Item name="posts" href="" onClick={handleClick} />
@@ -82,10 +85,6 @@ function MobileNav(props: Props) {
                 <Item name={name} key={`${href}-page`} href={href} onClick={handleClick} />
               ))}
             </Styled.ListWrapper>
-
-            <Styled.ThemeWrapper className="mobile-nav__link-items">
-              <ThemeToggler theme={props.theme} maskId="mobile-nav__theme-toggler" data-testid="mobile-theme-toggler-button" />
-            </Styled.ThemeWrapper>
           </Styled.Wrapper>
         </Styled.NavigationWrapper>
         <Styled.Backdrop $isOpen={isOpen} onClick={handleClick} />

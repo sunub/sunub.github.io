@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import type { Theme } from 'type';
 import useToggle from '@/hooks/use-toggle';
 import * as Styled from './Hamburger.style';
 import MobileNav from '../MobileNav';
@@ -16,7 +15,7 @@ interface RefObjects {
   svgRef: React.RefObject<SVGSVGElement | null>;
 }
 
-function Hamburger({ theme }: { theme: Theme }) {
+function Hamburger() {
   const [isOpen, toggleOpen] = useToggle(false);
 
   const pathStartRef = React.useRef<SVGPathElement>(null);
@@ -57,7 +56,7 @@ function Hamburger({ theme }: { theme: Theme }) {
       </Styled.Btn>
       {isOpen &&
         createPortal(
-          <MobileNav theme={theme} isOpen={isOpen} toggleOpen={toggleOpen} refObjects={refObjects} />,
+          <MobileNav isOpen={isOpen} toggleOpen={toggleOpen} refObjects={refObjects} />,
           document.getElementById('mobile-nav-portal') as HTMLDivElement
         )}
       <UnfilledSVG refObjects={refObjects} />
