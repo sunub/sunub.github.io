@@ -1,52 +1,40 @@
 'use client';
 
-import Link from 'next/link';
-import { VisuallyHidden } from '@/components/VisuallyHidden';
-import { FrontMatter } from '@/types/schema';
-import { BlogPostContent, BlogPostTitle, Date as DateCompo, Footer, Title, TitleDot } from '../style';
-import { UnderLineWave } from './UnderLineWave';
-import { BlogPostListItem, BlogPostWrapper } from '../style';
+import { memo, useMemo } from 'react';
+import { FrontMatter } from '@/db/blog/Schema'; 
+import { BlogPostItemComposer } from './BlogPostItemComposer';
 
-interface BlogPostItemProps extends Pick<FrontMatter, 'slug' | 'title' | 'summary' | 'category' | 'date'> {
+interface BlogPostItemProps {
+  post: FrontMatter;
   index: number;
 }
 
-export function BlogPostItem({ slug, title, summary, category, date, index }: BlogPostItemProps) {
-  const localeDate = new Intl.DateTimeFormat('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
-  const webStandardDate = date.toISOString().split('T')[0];
+export const BlogPostItem = memo(function BlogPostItem({ post, index }: BlogPostItemProps) {
   const titleId = `blog-post__recently-post-title-${index}`;
   const titleLinkId = `blog-post__recently-post-link-${index}`;
+  
+  const href = `/post/${post.category}/${post.slug}`;
+  
+  const dateISO = useMemo(() => 
+    new Date(post.date).toISOString(),
+    [post.date]
+  );
 
   return (
-    <BlogPostListItem
-      data-testid={`blog-post__recently-${index}-post-item`}
-      $isInitialize={index < 10}
-      key={`${category}-${slug}-${index}`}
-      className="blog-post__recently-post-item"
+    <BlogPostItemComposer.root
+      index={index}
       aria-labelledby={titleId}
+      data-testid={`blog-post__recently-${index}-post-item`}
     >
-      <article>
-        <BlogPostWrapper>
-          <Link href={`/post/${category}/${slug}`} aria-label={titleLinkId} scroll={true}>
-            <VisuallyHidden>{`${title} 포스트로 이동합니다.`}</VisuallyHidden>
-            <BlogPostTitle>
-              <Title id={titleId} title={title}>
-                {title}
-              </Title>
-              <TitleDot />
-              <UnderLineWave />
-            </BlogPostTitle>
-            <BlogPostContent>{summary}</BlogPostContent>
-          </Link>
-        </BlogPostWrapper>
-        <Footer>
-          <DateCompo dateTime={webStandardDate}>{localeDate}</DateCompo>
-        </Footer>
-      </article>
-    </BlogPostListItem>
+      <BlogPostItemComposer.main 
+        href={href}
+        aria-label={titleLinkId}
+        scroll={true}
+      >
+        <BlogPostItemComposer.title>{post.title}</BlogPostItemComposer.title>
+        <BlogPostItemComposer.content>{post.summary}</BlogPostItemComposer.content>
+      </BlogPostItemComposer.main>
+      <BlogPostItemComposer.footer dateISO={dateISO} />
+    </BlogPostItemComposer.root>
   );
-}
+});
