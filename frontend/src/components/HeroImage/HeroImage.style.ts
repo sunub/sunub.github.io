@@ -3,6 +3,10 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 
+interface BgImageProps {
+  $bgUrl: string;
+}
+
 export const RootWrapper = styled.div`
   position: relative;
   top: 65px;
@@ -31,22 +35,22 @@ export const HeroImageWrapper = styled.div`
   justify-items: center;
 `;
 
-export const Bridge = styled.span`
+export const Bridge = styled.span<BgImageProps>`
   display: inline-block;
   width: 100dvw;
   height: 120px;
   background-size: contain;
   background-repeat: repeat-x;
-  background-image: var(--bridge-url);
+  background-image: url(${props => props.$bgUrl});
   opacity: var(--bridge-opacity);
 `;
 
-export const Clouds = styled.span`
+export const Clouds = styled.span<BgImageProps>`
   display: inline-block;
   width: 100%;
   height: 200px;
   background-repeat: repeat-x;
-  background-image: var(--clouds-url);
+  background-image: url(${props => props.$bgUrl});
   opacity: var(--clouds-opacity);
 
   animation: pan 100s linear infinite;
@@ -69,7 +73,7 @@ export const Moon = styled(Image)<{ $opacity: string }>`
   opacity: var(${props => props.$opacity});
 `;
 
-export const Cars = styled.span`
+export const Cars = styled.span<BgImageProps>`
   background-repeat: repeat-x;
   position: absolute;
   z-index: -1;
@@ -81,7 +85,7 @@ export const Cars = styled.span`
   animation: pan-cars 50s linear infinite;
   will-change: background-position;
 
-  background-image: var(--cars-url);
+  background-image: url(${props => props.$bgUrl});
   opacity: var(--cars-opacity);
   @keyframes pan-cars {
     0% {
@@ -93,7 +97,6 @@ export const Cars = styled.span`
     }
   }
 `;
-
 export const LightShadow = styled.span`
   position: relative;
   top: -28px;

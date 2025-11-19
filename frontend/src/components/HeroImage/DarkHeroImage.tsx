@@ -1,5 +1,4 @@
-import { memo, useMemo } from "react";
-import { getComputedStyles } from "@/utils/getComputedStyles";
+import { memo } from "react";
 import { DrakHeroImageWapper, Clouds, Bridge, Cars, DarkShadow } from "./HeroImage.style";
 
 interface DarkHeroImageProps {
@@ -7,39 +6,17 @@ interface DarkHeroImageProps {
 }
 
 const DarkHeroImage = memo(({ $isVisible }: DarkHeroImageProps) => {
-  const cloudStyles = useMemo(() =>
-    getComputedStyles({
-      cloudsUrl: 'url(/assets/dark_clouds.avif)',
-      cloudsOpacity: 'var(--color-dark-heroimage)'
-    }), []
-  );
-
-  const bridgeStyles = useMemo(() =>
-    getComputedStyles({
-      bridgeUrl: 'url(/assets/dark_bridge.avif)',
-      bridgeOpacity: 'var(--color-dark-heroimage)'
-    }), []
-  );
-
-  const carsStyles = useMemo(() =>
-    getComputedStyles({
-      carsUrl: 'url(/assets/dark_cars.avif)',
-      carsOpacity: 'var(--color-dark-heroimage)'
-    }), []
-  );
-
-  const shadowStyles = useMemo(() =>
-    getComputedStyles({
-      shadowOpacity: 'var(--color-dark-heroimage)'
-    }), []
-  );
+  const cloudStyle = { '--clouds-opacity': 'var(--color-dark-heroimage)' } as React.CSSProperties;
+  const bridgeStyle = { '--bridge-opacity': 'var(--color-dark-heroimage)' } as React.CSSProperties;
+  const carsStyle = { '--cars-opacity': 'var(--color-dark-heroimage)' } as React.CSSProperties;
+  const shadowStyle = { opacity: 'var(--color-dark-heroimage)' } as React.CSSProperties;
 
   return (
     <DrakHeroImageWapper $isVisible={$isVisible}>
-      <Clouds style={cloudStyles} />
-      <Bridge style={bridgeStyles} />
-      <Cars style={carsStyles} />
-      <DarkShadow style={shadowStyles} />
+      <Clouds $bgUrl="/assets/dark_clouds.avif" style={cloudStyle} />
+      <Bridge $bgUrl="/assets/dark_bridge.avif" style={bridgeStyle} />
+      <Cars $bgUrl="/assets/dark_cars.avif" style={carsStyle} />
+      <DarkShadow style={shadowStyle} />
     </DrakHeroImageWapper>
   );
 });
