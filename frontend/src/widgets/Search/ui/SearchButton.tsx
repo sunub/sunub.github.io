@@ -25,14 +25,16 @@ const SearchIcon = memo(() => {
 });
 SearchIcon.displayName = 'SearchIcon';
 
-function SearchButton({ isOpen, toggleOpen }: { isOpen: boolean; toggleOpen: () => void }) {
+const SearchButton = memo(({ isOpen, toggleOpen }: { isOpen: boolean; toggleOpen: () => void }) => {
   return (
     <StyledSearchButton type="button" disabled={isOpen} onClick={toggleOpen} aria-label="검색">
       <VisuallyHidden>검색</VisuallyHidden>
       <SearchIcon />
     </StyledSearchButton>
   );
-}
+})
+
+SearchButton.displayName = 'SearchButton';
 
 const rotate = keyframes`
   0% {

@@ -90,3 +90,7 @@ export const clearSearchAtom = atom(null, (get, set) => {
 export const closeSearchModalAtom = atom(null, (get, set) => {
   set(isSearchModalOpenAtom, false);
 });
+
+export const openSearchModalAtom = atom(null, (get, set) => {
+  set(isSearchModalOpenAtom, true);
+});

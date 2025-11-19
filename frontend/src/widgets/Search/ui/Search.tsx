@@ -1,6 +1,6 @@
 'use client';
 
-import { Provider } from 'jotai';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { SearchButton } from './SearchButton';
 import { SearchModal } from './SearchModal';
@@ -8,16 +8,18 @@ import { useSearchModal } from '../hook/useSearchAtoms';
 
 function Search() {
   const { isOpen, open, close } = useSearchModal();
+  const portalRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!portalRef.current) {
+      portalRef.current = document.getElementById('blog-search__input-area') as HTMLDivElement;
+    }
+  });
+
   return (
     <>
       <SearchButton isOpen={isOpen} toggleOpen={open} />
-      {isOpen &&
-        createPortal(
-          <Provider>
-            <SearchModal close={close} />
-          </Provider>,
-          document.getElementById('blog-search__input-area')!
-        )}
+      {isOpen && portalRef.current && createPortal(<SearchModal close={close} />, portalRef.current)}
     </>
   );
 }

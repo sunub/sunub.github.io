@@ -5,6 +5,7 @@ import {
   hasSearchResultsAtom,
   isSearchLoadingAtom,
   isSearchModalOpenAtom,
+  openSearchModalAtom,
   searchActionAtom,
   searchQueryAtom,
   searchResultsAtom,
@@ -62,12 +63,13 @@ export function useHasSearchResultsAtom() {
 }
 
 export function useSearchModal() {
-  const [isOpen, setIsOpen] = useAtom(isSearchModalOpenAtom);
-  const closeModal = useSetAtom(closeSearchModalAtom);
+  const [isOpen] = useAtom(isSearchModalOpenAtom);
+  const close = useSetAtom(closeSearchModalAtom);
+  const open = useSetAtom(openSearchModalAtom);
 
   return {
     isOpen,
-    open: () => setIsOpen(true),
-    close: closeModal,
+    open,
+    close
   };
 }
