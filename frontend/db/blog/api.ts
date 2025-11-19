@@ -6,6 +6,7 @@ import matter from 'gray-matter';
 import { join, resolve } from 'path';
 import { cwd } from 'process';
 import { cache } from 'react';
+import postsJson from '@/generated/posts.generated.json';
 import { type PostCategory } from '@/types/schema';
 import { Post } from './Posts';
 import { FrontMatterSchema, JsonPostFrontMatterSchema, PostFrontMatter } from './Schema';
@@ -19,46 +20,14 @@ const getPostsDir = cache(() => {
 });
 
 const getAllJsonFrontMatter = cache(async () => {
-  const getPathsByEnvironment = () => {
-    const cwd = process.cwd();
+  const parsedJsonFrontMatter = JsonPostFrontMatterSchema.safeParse(postsJson);
 
-    if (process.env.VERCEL || cwd.includes('/vercel/')) {
-      return [
-        join('/var/task', 'public', 'posts.json'),
-        join('/vercel/path0', 'frontend', 'public', 'posts.json'),
-        join(cwd, 'frontend', 'public', 'posts.json'),
-        join(cwd, 'public', 'posts.json'),
-      ];
-    }
-
-    return [join(cwd, 'public', 'posts.json'), join(cwd, 'frontend', 'public', 'posts.json')];
-  };
-
-  const possiblePaths = getPathsByEnvironment();
-  let lastError: Error | null = null;
-
-  for (const filePath of possiblePaths) {
-    try {
-      const fileContent = await fs.readFile(filePath, 'utf8');
-      const json: unknown = JSON.parse(fileContent);
-
-      const parsedJsonFrontMatter = JsonPostFrontMatterSchema.safeParse(json);
-      if (!parsedJsonFrontMatter.success) {
-        lastError = new Error(`posts.json 파일의 형식이 잘못되었습니다: ${filePath}`);
-        console.error('JSON 스키마 검증 실패:', parsedJsonFrontMatter.error);
-        continue;
-      }
-
-      return parsedJsonFrontMatter.data;
-    } catch (error) {
-      lastError = error as Error;
-      console.error(`JSON 파일 처리 오류 (${filePath}):`, error);
-    }
+  if (!parsedJsonFrontMatter.success) {
+    console.error('posts.generated.json 스키마 검증 실패:', parsedJsonFrontMatter.error);
+    throw new Error('posts.generated.json 파일의 형식이 잘못되었습니다.');
   }
 
-  // 모든 경로에서 실패한 경우
-  console.error('posts.json 파일을 찾을 수 없습니다. 시도한 경로:', possiblePaths);
-  throw lastError || new Error('posts.json 파일을 찾을 수 없습니다.');
+  return parsedJsonFrontMatter.data;
 });
 
 export async function getAllPostsFrontmatter(): Promise<PostFrontMatter[]> {

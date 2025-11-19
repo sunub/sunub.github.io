@@ -38,6 +38,7 @@
       "@/components/*": ["./src/components/*"],
       "@/hooks/*": ["./src/hooks/*"],
       "@/posts/*": ["./src/app/posts/*"],
+      "@/generated/*": ["./src/generated/*"],
       "@/public/*": ["./public/*"],
       "@/shared/*": ["./src/shared/*"],
       "@/db/*": ["./db/*"]
