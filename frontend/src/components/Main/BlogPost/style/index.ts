@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'motion/react';
 import styled from 'styled-components';
 
 export const ScrollTrigger = styled.div`
@@ -129,7 +130,7 @@ export const BlogPostList = styled.ul`
   padding-left: 1rem;
 `;
 
-export const BlogPostListItem = styled.li<{ $isInitialize?: boolean }>`
+export const BlogPostListItem = styled(motion.li)<{ $isInitialize?: boolean }>`
   width: fit-content;
   text-wrap: pretty;
   word-break: keep-all;
