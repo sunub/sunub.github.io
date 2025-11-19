@@ -101,19 +101,5 @@
     "shiki": "^3.15.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4"
-  },
-  "resolutions": {
-    "postcss-selector-parser": "^6.0.10"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "@vercel/speed-insights",
-      "bufferutil",
-      "esbuild",
-      "sharp",
-      "unrs-resolver",
-      "utf-8-validate"
-    ]
   }
 }
