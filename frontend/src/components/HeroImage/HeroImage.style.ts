@@ -31,23 +31,23 @@ export const HeroImageWrapper = styled.div`
   justify-items: center;
 `;
 
-export const Bridge = styled.span<{ $url: string; $opacity: string }>`
+export const Bridge = styled.span`
   display: inline-block;
   width: 100dvw;
   height: 120px;
-  background-image: url(${props => props.$url});
   background-size: contain;
   background-repeat: repeat-x;
-  opacity: var(${props => props.$opacity});
+  background-image: var(--bridge-url);
+  opacity: var(--bridge-opacity);
 `;
 
-export const Clouds = styled.span<{ $url: string; $opacity: string }>`
+export const Clouds = styled.span`
   display: inline-block;
   width: 100%;
   height: 200px;
-  background-image: url(${props => props.$url});
   background-repeat: repeat-x;
-  opacity: var(${props => props.$opacity});
+  background-image: var(--clouds-url);
+  opacity: var(--clouds-opacity);
 
   animation: pan 100s linear infinite;
   will-change: background-position;
@@ -69,19 +69,20 @@ export const Moon = styled(Image)<{ $opacity: string }>`
   opacity: var(${props => props.$opacity});
 `;
 
-export const Cars = styled.span<{ $url: string; $opacity: string }>`
-  background-image: url(${props => props.$url});
+export const Cars = styled.span`
   background-repeat: repeat-x;
   position: absolute;
   z-index: -1;
-  top: 240px;
+  top: 231px;
   left: 0px;
   width: 100%;
   height: 100%;
-  opacity: var(${props => props.$opacity});
 
   animation: pan-cars 50s linear infinite;
   will-change: background-position;
+
+  background-image: var(--cars-url);
+  opacity: var(--cars-opacity);
   @keyframes pan-cars {
     0% {
       background-position: 0% 0%;
@@ -93,7 +94,7 @@ export const Cars = styled.span<{ $url: string; $opacity: string }>`
   }
 `;
 
-export const LightShadow = styled.span<{ $opacity: string }>`
+export const LightShadow = styled.span`
   position: relative;
   top: -28px;
   display: inline-block;
@@ -102,10 +103,10 @@ export const LightShadow = styled.span<{ $opacity: string }>`
   background-color: oklch(50.81% 0.191 29.05);
   mix-blend-mode: darken;
   filter: blur(10px);
-  opacity: var(${props => props.$opacity});
+  opacity: var(--color-light-heroimage);
 `;
 
-export const DarkShadow = styled.span<{ $opacity: string }>`
+export const DarkShadow = styled.span`
   position: relative;
   top: -28px;
   display: inline-block;
@@ -114,13 +115,17 @@ export const DarkShadow = styled.span<{ $opacity: string }>`
   background-color: oklch(15.29% 0.034 262.59 / 85%);
   mix-blend-mode: darken;
   filter: blur(10px);
-  opacity: var(${props => props.$opacity});
+  opacity: var(--color-dark-heroimage);
 `;
 
-export const DrakHeroImageWapper = styled.div`
+export const DrakHeroImageWapper = styled.div<{ $isVisible: boolean }>`
   grid-area: hero-image;
+  display: ${props => props.$isVisible ? 'contents' : 'none'};
+  content-visibility: ${props => props.$isVisible ? 'visible' : 'hidden'};
 `;
 
-export const LightHeroImageWapper = styled.div`
+export const LightHeroImageWapper = styled.div<{ $isVisible: boolean }>`
   grid-area: hero-image;
+  display: ${props => props.$isVisible ? 'contents' : 'none'};
+  content-visibility: ${props => props.$isVisible ? 'visible' : 'hidden'};
 `;

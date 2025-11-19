@@ -1,43 +1,10 @@
 'use client';
 
-import { memo, useContext } from 'react';
-import {
-  Bridge,
-  Cars,
-  Clouds,
-  DarkShadow,
-  DrakHeroImageWapper,
-  HeroImageWrapper,
-  LightHeroImageWapper,
-  LightShadow,
-  RootWrapper,
-} from './HeroImage.style';
+import { useContext } from 'react';
+import DarkHeroImage from './DarkHeroImage';
+import { HeroImageWrapper, RootWrapper } from './HeroImage.style';
+import LightHeroImage from './LightHeroImage';
 import { ThemeContext } from '../Theme/ThemeProvider';
-
-const LightHeroImage = memo(() => {
-  return (
-    <LightHeroImageWapper>
-      <Clouds $url="/assets/clouds.avif" $opacity="--color-light-heroimage" />
-      <Bridge $url="/assets/bridge.avif" $opacity="--color-light-heroimage" />
-      <Cars $url="/assets/cars.avif" $opacity="--color-light-heroimage" />
-      <LightShadow $opacity="--color-light-heroimage" />
-    </LightHeroImageWapper>
-  );
-});
-
-const DarkHeroImage = memo(() => {
-  return (
-    <DrakHeroImageWapper>
-      <Clouds $url="/assets/dark_clouds.avif" $opacity="--color-dark-heroimage" />
-      <Bridge $url="/assets/dark_bridge.avif" $opacity="--color-dark-heroimage" />
-      <Cars $url="/assets/dark_cars.avif" $opacity="--color-dark-heroimage" />
-      <DarkShadow $opacity="--color-dark-heroimage" />
-    </DrakHeroImageWapper>
-  );
-});
-
-LightHeroImage.displayName = 'LightHeroImage';
-DarkHeroImage.displayName = 'DarkHeroImage';
 
 function HeroImage() {
   const { colorTheme } = useContext(ThemeContext);
@@ -45,7 +12,10 @@ function HeroImage() {
 
   return (
     <RootWrapper suppressHydrationWarning={true}>
-      <HeroImageWrapper>{isDarkTheme ? <DarkHeroImage /> : <LightHeroImage />}</HeroImageWrapper>
+      <HeroImageWrapper>
+        <LightHeroImage $isVisible={!isDarkTheme} />
+        <DarkHeroImage $isVisible={isDarkTheme} />
+      </HeroImageWrapper>
     </RootWrapper>
   );
 }
