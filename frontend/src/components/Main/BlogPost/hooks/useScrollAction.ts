@@ -1,9 +1,8 @@
-import throttle from 'lodash.throttle';
 import { RefObject, useEffect } from 'react';
 
 export function useScrollAction(
   observeTarget: RefObject<HTMLDivElement | null>,
-  loadMorePublishedPost: ReturnType<typeof throttle>
+  loadMorePublishedPost: () => void
 ) {
   useEffect(() => {
     if (!observeTarget.current) {
@@ -20,7 +19,6 @@ export function useScrollAction(
     observer.observe(observeTarget.current);
     return () => {
       observer.disconnect();
-      loadMorePublishedPost.cancel();
     };
   }, [observeTarget, loadMorePublishedPost]);
 }
