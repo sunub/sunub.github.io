@@ -5,12 +5,17 @@ import NewestPost from '@/components/Main/NewestPost';
 import { FeatherIcon } from '@/components/Main/NewestPost/FeatherIcon';
 import { RootLayout } from '@/features/RootLayout';
 import { HeaderContentsWrapper, MainWrapper, Title, TitleWrapper } from './page.style';
+import { cookies } from 'next/headers';
+import { Theme } from 'type';
 
-async function Page() {
+export default async function Page() {
+  const savedTheme = (await cookies()).get('color-theme')?.value || 'light';
+  const initialTheme: Theme = savedTheme === 'dark' ? 'dark' : 'light';
+
   return (
     <RootLayout>
       <HeaderContentsWrapper>
-        <HeroImage />
+        <HeroImage initialTheme={initialTheme} />
         <Wave />
       </HeaderContentsWrapper>
       <div id="blog-main-wrapper">
@@ -25,5 +30,3 @@ async function Page() {
     </RootLayout>
   );
 }
-
-export default Page;

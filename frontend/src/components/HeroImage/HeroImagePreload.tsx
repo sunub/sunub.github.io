@@ -1,15 +1,35 @@
-export function HeroImagePreload() {
-  const criticalImages = [
-    { src: '/assets/bridge.avif', media: '(prefers-color-scheme: light)' },
-    { src: '/assets/dark_bridge.avif', media: '(prefers-color-scheme: dark)' },
-    { src: '/assets/clouds.avif', media: '(prefers-color-scheme: light)' },
-    { src: '/assets/dark_clouds.avif', media: '(prefers-color-scheme: dark)' },
-  ];
+import { Theme } from 'type';
+
+interface Props {
+  theme: Theme;
+}
+
+export function HeroImagePreload({ theme }: Props) {
+  const isLight = theme === 'light';
+  
+  const criticalImages = isLight
+    ? [
+        '/assets/bridge.avif',
+        '/assets/clouds.avif',
+        '/assets/cars.avif'
+      ]
+    : [
+        '/assets/dark_bridge.avif',
+        '/assets/dark_clouds.avif',
+        '/assets/dark_cars.avif'
+      ];
 
   return (
     <>
-      {criticalImages.map(({ src, media }) => (
-        <link key={src} rel="preload" as="image" href={src} type="image/avif" media={media} fetchPriority="high" />
+      {criticalImages.map((src) => (
+        <link 
+          key={src} 
+          rel="preload" 
+          as="image" 
+          href={src} 
+          type="image/avif" 
+          fetchPriority="high" 
+        />
       ))}
     </>
   );

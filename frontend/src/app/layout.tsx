@@ -67,7 +67,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1"></meta>
         <link rel="icon" type="image/x-icon" sizes="32x32" href="/assets/favicon.ico" />
-        <HeroImagePreload />
+        <HeroImagePreload theme={theme} />
         <Script id="theme-script" strategy="beforeInteractive">
           {initSetColorsByThemeFn}
         </Script>

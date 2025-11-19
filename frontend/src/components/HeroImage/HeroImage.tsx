@@ -5,16 +5,25 @@ import DarkHeroImage from './DarkHeroImage';
 import { HeroImageWrapper, RootWrapper } from './HeroImage.style';
 import LightHeroImage from './LightHeroImage';
 import { ThemeContext } from '../Theme/ThemeProvider';
+import { Theme } from 'type';
 
-function HeroImage() {
+interface HeroImageProps {
+  initialTheme?: Theme;
+}
+
+function HeroImage({ initialTheme }: HeroImageProps) {
   const { colorTheme } = useContext(ThemeContext);
-  const isDarkTheme = colorTheme === 'dark';
+  const currentTheme = colorTheme || initialTheme || 'light';
+  const isDarkTheme = currentTheme === 'dark';
 
   return (
     <RootWrapper suppressHydrationWarning={true}>
       <HeroImageWrapper>
-        <LightHeroImage $isVisible={!isDarkTheme} />
-        <DarkHeroImage $isVisible={isDarkTheme} />
+        {isDarkTheme ? (
+          <DarkHeroImage $isVisible={true} />
+        ) : (
+          <LightHeroImage $isVisible={true} />
+        )}
       </HeroImageWrapper>
     </RootWrapper>
   );
