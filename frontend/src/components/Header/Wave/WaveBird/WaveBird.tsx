@@ -1,45 +1,23 @@
 'use client';
 
-import gsap, { Linear } from 'gsap';
-import React from 'react';
+import { motion } from 'motion/react';
+import { memo } from 'react';
 import { WaveBirdMirroredSvg, WaveBirdSvg } from './WaveBird.style';
 
-export function WaveBird() {
-  const waveBirdRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (waveBirdRef.current == null) return;
-
-    const birdTimeline = gsap.timeline({
-      repeat: -1,
-      repeatDelay: 0,
-      yoyo: true,
-    });
-
-    birdTimeline.set(waveBirdRef.current, {
-      rotation: 0,
-      y: 0,
-    });
-
-    birdTimeline.to(waveBirdRef.current, {
-      rotation: 6,
-      duration: 4,
-      y: 15,
-      ease: Linear.easeIn,
-    });
-    birdTimeline.to(waveBirdRef.current, {
-      rotation: -4,
-      duration: 4,
-      y: 3,
-      ease: Linear.easeIn,
-    });
-
-    birdTimeline.play();
-  }, []);
-
+export const WaveBird = memo(() => {
   return (
-    <div
-      ref={waveBirdRef}
+    <motion.div
+      animate={{
+        rotate: [0, 6, -4],
+        y: [0, 15, 3],
+      }}
+      transition={{
+        duration: 8,
+        ease: 'linear',
+        repeat: Infinity,
+        repeatType: 'reverse',
+        times: [0, 0.5, 1],
+      }}
       style={{
         position: 'absolute',
         bottom: '38px',
@@ -84,7 +62,7 @@ export function WaveBird() {
         />
         <path
           fill="var(--color-birdShadow)"
-          d="M31.68 47.458C10.09 45.627 4.294 31.278 4.094 24.33H1.574v13.732c1.056 8.48 7.477 10.68 10.555 10.72h24.71c3.07 0 4.077-2.57 4.197-3.855-.48.964-5.997 2.815-9.355 2.53"
+          d="M31.68 47.458C10.09 45.627 4.294 31.278 4.094 24.33h-2.52v13.732c1.056 8.48 7.477 10.68 10.555 10.72h24.71c3.07 0 4.077-2.57 4.197-3.855-.48.964-5.997 2.815-9.355 2.53"
         />
       </WaveBirdSvg>
       <WaveBirdMirroredSvg xmlns="http://www.w3.org/2000/svg" width="48" height="52" fill="none">
@@ -109,7 +87,7 @@ export function WaveBird() {
           d="M1.585 24.375h19.742c3.03 0 5.484 2.48 5.484 5.54V48.75H12.553c-6.057 0-10.968-4.96-10.968-11.08z"
         />
         <path
-          fill="var(--color-birdEyeball)"
+          fill="var(--color-birdEyeBall)"
           d="M26.608 13.572c0 5.402-2.365 9.782-5.282 9.782s-5.282-4.38-5.282-9.782S18.41 3.79 21.327 3.79s5.282 4.38 5.282 9.782"
         />
         <path
@@ -117,7 +95,7 @@ export function WaveBird() {
           d="M24.847 13.572c0 4.42-1.576 8.003-3.52 8.003-1.946 0-3.522-3.583-3.522-8.003s1.576-8.003 3.521-8.003 3.521 3.583 3.521 8.003"
         />
         <path
-          fill="var(--color-birdEyeball)"
+          fill="var(--color-birdEyeBall)"
           d="M28.642 11.104c0-5.417 4.95-7.132 7.426-7.312h3.712c6.683 0 8.266 5.597 8.221 8.396v5.822H28.642z"
         />
         <path
@@ -126,9 +104,11 @@ export function WaveBird() {
         />
         <path
           fill="var(--color-birdShadow)"
-          d="M31.68 47.458C10.09 45.627 4.294 31.278 4.094 24.33H1.574v13.732c1.056 8.48 7.477 10.68 10.555 10.72h24.71c3.07 0 4.077-2.57 4.197-3.855-.48.964-5.997 2.815-9.355 2.53"
+          d="M31.68 47.458C10.09 45.627 4.294 31.278 4.094 24.33h-2.52v13.732c1.056 8.48 7.477 10.68 10.555 10.72h24.71c3.07 0 4.077-2.57 4.197-3.855-.48.964-5.997 2.815-9.355 2.53"
         />
       </WaveBirdMirroredSvg>
-    </div>
+    </motion.div>
   );
-}
+});
+
+WaveBird.displayName = 'WaveBird';

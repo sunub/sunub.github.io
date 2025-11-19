@@ -1,9 +1,6 @@
 'use client';
 
-/* eslint-disable */
-import gsap from 'gsap';
-import { CustomEase } from 'gsap/all';
-import React from 'react';
+import { motion, BezierDefinition } from 'motion/react';
 import * as Styled from '../Wave.style';
 
 const path = {
@@ -27,76 +24,9 @@ const path = {
   },
 };
 
+const customEase: BezierDefinition = [0.42, 0, 1, 1];
+
 export function WaveSvg({ ...delegated }) {
-  const frontWaveRef = React.useRef(null);
-  const midWaveRef = React.useRef(null);
-  const endWaveRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if (frontWaveRef.current == null) return;
-    gsap.registerPlugin(CustomEase);
-
-    const waveTimeline = gsap.timeline({
-      repeat: -1,
-      yoyo: true,
-    });
-    const midTimeline = gsap.timeline({
-      repeat: -1,
-      yoyo: true,
-    });
-    midTimeline.timeScale(1.25);
-
-    const endWaveTimeline = gsap.timeline({
-      repeat: -1,
-      repeatDelay: 0,
-      yoyo: true,
-    });
-    endWaveTimeline.timeScale(1.25);
-
-    waveTimeline.set(frontWaveRef.current, {
-      attr: { d: path.step1.front },
-      ease: 'sine.inOut',
-    });
-    waveTimeline.to(frontWaveRef.current, {
-      duration: 3,
-      attr: { d: path.step2.front },
-      ease: CustomEase.create('custom', 'M0,0 C0,0 1,0.4 1,0.4 '),
-    });
-    waveTimeline.to(frontWaveRef.current, {
-      duration: 3,
-      attr: { d: path.step3.front },
-      ease: 'none',
-    });
-
-    midTimeline.set(midWaveRef.current, {
-      attr: { d: path.step1.mid },
-    });
-    midTimeline.to(midWaveRef.current, {
-      duration: 5,
-      attr: { d: path.step3.mid },
-      ease: 'none',
-    });
-    midTimeline.to(midWaveRef.current, {
-      duration: 3,
-      attr: { d: path.step2.mid },
-      ease: CustomEase.create('custom', 'M0,0 C0,0 1,0.4 1,0.4 '),
-    });
-
-    endWaveTimeline.set(endWaveRef.current, {
-      attr: { d: path.step1.end },
-    });
-    endWaveTimeline.to(endWaveRef.current, {
-      duration: 6,
-      attr: { d: path.step3.end },
-      ease: 'none',
-    });
-    endWaveTimeline.to(endWaveRef.current, {
-      duration: 3,
-      attr: { d: path.step1.end },
-      ease: CustomEase.create('custom', 'M0,0 C0,0 1,0.4 1,0.4 '),
-    });
-  }, []);
-
   return (
     <Styled.WaveSvgWrapper key={'light-wave-svg'} {...delegated}>
       <Styled.WaveSvg
@@ -107,9 +37,52 @@ export function WaveSvg({ ...delegated }) {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d={path.step1.end} fill="url(#paint0_linear_103_748)" fillOpacity="0.85" ref={endWaveRef} />
-        <path d={path.step1.mid} fill="url(#paint1_linear_103_748)" ref={midWaveRef} />
-        <path d={path.step1.front} fill="var(--color-frontWave)" ref={frontWaveRef} />
+        <motion.path
+          d={path.step1.end}
+          fill="url(#paint0_linear_103_748)"
+          fillOpacity="0.85"
+          animate={{
+            d: [path.step1.end, path.step3.end, path.step1.end],
+          }}
+          transition={{
+            duration: 7.2, 
+            times: [0, 0.66, 1], 
+            ease: ['linear', customEase], 
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+        />
+
+        <motion.path
+          d={path.step1.mid}
+          fill="url(#paint1_linear_103_748)"
+          animate={{
+            d: [path.step1.mid, path.step3.mid, path.step2.mid],
+          }}
+          transition={{
+            duration: 6.4,
+            times: [0, 0.625, 1],
+            ease: ['linear', customEase],
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+        />
+
+        <motion.path
+          d={path.step1.front}
+          fill="var(--color-frontWave)"
+          animate={{
+            d: [path.step1.front, path.step2.front, path.step3.front],
+          }}
+          transition={{
+            duration: 6,
+            times: [0, 0.5, 1],
+            ease: [customEase, 'linear'],
+            repeat: Infinity,
+            repeatType: 'reverse',
+          }}
+        />
+
         <defs>
           <linearGradient
             id="paint0_linear_103_748"
@@ -122,7 +95,14 @@ export function WaveSvg({ ...delegated }) {
             <stop offset="0.457674" stopColor="var(--color-midStart)" />
             <stop offset="0.590708" stopColor="var(--color-midStop)" />
           </linearGradient>
-          <linearGradient id="paint1_linear_103_748" x1="720" y1="46" x2="720" y2="196" gradientUnits="userSpaceOnUse">
+          <linearGradient
+            id="paint1_linear_103_748"
+            x1="720"
+            y1="46"
+            x2="720"
+            y2="196"
+            gradientUnits="userSpaceOnUse"
+          >
             <stop offset="0.133996" stopColor="var(--color-endStart)" />
             <stop offset="0.690268" stopColor="var(--color-endStop)" />
           </linearGradient>
