@@ -1,69 +1,37 @@
 'use client';
 
-import Cookies from 'js-cookie';
 import React from 'react';
-import { Theme } from 'type';
-import { ThemeContext } from '@/components/Theme/ThemeProvider';
+import { useTheme } from '@/components/Theme/ThemeProvider';
 import { VisuallyHidden } from '@/components/VisuallyHidden';
-import { DARK_COLORS, LIGHT_COLORS } from '@/constants/constants';
 import * as Styled from './ThemeToggler.style';
 
 export default function ThemeTogglerButton({
   maskId,
-  theme,
   'data-testid': dataTestId = 'theme-toggler-button',
   ...delegated
 }: {
-  theme: Theme;
   maskId: string;
   'data-testid'?: string;
 }) {
-  const [colorTheme, rawSetColorTheme] = React.useState<Theme>(theme);
-  const { setColorTheme } = React.useContext(ThemeContext);
-
-  React.useEffect(() => {
-    const root = window.document.documentElement;
-    const initColorTheme = root.getAttribute('data-color-theme') as Theme;
-    rawSetColorTheme(initColorTheme);
-  }, []);
+  const { colorTheme, setColorTheme } = useTheme();
 
   function handleClick() {
-    const root = document.documentElement;
     const nextTheme = colorTheme === 'light' ? 'dark' : 'light';
-    Cookies.set('color-theme', nextTheme);
-    const nextColor = nextTheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
-
-    rawSetColorTheme(nextTheme);
-    root.setAttribute('data-color-theme', nextTheme);
-    Object.entries(nextColor).forEach(([key, value]) => {
-      root.style.setProperty(key, value as string);
-    });
     setColorTheme(nextTheme);
-    return nextTheme;
   }
 
   return (
-    colorTheme && (
       <Styled.ToggleBtn
         {...delegated}
         title="테마 변경"
         aria-label="theme-toggler-button"
         data-testid={dataTestId}
-        onClick={() => {
-          const nextTheme = handleClick();
-          document
-            .querySelector('meta[name=theme-color]')
-            ?.setAttribute(
-              'content',
-              nextTheme === 'light' ? 'oklch(87.44% 0.067 30.96)' : 'oklch(43.81% 0.072 289.34)'
-            );
-        }}
+        onClick={() => handleClick()}
       >
         <VisuallyHidden>테마 변경 버튼</VisuallyHidden>
         <ThemeIcon colorTheme={colorTheme} maskId={maskId} />
       </Styled.ToggleBtn>
     )
-  );
 }
 function ThemeIcon({ colorTheme, maskId, ...delegated }: { colorTheme: string; maskId: string }) {
   return (

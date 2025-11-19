@@ -1,7 +1,7 @@
 'use client';
 
 import Cookies from 'js-cookie';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Theme } from 'type';
 import { DARK_COLORS, LIGHT_COLORS } from '@/constants/constants';
 
@@ -15,67 +15,53 @@ export const ThemeContext = React.createContext<ThemeContextProps>({
   setColorTheme: () => {},
 });
 
-function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [colorTheme, rawSetColorTheme] = React.useState<'light' | 'dark' | null>(null);
+function ThemeProvider({ initialTheme, children }: { initialTheme: 'light' | 'dark'; children: React.ReactNode }) {
+  const [colorTheme, rawSetColorTheme] = React.useState<'light' | 'dark'>(initialTheme);
 
-  React.useEffect(() => {
+  const updateTheme = useCallback((nextTheme: Theme) => {
     const root = document.documentElement;
-    const initColorTheme = root.getAttribute('data-color-theme') as Theme;
-    rawSetColorTheme(() => initColorTheme);
+
+    const colors = nextTheme === 'light' ? LIGHT_COLORS : DARK_COLORS;
+
+    root.setAttribute('data-color-theme', nextTheme);
+    Object.entries(colors).forEach(([key, value]) => {
+      root.style.setProperty(key, value as string);
+    });
+
+    Cookies.set('color-theme', nextTheme, { expires: 1000 });
+    rawSetColorTheme(nextTheme);
   }, []);
 
   React.useEffect(() => {
     function matchMediaHandler({ matches: isDark }: { matches: boolean }) {
       const nextColorTheme = isDark ? 'dark' : 'light';
-      Cookies.set('color-theme', nextColorTheme, {
-        expires: 1000,
-      });
-
-      const root = document.documentElement;
-      const nextColor = nextColorTheme === 'light' ? LIGHT_COLORS : DARK_COLORS;
-
-      root.setAttribute('data-color-theme', nextColorTheme);
-      Object.entries(nextColor).forEach(([key, value]) => {
-        root.style.setProperty(key, value as string);
-      });
-      rawSetColorTheme(nextColorTheme);
+      updateTheme(nextColorTheme);
     }
 
-    window
-      .matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', ({ matches: isDark }) => matchMediaHandler({ matches: isDark }));
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', matchMediaHandler);
 
-    return () =>
-      window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .removeEventListener('change', ({ matches: isDark }) => matchMediaHandler({ matches: isDark }));
-  }, []);
+    return () => mediaQuery.removeEventListener('change', matchMediaHandler);
+  }, [updateTheme]);
 
-  const contextValue = React.useMemo(() => {
-    const setColorTheme = (nextValue: Theme) => {
-      const root = document.documentElement;
-      root.setAttribute('data-color-theme', nextValue);
-
-      const nextColor = nextValue === 'light' ? LIGHT_COLORS : DARK_COLORS;
-      Object.entries(nextColor).forEach(([key, value]) => {
-        root.style.setProperty(key, value as string);
-      });
-
-      Cookies.set('color-theme', nextValue, {
-        expires: 1000,
-      });
-      rawSetColorTheme(nextValue);
-    };
-
-    return {
+  const contextValue = React.useMemo(
+    () => ({
       colorTheme,
-      setColorTheme,
-    };
-  }, [colorTheme, rawSetColorTheme]);
+      setColorTheme: updateTheme,
+    }),
+    [colorTheme, updateTheme]
+  );
 
   return <ThemeContext.Provider value={contextValue as ThemeContextProps}>{children}</ThemeContext.Provider>;
 }
 
-export const useColorTheme = () => React.useContext(ThemeContext);
+export function useTheme() {
+  const context = React.useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
+  }
+  return context;
+}
+
 
 export default ThemeProvider;
