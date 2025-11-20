@@ -4,7 +4,7 @@ import { BlogPostList } from "../../style";
 import { BlogPostItem } from "../BlogPostItem";
 import { motion, Variants } from "motion/react";
 
-const MotionBlogPostList = motion(BlogPostList);
+const MotionBlogPostList = motion.create(BlogPostList);
 
 const containerVariants: Variants = {
   hidden: {},
