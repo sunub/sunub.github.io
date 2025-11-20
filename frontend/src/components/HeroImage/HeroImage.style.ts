@@ -123,12 +123,16 @@ export const DarkShadow = styled.span`
 
 export const DrakHeroImageWapper = styled.div<{ $isVisible: boolean }>`
   grid-area: hero-image;
-  display: ${props => props.$isVisible ? 'contents' : 'none'};
-  content-visibility: ${props => props.$isVisible ? 'visible' : 'hidden'};
+  :root[data-color-theme='dark'] & {
+    display: contents;
+    content-visibility: visible;
+  }
 `;
 
 export const LightHeroImageWapper = styled.div<{ $isVisible: boolean }>`
   grid-area: hero-image;
-  display: ${props => props.$isVisible ? 'contents' : 'none'};
-  content-visibility: ${props => props.$isVisible ? 'visible' : 'hidden'};
+  :root[data-color-theme='light'] & {
+    display: contents;
+    content-visibility: visible;
+  }
 `;
