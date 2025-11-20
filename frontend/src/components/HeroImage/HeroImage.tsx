@@ -1,11 +1,11 @@
 'use client';
 
 import { useContext } from 'react';
+import { Theme } from 'type';
 import DarkHeroImage from './DarkHeroImage';
 import { HeroImageWrapper, RootWrapper } from './HeroImage.style';
 import LightHeroImage from './LightHeroImage';
 import { ThemeContext } from '../Theme/ThemeProvider';
-import { Theme } from 'type';
 
 interface HeroImageProps {
   initialTheme?: Theme;
@@ -19,11 +19,8 @@ function HeroImage({ initialTheme }: HeroImageProps) {
   return (
     <RootWrapper suppressHydrationWarning={true}>
       <HeroImageWrapper>
-        {isDarkTheme ? (
-          <DarkHeroImage $isVisible={true} />
-        ) : (
-          <LightHeroImage $isVisible={true} />
-        )}
+        <DarkHeroImage $isVisible={isDarkTheme} />
+        <LightHeroImage $isVisible={isDarkTheme} />
       </HeroImageWrapper>
     </RootWrapper>
   );

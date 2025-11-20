@@ -1,21 +1,21 @@
 import { memo } from "react";
-import { LightHeroImageWapper, Clouds, Bridge, Cars, LightShadow } from "./HeroImage.style";
+import { LightHeroImageWapper, LightShadow } from "./HeroImage.style";
+import { LightCloudHeroImage } from "./LightHeroImage/LightHeroCloudImage";
+import { LightCarHeroImage } from "./LightHeroImage/LightCarsImage";
+import { LightBridgeHeroImage } from "./LightHeroImage/LightBridgeImage";
 
 interface LightHeroImageProps {
   $isVisible: boolean;
 }
 
 const LightHeroImage = memo(({ $isVisible }: LightHeroImageProps) => {
-  const cloudStyle = { '--clouds-opacity': 'var(--color-light-heroimage)' } as React.CSSProperties;
-  const bridgeStyle = { '--bridge-opacity': 'var(--color-light-heroimage)' } as React.CSSProperties;
-  const carsStyle = { '--cars-opacity': 'var(--color-light-heroimage)' } as React.CSSProperties;
   const shadowStyle = { opacity: 'var(--color-light-heroimage)' } as React.CSSProperties;
 
   return (
     <LightHeroImageWapper $isVisible={$isVisible}>
-      <Clouds $bgUrl="/assets/clouds.avif" style={cloudStyle} />
-      <Bridge $bgUrl="/assets/bridge.avif" style={bridgeStyle} />
-      <Cars $bgUrl="/assets/cars.avif" style={carsStyle} />
+      <LightCloudHeroImage />
+      <LightCarHeroImage />
+      <LightBridgeHeroImage />
       <LightShadow style={shadowStyle} />
     </LightHeroImageWapper>
   );
