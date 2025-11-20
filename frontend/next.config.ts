@@ -141,6 +141,10 @@ const securityHeaders = [
     key: 'Access-Control-Allow-Headers',
     value: 'Cache-Control',
   },
+  {
+    key: 'Cache-Control',
+    value: 'private, no-cache, must-revalidate', 
+  },
 ];
 
 const withBundleAnalyzer = bundleAnalyzer({
