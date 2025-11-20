@@ -77,7 +77,7 @@ export const Cars = styled.span<BgImageProps>`
   background-repeat: repeat-x;
   position: absolute;
   z-index: -1;
-  top: 231px;
+  top: 241px;
   left: 0px;
   width: 100%;
   height: 100%;
