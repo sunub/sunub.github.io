@@ -1,7 +1,7 @@
 import { Provider } from 'jotai';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import Script from 'next/script';
 import React from 'react';
 import { Theme } from 'type';
@@ -52,10 +52,15 @@ const pretendard = localFont({
 });
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const savedTheme = (await cookies()).get('color-theme')?.value || 'light';
-  const theme: Theme = savedTheme === 'dark' ? 'dark' : 'light';
-  const themeColors = theme === 'light' ? LIGHT_COLORS : DARK_COLORS;
+  const cookieStore = await cookies();
+  
+  const headersList = await headers();
+  const prefers = headersList.get('sec-ch-prefers-color-scheme');
 
+  const theme: Theme = cookieStore.has('color-theme') ? cookieStore.get('color-theme')?.value as Theme : (prefers === 'dark' ? 'dark' : 'light');
+  const themeColors = theme === 'light' ? LIGHT_COLORS : DARK_COLORS;
+  console.log('Initial theme:', theme);
+  
   return (
     <html
       lang="ko"

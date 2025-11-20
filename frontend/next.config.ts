@@ -145,6 +145,18 @@ const securityHeaders = [
     key: 'Cache-Control',
     value: 'private, no-cache, must-revalidate', 
   },
+  {
+    key: 'Accept-CH',
+    value: 'Sec-CH-Prefers-Color-Scheme',
+  },
+  {
+    key: 'Critical-CH',
+    value: 'Sec-CH-Prefers-Color-Scheme',
+  },
+  {
+    key: 'Vary',
+    value: 'Sec-CH-Prefers-Color-Scheme',
+  },
 ];
 
 const withBundleAnalyzer = bundleAnalyzer({
