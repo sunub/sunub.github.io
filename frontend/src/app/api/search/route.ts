@@ -15,7 +15,10 @@ export async function GET(request: Request) {
   if (!query) {
     return new Response(JSON.stringify({ results: [] }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'private, no-cache, must-revalidate'
+      },
     });
   }
 
@@ -36,6 +39,9 @@ export async function GET(request: Request) {
   z.array(SearchResultSchema).parse(results);
   return new Response(JSON.stringify({ results }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Cache-Control': 'private, no-cache, must-revalidate'
+    },
   });
 }

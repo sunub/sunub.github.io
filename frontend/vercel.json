@@ -18,6 +18,10 @@
         {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "private, no-cache, no-transform, must-revalidate"
         }
       ]
     },
@@ -26,7 +30,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "value": "private, no-cache, no-transform, must-revalidate"
         }
       ]
     },

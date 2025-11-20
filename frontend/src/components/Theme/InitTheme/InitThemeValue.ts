@@ -20,7 +20,8 @@ function setColorsByTheme() {
       'linear-gradient(1deg, oklch(97.14% 0.011 31.07) 21.41%, oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 55.11%)',
     '--color-light-heroimage': 1,
     '--color-dark-heroimage': 0,
-    '--color-codeBlock': 'color-mix(in oklch, oklch(87.48% 0.113 75.97 / 73.11%), var(--color-primary) 52.5%)',
+    '--color-codeBlock':
+      'color-mix(in oklch, oklch(87.48% 0.113 75.97 / 73.11%), var(--color-primary) 52.5%)',
     '--color-title': 'oklch(20.8% 0.165 32.85)',
 
     '--sh-class': '#2d5e9d',
@@ -111,24 +112,31 @@ function setColorsByTheme() {
     return 'light';
   }
 
-  const colorMode = getInitialColorMode();
-  const root = document.documentElement;
-  const COLORS = colorMode === 'light' ? LIGHT_COLORS : DARK_COLORS;
+  function applyTheme(mode: string) {
+    const root = document.documentElement;
+    const COLORS = mode === 'light' ? LIGHT_COLORS : DARK_COLORS;
+    
+    root.setAttribute('data-color-theme', mode);
+    Object.entries(COLORS).forEach(([key, value]) => {
+      root.style.setProperty(key, value as string);
+    });
+  }
 
-  root.setAttribute('data-color-theme', colorMode);
-  Object.entries(COLORS).forEach(([key, value]) => {
-    root.style.setProperty(key, value as string);
-  });
+  const initialColorMode = getInitialColorMode();
+  applyTheme(initialColorMode);
 
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
     const nextColorMode = e.matches ? 'dark' : 'light';
-    const nextColors = nextColorMode === 'light' ? LIGHT_COLORS : DARK_COLORS;
-
-    root.setAttribute('data-color-theme', nextColorMode);
-    Object.entries(nextColors).forEach(([key, value]) => {
-      root.style.setProperty(key, value as string);
-    });
+    applyTheme(nextColorMode);
     setColorThemeCookie('color-theme', nextColorMode, 1000);
+  });
+
+  window.addEventListener('pageshow', (event: PageTransitionEvent) => {
+    // event.persisted가 true면 캐시에서 페이지가 복원된 것입니다.
+    if (event.persisted) {
+      const currentMode = getInitialColorMode();
+      applyTheme(currentMode);
+    }
   });
 }
 
