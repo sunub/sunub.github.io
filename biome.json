@@ -37,7 +37,7 @@
 			}
 		},
 		{
-			"includes": ["frontend/src/app/overrieds.css"],
+			"includes": ["frontend/src/app/shiki-overrieds.css"],
 			"linter": {
 				"rules": {
 					"complexity": {
