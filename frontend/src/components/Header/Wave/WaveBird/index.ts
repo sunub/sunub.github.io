@@ -1,1 +1,1 @@
-export { WaveBird } from './WaveBird';
+export { WaveBird } from "./WaveBird";

@@ -1,61 +1,67 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
-import { FeatherIcon } from '@/components/Main/NewestPost/FeatherIcon';
-import Spacer from '@/components/Spacer';
+import styled from "styled-components";
+import { FeatherIcon } from "@/components/Main/NewestPost/FeatherIcon";
+import Spacer from "@/components/Spacer";
 
 function LoadingAnimation() {
-  return (
-    <BlogPostListItem>
-      <BlogPostWrapper>
-        <BlogPostTitle>
-          <Title>
-            <ContentBlink $width={30} />
-          </Title>
-        </BlogPostTitle>
-        <BlogPostContent>
-          <ContentBlink $width={40} />
-        </BlogPostContent>
-      </BlogPostWrapper>
-      <Footer>
-        <Date>
-          <ContentBlink $width={7} />
-        </Date>
-      </Footer>
-    </BlogPostListItem>
-  );
+	return (
+		<BlogPostListItem>
+			<BlogPostWrapper>
+				<BlogPostTitle>
+					<Title>
+						<ContentBlink $width={30} />
+					</Title>
+				</BlogPostTitle>
+				<BlogPostContent>
+					<ContentBlink $width={40} />
+				</BlogPostContent>
+			</BlogPostWrapper>
+			<Footer>
+				<DateCompo>
+					<ContentBlink $width={7} />
+				</DateCompo>
+			</Footer>
+		</BlogPostListItem>
+	);
 }
 
 function ContentListLoading() {
-  return (
-    <RootWrapper>
-      <TitleWrapper>
-        <FeatherIcon />
-        <RecentTitle>최신 포스트들</RecentTitle>
-      </TitleWrapper>
-      <Spacer axis={'vertical'} size={32} />
-      {Array.from({ length: 5 }, (_, index) => (
-        <LoadingAnimation key={`${index}-content-loading-animation`} />
-      ))}
-    </RootWrapper>
-  );
+	return (
+		<RootWrapper>
+			<TitleWrapper>
+				<FeatherIcon />
+				<RecentTitle>최신 포스트들</RecentTitle>
+			</TitleWrapper>
+			<Spacer axis={"vertical"} size={32} />
+			{Array.from(
+				{ length: 5 },
+				(_, index) => `${index}-content-list-loading-animation`,
+			).map((key) => (
+				<LoadingAnimation key={key} />
+			))}
+		</RootWrapper>
+	);
 }
 
 function FrontMatterLoading({ length }: { length: number }) {
-  return (
-    <RootWrapper data-testid="blog-post__front-matter-loading">
-      {Array.from({ length }, (_, index) => (
-        <LoadingAnimation key={`${index}-content-loading-animation`} />
-      ))}
-    </RootWrapper>
-  );
+	return (
+		<RootWrapper data-testid="blog-post__front-matter-loading">
+			{Array.from(
+				{ length },
+				(_, index) => `${index}-frontmatter-loading-animation`,
+			).map((key) => (
+				<LoadingAnimation key={key} />
+			))}
+		</RootWrapper>
+	);
 }
 
 export { ContentListLoading, FrontMatterLoading };
 
 const ContentBlink = styled.div<{ $width: number }>`
   display: inline-block;
-  width: ${props => props.$width}rem;
+  width: ${(props) => props.$width}rem;
   height: 1.5rem;
   background-color: color-mix(in oklch, var(--color-text) 20%, transparent);
   border-radius: 0.25rem;
@@ -90,7 +96,7 @@ const Title = styled.span`
   font-weight: 600;
 `;
 
-const Date = styled.time`
+const DateCompo = styled.time`
   color: var(--color-text);
 `;
 

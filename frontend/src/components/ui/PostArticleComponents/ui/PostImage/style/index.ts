@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import styled, { keyframes, css } from 'styled-components';
+import Image from "next/image";
+import styled, { css, keyframes } from "styled-components";
 
 const fadeIn = keyframes`
   from { opacity: 0; }
@@ -82,8 +82,8 @@ export const BlurredBackground = styled.div`
 `;
 
 export const StyledImage = styled(Image)<{
-  $isLoading: boolean;
-  $zoomed?: boolean;
+	$isLoading: boolean;
+	$zoomed?: boolean;
 }>`
   object-fit: contain;
   transition: opacity 0.3s ease;
@@ -91,20 +91,20 @@ export const StyledImage = styled(Image)<{
   animation: ${scrollAnimation} 800ms cubic-bezier(0.4, 0, 0.25, 1);
 
   ${({ $zoomed }) =>
-    $zoomed &&
-    css`
+		$zoomed &&
+		css`
       cursor: zoom-out;
       z-index: 10000;
     `}
 `;
 
 export const CustomImageStyle = styled(Image)<{
-  $isLoading: boolean;
-  $extraCss?: ReturnType<typeof css>;
+	$isLoading: boolean;
+	$extraCss?: ReturnType<typeof css>;
 }>`
   object-fit: contain;
   transition: opacity 0.3s ease;
   opacity: ${({ $isLoading }) => ($isLoading ? 0 : 1)};
 
-  ${({ $extraCss }) => $extraCss || ''}
+  ${({ $extraCss }) => $extraCss || ""}
 `;

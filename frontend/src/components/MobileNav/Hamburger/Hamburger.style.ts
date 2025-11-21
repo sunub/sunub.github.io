@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const RootContainer = styled.div`
   z-index: 10000;
@@ -100,9 +100,9 @@ export const Circle = styled.rect`
 
 export const Btn = styled.button<{ $isOpen: boolean }>`
   z-index: 10001;
-  position: ${({ $isOpen }) => ($isOpen ? 'absolute' : 'static')};
-  right: ${({ $isOpen }) => ($isOpen ? '13px' : '0')};
-  top: ${({ $isOpen }) => ($isOpen ? '16px' : '0')};
+  position: ${({ $isOpen }) => ($isOpen ? "absolute" : "static")};
+  right: ${({ $isOpen }) => ($isOpen ? "13px" : "0")};
+  top: ${({ $isOpen }) => ($isOpen ? "16px" : "0")};
   width: 40px;
   height: 40px;
 

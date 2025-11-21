@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'motion/react';
-import styled from 'styled-components';
+import { motion } from "motion/react";
+import styled from "styled-components";
 
 export const ScrollTrigger = styled.div`
   position: sticky;
@@ -38,7 +38,7 @@ export const Title = styled.span`
   font-weight: 600;
 `;
 
-export const Date = styled.time`
+export const DateCompo = styled.time`
   color: var(--color-text);
 `;
 
@@ -135,8 +135,8 @@ export const BlogPostListItem = styled(motion.li)<{ $isInitialize?: boolean }>`
   text-wrap: pretty;
   word-break: keep-all;
 
-  opacity: ${props => (props.$isInitialize ? 0 : 1)};
-  transform: ${props => (props.$isInitialize ? 'translateY(-10px)' : 'translateY(0)')};
+  opacity: ${(props) => (props.$isInitialize ? 0 : 1)};
+  transform: ${(props) => (props.$isInitialize ? "translateY(-10px)" : "translateY(0)")};
   will-change: transform, opacity;
 
   &:not(:first-of-type) {

@@ -1,40 +1,39 @@
 .wrapper {
-  border-radius: 0px !important;
-  margin: 0px 24px 48px !important;
-  border: 1px solid transparent;
-  border-radius: 8px !important;
+	border-radius: 8px;
+	margin: 0px 24px 48px;
+	border: 1px solid transparent;
 }
 .wrapper pre {
-  padding: 24px !important;
-  max-width: calc(100% + 64px);
+	padding: 24px;
+	max-width: calc(100% + 64px);
 }
 
 .wrapper code {
-  display: flex;
+	display: flex;
 }
 
 @media (min-width: 56rem) {
-  .wrapper {
-    border-radius: 8px !important;
-  }
+	.wrapper {
+		border-radius: 8px;
+	}
 }
 
 .wrapper pre {
-  padding: 24px !important;
-  max-width: calc(100% + 64px);
-  word-wrap: break-word;
-  display: flex;
-  overflow: hidden;
+	padding: 24px;
+	max-width: calc(100% + 64px);
+	word-wrap: break-word;
+	display: flex;
+	overflow: hidden;
 }
 
 .wrapper code > div {
-  display: flex;
-  word-wrap: break-word;
-  font-size: 1.125rem;
-  padding: 0px !important;
+	display: flex;
+	word-wrap: break-word;
+	font-size: 1.125rem;
+	padding: 0px;
 }
 
 .wrapper code > div > span {
-  word-wrap: break-word;
-  white-space: pre-wrap;
+	word-wrap: break-word;
+	white-space: pre-wrap;
 }

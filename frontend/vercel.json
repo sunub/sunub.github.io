@@ -1,74 +1,74 @@
 {
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "private, no-cache, no-transform, must-revalidate"
-        },
-        {
-          "key": "Accept-CH",
-          "value": "Sec-CH-Prefers-Color-Scheme"
-        },
-        {
-          "key": "Critical-CH",
-          "value": "Sec-CH-Prefers-Color-Scheme"
-        },
-        {
-          "key": "Vary",
-          "value": "Sec-CH-Prefers-Color-Scheme"
-        }
-      ]
-    },
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "private, no-cache, no-transform, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/_next/image(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ],
-  "crons": [
-    {
-      "path": "/api/warmup",
-      "schedule": "0 1 * * *"
-    }
-  ]
+	"headers": [
+		{
+			"source": "/(.*)",
+			"headers": [
+				{
+					"key": "X-Content-Type-Options",
+					"value": "nosniff"
+				},
+				{
+					"key": "X-Frame-Options",
+					"value": "DENY"
+				},
+				{
+					"key": "X-XSS-Protection",
+					"value": "1; mode=block"
+				},
+				{
+					"key": "Referrer-Policy",
+					"value": "strict-origin-when-cross-origin"
+				},
+				{
+					"key": "Cache-Control",
+					"value": "private, no-cache, no-transform, must-revalidate"
+				},
+				{
+					"key": "Accept-CH",
+					"value": "Sec-CH-Prefers-Color-Scheme"
+				},
+				{
+					"key": "Critical-CH",
+					"value": "Sec-CH-Prefers-Color-Scheme"
+				},
+				{
+					"key": "Vary",
+					"value": "Sec-CH-Prefers-Color-Scheme"
+				}
+			]
+		},
+		{
+			"source": "/api/(.*)",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "private, no-cache, no-transform, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/_next/image(.*)",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=31536000, immutable"
+				}
+			]
+		},
+		{
+			"source": "/assets/(.*)",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=31536000, immutable"
+				}
+			]
+		}
+	],
+	"crons": [
+		{
+			"path": "/api/warmup",
+			"schedule": "0 1 * * *"
+		}
+	]
 }

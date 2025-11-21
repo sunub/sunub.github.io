@@ -1,39 +1,44 @@
-'use client';
+"use client";
 
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { Button } from '@/components/ui/button';
-import { goToHome } from '@/utils/redirect';
+import React from "react";
+import styled, { keyframes } from "styled-components";
+import { Button } from "@/components/ui/button";
+import { goToHome } from "@/utils/redirect";
 
-export default function Error({ error }: { error: Error & { digest?: string }; reset: () => void }) {
-  React.useEffect(() => {
-    console.error(error);
-  }, [error]);
+export default function ErrorPage({
+	error,
+}: {
+	error: Error & { digest?: string };
+	reset: () => void;
+}) {
+	React.useEffect(() => {
+		console.error(error);
+	}, [error]);
 
-  return (
-    <Outer data-testid="error-page">
-      <PatternLayer>
-        <Content>
-          <Title data-testid={'error-page__title'}>{error.message}</Title>
-          <StackTrace data-testid="error-page__stack-trace">
-            <Pre>{error.stack?.split('\n')[0]}</Pre>
-            <p>{error.digest}</p>
-          </StackTrace>
-          <ButtonGroup>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                // eslint-disable-next-line
-                goToHome();
-              }}
-            >
-              홈으로 돌아가기
-            </Button>
-          </ButtonGroup>
-        </Content>
-      </PatternLayer>
-    </Outer>
-  );
+	return (
+		<Outer data-testid="error-page">
+			<PatternLayer>
+				<Content>
+					<Title data-testid={"error-page__title"}>{error.message}</Title>
+					<StackTrace data-testid="error-page__stack-trace">
+						<Pre>{error.stack?.split("\n")[0]}</Pre>
+						<p>{error.digest}</p>
+					</StackTrace>
+					<ButtonGroup>
+						<Button
+							variant="destructive"
+							onClick={() => {
+								// eslint-disable-next-line
+								goToHome();
+							}}
+						>
+							홈으로 돌아가기
+						</Button>
+					</ButtonGroup>
+				</Content>
+			</PatternLayer>
+		</Outer>
+	);
 }
 
 const pan = keyframes`

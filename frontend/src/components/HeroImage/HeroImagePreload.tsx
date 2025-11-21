@@ -1,36 +1,32 @@
-import { Theme } from 'type';
+import type { Theme } from "type";
 
 interface Props {
-  theme: Theme;
+	theme: Theme;
 }
 
 export function HeroImagePreload({ theme }: Props) {
-  const isLight = theme === 'light';
-  
-  const criticalImages = isLight
-    ? [
-        '/assets/bridge.avif',
-        '/assets/clouds.avif',
-        '/assets/cars.avif'
-      ]
-    : [
-        '/assets/dark_bridge.avif',
-        '/assets/dark_clouds.avif',
-        '/assets/dark_cars.avif'
-      ];
+	const isLight = theme === "light";
 
-  return (
-    <>
-      {criticalImages.map((src) => (
-        <link 
-          key={src} 
-          rel="preload" 
-          as="image" 
-          href={src} 
-          type="image/avif" 
-          fetchPriority="high" 
-        />
-      ))}
-    </>
-  );
+	const criticalImages = isLight
+		? ["/assets/bridge.avif", "/assets/clouds.avif", "/assets/cars.avif"]
+		: [
+				"/assets/dark_bridge.avif",
+				"/assets/dark_clouds.avif",
+				"/assets/dark_cars.avif",
+			];
+
+	return (
+		<>
+			{criticalImages.map((src) => (
+				<link
+					key={src}
+					rel="preload"
+					as="image"
+					href={src}
+					type="image/avif"
+					fetchPriority="high"
+				/>
+			))}
+		</>
+	);
 }

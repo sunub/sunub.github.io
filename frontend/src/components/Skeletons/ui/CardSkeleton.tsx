@@ -1,17 +1,15 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 function CardsSkeleton() {
-  return (
-    <Wrapper>
-      {Array(8)
-        .fill(0)
-        .map((_, i) => (
-          <SkeletonItem key={i}></SkeletonItem>
-        ))}
-    </Wrapper>
-  );
+	return (
+		<Wrapper>
+			{["a", "b", "c", "d", "e", "f", "g", "h"].map((id) => (
+				<SkeletonItem key={`skeleton-item-${id}`}></SkeletonItem>
+			))}
+		</Wrapper>
+	);
 }
 
 const Wrapper = styled.div`

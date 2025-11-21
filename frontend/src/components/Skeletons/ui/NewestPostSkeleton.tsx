@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
-import { FlexCenter } from '@/shared/style/Flex';
+import styled from "styled-components";
+import { FlexCenter } from "@/shared/style/Flex";
 
 function NewestPostSkeleton() {
-  return (
-    <Wrapper>
-      <Skeleton />
-      <SkeletonWrapper>
-        <SkeletonContent>
-          {Array(5).map((_, i) => (
-            <div key={i}>
-              <SkeletonItem />
-              <SkeletonItemShort />
-              <SkeletonItemShort />
-            </div>
-          ))}
-        </SkeletonContent>
-      </SkeletonWrapper>
-    </Wrapper>
-  );
+	return (
+		<Wrapper>
+			<Skeleton />
+			<SkeletonWrapper>
+				<SkeletonContent>
+					{Array.from({ length: 5 }, (_, i) => i).map((key) => (
+						<div key={`skeleton-item-${key}`}>
+							<SkeletonItem />
+							<SkeletonItemShort />
+							<SkeletonItemShort />
+						</div>
+					))}
+				</SkeletonContent>
+			</SkeletonWrapper>
+		</Wrapper>
+	);
 }
 const Wrapper = styled(FlexCenter)`
   width: 100%;

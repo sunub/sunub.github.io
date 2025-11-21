@@ -1,38 +1,37 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import { Button } from '@/components/ui/button';
-import { goToHome } from '@/utils/redirect';
+import { usePathname } from "next/navigation";
+import styled, { keyframes } from "styled-components";
+import { Button } from "@/components/ui/button";
+import { goToHome } from "@/utils/redirect";
 
 export default function NotFound() {
-  const pathname = usePathname();
+	const pathname = usePathname();
 
-  return (
-    <Outer data-testid="not-found-page">
-      <PatternLayer>
-        <Content>
-          <Title data-testid="not-found-title">
-            해당 url <b data-testid="not-found-url">{decodeURI(pathname)}</b> 은 블로그 사이트맵에 존재하지 않는 url
-            입니다
-          </Title>
-          <ButtonGroup>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                // eslint-disable-next-line
-                goToHome();
-              }}
-              data-testid="not-found-home-button"
-            >
-              홈으로 돌아가기
-            </Button>
-          </ButtonGroup>
-        </Content>
-      </PatternLayer>
-    </Outer>
-  );
+	return (
+		<Outer data-testid="not-found-page">
+			<PatternLayer>
+				<Content>
+					<Title data-testid="not-found-title">
+						해당 url <b data-testid="not-found-url">{decodeURI(pathname)}</b> 은
+						블로그 사이트맵에 존재하지 않는 url 입니다
+					</Title>
+					<ButtonGroup>
+						<Button
+							variant="destructive"
+							onClick={() => {
+								// eslint-disable-next-line
+								goToHome();
+							}}
+							data-testid="not-found-home-button"
+						>
+							홈으로 돌아가기
+						</Button>
+					</ButtonGroup>
+				</Content>
+			</PatternLayer>
+		</Outer>
+	);
 }
 
 const pan = keyframes`

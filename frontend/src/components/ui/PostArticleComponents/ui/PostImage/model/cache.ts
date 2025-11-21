@@ -2,9 +2,9 @@
 const imageCache: { [key: string]: boolean } = {};
 
 export const isImageLoaded = (src: string): boolean => {
-  return !!imageCache[src];
+	return !!imageCache[src];
 };
 
 export const markImageAsLoaded = (src: string): void => {
-  imageCache[src] = true;
+	imageCache[src] = true;
 };

@@ -1,3 +1,9 @@
 export function isAsyncIterable<T>(a: unknown): a is AsyncIterable<T> {
-  return typeof a === 'object' && typeof (a as any)?.[Symbol.asyncIterator] === 'function';
+	const isObject = typeof a === "object" && a !== null;
+	const hasAsyncIterator =
+		isObject &&
+		typeof (a as { [Symbol.asyncIterator]?: unknown })[Symbol.asyncIterator] ===
+			"function";
+
+	return hasAsyncIterator;
 }

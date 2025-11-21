@@ -1,28 +1,28 @@
-'use server';
+"use server";
 
-import { cookies } from 'next/headers';
-import process from 'process';
+import process from "node:process";
+import { cookies } from "next/headers";
 
 async function checkHasColorTheme() {
-  const cookieStore = await cookies();
-  return cookieStore.get('color-theme');
+	const cookieStore = await cookies();
+	return cookieStore.get("color-theme");
 }
 
 async function setInitColorTheme(preferenceColorTheme: string) {
-  const cookieStore = await cookies();
-  const nodeenv = process.env.NODE_ENV;
-  let sameSite: 'lax' | 'none' | 'static' = 'lax';
-  let secure: boolean = true;
+	const cookieStore = await cookies();
+	const nodeenv = process.env.NODE_ENV;
+	let sameSite: "lax" | "none" | "static" = "lax";
+	let secure: boolean = true;
 
-  if (nodeenv === 'development') {
-    [sameSite, secure] = ['none', false];
-  }
+	if (nodeenv === "development") {
+		[sameSite, secure] = ["none", false];
+	}
 
-  cookieStore.set('color-theme', preferenceColorTheme, {
-    path: '/',
-    sameSite,
-    secure,
-  });
+	cookieStore.set("color-theme", preferenceColorTheme, {
+		path: "/",
+		sameSite,
+		secure,
+	});
 }
 
 export { setInitColorTheme, checkHasColorTheme };

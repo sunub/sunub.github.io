@@ -1,40 +1,47 @@
-'use client';
+"use client";
 
-import { memo } from 'react';
-import styled, { keyframes } from 'styled-components';
-import { VisuallyHidden } from '@/components/VisuallyHidden';
+import { memo } from "react";
+import styled, { keyframes } from "styled-components";
+import { VisuallyHidden } from "@/components/VisuallyHidden";
 
 const SearchIcon = memo(() => {
-  return (
-    <SearchSvg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="lucide lucide-search-icon lucide-search"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </SearchSvg>
-  );
+	return (
+		<SearchSvg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			className="lucide lucide-search-icon lucide-search"
+		>
+			<circle cx="11" cy="11" r="8" />
+			<path d="m21 21-4.3-4.3" />
+		</SearchSvg>
+	);
 });
-SearchIcon.displayName = 'SearchIcon';
+SearchIcon.displayName = "SearchIcon";
 
-const SearchButton = memo(({ isOpen, toggleOpen }: { isOpen: boolean; toggleOpen: () => void }) => {
-  return (
-    <StyledSearchButton type="button" disabled={isOpen} onClick={toggleOpen} aria-label="검색">
-      <VisuallyHidden>검색</VisuallyHidden>
-      <SearchIcon />
-    </StyledSearchButton>
-  );
-})
+const SearchButton = memo(
+	({ isOpen, toggleOpen }: { isOpen: boolean; toggleOpen: () => void }) => {
+		return (
+			<StyledSearchButton
+				type="button"
+				disabled={isOpen}
+				onClick={toggleOpen}
+				aria-label="검색"
+			>
+				<VisuallyHidden>검색</VisuallyHidden>
+				<SearchIcon />
+			</StyledSearchButton>
+		);
+	},
+);
 
-SearchButton.displayName = 'SearchButton';
+SearchButton.displayName = "SearchButton";
 
 const rotate = keyframes`
   0% {

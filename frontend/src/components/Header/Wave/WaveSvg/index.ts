@@ -1,1 +1,1 @@
-export { WaveSvg } from './WaveSvg';
+export { WaveSvg } from "./WaveSvg";

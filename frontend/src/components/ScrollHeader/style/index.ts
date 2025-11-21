@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const HeaderWrapper = styled.div<{
-  $isDarkTheme: boolean;
+	$isDarkTheme: boolean;
 }>`
   position: sticky;
   top: 0;
@@ -24,7 +24,7 @@ export const HeaderWrapper = styled.div<{
   background-color: color-mix(
     in oklch,
     var(--color-landscape),
-    transparent ${({ $isDarkTheme }) => ($isDarkTheme ? '100%' : '75%')}
+    transparent ${({ $isDarkTheme }) => ($isDarkTheme ? "100%" : "75%")}
   );
 
   &[data-is-scrolled='true']::before {

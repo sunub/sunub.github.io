@@ -1,31 +1,38 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 function PenToolIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" {...props}>
-      <path
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M21.293 8.293a1 1 0 0 1 0 1.414l-1.586 1.586a1 1 0 0 1-1.414 0l-5.586-5.586a1 1 0 0 1 0-1.414l1.586-1.586a1 1 0 0 1 1.414 0z"
-      />
-      <path
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M13 6 6.126 7.375a1 1 0 0 0-.776.746L2.028 20.765a1 1 0 0 0 1.207 1.207l12.644-3.322a1 1 0 0 0 .746-.776L18 11M2.3 21.7l7.286-7.286"
-      />
-      <path
-        stroke="#000"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M13 13a2 2 0 1 0-4 0 2 2 0 0 0 4 0"
-      />
-    </svg>
-  );
+	return (
+		<svg
+			aria-hidden="true"
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			{...props}
+		>
+			<path
+				stroke="#000"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				d="M21.293 8.293a1 1 0 0 1 0 1.414l-1.586 1.586a1 1 0 0 1-1.414 0l-5.586-5.586a1 1 0 0 1 0-1.414l1.586-1.586a1 1 0 0 1 1.414 0z"
+			/>
+			<path
+				stroke="#000"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				d="M13 6 6.126 7.375a1 1 0 0 0-.776.746L2.028 20.765a1 1 0 0 0 1.207 1.207l12.644-3.322a1 1 0 0 0 .746-.776L18 11M2.3 21.7l7.286-7.286"
+			/>
+			<path
+				stroke="#000"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				d="M13 13a2 2 0 1 0-4 0 2 2 0 0 0 4 0"
+			/>
+		</svg>
+	);
 }
 
 const MovingPen = styled(PenToolIcon)`

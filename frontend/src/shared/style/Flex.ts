@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Full = styled.div`
   width: 100%;
@@ -12,7 +12,7 @@ export const FlexCenter = styled(Full)<{ $gap?: string }>`
   justify-content: center;
   align-items: center;
 
-  ${props => props.$gap && `gap: ${props.$gap};`}
+  ${(props) => props.$gap && `gap: ${props.$gap};`}
 `;
 
 export const FlexColCenter = styled(FlexCenter)`

@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
-import { LoadingAnimation } from '@/components/LoadingAnimation';
-import { BottomClouds } from '@/components/LoadingAnimation/ui/BottomClouds';
-import { FlyingBirdAnime } from '@/components/LoadingAnimation/ui/FlyingBird';
-import { TopClouds } from '@/components/LoadingAnimation/ui/TopCloud';
+import styled from "styled-components";
+import { LoadingAnimation } from "@/components/LoadingAnimation";
+import { BottomClouds } from "@/components/LoadingAnimation/ui/BottomClouds";
+import { FlyingBirdAnime } from "@/components/LoadingAnimation/ui/FlyingBird";
+import { TopClouds } from "@/components/LoadingAnimation/ui/TopCloud";
 
 export default function Loading() {
-  return (
-    <BodyWrapper data-testid="loading-screen">
-      <TopClouds />
-      <LoadingAnimation>
-        <FlyingBirdAnime />
-      </LoadingAnimation>
-      <BottomClouds />
-    </BodyWrapper>
-  );
+	return (
+		<BodyWrapper data-testid="loading-screen">
+			<TopClouds />
+			<LoadingAnimation>
+				<FlyingBirdAnime />
+			</LoadingAnimation>
+			<BottomClouds />
+		</BodyWrapper>
+	);
 }
 
 const BodyWrapper = styled.div`

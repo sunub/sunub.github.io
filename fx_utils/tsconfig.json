@@ -1,17 +1,17 @@
 {
-  "include": ["src"],
-  "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "lib": ["es2020", "dom"],
-    "downlevelIteration": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true
-  }
+	"include": ["src"],
+	"compilerOptions": {
+		"target": "es5",
+		"module": "commonjs",
+		"lib": ["es2020", "dom"],
+		"downlevelIteration": true,
+		"strict": true,
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"noEmit": true
+	}
 }

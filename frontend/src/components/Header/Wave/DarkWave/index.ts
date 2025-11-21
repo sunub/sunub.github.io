@@ -1,1 +1,1 @@
-export { DarkWave } from './DarkWave';
+export { DarkWave } from "./DarkWave";

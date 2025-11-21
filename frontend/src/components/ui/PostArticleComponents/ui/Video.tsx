@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const VideoWrapper = styled.div<{ maxWidth: number }>`
   position: relative;
@@ -10,7 +10,7 @@ const VideoWrapper = styled.div<{ maxWidth: number }>`
   margin-bottom: 1.5rem;
 
   outline: 1px solid var(--color-content-outline);
-  max-width: ${props => props.maxWidth}px;
+  max-width: ${(props) => props.maxWidth}px;
   width: 100%;
 `;
 
@@ -61,77 +61,90 @@ const VideoSvgContainer = styled.div`
 `;
 
 function PlaySvg() {
-  return (
-    <VideoSvgContainer>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polygon points="5 3 19 12 5 21 5 3" />
-      </svg>
-    </VideoSvgContainer>
-  );
+	return (
+		<VideoSvgContainer>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			>
+				<title>play button icon</title>
+				<polygon points="5 3 19 12 5 21 5 3" />
+			</svg>
+		</VideoSvgContainer>
+	);
 }
 
 function PauseSvg() {
-  return (
-    <VideoSvgContainer>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="6" y="4" width="4" height="16" />
-        <rect x="14" y="4" width="4" height="16" />
-      </svg>
-    </VideoSvgContainer>
-  );
+	return (
+		<VideoSvgContainer>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			>
+				<title>pause button icon</title>
+				<rect x="6" y="4" width="4" height="16" />
+				<rect x="14" y="4" width="4" height="16" />
+			</svg>
+		</VideoSvgContainer>
+	);
 }
 
-const Video = ({ src, maxWidth = 528 }: { src: string; caption: string; maxWidth?: number; aspectRatio?: string }) => {
-  const videoRef = React.useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = React.useState(false);
+const Video = ({
+	src,
+	maxWidth = 528,
+}: {
+	src: string;
+	caption: string;
+	maxWidth?: number;
+	aspectRatio?: string;
+}) => {
+	const videoRef = React.useRef<HTMLVideoElement>(null);
+	const [isPlaying, setIsPlaying] = React.useState(false);
 
-  const togglePlay = () => setIsPlaying(prev => !prev);
+	const togglePlay = () => setIsPlaying((prev) => !prev);
 
-  React.useEffect(() => {
-    if (!videoRef.current) {
-      return;
-    }
+	React.useEffect(() => {
+		if (!videoRef.current) {
+			return;
+		}
 
-    if (isPlaying) {
-      videoRef.current.play().catch(error => {
-        console.error('영상을 플레이할 수 없습니다.', error);
-      });
-    } else {
-      videoRef.current.pause();
-    }
-  }, [isPlaying]);
+		if (isPlaying) {
+			videoRef.current.play().catch((error) => {
+				console.error("영상을 플레이할 수 없습니다.", error);
+			});
+		} else {
+			videoRef.current.pause();
+		}
+	}, [isPlaying]);
 
-  return (
-    <VideoWrapper maxWidth={maxWidth}>
-      <StyledVideo loop muted playsInline src={src} ref={videoRef}>
-        <source src={src} type="video/mp4" />
-      </StyledVideo>
+	return (
+		<VideoWrapper maxWidth={maxWidth}>
+			<StyledVideo loop muted playsInline src={src} ref={videoRef}>
+				<source src={src} type="video/mp4" />
+			</StyledVideo>
 
-      <OverlayButton onClick={togglePlay} aria-label={isPlaying ? 'Pause video' : 'Play video'}>
-        {isPlaying ? <PauseSvg /> : <PlaySvg />}
-      </OverlayButton>
-    </VideoWrapper>
-  );
+			<OverlayButton
+				onClick={togglePlay}
+				aria-label={isPlaying ? "Pause video" : "Play video"}
+			>
+				{isPlaying ? <PauseSvg /> : <PlaySvg />}
+			</OverlayButton>
+		</VideoWrapper>
+	);
 };
 
 export { Video };

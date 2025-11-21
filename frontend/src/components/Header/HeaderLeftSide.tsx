@@ -1,9 +1,5 @@
-import { HeaderLeftSideWrapper} from './Header.style';
+import { HeaderLeftSideWrapper } from "./Header.style";
 
 export function HeaderLeftSide({ children }: { children?: React.ReactNode }) {
-  return (
-    <HeaderLeftSideWrapper>
-      {children}
-    </HeaderLeftSideWrapper>
-  );
+	return <HeaderLeftSideWrapper>{children}</HeaderLeftSideWrapper>;
 }

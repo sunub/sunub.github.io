@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import styled, { keyframes } from 'styled-components';
+import Image from "next/image";
+import styled, { keyframes } from "styled-components";
 
 interface BgImageProps {
-  $bgUrl: string;
+	$bgUrl: string;
 }
 
 export const RootWrapper = styled.div`
@@ -110,7 +110,6 @@ export const CarImage = styled(Image)`
   max-width: none; /* Flex 안에서 이미지가 찌그러지는 것 방지 */
 `;
 
-
 export const BridgeWindow = styled.div`
   position: relative; // Grid 안에 배치되므로 relative 혹은 absolute
   width: 100vw;       // 화면 전체 너비
@@ -155,7 +154,7 @@ export const Moon = styled(Image)<{ $opacity: string }>`
   position: absolute;
   top: 0px;
   left: 0px;
-  opacity: var(${props => props.$opacity});
+  opacity: var(${(props) => props.$opacity});
 `;
 
 export const Cars = styled.span<BgImageProps>`
@@ -170,7 +169,7 @@ export const Cars = styled.span<BgImageProps>`
   animation: pan-cars 50s linear infinite;
   will-change: background-position;
 
-  background-image: url(${props => props.$bgUrl});
+  background-image: url(${(props) => props.$bgUrl});
   opacity: var(--cars-opacity);
   @keyframes pan-cars {
     0% {

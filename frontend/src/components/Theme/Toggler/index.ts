@@ -1,2 +1,2 @@
-export * from './ThemeTogglerButton';
-export { default } from './ThemeTogglerButton';
+export * from "./ThemeTogglerButton";
+export { default } from "./ThemeTogglerButton";

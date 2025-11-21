@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css, keyframes } from "styled-components";
 
 const LinkSVG = styled.svg`
   position: absolute;
@@ -41,12 +41,12 @@ const baseHeadingStyles = css`
 `;
 
 const fontSizeMap = {
-  h1: '2.5rem',
-  h2: '2.25rem',
-  h3: '1.875rem',
-  h4: '1.5rem',
-  h5: '1.25rem',
-  h6: '1.125rem',
+	h1: "2.5rem",
+	h2: "2.25rem",
+	h3: "1.875rem",
+	h4: "1.5rem",
+	h5: "1.25rem",
+	h6: "1.125rem",
 };
 
 const H1 = styled.h1`

@@ -1,37 +1,38 @@
-import { stat } from 'fs/promises';
-import path from 'path';
-import { cwd } from 'process';
-import { fileURLToPath } from 'url';
+import { stat } from "node:fs/promises";
+import path from "node:path";
+import { cwd } from "node:process";
+import { fileURLToPath } from "node:url";
 
 type Options = {
-  stopAt?: string;
+	stopAt?: string;
 };
 
-const toPath = (urlOrPath: string | URL): string => (urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath);
+const toPath = (urlOrPath: string | URL): string =>
+	urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;
 
 export async function findUpDir(name: string, options: Options = {}) {
-  const currentCwd = cwd();
-  const { stopAt } = options;
-  let directory = path.resolve(toPath(currentCwd));
+	const currentCwd = cwd();
+	const { stopAt } = options;
+	let directory = path.resolve(toPath(currentCwd));
 
-  while (directory !== path.dirname(directory)) {
-    const target = path.join(directory, name);
+	while (directory !== path.dirname(directory)) {
+		const target = path.join(directory, name);
 
-    try {
-      const stats = await stat(target);
-      if (stats.isDirectory()) {
-        return target;
-      }
-    } catch {
-      // 파일/폴더가 존재하지 않음
-    }
+		try {
+			const stats = await stat(target);
+			if (stats.isDirectory()) {
+				return target;
+			}
+		} catch {
+			// 파일/폴더가 존재하지 않음
+		}
 
-    if (stopAt && directory === path.resolve(stopAt)) {
-      break;
-    }
+		if (stopAt && directory === path.resolve(stopAt)) {
+			break;
+		}
 
-    directory = path.dirname(directory);
-  }
+		directory = path.dirname(directory);
+	}
 
-  return null;
+	return null;
 }

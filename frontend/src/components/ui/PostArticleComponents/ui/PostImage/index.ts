@@ -1,1 +1,1 @@
-export { PostImage } from './ui/PostImage';
+export { PostImage } from "./ui/PostImage";

@@ -1,8 +1,8 @@
-import { FrontMatter } from '@/types/schema';
+import type { FrontMatter } from "@/types/schema";
 
 export interface SearchResult {
-  postKey: string;
-  post: {
-    frontmatter: FrontMatter;
-  };
+	postKey: string;
+	post: {
+		frontmatter: FrontMatter;
+	};
 }

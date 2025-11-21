@@ -1,14 +1,25 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import styled from 'styled-components';
+import Link from "next/link";
+import styled from "styled-components";
 
-function CustomLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <LinkComponent rel="noopener noreferrer" href={href} replace target="_blank">
-      {children}
-    </LinkComponent>
-  );
+function CustomLink({
+	href,
+	children,
+}: {
+	href: string;
+	children: React.ReactNode;
+}) {
+	return (
+		<LinkComponent
+			rel="noopener noreferrer"
+			href={href}
+			replace
+			target="_blank"
+		>
+			{children}
+		</LinkComponent>
+	);
 }
 
 const LinkComponent = styled(Link)`

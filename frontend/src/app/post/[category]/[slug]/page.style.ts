@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
 const slideInAnimation = keyframes`
   from {

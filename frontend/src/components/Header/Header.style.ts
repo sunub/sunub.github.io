@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const RootWrapper = styled.div`
   transition: all 350ms ease 0s;

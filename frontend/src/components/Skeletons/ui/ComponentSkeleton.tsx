@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
 function ComponentSkeleton() {
-  return (
-    <SkeletonContainer>
-      <SkeletonLineWide />
-      <SkeletonLineWider />
-      <SkeletonLineWide />
-      <SkeletonLineWide />
-      <SkeletonLineWider />
-      <SkeletonLineWide />
-      <SkeletonLineWide />
-      <SkeletonLineWide />
-    </SkeletonContainer>
-  );
+	return (
+		<SkeletonContainer>
+			<SkeletonLineWide />
+			<SkeletonLineWider />
+			<SkeletonLineWide />
+			<SkeletonLineWide />
+			<SkeletonLineWider />
+			<SkeletonLineWide />
+			<SkeletonLineWide />
+			<SkeletonLineWide />
+		</SkeletonContainer>
+	);
 }
 
 const SkeletonContainer = styled.div`

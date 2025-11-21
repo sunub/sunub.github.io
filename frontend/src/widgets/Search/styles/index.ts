@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import styled from 'styled-components';
-import Link from 'next/link';
-import { ListItemStyles } from '@/shared/style/List';
+import Link from "next/link";
+import styled from "styled-components";
+import { ListItemStyles } from "@/shared/style/List";
 
 export const SearchOverlay = styled.div`
   position: absolute;

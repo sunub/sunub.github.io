@@ -1,6 +1,6 @@
-import type { FrontMatter } from '@/db/blog/Schema';
+import type { FrontMatter } from "@/db/blog/Schema";
 
 export type PublishedPost = {
-  totalCount: number;
-  frontmattters: FrontMatter[];
+	totalCount: number;
+	frontmattters: FrontMatter[];
 };

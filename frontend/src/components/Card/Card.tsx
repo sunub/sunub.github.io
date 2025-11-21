@@ -1,58 +1,63 @@
-'use client';
+"use client";
 
-import { FrontMatter } from 'db/blog/Schema';
-import Link from 'next/link';
-import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
-import Elevation from '@/constants/Elevation';
+import type { FrontMatter } from "db/blog/Schema";
+import Link from "next/link";
+import React, { useEffect, useRef } from "react";
+import styled from "styled-components";
+import Elevation from "@/constants/Elevation";
 
 export default function Card({ frontMatter }: { frontMatter: FrontMatter }) {
-  const { title, date, slug, category } = frontMatter;
-  const containerRef = useRef<HTMLDivElement>(null);
-  const formattedDate = React.useMemo(() => {
-    return new Intl.DateTimeFormat('ko-kr', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }).format(new Date(date));
-  }, [date]);
+	const { title, date, slug, category } = frontMatter;
+	const containerRef = useRef<HTMLDivElement>(null);
+	const formattedDate = React.useMemo(() => {
+		return new Intl.DateTimeFormat("ko-kr", {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		}).format(new Date(date));
+	}, [date]);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+	useEffect(() => {
+		const el = containerRef.current;
+		if (!el) return;
 
-    const smallCard = el.querySelector<HTMLDivElement>('.small-card');
-    if (!smallCard) return;
+		const smallCard = el.querySelector<HTMLDivElement>(".small-card");
+		if (!smallCard) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const { left, top } = el.getBoundingClientRect();
-      const x = e.clientX - left;
-      const y = e.clientY - top;
-      smallCard.style.setProperty('--mx', `${x}px`);
-      smallCard.style.setProperty('--my', `${y}px`);
-    };
+		const handleMouseMove = (e: MouseEvent) => {
+			const { left, top } = el.getBoundingClientRect();
+			const x = e.clientX - left;
+			const y = e.clientY - top;
+			smallCard.style.setProperty("--mx", `${x}px`);
+			smallCard.style.setProperty("--my", `${y}px`);
+		};
 
-    el.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      el.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
+		el.addEventListener("mousemove", handleMouseMove);
+		return () => {
+			el.removeEventListener("mousemove", handleMouseMove);
+		};
+	}, []);
 
-  if (!frontMatter) {
-    return null;
-  }
+	if (!frontMatter) {
+		return null;
+	}
 
-  return (
-    <RootContainer ref={containerRef}>
-      <Wrapper className="cards">
-        <LinkWrapper className="card" href={`/post/${category}/${slug}`} tabIndex={0} prefetch={false}>
-          <Header>{title}</Header>
-          <Footer>{formattedDate}</Footer>
-        </LinkWrapper>
-      </Wrapper>
-      <SmallCard className="small-card" />
-    </RootContainer>
-  );
+	return (
+		<RootContainer ref={containerRef}>
+			<Wrapper className="cards">
+				<LinkWrapper
+					className="card"
+					href={`/post/${category}/${slug}`}
+					tabIndex={0}
+					prefetch={false}
+				>
+					<Header>{title}</Header>
+					<Footer>{formattedDate}</Footer>
+				</LinkWrapper>
+			</Wrapper>
+			<SmallCard className="small-card" />
+		</RootContainer>
+	);
 }
 
 const RootContainer = styled.div`
@@ -62,7 +67,7 @@ const RootContainer = styled.div`
 `;
 
 const Wrapper = styled.div`
-  ${Elevation(170, 216, 15, 'short', 'other')}
+  ${Elevation(170, 216, 15, "short", "other")}
   position: relative;
   z-index: 2;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.17);

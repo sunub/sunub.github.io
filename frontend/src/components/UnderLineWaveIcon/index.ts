@@ -1,1 +1,1 @@
-export { UnderLineWaveIcon } from './ui/UnderLineWaveIcon';
+export { UnderLineWaveIcon } from "./ui/UnderLineWaveIcon";

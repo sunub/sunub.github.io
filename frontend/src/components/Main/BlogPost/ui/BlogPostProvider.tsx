@@ -1,111 +1,143 @@
-'use client';
+"use client";
 
-import type { FrontMatter } from 'db/blog/Schema';
-import { useAtom } from 'jotai';
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useTransition } from 'react';
-import { blogPostAtom } from '../store/blogPost.atom';
-import type { PublishedPost } from '../types';
-import { getAdditionalPost } from '../utils/utils';
+import type { FrontMatter } from "db/blog/Schema";
+import { useAtom } from "jotai";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useRef,
+	useTransition,
+} from "react";
+import { blogPostAtom } from "../store/blogPost.atom";
+import type { PublishedPost } from "../types";
+import { getAdditionalPost } from "../utils/utils";
 
 interface BlogPostContextValue {
-  posts: FrontMatter[];
-  totalCount: number;
-  isPending: boolean;
-  loadMore: () => void;
-  hasMore: boolean;
+	posts: FrontMatter[];
+	totalCount: number;
+	isPending: boolean;
+	loadMore: () => void;
+	hasMore: boolean;
 }
 
 const BlogPostContext = createContext<BlogPostContextValue | null>(null);
 
 export function useBlogPostContext() {
-  const context = useContext(BlogPostContext);
-  if (!context) {
-    throw new Error('useBlogPostContext must be used within BlogPostProvider');
-  }
-  return context;
+	const context = useContext(BlogPostContext);
+	if (!context) {
+		throw new Error("useBlogPostContext must be used within BlogPostProvider");
+	}
+	return context;
 }
 
 const THROTTLE_DELAY = 100;
 const POSTS_PER_PAGE = 10;
 const LOAD_DELAY = 500;
 
-export function BlogPostProvider({ children, initialData }: { children: React.ReactNode; initialData: PublishedPost }) {
-  const [atomState, setAtomState] = useAtom(blogPostAtom);
+export function BlogPostProvider({
+	children,
+	initialData,
+}: {
+	children: React.ReactNode;
+	initialData: PublishedPost;
+}) {
+	const [atomState, setAtomState] = useAtom(blogPostAtom);
 
-  const currentData = useMemo(() => {
-    if (atomState?.frontmattters.length && atomState.frontmattters.length > initialData.frontmattters.length) {
-      return atomState;
-    }
-    return initialData;
-  }, [atomState, initialData]);
+	const currentData = useMemo(() => {
+		if (
+			atomState?.frontmattters.length &&
+			atomState.frontmattters.length > initialData.frontmattters.length
+		) {
+			return atomState;
+		}
+		return initialData;
+	}, [atomState, initialData]);
 
-  useEffect(() => {
-    if (!atomState || initialData.frontmattters.length > atomState.frontmattters.length) {
-      setAtomState(initialData);
-    }
-  }, [initialData, setAtomState, atomState]);
+	useEffect(() => {
+		if (
+			!atomState ||
+			initialData.frontmattters.length > atomState.frontmattters.length
+		) {
+			setAtomState(initialData);
+		}
+	}, [initialData, setAtomState, atomState]);
 
-  const [isPending, startTransition] = useTransition();
-  const isLoadingRef = useRef(false);
-  const lastCallTimeRef = useRef(0);
+	const [isPending, startTransition] = useTransition();
+	const isLoadingRef = useRef(false);
+	const lastCallTimeRef = useRef(0);
 
-  const loadMore = useCallback(() => {
-    const now = Date.now();
-    
-    if (now - lastCallTimeRef.current < THROTTLE_DELAY || isLoadingRef.current) {
-      return;
-    }
+	const loadMore = useCallback(() => {
+		const now = Date.now();
 
-    if (currentData.frontmattters.length >= currentData.totalCount) {
-      return;
-    }
+		if (
+			now - lastCallTimeRef.current < THROTTLE_DELAY ||
+			isLoadingRef.current
+		) {
+			return;
+		}
 
-    lastCallTimeRef.current = now;
-    isLoadingRef.current = true;
+		if (currentData.frontmattters.length >= currentData.totalCount) {
+			return;
+		}
 
-    startTransition(async () => {
-      try {
-        const currentLength = currentData.frontmattters.length;
-        const nextEnd = currentLength + POSTS_PER_PAGE;
+		lastCallTimeRef.current = now;
+		isLoadingRef.current = true;
 
-        const [newPostsData] = await Promise.all([
-          getAdditionalPost(currentLength, nextEnd),
-          new Promise(resolve => setTimeout(resolve, LOAD_DELAY)),
-        ]);
+		startTransition(async () => {
+			try {
+				const currentLength = currentData.frontmattters.length;
+				const nextEnd = currentLength + POSTS_PER_PAGE;
 
-        // Deduplication
-        const existingKeys = new Set(currentData.frontmattters.map(p => `${p.category}-${p.slug}`));
-        const filteredNewPosts = newPostsData.frontmattters.filter(post => {
-          const key = `${post.category}-${post.slug}`;
-          if (existingKeys.has(key)) return false;
-          existingKeys.add(key);
-          return true;
-        });
+				const [newPostsData] = await Promise.all([
+					getAdditionalPost(currentLength, nextEnd),
+					new Promise((resolve) => setTimeout(resolve, LOAD_DELAY)),
+				]);
 
-        if (filteredNewPosts.length > 0) {
-          setAtomState(prev => ({
-            totalCount: prev?.totalCount ?? currentData.totalCount,
-            frontmattters: [...(prev?.frontmattters ?? currentData.frontmattters), ...filteredNewPosts],
-          }));
-        }
-      } catch (error) {
-        console.error('Failed to load more posts:', error);
-      } finally {
-        isLoadingRef.current = false;
-      }
-    });
-  }, [currentData, setAtomState]);
+				// Deduplication
+				const existingKeys = new Set(
+					currentData.frontmattters.map((p) => `${p.category}-${p.slug}`),
+				);
+				const filteredNewPosts = newPostsData.frontmattters.filter((post) => {
+					const key = `${post.category}-${post.slug}`;
+					if (existingKeys.has(key)) return false;
+					existingKeys.add(key);
+					return true;
+				});
 
-  const value = useMemo<BlogPostContextValue>(
-    () => ({
-      posts: currentData.frontmattters,
-      totalCount: currentData.totalCount,
-      isPending,
-      loadMore,
-      hasMore: currentData.frontmattters.length < currentData.totalCount,
-    }),
-    [currentData, isPending, loadMore]
-  );
+				if (filteredNewPosts.length > 0) {
+					setAtomState((prev) => ({
+						totalCount: prev?.totalCount ?? currentData.totalCount,
+						frontmattters: [
+							...(prev?.frontmattters ?? currentData.frontmattters),
+							...filteredNewPosts,
+						],
+					}));
+				}
+			} catch (error) {
+				console.error("Failed to load more posts:", error);
+			} finally {
+				isLoadingRef.current = false;
+			}
+		});
+	}, [currentData, setAtomState]);
 
-  return <BlogPostContext.Provider value={value}>{children}</BlogPostContext.Provider>;
+	const value = useMemo<BlogPostContextValue>(
+		() => ({
+			posts: currentData.frontmattters,
+			totalCount: currentData.totalCount,
+			isPending,
+			loadMore,
+			hasMore: currentData.frontmattters.length < currentData.totalCount,
+		}),
+		[currentData, isPending, loadMore],
+	);
+
+	return (
+		<BlogPostContext.Provider value={value}>
+			{children}
+		</BlogPostContext.Provider>
+	);
 }

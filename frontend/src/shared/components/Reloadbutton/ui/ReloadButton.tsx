@@ -1,15 +1,15 @@
-import { RefreshCcw } from 'lucide-react';
-import styled from 'styled-components';
-import { useReloadContext } from '../hook/useReload';
+import { RefreshCcw } from "lucide-react";
+import styled from "styled-components";
+import { useReloadContext } from "../hook/useReload";
 
 export function ReloadButton() {
-  const { reload } = useReloadContext();
+	const { reload } = useReloadContext();
 
-  return (
-    <Button onClick={reload}>
-      <RefreshCcw size={24} />
-    </Button>
-  );
+	return (
+		<Button onClick={reload}>
+			<RefreshCcw size={24} />
+		</Button>
+	);
 }
 
 const Button = styled.button`
