@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import styled from "styled-components";
 
 export const Container = styled.footer`
@@ -39,4 +40,8 @@ export const IconsWrapper = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 1rem;
+`;
+
+export const LinkWrapper = styled(Link)`
+  display: flex;
 `;
