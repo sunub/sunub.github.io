@@ -79,6 +79,10 @@ export default async function RootLayout({
 		>
 			<head>
 				<meta
+					name="description"
+					content="sunub가 만든 개인 블로그입니다. 주로 프론트엔드 개발과 관련된 여러 지식들을 다루지만 이외에도 다양한 개발 지식을 공유하기 위한 사이트입니다."
+				/>
+				<meta
 					name="viewport"
 					content="width=device-width, initial-scale=1, user-scalable=1"
 				></meta>
