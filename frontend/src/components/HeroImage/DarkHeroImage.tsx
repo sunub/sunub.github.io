@@ -1,28 +1,26 @@
 import { memo } from "react";
-import { DarkBridgeHeroImage } from "./DarkHeroImage/DarkBridgeImage";
-import { DarkCarHeroImage } from "./DarkHeroImage/DarkCarsImage";
-import { DarkCloudHeroImage } from "./DarkHeroImage/DarkHeroCloudImage";
-import { DarkShadow, DrakHeroImageWapper } from "./HeroImage.style";
+import { DrakHeroImageWapper, Clouds, Bridge, Cars, DarkShadow } from "./HeroImage.style";
 
 interface DarkHeroImageProps {
-	$isVisible: boolean;
+  $isVisible: boolean;
 }
 
 const DarkHeroImage = memo(({ $isVisible }: DarkHeroImageProps) => {
-	const shadowStyle = {
-		opacity: "var(--color-dark-heroimage)",
-	} as React.CSSProperties;
+  const cloudStyle = { '--clouds-opacity': 'var(--color-dark-heroimage)' } as React.CSSProperties;
+  const bridgeStyle = { '--bridge-opacity': 'var(--color-dark-heroimage)' } as React.CSSProperties;
+  const carsStyle = { '--cars-opacity': 'var(--color-dark-heroimage)' } as React.CSSProperties;
+  const shadowStyle = { opacity: 'var(--color-dark-heroimage)' } as React.CSSProperties;
 
-	return (
-		<DrakHeroImageWapper $isVisible={$isVisible}>
-			<DarkCloudHeroImage />
-			<DarkCarHeroImage />
-			<DarkBridgeHeroImage />
-			<DarkShadow style={shadowStyle} />
-		</DrakHeroImageWapper>
-	);
+  return (
+    <DrakHeroImageWapper $isVisible={$isVisible}>
+      <Clouds $bgUrl="/assets/dark_clouds.avif" style={cloudStyle} />
+      <Bridge $bgUrl="/assets/dark_bridge.avif" style={bridgeStyle} />
+      <Cars $bgUrl="/assets/dark_cars.avif" style={carsStyle} />
+      <DarkShadow style={shadowStyle} />
+    </DrakHeroImageWapper>
+  );
 });
 
-DarkHeroImage.displayName = "DarkHeroImage";
+DarkHeroImage.displayName = 'DarkHeroImage';
 
 export default DarkHeroImage;
