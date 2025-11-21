@@ -35,6 +35,16 @@
 			"linter": {
 				"enabled": false
 			}
+		},
+		{
+			"includes": ["frontend/src/app/overrieds.css"],
+			"linter": {
+				"rules": {
+					"complexity": {
+						"noImportantStyles": "off"
+					}
+				}
+			}
 		}
 	],
 	"assist": {

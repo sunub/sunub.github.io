@@ -1,3 +1,5 @@
+@import "./shiki-overrieds.css";
+
 * {
 	margin: 0px;
 	line-height: calc(1em + 0.9rem);
@@ -579,15 +581,6 @@ li.active > a {
 	100% {
 		transform: translateY(0);
 	}
-}
-
-html[data-color-theme="dark"] .shiki,
-html[data-color-theme="dark"] .shiki span {
-	color: var(--shiki-dark);
-	background-color: var(--shiki-dark-bg);
-	font-style: var(--shiki-dark-font-style);
-	font-weight: var(--shiki-dark-font-weight);
-	text-decoration: var(--shiki-dark-text-decoration);
 }
 
 html[data-color-theme="light"] {
