@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": true,
-		"includes": ["**", "!node_modules", "!.next", "!dist", "!build", "!backend"]
+		"includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -18,13 +18,12 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true
-		},
-		"domains": {
-			"next": "recommended",
-			"react": "recommended"
 		}
 	},
 	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		},
 		"formatter": {
 			"quoteStyle": "double"
 		}
@@ -42,6 +41,25 @@
 				"rules": {
 					"complexity": {
 						"noImportantStyles": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["frontend/**/*.ts", "frontend/**/*.tsx"],
+			"linter": {
+				"domains": {
+					"next": "recommended",
+					"react": "recommended"
+				}
+			}
+		},
+		{
+			"includes": ["backend/**/*.ts"],
+			"linter": {
+				"rules": {
+					"style": {
+						"useImportType": "off"
 					}
 				}
 			}
