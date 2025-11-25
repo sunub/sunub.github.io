@@ -27,6 +27,7 @@
 		"start:frontend": "pnpm --filter frontend run start"
 	},
 	"dependencies": {
+		"@nestjs/mapped-types": "*",
 		"@types/node": "^24.1.0",
 		"execa": "^9.6.0",
 		"ora": "^8.2.0",
