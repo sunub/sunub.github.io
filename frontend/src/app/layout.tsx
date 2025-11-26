@@ -67,7 +67,6 @@ export default async function RootLayout({
 			? "dark"
 			: "light";
 	const themeColors = theme === "light" ? LIGHT_COLORS : DARK_COLORS;
-	console.log("Initial theme:", theme);
 
 	return (
 		<html
