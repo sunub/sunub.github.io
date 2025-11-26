@@ -71,11 +71,13 @@ const DARK_COLORS = {
 
 const COLOR_MODE_KEY = "theme-preference";
 
+const IS_SERVER = typeof window === "undefined";
+
 const API_HOST =
-	process.env.NODE_ENV === "test"
-		? process.env.EC2_PUBLIC_API_URL || "http://localhost:4004"
+	IS_SERVER && process.env.EC2_PUBLIC_API_URL
+		? process.env.EC2_PUBLIC_API_URL
 		: process.env.NEXT_PUBLIC_BASE_URL
-			? `${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy`
-			: process.env.EC2_PUBLIC_API_URL || "http://localhost:3000/api/proxy";
+		? `${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy`
+		: "http://localhost:3000/api/proxy";
 
 export { LIGHT_COLORS, DARK_COLORS, COLOR_MODE_KEY, API_HOST };

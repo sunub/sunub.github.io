@@ -88,9 +88,9 @@ export default defineConfig({
 			stdout: "pipe",
 			stderr: "pipe",
 			env: {
-				NEXT_PUBLIC_BASE_URL: "http://localhost:4004",
 				NODE_ENV: "test",
 				PORT: "4008",
+				NEXT_PUBLIC_BASE_URL: "http://localhost:4004",
 				EC2_PUBLIC_API_URL: "http://localhost:4008",
 			},
 		},

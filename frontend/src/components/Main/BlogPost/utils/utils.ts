@@ -15,7 +15,7 @@ const RecentPostSchema = z.object({
 
 const getAdditionalPostFetch = async (start: number, end: number) => {
 	const API_URL = `${API_HOST}/posts/latest/range?start=${start}&end=${end}`;
-	const data = await fetch(API_URL, { cache: "no-store" });
+	const data = await fetch(API_URL);
 	if (!data.ok) {
 		return null;
 	}

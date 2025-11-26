@@ -4,7 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "next dev --turbo",
+		"dev": "concurrently \"pnpm --filter backend run start:dev\" \"next dev --turbo\"",
 		"prebuild": "cd .. && pnpm --filter fx_utils run build",
 		"build": "concurrently --kill-others --success first \"wait-on tcp:4008 && next build\" \"pnpm --filter backend run start:ci\"",
 		"build:workers": "tsc -p tsconfig.worker.json",

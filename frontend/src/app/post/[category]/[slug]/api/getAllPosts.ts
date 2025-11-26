@@ -8,9 +8,7 @@ import { PostFrontMatterSchema } from "@/db/blog/Schema";
 
 async function fetchAllPostFrontmatter() {
   try {
-    const data = await fetch(`${API_HOST}/posts/all`, {
-      cache: "force-cache",
-    });
+    const data = await fetch(`${API_HOST}/posts/all`);
     if (!data.ok) {
       throw new Error("Failed to fetch all posts");
     }

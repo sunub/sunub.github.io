@@ -6,7 +6,7 @@ import type { PostCategory } from "@/db/blog/Schema";
 const fetchPostsMetadataByCategory = async (category: PostCategory) => {
   try {
     const API_URL = `${API_HOST}/posts/${category}`;
-    const data = await fetch(API_URL, { cache: "force-cache" });
+    const data = await fetch(API_URL);
     if (!data.ok) {
       return null;
     }

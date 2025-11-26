@@ -15,7 +15,7 @@ const RecentPostSchema = z.object({
 export async function getRecentPostFetch() {
 	try {
 		const API_URL = `${API_HOST}/posts/latest`;
-		const data = await fetch(API_URL, { cache: "force-cache" });
+		const data = await fetch(API_URL);
 		if (!data.ok) {
 			throw new Error("Failed to fetch recent posts");
 		}

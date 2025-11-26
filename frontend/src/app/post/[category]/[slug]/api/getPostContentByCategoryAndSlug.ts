@@ -13,7 +13,7 @@ const fetchPostContentByCategoryAndSlug = async (
 ) => {
   try {
     const API_URL = `${API_HOST}/posts/${category}/${slug}`;
-    const data = await fetch(API_URL, { cache: "force-cache" });
+    const data = await fetch(API_URL);
     if (!data.ok) {
       return null;
     }
