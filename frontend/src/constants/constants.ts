@@ -74,8 +74,8 @@ const COLOR_MODE_KEY = "theme-preference";
 const API_HOST =
 	process.env.NODE_ENV === "test"
 		? process.env.EC2_PUBLIC_API_URL || "http://localhost:4004"
-		: process.env.VERCEL_URL
-			? `${process.env.VERCEL_URL}/api/proxy`
+		: process.env.NEXT_PUBLIC_BASE_URL
+			? `${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy`
 			: process.env.EC2_PUBLIC_API_URL || "http://localhost:3000/api/proxy";
 
 export { LIGHT_COLORS, DARK_COLORS, COLOR_MODE_KEY, API_HOST };
