@@ -6,7 +6,7 @@ import { getAdditionalPost } from "../utils/utils";
 
 type PublishedPost = {
 	totalCount: number;
-	frontmattters: FrontMatter[];
+	frontmatters: FrontMatter[];
 };
 
 const THROTTLE_DELAY = 300;
@@ -22,7 +22,7 @@ async function addNewPublishedPost(
 	]);
 
 	const seen = new Set(current.map((p) => `${p.category}-${p.slug}`));
-	const filteredNewPosts = dataPromise.frontmattters.filter((p) => {
+	const filteredNewPosts = dataPromise.frontmatters.filter((p) => {
 		const key = `${p.category}-${p.slug}`;
 		if (seen.has(key)) {
 			return false;
@@ -37,7 +37,7 @@ async function addNewPublishedPost(
 
 	setPublishedPost((prev) => ({
 		...prev,
-		frontmattters: [...prev.frontmattters, ...filteredNewPosts],
+		frontmatters: [...prev.frontmatters, ...filteredNewPosts],
 	}));
 }
 
@@ -48,7 +48,7 @@ export function useLoadMorePublishdedPosts(
 ) {
 	const [isPending, startTransition] = useTransition();
 	const loadMorePublishedPost = throttle(() => {
-		const current = publishedPost.frontmattters;
+		const current = publishedPost.frontmatters;
 		if (current.length >= MAX_POST_COUNT) {
 			return;
 		}
