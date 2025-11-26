@@ -51,6 +51,10 @@ export class BlogService implements OnModuleInit {
 		return this.allPosts.slice(0, count);
 	}
 
+	public getPostsInRange(start: number, end: number): PostFrontMatter[] {
+		return this.allPosts.slice(start, end);
+	}
+
 	public getAllPosts(): PostFrontMatter[] {
 		return this.allPosts;
 	}

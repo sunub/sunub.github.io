@@ -6,10 +6,25 @@ import type { PostCategory } from "../instances/blog/Schema";
 export class PostsService {
 	constructor(private readonly blogService: BlogService) {}
 
+	findAll() {
+		return this.blogService.getAllPosts();
+	}
+
 	findLatest(count: number = 10) {
 		const totalCount = this.blogService.getTotalPostCount();
 		const latestFrontmatters = this.blogService
 			.getLatestPosts(count)
+			.map((post) => post.frontmatter);
+		return {
+			totalCount,
+			frontmatters: latestFrontmatters,
+		};
+	}
+
+	findLatestInRange(start: number, end: number) {
+		const totalCount = this.blogService.getTotalPostCount();
+		const latestFrontmatters = this.blogService
+			.getPostsInRange(start, end)
 			.map((post) => post.frontmatter);
 		return {
 			totalCount,

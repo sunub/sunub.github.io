@@ -16,12 +16,25 @@ import { PostsService } from "./posts.service";
 export class PostsController {
 	constructor(private readonly postsService: PostsService) {}
 
+	@Get("all")
+	getAllPosts() {
+		return this.postsService.findAll();
+	}
+
 	@Get("latest")
 	getLatestPosts(
 		@Query(new ValidationPipe({ transform: true }))
 		query: GetLatestPostsQueryDto,
 	) {
 		return this.postsService.findLatest(query.count);
+	}
+
+	@Get("latest/range")
+	getLatestPostsInRange(
+		@Query(new ValidationPipe({ transform: true }))
+		{ start, end }: { start: number; end: number },
+	) {
+		return this.postsService.findLatestInRange(start, end);
 	}
 
 	@Get(":category")

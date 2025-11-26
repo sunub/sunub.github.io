@@ -9,3 +9,15 @@ export class GetLatestPostsQueryDto {
 	@Max(50)
 	count: number = 10;
 }
+
+export class GetLatestPostsInRangeQueryDto {
+	@Type(() => Number)
+	@IsInt()
+	@Min(0)
+	start: number;
+
+	@Type(() => Number)
+	@IsInt()
+	@Min(1)
+	end: number;
+}
