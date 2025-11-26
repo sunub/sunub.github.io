@@ -6,9 +6,11 @@
 	"private": true,
 	"license": "UNLICENSED",
 	"scripts": {
-		"build": "nest build",
+		"prebuild": "cd .. && pnpm --filter fx_utils run build",
+		"build": "pnpm --filter fx_utils run build && nest build",
 		"format": "pnpm exec biome format --write",
 		"start": "nest start",
+		"start:ci": "PORT=4008 nest start",
 		"start:dev": "nest start --watch",
 		"start:debug": "nest start --debug --watch",
 		"start:prod": "node dist/main",
@@ -22,6 +24,7 @@
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",
+		"@nestjs/config": "^4.0.2",
 		"@nestjs/core": "^10.0.0",
 		"@nestjs/mapped-types": "*",
 		"@nestjs/platform-express": "^10.0.0",
