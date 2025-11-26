@@ -4,9 +4,10 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"dev": "concurrently \"pnpm --filter frontend run dev\" \"pnpm --filter backend run start:dev\"",
 		"dev:f": "pnpm --filter frontend run dev",
 		"dev:d": "pnpm --filter backend run dev",
-		"build": "pnpm --filter fx_utils run build && pnpm --filter frontend run build",
+		"build": "pnpm --filter fx_utils run build && pnpm --filter frontend run build && pnpm --filter backend run build",
 		"build:f": "pnpm --filter frontend run build",
 		"format:check": "pnpm dlx prettier --check .",
 		"lint": "pnpm exec biome lint",
@@ -31,10 +32,12 @@
 		"@types/node": "^24.1.0",
 		"execa": "^9.6.0",
 		"ora": "^8.2.0",
-		"typescript": "^5.8.3"
+		"typescript": "^5.8.3",
+		"wait-on": "^9.0.3"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.6",
+		"concurrently": "^9.2.1",
 		"globals": "^16.3.0"
 	},
 	"resolutions": {
