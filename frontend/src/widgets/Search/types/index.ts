@@ -1,4 +1,4 @@
-import type { FrontMatter } from "@/types/schema";
+import type { FrontMatter } from "@/db/blog/Schema"; 
 
 export interface SearchResult {
 	postKey: string;
