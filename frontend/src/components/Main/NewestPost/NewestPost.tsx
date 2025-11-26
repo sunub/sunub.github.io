@@ -1,18 +1,18 @@
-import { getRecentPostsMetadataInRange } from "db/blog/api";
 import { Suspense } from "react";
 import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 import Spacer from "@/components/Spacer";
 import { BlogPost } from "../BlogPost";
+import { getRecentPost } from "./api/getRecentPost";
 import { RootWrapper } from "./NewestPost.style";
 
 async function NewestPost() {
-	const initialPosts = await getRecentPostsMetadataInRange(0, 10);
+	const recentlyPostedPost = await getRecentPost();
 
 	return (
 		<RootWrapper>
 			<Spacer axis={"vertical"} size={32} />
 			<Suspense fallback={<FrontMatterLoading length={5} />}>
-				<BlogPost recentlyPublished={initialPosts} />
+				<BlogPost recentlyPublished={recentlyPostedPost} />
 			</Suspense>
 		</RootWrapper>
 	);

@@ -1,8 +1,3 @@
-import {
-	getAllPosts,
-	getPostContentByCategoryAndSlug,
-	getPostFrontMatterByCategoryAndSlug,
-} from "db/blog/api";
 import type { FrontMatter } from "db/blog/Schema";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -20,6 +15,8 @@ import {
 	PostTitle,
 	Time,
 } from "./page.style";
+import { getPostContentByCategoryAndSlug } from "./api/getPostContentByCategoryAndSlug";
+import { getAllPosts } from "./api/getAllPosts";
 
 export const revalidate = 43200;
 
@@ -48,7 +45,7 @@ export async function generateMetadata({
 	const { category, slug } = resolvedParams;
 
 	try {
-		const specificFrontmatter = await getPostFrontMatterByCategoryAndSlug(
+		const specificFrontmatter = await getPostContentByCategoryAndSlug(
 			category,
 			slug,
 		);
@@ -111,7 +108,6 @@ async function Page({ params }: { params: Params }) {
 			category,
 			slug,
 		);
-		if (!postContentData) return null;
 		const { content, frontmatter } = postContentData;
 		return (
 			<RootLayout>

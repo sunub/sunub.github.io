@@ -1,4 +1,3 @@
-import { getPostsMetadataByCategory } from "db/blog/api";
 import { Crafty_Girls } from "next/font/google";
 import { Suspense } from "react";
 import Card from "@/components/Card";
@@ -12,6 +11,7 @@ import {
 	Title,
 	TitleContainer,
 } from "./page.style";
+import { getPostsMetadataByCategory } from "./api/getPostsMetadataByCategory";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
 type Params = Promise<{

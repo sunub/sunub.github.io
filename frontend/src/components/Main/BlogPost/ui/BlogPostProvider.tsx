@@ -48,8 +48,8 @@ export function BlogPostProvider({
 
 	const currentData = useMemo(() => {
 		if (
-			atomState?.frontmattters.length &&
-			atomState.frontmattters.length > initialData.frontmattters.length
+			atomState?.frontmatters.length &&
+			atomState.frontmatters.length > initialData.frontmatters.length
 		) {
 			return atomState;
 		}
@@ -59,7 +59,7 @@ export function BlogPostProvider({
 	useEffect(() => {
 		if (
 			!atomState ||
-			initialData.frontmattters.length > atomState.frontmattters.length
+			initialData.frontmatters.length > atomState.frontmatters.length
 		) {
 			setAtomState(initialData);
 		}
@@ -79,7 +79,7 @@ export function BlogPostProvider({
 			return;
 		}
 
-		if (currentData.frontmattters.length >= currentData.totalCount) {
+		if (currentData.frontmatters.length >= currentData.totalCount) {
 			return;
 		}
 
@@ -88,7 +88,7 @@ export function BlogPostProvider({
 
 		startTransition(async () => {
 			try {
-				const currentLength = currentData.frontmattters.length;
+				const currentLength = currentData.frontmatters.length;
 				const nextEnd = currentLength + POSTS_PER_PAGE;
 
 				const [newPostsData] = await Promise.all([
@@ -96,11 +96,10 @@ export function BlogPostProvider({
 					new Promise((resolve) => setTimeout(resolve, LOAD_DELAY)),
 				]);
 
-				// Deduplication
 				const existingKeys = new Set(
-					currentData.frontmattters.map((p) => `${p.category}-${p.slug}`),
+					currentData.frontmatters.map((p) => `${p.category}-${p.slug}`),
 				);
-				const filteredNewPosts = newPostsData.frontmattters.filter((post) => {
+				const filteredNewPosts = newPostsData.frontmatters.filter((post) => {
 					const key = `${post.category}-${post.slug}`;
 					if (existingKeys.has(key)) return false;
 					existingKeys.add(key);
@@ -110,8 +109,8 @@ export function BlogPostProvider({
 				if (filteredNewPosts.length > 0) {
 					setAtomState((prev) => ({
 						totalCount: prev?.totalCount ?? currentData.totalCount,
-						frontmattters: [
-							...(prev?.frontmattters ?? currentData.frontmattters),
+						frontmatters: [
+							...(prev?.frontmatters ?? currentData.frontmatters),
 							...filteredNewPosts,
 						],
 					}));
@@ -126,11 +125,11 @@ export function BlogPostProvider({
 
 	const value = useMemo<BlogPostContextValue>(
 		() => ({
-			posts: currentData.frontmattters,
+			posts: currentData.frontmatters,
 			totalCount: currentData.totalCount,
 			isPending,
 			loadMore,
-			hasMore: currentData.frontmattters.length < currentData.totalCount,
+			hasMore: currentData.frontmatters.length < currentData.totalCount,
 		}),
 		[currentData, isPending, loadMore],
 	);
