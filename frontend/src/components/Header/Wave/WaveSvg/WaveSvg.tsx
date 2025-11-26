@@ -1,7 +1,6 @@
 "use client";
 
-import { animate, type BezierDefinition, motion } from "motion/react";
-import { useEffect, useRef } from "react";
+import { type BezierDefinition, motion } from "motion/react";
 import * as Styled from "../Wave.style";
 
 const path = {
@@ -28,58 +27,6 @@ const path = {
 const customEase: BezierDefinition = [0.42, 0, 1, 1];
 
 export function WaveSvg({ ...delegated }) {
-	const endRef = useRef<SVGPathElement>(null);
-	const midRef = useRef<SVGPathElement>(null);
-	const frontRef = useRef<SVGPathElement>(null);
-
-	useEffect(() => {
-		if (endRef.current) {
-			animate(
-				endRef.current,
-				{
-					d: [path.step1.end, path.step3.end, path.step1.end],
-				},
-				{
-					duration: 7.2,
-					times: [0, 0.66, 1],
-					ease: ["linear", customEase],
-					repeat: Infinity,
-					repeatType: "reverse",
-				},
-			);
-		}
-		if (midRef.current) {
-			animate(
-				midRef.current,
-				{
-					d: [path.step1.mid, path.step3.mid, path.step2.mid],
-				},
-				{
-					duration: 6.4,
-					times: [0, 0.625, 1],
-					ease: ["linear", customEase],
-					repeat: Infinity,
-					repeatType: "reverse",
-				},
-			);
-		}
-		if (frontRef.current) {
-			animate(
-				frontRef.current,
-				{
-					d: [path.step1.front, path.step2.front, path.step3.front],
-				},
-				{
-					duration: 6,
-					times: [0, 0.5, 1],
-					ease: [customEase, "linear"],
-					repeat: Infinity,
-					repeatType: "reverse",
-				},
-			);
-		}
-	}, []);
-
 	return (
 		<Styled.WaveSvgWrapper key={"light-wave-svg"} {...delegated}>
 			<Styled.WaveSvg
@@ -91,21 +38,48 @@ export function WaveSvg({ ...delegated }) {
 				xmlns="http://www.w3.org/2000/svg"
 			>
 				<motion.path
-					ref={endRef}
 					d={path.step1.end}
+					animate={{
+						d: [path.step1.end, path.step3.end, path.step1.end],
+					}}
+					transition={{
+						duration: 7.2,
+						times: [0, 0.66, 1],
+						ease: ["linear", customEase],
+						repeat: Infinity,
+						repeatType: "reverse",
+					}}
 					fill="url(#paint0_linear_103_748)"
 					fillOpacity="0.85"
 				/>
 
 				<motion.path
-					ref={midRef}
 					d={path.step1.mid}
+					animate={{
+						d: [path.step1.mid, path.step3.mid, path.step2.mid],
+					}}
+					transition={{
+						duration: 6.4,
+						times: [0, 0.625, 1],
+						ease: ["linear", customEase],
+						repeat: Infinity,
+						repeatType: "reverse",
+					}}
 					fill="url(#paint1_linear_103_748)"
 				/>
 
 				<motion.path
-					ref={frontRef}
 					d={path.step1.front}
+					animate={{
+						d: [path.step1.front, path.step2.front, path.step3.front],
+					}}
+					transition={{
+						duration: 6,
+						times: [0, 0.5, 1],
+						ease: [customEase, "linear"],
+						repeat: Infinity,
+						repeatType: "reverse",
+					}}
 					fill="var(--color-frontWave)"
 				/>
 
