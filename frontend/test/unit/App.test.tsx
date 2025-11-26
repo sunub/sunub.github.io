@@ -26,7 +26,7 @@ const demoFrontMatters: FrontMatter[] = Array.from(
 
 const demoPublishedPosts: PublishedPost = {
 	totalCount: 10,
-	frontmattters: demoFrontMatters,
+	frontmatters: demoFrontMatters,
 };
 
 describe("블로그 메인 서버 컴포넌트 테스트", () => {
