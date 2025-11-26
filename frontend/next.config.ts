@@ -7,6 +7,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
 	basePath: "",
 	reactStrictMode: true,
+	async rewrites() {
+		return [
+			{
+				source: "/api/proxy/:path*",
+				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/:path*`,
+			},
+		];
+	},
 	skipTrailingSlashRedirect: true,
 	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 

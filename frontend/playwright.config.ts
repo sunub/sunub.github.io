@@ -78,18 +78,22 @@ export default defineConfig({
 	],
 
 	/* Run your local dev server before starting the tests */
-	webServer: {
-		command: "pnpm run start",
-		url: "http://localhost:4004",
-		reuseExistingServer: !process.env.CI,
-		timeout: 180 * 1000,
-		// 서버가 완전히 준비될 때까지 대기
-		cwd: ".",
-		env: {
-			NODE_ENV: "test",
-			PORT: "4004",
+	webServer: [
+		{
+			command: "pnpm --filter frontend run start:test",
+			url: "http://localhost:4004",
+			reuseExistingServer: !process.env.CI,
+			timeout: 180 * 1000, // 빌드 시간 + 서버 구동 시간 고려해서 넉넉하게
+			cwd: ".",
+			stdout: "pipe",
+			stderr: "pipe",
+			env: {
+				NODE_ENV: "test",
+				PORT: "4008",
+				EC2_PUBLIC_API_URL: "http://localhost:4008",
+			},
 		},
-	},
+	],
 
 	/* 전역 설정으로 서버 준비 대기 */
 	// globalSetup: './test/global-setup.ts',
