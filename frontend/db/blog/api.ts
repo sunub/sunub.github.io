@@ -7,9 +7,8 @@ import { chunk } from "fx_utils";
 import matter from "gray-matter";
 import { cache } from "react";
 import postsJson from "@/generated/posts.generated.json";
-import type { PostCategory } from "@/types/schema";
 import { Post } from "./Posts";
-import type { PostFrontMatter } from "./Schema";
+import type { PostCategory, PostFrontMatter } from "./Schema";
 import { FrontMatterSchema, JsonPostFrontMatterSchema } from "./Schema";
 
 const getPostsDir = cache(() => {
@@ -77,7 +76,7 @@ export const getRecentPostsMetadataInRange = cache(
 		const allFrontMatters = await getAllPostsFrontmatter();
 		return {
 			totalCount: allFrontMatters.length,
-			frontmattters: allFrontMatters
+			frontmatters: allFrontMatters
 				.slice(start, end)
 				.map((post) => post.frontmatter),
 		};

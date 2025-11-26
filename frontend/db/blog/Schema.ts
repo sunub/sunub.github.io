@@ -1,15 +1,15 @@
 import { z } from "zod/v4";
 
-const PostCategorySchema = z.union([
+export const PostCategorySchema = z.union([
 	z.literal("web"),
 	z.literal("algorithm"),
 	z.literal("cs"),
 	z.literal("code"),
 ]);
 
-const DateStringSchema = z.union([z.string(), z.date()]);
+export const DateStringSchema = z.union([z.string(), z.date()]);
 
-const FrontMatterSchema = z.object({
+export const FrontMatterSchema = z.object({
 	title: z.string(),
 	date: DateStringSchema,
 	tags: z.array(z.string()),
@@ -19,7 +19,7 @@ const FrontMatterSchema = z.object({
 	completed: z.boolean(),
 });
 
-const CacheDataSchema = z.object({
+export const CacheDataSchema = z.object({
 	content: z.string(),
 	data: FrontMatterSchema,
 	isEmpty: z.boolean(),
@@ -29,9 +29,9 @@ const CacheDataSchema = z.object({
 	date: DateStringSchema,
 });
 
-type PostCategory = z.infer<typeof PostCategorySchema>;
-type FrontMatter = z.infer<typeof FrontMatterSchema>;
-type CacheData = z.infer<typeof CacheDataSchema>;
+export type PostCategory = z.infer<typeof PostCategorySchema>;
+export type FrontMatter = z.infer<typeof FrontMatterSchema>;
+export type CacheData = z.infer<typeof CacheDataSchema>;
 
 export interface MatterTransformData {
 	content: string;
@@ -50,6 +50,16 @@ export interface PostFrontMatter {
 	filePath: string;
 }
 
+export const PostSchema = z.object({
+	frontmatter: FrontMatterSchema,
+	content: z.string(),
+});
+
+export interface Post {
+	frontmatter: FrontMatter;
+	content: string;
+}
+
 export const JsonPostFrontMatterSchema = z.object({
 	all: z.array(PostFrontMatterSchema),
 	web: z.array(PostFrontMatterSchema),
@@ -65,6 +75,3 @@ export interface JsonPostFrontMatter {
 	code: PostFrontMatter[];
 	cs: PostFrontMatter[];
 }
-
-export { CacheDataSchema, FrontMatterSchema, PostCategorySchema };
-export type { CacheData, FrontMatter, PostCategory };
