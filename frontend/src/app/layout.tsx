@@ -1,5 +1,3 @@
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Provider } from "jotai";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -115,8 +113,6 @@ export default async function RootLayout({
 						</Provider>
 					</ThemeProvider>
 				</StyledComponentsRegistry>
-				<SpeedInsights />
-				<Analytics />
 			</body>
 		</html>
 	);
