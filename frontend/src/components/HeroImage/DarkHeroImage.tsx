@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { cdnPath } from "@/utils/cdnPath";
 import {
 	Bridge,
 	Cars,
@@ -27,9 +28,12 @@ const DarkHeroImage = memo(({ $isVisible }: DarkHeroImageProps) => {
 
 	return (
 		<DrakHeroImageWapper $isVisible={$isVisible}>
-			<Clouds $bgUrl="/assets/dark_clouds.avif" style={cloudStyle} />
-			<Bridge $bgUrl="/assets/dark_bridge.avif" style={bridgeStyle} />
-			<Cars $bgUrl="/assets/dark_cars.avif" style={carsStyle} />
+			<Clouds $bgUrl={cdnPath("/assets/dark_clouds.avif")} style={cloudStyle} />
+			<Bridge
+				$bgUrl={cdnPath("/assets/dark_bridge.avif")}
+				style={bridgeStyle}
+			/>
+			<Cars $bgUrl={cdnPath("/assets/dark_cars.avif")} style={carsStyle} />
 			<DarkShadow style={shadowStyle} />
 		</DrakHeroImageWapper>
 	);

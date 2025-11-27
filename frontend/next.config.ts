@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
 
 	images: {
 		formats: ["image/avif", "image/webp"],
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "d2u919r15udwpw.cloudfront.net",
+				port: "",
+				pathname: "/**",
+			},
+		],
 		minimumCacheTTL: 60 * 60 * 24 * 30,
 		deviceSizes: [640, 750, 828, 1080, 1200],
 		imageSizes: [16, 32, 48, 64, 96],
