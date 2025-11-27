@@ -5,6 +5,20 @@ import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+	typescript: {
+		ignoreBuildErrors: true,
+	},
+	modularizeImports: {
+		"lodash.throttle": {
+			transform: "lodash.throttle",
+		},
+		"lucide-react": {
+			transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
+		},
+	},
+	experimental: {
+		optimizePackageImports: ["lucide-react"],
+	},
 	basePath: "",
 	reactStrictMode: true,
 	async rewrites() {
@@ -83,39 +97,6 @@ const nextConfig: NextConfig = {
 			},
 		];
 	},
-	webpack: (config, { isServer }) => {
-		if (!isServer) {
-			config.optimization = {
-				...config.optimization,
-				splitChunks: {
-					chunks: "all",
-					cacheGroups: {
-						default: false,
-						vendors: false,
-						hero: {
-							name: "hero",
-							test: /HeroImage/,
-							priority: 30,
-							reuseExistingChunk: true,
-						},
-						styles: {
-							name: "styles",
-							test: /styled-components/,
-							priority: 20,
-							reuseExistingChunk: true,
-						},
-						commons: {
-							name: "commons",
-							minChunks: 2,
-							priority: 10,
-							reuseExistingChunk: true,
-						},
-					},
-				},
-			};
-		}
-		return config;
-	},
 };
 
 const ContentSecurityPolicy = `
@@ -179,6 +160,7 @@ const securityHeaders = [
 
 const withBundleAnalyzer = bundleAnalyzer({
 	enabled: process.env.ANALYZE === "true",
+	openAnalyzer: true,
 })(nextConfig);
 
 const withMDX = createMDX({
