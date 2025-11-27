@@ -38,7 +38,7 @@ export function SearchResultsList({ onResultClick }: SearchResultsListProps) {
 				const url = `/post/${frontmatter.category}/${frontmatter.slug}`;
 
 				return (
-					<ResultItem role="option" key={postKey}>
+					<ResultItem role="option" key={`${postKey}-${frontmatter.title}`}>
 						<VisuallyHidden>{`${frontmatter.title}로 이동하는 링크`}</VisuallyHidden>
 						<ListIndicator />
 						<ResultLink href={url} onClick={() => onResultClick} tabIndex={0}>

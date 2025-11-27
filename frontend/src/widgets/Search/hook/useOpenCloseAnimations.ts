@@ -1,6 +1,6 @@
 "use client";
 
-import { gsap } from "gsap";
+import { animate } from "motion/react";
 import { useCallback } from "react";
 
 export function useOpenCloseAnimations(
@@ -9,31 +9,24 @@ export function useOpenCloseAnimations(
 	const initOpenAnimation = useCallback(() => {
 		if (!elementRef.current) return;
 
-		gsap.fromTo(
+		elementRef.current.style.opacity = "0";
+		elementRef.current.style.transform = "translateY(-20px)";
+
+		animate(
 			elementRef.current,
-			{ opacity: 0, y: -20 },
-			{ opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+			{ opacity: 1, y: 0 },
+			{ duration: 0.5, ease: "easeOut" },
 		);
 	}, [elementRef]);
 
-	const closeAnimation = useCallback(() => {
-		if (!elementRef.current) return Promise.resolve();
+	const closeAnimation = useCallback(async () => {
+		if (!elementRef.current) return;
 
-		return new Promise<void>((resolve) => {
-			gsap.to(elementRef.current, {
-				opacity: 0,
-				y: -20,
-				duration: 0.2,
-				onComplete: () => {
-					// DOM 업데이트가 완전히 완료될 때까지 대기
-					requestAnimationFrame(() => {
-						requestAnimationFrame(() => {
-							resolve();
-						});
-					});
-				},
-			});
-		});
+		await animate(
+			elementRef.current,
+			{ opacity: 0, y: -20 },
+			{ duration: 0.2, ease: "linear" },
+		);
 	}, [elementRef]);
 
 	return {
