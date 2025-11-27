@@ -19,8 +19,8 @@ export async function handleKeyEnter(
 		return;
 	}
 
-	if (indexRef.current >= 0) {
-		listItems[indexRef.current].setAttribute("aria-selected", "false");
+	if (indexRef.current < 0 || indexRef.current >= listItems.length) {
+		return;
 	}
 
 	const currentItem = listItems[indexRef.current];

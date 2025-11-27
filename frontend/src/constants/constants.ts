@@ -69,15 +69,13 @@ const DARK_COLORS = {
 	"--sh-comment": "#a19595",
 };
 
-const COLOR_MODE_KEY = "theme-preference";
-
 const IS_SERVER = typeof window === "undefined";
 
 const API_HOST =
 	IS_SERVER && process.env.EC2_PUBLIC_API_URL
 		? process.env.EC2_PUBLIC_API_URL
 		: process.env.NEXT_PUBLIC_BASE_URL
-		? `${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy`
-		: "http://localhost:3000/api/proxy";
+			? `${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy`
+			: "http://localhost:3000/api/proxy";
 
-export { LIGHT_COLORS, DARK_COLORS, COLOR_MODE_KEY, API_HOST };
+export { LIGHT_COLORS, DARK_COLORS, API_HOST };

@@ -1,8 +1,6 @@
 "use client";
 
 import styled from "styled-components";
-import { FeatherIcon } from "@/components/Main/NewestPost/FeatherIcon";
-import Spacer from "@/components/Spacer";
 
 function LoadingAnimation() {
 	return (
@@ -26,24 +24,6 @@ function LoadingAnimation() {
 	);
 }
 
-function ContentListLoading() {
-	return (
-		<RootWrapper>
-			<TitleWrapper>
-				<FeatherIcon />
-				<RecentTitle>최신 포스트들</RecentTitle>
-			</TitleWrapper>
-			<Spacer axis={"vertical"} size={32} />
-			{Array.from(
-				{ length: 5 },
-				(_, index) => `${index}-content-list-loading-animation`,
-			).map((key) => (
-				<LoadingAnimation key={key} />
-			))}
-		</RootWrapper>
-	);
-}
-
 function FrontMatterLoading({ length }: { length: number }) {
 	return (
 		<RootWrapper data-testid="blog-post__front-matter-loading">
@@ -57,7 +37,7 @@ function FrontMatterLoading({ length }: { length: number }) {
 	);
 }
 
-export { ContentListLoading, FrontMatterLoading };
+export { FrontMatterLoading };
 
 const ContentBlink = styled.div<{ $width: number }>`
   display: inline-block;
@@ -79,16 +59,6 @@ const ContentBlink = styled.div<{ $width: number }>`
 
 const RootWrapper = styled.div`
   grid-area: newest;
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-`;
-
-const RecentTitle = styled.h1`
-  font-size: 1.75rem;
 `;
 
 const Title = styled.span`
