@@ -1,28 +1,29 @@
-import { Crafty_Girls } from "next/font/google";
+import localFont from "next/font/local";
 import { Suspense } from "react";
 import Card from "@/components/Card";
 import { Wave } from "@/components/Header/Wave";
 import { CardsSkeleton } from "@/components/Skeletons";
 import Spacer from "@/components/Spacer";
 import { RootLayout } from "@/features/RootLayout";
+import { getPostsMetadataByCategory } from "./api/getPostsMetadataByCategory";
 import {
 	FrontmatterWrapper,
 	RootContainer,
 	Title,
 	TitleContainer,
 } from "./page.style";
-import { getPostsMetadataByCategory } from "./api/getPostsMetadataByCategory";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
 type Params = Promise<{
 	category: Cateogry;
 }>;
 
-const craftyGirls = Crafty_Girls({
-	subsets: ["latin"],
-	weight: ["400"],
-	variable: "--crafty-girls-font",
+const craftyGirls = localFont({
+	src: "../../../../public/fonts/CraftyGirls-Regular.woff2",
 	display: "swap",
+	style: "normal",
+	variable: "--crafty-girls-font",
+	fallback: ["system-ui", "sans-serif"],
 });
 
 export default async function Page({ params }: { params: Params }) {
