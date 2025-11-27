@@ -2,7 +2,6 @@ import React from "react";
 import { codeToHtml } from "shiki";
 import { CodeBlockWrapper, InlineCodeStyle } from "../style";
 import { Clipboard } from "./Clipboard";
-import { codeFont } from "./Font";
 
 const languageMap = {
 	"language-html": "html",
@@ -20,14 +19,12 @@ const languageMap = {
 
 type LanguageKey = keyof typeof languageMap;
 
-async function CodeBlock({
-	className,
-	children,
-	...props
-}: {
+interface ColdeBlockProps extends React.HTMLAttributes<HTMLElement> {
 	className: string;
 	children: React.ReactNode;
-}) {
+}
+
+async function CodeBlock({ className, children, ...props }: ColdeBlockProps) {
 	const codeToString = React.Children.toArray(children)
 		.filter((child) => typeof child === "string")
 		.join("");
@@ -53,17 +50,19 @@ async function CodeBlock({
 			error,
 		);
 		return (
-			<pre className={`${className} ${codeFont.className}`} {...props}>
+			<pre {...props}>
 				<code>{codeToString}</code>
 			</pre>
 		);
 	}
 }
 
-function InlineCode({ children }: { children: React.ReactNode }) {
-	return (
-		<InlineCodeStyle className={codeFont.className}>{children}</InlineCodeStyle>
-	);
+interface InlineCodeProps extends React.HTMLAttributes<HTMLElement> {
+	children: React.ReactNode;
+}
+
+function InlineCode({ children, ...props }: InlineCodeProps) {
+	return <InlineCodeStyle {...props}>{children}</InlineCodeStyle>;
 }
 
 export { CodeBlock, InlineCode };

@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardCheckIcon, ClipboardIcon } from "lucide-react";
+import { ClipboardCheck, Clipboard as ClipboardIcon } from "lucide-react";
 import { useState } from "react";
 import { ClipboardButton } from "../style";
 
@@ -25,7 +25,7 @@ export function Clipboard({ text }: { text: string }) {
 	return (
 		<ClipboardButton onClick={handleCopy} aria-label="Copy to clipboard">
 			{copied ? (
-				<ClipboardCheckIcon className="text-green-500" />
+				<ClipboardCheck className="text-green-500" />
 			) : (
 				<ClipboardIcon className="text-gray-500" />
 			)}

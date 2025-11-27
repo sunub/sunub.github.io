@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import { createElement } from "react";
 import { MDXComponents } from "@/MDXContents";
 import { Blockquote } from "./BlockQuote";
 import { CodeBlock, InlineCode } from "./CodeBlock";
@@ -55,11 +57,11 @@ function createHeadingComponent(level: number) {
 	const HeadingComponent = ({ children }: { children: string }) => {
 		const slug = slugify(children);
 		const header = getHeaderByLevel(level);
-		return React.createElement(header, { id: slug }, [
-			React.createElement(LinkAnchor, { href: `#${slug}`, key: `${slug}` }, [
-				React.createElement(LinkIcon, { key: `${slug}-icon` }),
+		return createElement(header, { id: slug }, [
+			createElement(LinkAnchor, { href: `#${slug}`, key: `${slug}` }, [
+				createElement(LinkIcon, { key: `${slug}-icon` }),
 			]),
-			React.createElement(
+			createElement(
 				"span",
 				{ key: `${slug}-content`, className: "post-heading-titles" },
 				children,
@@ -91,7 +93,7 @@ const PostArticleComponents = {
 		if (className?.startsWith("language-")) {
 			return <CodeBlock className={className} {...props} />;
 		}
-		return <InlineCode {...props} />;
+		return <InlineCode className={className} {...props} />;
 	},
 	ul: UnOrderedList,
 	li: ListItem,

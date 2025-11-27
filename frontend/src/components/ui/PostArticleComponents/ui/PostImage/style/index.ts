@@ -3,11 +3,6 @@
 import Image from "next/image";
 import styled, { css, keyframes } from "styled-components";
 
-const fadeIn = keyframes`
-  from { opacity: 0; }
-  to   { opacity: 1; }
-`;
-
 const pulse = keyframes`
   0%, 100% { opacity: 1; }
   50%      { opacity: 0.5; }
@@ -38,49 +33,6 @@ export const Caption = styled.figcaption`
   margin-top: 0.5rem;
 `;
 
-export const Figure = styled.figure`
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-export const ImageWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  aspect-ratio: auto;
-  cursor: zoom-in;
-`;
-
-export const ZoomImageContainer = styled.div`
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  animation: ${fadeIn} 0.3s ease;
-`;
-
-export const ZoomedImage = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 90%;
-  max-height: 90%;
-  aspect-ratio: auto;
-  cursor: zoom-out;
-`;
-
-export const BlurredBackground = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: var(--color-background);
-  cursor: zoom-out;
-`;
-
 export const StyledImage = styled(Image)<{
 	$isLoading: boolean;
 	$zoomed?: boolean;
@@ -96,15 +48,4 @@ export const StyledImage = styled(Image)<{
       cursor: zoom-out;
       z-index: 10000;
     `}
-`;
-
-export const CustomImageStyle = styled(Image)<{
-	$isLoading: boolean;
-	$extraCss?: ReturnType<typeof css>;
-}>`
-  object-fit: contain;
-  transition: opacity 0.3s ease;
-  opacity: ${({ $isLoading }) => ($isLoading ? 0 : 1)};
-
-  ${({ $extraCss }) => $extraCss || ""}
 `;

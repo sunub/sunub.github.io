@@ -105,8 +105,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   ${(props) => props.$customStyles}
 `;
 
-export interface ButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	variant?: keyof typeof variantStyles;
 	size?: keyof typeof sizeStyles;
 	asChild?: boolean;
@@ -156,10 +155,5 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = "Button";
-
-export const buttonVariants = {
-	variant: Object.keys(variantStyles),
-	size: Object.keys(sizeStyles),
-};
 
 export { Button };
