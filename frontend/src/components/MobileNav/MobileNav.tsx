@@ -1,43 +1,73 @@
 "use client";
 
-import gsap from "gsap";
-import React from "react";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import ThemeToggler from "@/components/Theme/Toggler/ThemeTogglerButton";
 import { getMoblieCloseAnimationTimeline } from "./MoblieNav.helper";
-import * as Styled from "./MoblieNav.style";
+import {
+	Backdrop,
+	Item as ItemStyle,
+	List,
+	ListWrapper,
+	NavigationWrapper,
+	ThemeWrapper,
+	Wrapper,
+} from "./MoblieNav.style";
 
 const CATEGORIES = [
-	{
-		name: "cs",
-		href: "/post/cs",
-	},
-	{
-		name: "web",
-		href: "/post/web",
-	},
-	{
-		name: "code",
-		href: "/post/code",
-	},
-	{
-		name: "algorithm",
-		href: "/post/algorithm",
-	},
+	{ name: "cs", href: "/post/cs" },
+	{ name: "web", href: "/post/web" },
+	{ name: "code", href: "/post/code" },
+	{ name: "algorithm", href: "/post/algorithm" },
 ];
-export interface RefObjects {
+
+interface RefObjects {
 	pathStartRef: React.RefObject<SVGPathElement | null>;
 	pathMidRef: React.RefObject<SVGPathElement | null>;
 	pathEndRef: React.RefObject<SVGPathElement | null>;
 	gradientRef: React.RefObject<SVGLinearGradientElement | null>;
 	svgRef: React.RefObject<SVGSVGElement | null>;
 }
+
 interface Props {
 	isOpen: boolean;
 	toggleOpen: () => void;
 	refObjects: RefObjects;
 }
+
+const containerVariants: Variants = {
+	hidden: { opacity: 0 },
+	visible: {
+		opacity: 1,
+		transition: {
+			staggerChildren: 0.1,
+			delayChildren: 0.2,
+		},
+	},
+};
+
+const itemVariants: Variants = {
+	hidden: {
+		opacity: 0,
+		filter: "blur(5px)",
+		textShadow: "20px 0px 0px rgba(0, 0, 0, 0.5)",
+	},
+	visible: {
+		opacity: 1,
+		filter: "blur(0px)",
+		textShadow: "0px 0px 0px rgba(0, 0, 0, 0)",
+		transition: {
+			duration: 0.95,
+			ease: "easeOut",
+		},
+	},
+};
+
+const MotionThemeWrapper = motion(ThemeWrapper);
+const MotionListWrapper = motion(ListWrapper);
+const MotionList = motion(List);
 
 function MobileNav(props: Props) {
 	const { isOpen, toggleOpen, refObjects } = props;
@@ -50,38 +80,29 @@ function MobileNav(props: Props) {
 		closeTimeline.play();
 	}
 
-	React.useEffect(() => {
-		const listItemTimeline = gsap
-			.timeline({ paused: true })
-			.set(".mobile-nav__link-items", {
-				autoAlpha: 0,
-				filter: "blur(5px)",
-				textShadow: "20px 0px 0px rgba(0, 0, 0, 0.5)",
-			})
-			.to(".mobile-nav__link-items", {
-				autoAlpha: 1,
-				duration: 0.95,
-				ease: "ease.in",
-				filter: "blur(0px)",
-				textShadow: "0px 0px 0px rgba(0, 0, 0, 0.5)",
-			});
-
-		listItemTimeline.play();
-	}, []);
-
 	return (
 		<FocusLock>
 			<RemoveScroll>
-				<Styled.NavigationWrapper>
-					<Styled.Wrapper $isOpen={isOpen}>
-						<Styled.ThemeWrapper className="mobile-nav__link-items">
+				<NavigationWrapper>
+					<Wrapper $isOpen={isOpen}>
+						<MotionThemeWrapper
+							className="mobile-nav__link-items"
+							variants={itemVariants}
+							initial="hidden"
+							animate="visible"
+						>
 							<ThemeToggler
 								maskId="mobile-nav__theme-toggler"
 								data-testid="mobile-theme-toggler-button"
 							/>
-						</Styled.ThemeWrapper>
+						</MotionThemeWrapper>
 
-						<Styled.ListWrapper id="moblie-nav__link-wrapper">
+						<MotionListWrapper
+							id="moblie-nav__link-wrapper"
+							variants={containerVariants}
+							initial="hidden"
+							animate="visible"
+						>
 							<Item name="latest" href={"/"} onClick={handleClick} />
 							<Item name="posts" href="" onClick={handleClick} />
 							{CATEGORIES.map(({ name, href }) => (
@@ -92,10 +113,10 @@ function MobileNav(props: Props) {
 									onClick={handleClick}
 								/>
 							))}
-						</Styled.ListWrapper>
-					</Styled.Wrapper>
-				</Styled.NavigationWrapper>
-				<Styled.Backdrop $isOpen={isOpen} onClick={handleClick} />
+						</MotionListWrapper>
+					</Wrapper>
+				</NavigationWrapper>
+				<Backdrop $isOpen={isOpen} onClick={handleClick} />
 			</RemoveScroll>
 		</FocusLock>
 	);
@@ -111,11 +132,11 @@ function Item({
 	onClick: () => void;
 }) {
 	return (
-		<Styled.List className="mobile-nav__link-items">
-			<Styled.Item href={href} onClick={onClick}>
+		<MotionList className="mobile-nav__link-items" variants={itemVariants}>
+			<ItemStyle href={href} onClick={onClick}>
 				{name}
-			</Styled.Item>
-		</Styled.List>
+			</ItemStyle>
+		</MotionList>
 	);
 }
 

@@ -1,4 +1,4 @@
-import gsap from "gsap";
+import { animate } from "motion/react";
 import type React from "react";
 
 interface RefObjects {
@@ -8,6 +8,18 @@ interface RefObjects {
 	gradientRef: React.RefObject<SVGLinearGradientElement | null>;
 	svgRef: React.RefObject<SVGSVGElement | null>;
 }
+
+const animateSVGAttribute = async (
+	element: SVGElement,
+	attribute: string,
+	targetValue: string,
+	duration: number,
+) => {
+	return new Promise<void>((resolve) => {
+		element.setAttribute(attribute, targetValue);
+		setTimeout(resolve, duration * 1000);
+	});
+};
 
 const paths = {
 	step1: {
@@ -34,7 +46,7 @@ const paths = {
 	},
 	step3: {
 		unfilled:
-			"M220.633 985.29C263.219 1053 191.301 1121.94 191.301 1133L6.10352e-05 1133L0.000111061 0.000111468L205.845 0.000120376C205.845 57.5353 220.633 139.965 241.926 237.886C263.219 335.806 167.4 398.32 153.951 521.136C140.503 643.951 243.607 666.634 205.503 749.617C167.4 832.6 167.4 900.647 220.633 985.29Z",
+			"M220.633 985.29C263.219 1053 191.301 1121.94 191.301 1133L6.10352e-05 1133L0.000111061 0.000111468L205.845 0.000120376C205.845 57.535 220.633 139.965 241.926 237.886C263.219 335.806 167.4 398.32 153.951 521.136C140.503 643.951 243.607 666.634 205.503 749.617C167.4 832.6 167.4 900.647 220.633 985.29Z",
 		inBetween:
 			"M329.598 985.29C229.984 1057 395.5 1136.5 285.781 1133L-6.10302e-05 1133L-1.10046e-05 -0.000138475L307.507 -0.000125168C307.507 57.535 422 165.5 361.408 237.886C295.321 316.834 133.685 442.309 229.984 521.136C319 594 255.515 663.153 306.997 749.617C361.408 841 423.855 917.436 329.598 985.29Z",
 		filled:
@@ -45,215 +57,231 @@ const paths = {
 	},
 };
 
+const validateRefs = (refObjects: RefObjects) => {
+	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+		refObjects;
+	return (
+		pathStartRef.current &&
+		pathMidRef.current &&
+		pathEndRef.current &&
+		gradientRef.current &&
+		svgRef.current
+	);
+};
+
 export const getMoblieOpenAnimationTimeline = (refObjects: RefObjects) => {
 	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
 		refObjects;
 
-	const filledTimeline = gsap
-		.timeline({
-			paused: true,
-		})
-		.set(svgRef.current, { transform: "translateX(-100%)" })
-		.set(pathStartRef.current, { attr: { d: paths.step1.unfilled } })
-		.set(pathMidRef.current, { attr: { d: paths.step2.unfilled } })
-		.set(pathEndRef.current, { attr: { d: paths.step3.unfilled } })
-		.set(gradientRef.current, {
-			attr: { x1: paths.step1.x1, x2: paths.step1.x2 },
-		});
+	return {
+		play: async () => {
+			if (!validateRefs(refObjects)) return;
 
-	openInBetweenAnimation(refObjects, filledTimeline);
-	openFilledAnimation(refObjects, filledTimeline);
+			if (svgRef.current) {
+				svgRef.current.style.transform = "translateX(-100%)";
+			}
+			if (pathStartRef.current)
+				pathStartRef.current.setAttribute("d", paths.step1.unfilled);
+			if (pathMidRef.current)
+				pathMidRef.current.setAttribute("d", paths.step2.unfilled);
+			if (pathEndRef.current)
+				pathEndRef.current.setAttribute("d", paths.step3.unfilled);
+			if (gradientRef.current) {
+				gradientRef.current.setAttribute("x1", paths.step1.x1);
+				gradientRef.current.setAttribute("x2", paths.step1.x2);
+			}
 
-	return filledTimeline;
-};
+			const inBetweenDuration = 0.15;
+			await Promise.all(
+				[
+					pathStartRef.current &&
+						animateSVGAttribute(
+							pathStartRef.current,
+							"d",
+							paths.step1.inBetween,
+							inBetweenDuration,
+						),
+					pathMidRef.current &&
+						animateSVGAttribute(
+							pathMidRef.current,
+							"d",
+							paths.step2.inBetween,
+							inBetweenDuration,
+						),
+					pathEndRef.current &&
+						animateSVGAttribute(
+							pathEndRef.current,
+							"d",
+							paths.step3.inBetween,
+							inBetweenDuration,
+						),
+					gradientRef.current &&
+						Promise.all([
+							animateSVGAttribute(
+								gradientRef.current,
+								"x1",
+								paths.step3.x1,
+								inBetweenDuration,
+							),
+							animateSVGAttribute(
+								gradientRef.current,
+								"x2",
+								paths.step3.x2,
+								inBetweenDuration,
+							),
+						]),
+					svgRef.current &&
+						animate(
+							svgRef.current,
+							{ x: "0%" },
+							{ duration: inBetweenDuration },
+						),
+				].filter(Boolean),
+			);
 
-const openInBetweenAnimation = (
-	refObjects: RefObjects,
-	timeline: GSAPTimeline,
-) => {
-	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
-		refObjects;
-
-	timeline
-		.to(
-			pathStartRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { d: paths.step1.inBetween },
-			},
-			0,
-		)
-		.to(
-			pathMidRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { d: paths.step2.inBetween },
-			},
-			0,
-		)
-		.to(
-			pathEndRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { d: paths.step3.inBetween },
-			},
-			0,
-		)
-		.to(
-			gradientRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
-			},
-			0,
-		)
-		.to(svgRef.current, {
-			transform: "translateX(0)",
-		});
-};
-
-const openFilledAnimation = (
-	refObjects: RefObjects,
-	timeline: GSAPTimeline,
-) => {
-	const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
-
-	timeline
-		.to(
-			pathStartRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { d: paths.step1.filled },
-			},
-			"<",
-		)
-		.to(
-			pathMidRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { d: paths.step2.filled },
-			},
-			"<",
-		)
-		.to(
-			pathEndRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { d: paths.step3.filled },
-			},
-			"<",
-		)
-		.to(
-			gradientRef.current,
-			{
-				duration: 0.01,
-				ease: "sine.in",
-				attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
-			},
-			"<",
-		);
+			const filledDuration = 0.15;
+			await Promise.all(
+				[
+					pathStartRef.current &&
+						animateSVGAttribute(
+							pathStartRef.current,
+							"d",
+							paths.step1.filled,
+							filledDuration,
+						),
+					pathMidRef.current &&
+						animateSVGAttribute(
+							pathMidRef.current,
+							"d",
+							paths.step2.filled,
+							filledDuration,
+						),
+					pathEndRef.current &&
+						animateSVGAttribute(
+							pathEndRef.current,
+							"d",
+							paths.step3.filled,
+							filledDuration,
+						),
+					gradientRef.current &&
+						Promise.all([
+							animateSVGAttribute(
+								gradientRef.current,
+								"x1",
+								paths.step3.x1,
+								filledDuration,
+							),
+							animateSVGAttribute(
+								gradientRef.current,
+								"x2",
+								paths.step3.x2,
+								filledDuration,
+							),
+						]),
+				].filter(Boolean),
+			);
+		},
+	};
 };
 
 export const getMoblieCloseAnimationTimeline = (refObjects: RefObjects) => {
 	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
 		refObjects;
 
-	const closeMenuTimeline = gsap
-		.timeline({
-			paused: true,
-		})
-		.set(svgRef.current, { transform: "translateX(0)" })
-		.set(pathStartRef.current, { attr: { d: paths.step1.filled } })
-		.set(pathMidRef.current, { attr: { d: paths.step2.filled } })
-		.set(pathEndRef.current, { attr: { d: paths.step3.filled } })
-		.set(gradientRef.current, {
-			attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
-		});
+	return {
+		play: async () => {
+			if (!validateRefs(refObjects)) return;
 
-	closeInBetweenAnimation(refObjects, closeMenuTimeline);
-	closeUnfilledAnimation(refObjects, closeMenuTimeline);
+			if (svgRef.current) {
+				svgRef.current.style.transform = "translateX(0)";
+			}
+			if (pathStartRef.current)
+				pathStartRef.current.setAttribute("d", paths.step1.filled);
+			if (pathMidRef.current)
+				pathMidRef.current.setAttribute("d", paths.step2.filled);
+			if (pathEndRef.current)
+				pathEndRef.current.setAttribute("d", paths.step3.filled);
+			if (gradientRef.current) {
+				gradientRef.current.setAttribute("x1", paths.step3.x1);
+				gradientRef.current.setAttribute("x2", paths.step3.x2);
+			}
 
-	return closeMenuTimeline;
-};
+			const toInBetweenDuration = 0.07;
 
-const closeInBetweenAnimation = (
-	refObjects: RefObjects,
-	timeline: GSAPTimeline,
-) => {
-	const { pathStartRef, pathMidRef, pathEndRef, gradientRef } = refObjects;
+			await Promise.all(
+				[
+					pathStartRef.current &&
+						animateSVGAttribute(
+							pathStartRef.current,
+							"d",
+							paths.step1.inBetween,
+							toInBetweenDuration,
+						),
+					pathMidRef.current &&
+						animateSVGAttribute(
+							pathMidRef.current,
+							"d",
+							paths.step2.inBetween,
+							toInBetweenDuration,
+						),
+					pathEndRef.current &&
+						animateSVGAttribute(
+							pathEndRef.current,
+							"d",
+							paths.step3.inBetween,
+							toInBetweenDuration,
+						),
+					gradientRef.current &&
+						Promise.all([
+							animateSVGAttribute(
+								gradientRef.current,
+								"x1",
+								paths.step3.x1,
+								toInBetweenDuration,
+							),
+							animateSVGAttribute(
+								gradientRef.current,
+								"x2",
+								paths.step3.x2,
+								toInBetweenDuration,
+							),
+						]),
+				].filter(Boolean),
+			);
 
-	timeline
-		.to(
-			pathStartRef.current,
-			{
-				duration: 0.1,
-				ease: "sine.in",
-				attr: { d: paths.step1.inBetween },
-			},
-			0,
-		)
-		.to(
-			pathMidRef.current,
-			{
-				duration: 0.1,
-				ease: "power1",
-				attr: { d: paths.step2.inBetween },
-			},
-			0,
-		)
-		.to(
-			pathEndRef.current,
-			{
-				duration: 0.1,
-				ease: "sine.in",
-				attr: { d: paths.step3.inBetween },
-			},
-			0,
-		)
-		.to(
-			gradientRef.current,
-			{
-				duration: 0.1,
-				ease: "sine.in",
-				attr: { x1: paths.step3.x1, x2: paths.step3.x2 },
-			},
-			0,
-		);
-};
-
-const closeUnfilledAnimation = (
-	refObjects: RefObjects,
-	timeline: GSAPTimeline,
-) => {
-	const { pathStartRef, gradientRef, svgRef } = refObjects;
-
-	timeline
-		.to(
-			pathStartRef.current,
-			{
-				duration: 0.1,
-				ease: "sine.in",
-				attr: { d: paths.step1.unfilled },
-			},
-			"<",
-		)
-		.to(
-			gradientRef.current,
-			{
-				duration: 0.1,
-				ease: "sine.in",
-				attr: { x1: paths.step1.x1, x2: paths.step1.x2 },
-			},
-			"<",
-		)
-		.to(svgRef.current, {
-			transform: "translateX(-100%)",
-		});
+			const toUnfilledDuration = 0.07;
+			await Promise.all(
+				[
+					pathStartRef.current &&
+						animateSVGAttribute(
+							pathStartRef.current,
+							"d",
+							paths.step1.unfilled,
+							toUnfilledDuration,
+						),
+					gradientRef.current &&
+						Promise.all([
+							animateSVGAttribute(
+								gradientRef.current,
+								"x1",
+								paths.step1.x1,
+								toUnfilledDuration,
+							),
+							animateSVGAttribute(
+								gradientRef.current,
+								"x2",
+								paths.step1.x2,
+								toUnfilledDuration,
+							),
+						]),
+					svgRef.current &&
+						animate(
+							svgRef.current,
+							{ x: "-100%" },
+							{ duration: toUnfilledDuration },
+						),
+				].filter(Boolean),
+			);
+		},
+	};
 };

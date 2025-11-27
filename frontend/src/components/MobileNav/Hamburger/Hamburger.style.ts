@@ -81,7 +81,7 @@ export const Cross2 = styled.path`
   }
 `;
 
-export const Circle = styled.rect`
+const Circle = styled.rect`
   stroke-width: 3px;
   transform-origin: center;
 
@@ -209,13 +209,5 @@ export const FloodSVG = styled.svg`
   transform: translateX(-100%);
   & > path {
     transition: all 300ms ease;
-  }
-`;
-
-export const RootWrapper = styled.div`
-  display: none;
-
-  @media screen and (max-width: 768px) {
-    display: block;
   }
 `;
