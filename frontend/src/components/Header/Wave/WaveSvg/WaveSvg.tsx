@@ -1,7 +1,8 @@
 "use client";
 
-import { type BezierDefinition, motion } from "motion/react";
-import * as Styled from "../Wave.style";
+import type { BezierDefinition } from "motion/react";
+import { motion } from "motion/react";
+import { WaveSvg as WaveSvgStyle, WaveSvgWrapper } from "../Wave.style";
 
 const path = {
 	step1: {
@@ -28,8 +29,8 @@ const customEase: BezierDefinition = [0.42, 0, 1, 1];
 
 export function WaveSvg({ ...delegated }) {
 	return (
-		<Styled.WaveSvgWrapper key={"light-wave-svg"} {...delegated}>
-			<Styled.WaveSvg
+		<WaveSvgWrapper key={"light-wave-svg"} {...delegated}>
+			<WaveSvgStyle
 				preserveAspectRatio="none"
 				width="938"
 				height="208"
@@ -107,7 +108,7 @@ export function WaveSvg({ ...delegated }) {
 						<stop offset="0.690268" stopColor="var(--color-endStop)" />
 					</linearGradient>
 				</defs>
-			</Styled.WaveSvg>
-		</Styled.WaveSvgWrapper>
+			</WaveSvgStyle>
+		</WaveSvgWrapper>
 	);
 }

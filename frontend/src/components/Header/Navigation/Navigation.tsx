@@ -1,13 +1,13 @@
 "use client";
 
-import { BinaryIcon, CpuIcon, GlobeIcon, PiIcon } from "lucide-react";
+import { Code, Cpu, Globe, Pi } from "lucide-react";
 import Link from "next/link";
 import { memo, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
 import useToggle from "@/hooks/use-toggle";
-import * as Styled from "../Header.style";
+import { PostNaviation } from "../Header.style";
 
 function Navigation() {
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -48,7 +48,7 @@ function Navigation() {
 
 	return (
 		<NavigationWrapper id="blog-main__post-navigation" className="pl-4">
-			<Styled.PostNaviation>
+			<PostNaviation>
 				<Button
 					disabled={isOpen}
 					onClick={toggleOpen}
@@ -64,7 +64,7 @@ function Navigation() {
 					ref={portalRef}
 					$isScroll={isScroll}
 				/>
-			</Styled.PostNaviation>
+			</PostNaviation>
 			{isOpen &&
 				portalRef.current &&
 				createPortal(
@@ -80,22 +80,22 @@ function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
 		<DropDownMenuWrapper>
 			<LinkTag href={"/post/cs"} onClick={toggleOpen}>
 				<VisuallyHidden>CS 카데고리로 이동하는 링크</VisuallyHidden>
-				<CpuIcon size={16} />
+				<Cpu size={16} />
 				cs
 			</LinkTag>
 			<LinkTag href={"/post/web"} onClick={toggleOpen}>
 				<VisuallyHidden>Web 카데고리로 이동하는 링크</VisuallyHidden>
-				<GlobeIcon size={16} />
+				<Globe size={16} />
 				web
 			</LinkTag>
 			<LinkTag href={"/post/code"} onClick={toggleOpen}>
 				<VisuallyHidden>Code 카데고리로 이동하는 링크</VisuallyHidden>
-				<BinaryIcon size={16} />
+				<Code size={16} />
 				code
 			</LinkTag>
 			<LinkTag href={"/post/algorithm"} onClick={toggleOpen}>
 				<VisuallyHidden>Algorithm 카데고리로 이동하는 링크</VisuallyHidden>
-				<PiIcon size={16} />
+				<Pi size={16} />
 				algorithm
 			</LinkTag>
 		</DropDownMenuWrapper>

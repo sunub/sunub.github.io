@@ -23,12 +23,6 @@ export const MainWrapper = styled.main`
   padding-right: 48px;
 `;
 
-export const RightSideWrapper = styled.div`
-  position: sticky;
-  top: 4rem;
-  left: 0;
-`;
-
 export const TitleWrapper = styled.div`
   display: flex;
   align-items: baseline;

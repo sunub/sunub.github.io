@@ -8,16 +8,6 @@ export const RootWrapper = styled.div`
   padding-top: 1rem;
 `;
 
-export const DemoWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 812px;
-  background: var(--color-landscape);
-  z-index: -1;
-`;
-
 export const HeaderWrapper = styled.div`
   width: 100%;
   height: 60px;

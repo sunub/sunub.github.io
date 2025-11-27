@@ -1,13 +1,13 @@
 import { z } from "zod/v4";
 
-export const PostCategorySchema = z.union([
+const PostCategorySchema = z.union([
 	z.literal("web"),
 	z.literal("algorithm"),
 	z.literal("cs"),
 	z.literal("code"),
 ]);
 
-export const DateStringSchema = z.union([z.string(), z.date()]);
+const DateStringSchema = z.union([z.string(), z.date()]);
 
 export const FrontMatterSchema = z.object({
 	title: z.string(),
@@ -19,19 +19,8 @@ export const FrontMatterSchema = z.object({
 	completed: z.boolean(),
 });
 
-export const CacheDataSchema = z.object({
-	content: z.string(),
-	data: FrontMatterSchema,
-	isEmpty: z.boolean(),
-	excerpt: z.string(),
-	cacheKey: z.string(),
-	category: PostCategorySchema,
-	date: DateStringSchema,
-});
-
 export type PostCategory = z.infer<typeof PostCategorySchema>;
 export type FrontMatter = z.infer<typeof FrontMatterSchema>;
-export type CacheData = z.infer<typeof CacheDataSchema>;
 
 export interface MatterTransformData {
 	content: string;
