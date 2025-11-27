@@ -12,7 +12,7 @@ const RecentPostSchema = z.object({
 	frontmatters: FrontMattersSchema,
 });
 
-export async function getRecentPostFetch() {
+async function getRecentPostFetch() {
 	try {
 		const API_URL = `${API_HOST}/posts/latest`;
 		const data = await fetch(API_URL);

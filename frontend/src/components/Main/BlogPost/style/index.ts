@@ -3,22 +3,6 @@
 import { motion } from "motion/react";
 import styled from "styled-components";
 
-export const ScrollTrigger = styled.div`
-  position: sticky;
-  bottom: 326px;
-
-  height: 1px;
-  width: 100cqw;
-`;
-
-export const ScrollTriggerHelper = styled.div`
-  position: sticky;
-  bottom: 526px;
-
-  height: 1px;
-  width: 100cqw;
-`;
-
 export const TitleDot = styled.span`
   content: '';
   display: inline-block;
@@ -49,31 +33,8 @@ export const BlogPostTitle = styled.div`
   gap: 16px;
 `;
 
-export const BlogPostIcons = styled.div`
-  display: grid;
-  place-items: center;
-`;
-
 export const BlogPostContent = styled.p`
   margin-top: 16px;
-`;
-
-export const BlogTagsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 8px;
-  gap: 8px;
-`;
-
-export const BlogTag = styled.span`
-  display: inline-flex;
-  padding: 2px 8px 2px 8px;
-  border-radius: 16px;
-  color: var(--color-text);
-  font-size: 1rem;
-  font-weight: 600;
-  border: 1.35px solid var(--color-text);
-  user-select: none;
 `;
 
 export const UnderLineWaveSVG = styled.svg`
@@ -83,11 +44,6 @@ export const UnderLineWaveSVG = styled.svg`
   stroke: var(--color-text);
   stroke-width: 2.5;
   stroke-linecap: round;
-`;
-
-export const ScrollEndIndicator = styled.div`
-  width: 100%;
-  height: 1px;
 `;
 
 export const UnderLineWavePath = styled.path`
