@@ -49,6 +49,7 @@ const pretendard = localFont({
 	display: "swap",
 	style: "normal",
 	variable: "--pretendard-font",
+	fallback: ["system-ui", "sans-serif"],
 });
 
 export default async function RootLayout({
@@ -85,12 +86,6 @@ export default async function RootLayout({
 					name="viewport"
 					content="width=device-width, initial-scale=1, user-scalable=1"
 				></meta>
-				<link
-					rel="icon"
-					type="image/x-icon"
-					sizes="32x32"
-					href="/assets/favicon.ico"
-				/>
 				<HeroImagePreload theme={theme} />
 				<Script id="theme-script" strategy="beforeInteractive">
 					{initSetColorsByThemeFn}
