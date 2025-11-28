@@ -102,6 +102,9 @@ export const Article = styled.article`
     overflow-x: auto;
     scrollbar-width: none;
     font-weight: 500;
+    & > code {
+      font-family: var(--pretendard-font-regular);
+    }
   }
 
   & > :is(:first-child) {
@@ -134,7 +137,7 @@ export const Article = styled.article`
 
     & > code {
       --border-color: color-mix(in oklch, var(--color-frontWave), var(--color-codeBlock));
-      font-weight: 700;
+      font-family: var(--pretendard-font-regular);
       background-color: var(--color-codeBlock);
       padding: 0.15rem 0.35rem;
       margin: 0 0.25rem;
