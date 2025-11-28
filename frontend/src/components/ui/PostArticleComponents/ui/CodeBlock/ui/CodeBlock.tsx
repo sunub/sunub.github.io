@@ -1,5 +1,5 @@
 import React from "react";
-import { codeToHtml } from "shiki";
+import * as shiki from "shiki";
 import { CodeBlockWrapper, InlineCodeStyle } from "../style";
 import { Clipboard } from "./Clipboard";
 
@@ -17,6 +17,24 @@ const languageMap = {
 	"language-c++": "cpp",
 } as const;
 
+const highlighterPromise = shiki.createHighlighter({
+	themes: ["vitesse-light", "tokyo-night"],
+	langs: [
+		"html",
+		"javascript",
+		"jsx",
+		"typescript",
+		"tsx",
+		"bash",
+		"markdown",
+		"yaml",
+		"json",
+		"css",
+		"cpp",
+		"plaintext",
+	],
+});
+
 type LanguageKey = keyof typeof languageMap;
 
 interface ColdeBlockProps extends React.HTMLAttributes<HTMLElement> {
@@ -30,7 +48,8 @@ async function CodeBlock({ className, children, ...props }: ColdeBlockProps) {
 		.join("");
 
 	try {
-		const html = await codeToHtml(codeToString, {
+		const highlighter = await highlighterPromise;
+		const html = highlighter.codeToHtml(codeToString, {
 			themes: {
 				light: "vitesse-light",
 				dark: "tokyo-night",

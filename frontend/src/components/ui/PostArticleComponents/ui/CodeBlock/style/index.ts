@@ -46,7 +46,7 @@ export const CodeBlockWrapper = styled.div`
 
   code {
     display: flex;
-    font-family: 'Source Code Pro', monospace;
+    font-family: var(--pretendard-font-regular);
     flex-direction: column;
     text-wrap: pretty;
     word-break: break-all;
@@ -56,16 +56,7 @@ export const CodeBlockWrapper = styled.div`
   }
   pre {
     border-radius: 0.5rem;
-    font-family:
-      DM Mono,
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      Monaco,
-      Consolas,
-      Liberation Mono,
-      Courier New,
-      monospace;
+    font-family: var(--pretendard-font-bold);
     border: 2px solid color-mix(in oklch, var(--color-bird) 30%, transparent);
     margin-top: 2rem;
     margin-bottom: 2rem;
@@ -89,15 +80,6 @@ export const InlineCodeStyle = styled.code`
   color: var(--color-text);
   font-size: 0.92em;
   font-weight: 500;
-  font-family:
-    DM Mono,
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    Liberation Mono,
-    Courier New,
-    monospace;
+  font-family: var(--pretendard-font-bold);
   display: inline-block;
 `;

@@ -3,7 +3,8 @@
 import { createElement } from "react";
 import { MDXComponents } from "@/MDXContents";
 import { Blockquote } from "./BlockQuote";
-import { CodeBlock, InlineCode } from "./CodeBlock";
+import DynamicCodeBlock from "./CodeBlock/ui/DynamicCodeBlock";
+import { InlineCode } from "./CodeBlock";
 import { CustomLink } from "./CustomLink";
 import { ListItem } from "./ListItem";
 import {
@@ -91,7 +92,7 @@ const PostArticleComponents = {
 	pre: ({ children }: { children: React.ReactNode }) => children,
 	code: ({ className, ...props }: CodeProps) => {
 		if (className?.startsWith("language-")) {
-			return <CodeBlock className={className} {...props} />;
+			return <DynamicCodeBlock className={className} {...props} />;
 		}
 		return <InlineCode className={className} {...props} />;
 	},
