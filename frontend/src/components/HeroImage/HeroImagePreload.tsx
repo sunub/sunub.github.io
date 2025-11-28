@@ -8,11 +8,7 @@ export function HeroImagePreload({ theme }: Props) {
 	const isLight = theme === "light";
 
 	const criticalImages = isLight
-		? [
-				"/assets/bridge.avif",
-				"/assets/clouds.avif",
-				"/assets/cars.avif",
-			]
+		? ["/assets/bridge.avif", "/assets/clouds.avif", "/assets/cars.avif"]
 		: [
 				"/assets/dark_bridge.avif",
 				"/assets/dark_clouds.avif",
