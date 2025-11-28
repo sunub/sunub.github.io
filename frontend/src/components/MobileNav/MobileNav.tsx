@@ -65,9 +65,9 @@ const itemVariants: Variants = {
 	},
 };
 
-const MotionThemeWrapper = motion(ThemeWrapper);
-const MotionListWrapper = motion(ListWrapper);
-const MotionList = motion(List);
+const MotionThemeWrapper = motion.create(ThemeWrapper);
+const MotionListWrapper = motion.create(ListWrapper);
+const MotionList = motion.create(List);
 
 function MobileNav(props: Props) {
 	const { isOpen, toggleOpen, refObjects } = props;
