@@ -2,7 +2,7 @@
 
 import type { FrontMatter } from "db/blog/Schema";
 import Link from "next/link";
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import styled from "styled-components";
 import Elevation from "@/constants/Elevation";
 import { useIdleCallback } from "@/hooks/useIdleCallback";
