@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
 			transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
 		},
 	},
-  productionBrowserSourceMaps: false,
+	productionBrowserSourceMaps: false,
 	experimental: {
 		optimizePackageImports: ["lucide-react"],
 	},
