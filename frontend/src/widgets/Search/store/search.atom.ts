@@ -55,7 +55,7 @@ export const searchActionAtom = atom(
 		const currentController = abortController.current;
 		try {
 			const res = await fetch(
-				`${API_HOST}/search?query=${encodeURIComponent(query)}`,
+				`/api/search?query=${encodeURIComponent(query)}`,
 				{
 					signal: currentController.signal,
 				},
