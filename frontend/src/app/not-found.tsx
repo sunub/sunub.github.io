@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import styled, { keyframes } from "styled-components";
 import { Button } from "@/components/ui/button";
-import { goToHome } from "@/utils/redirect"; 
+import { goToHome } from "@/utils/redirect";
 
 export default function NotFound() {
 	const pathname = usePathname();
