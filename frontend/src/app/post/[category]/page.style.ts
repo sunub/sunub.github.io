@@ -26,6 +26,7 @@ export const Title = styled.h1`
   font-weight: bold;
   color: color-mix(in oklch, var(--color-bird), var(--color-text) 30%);
   font-size: 2rem;
+  font-family: var(--crafty-girls-font);
 `;
 
 export const FrontmatterWrapper = styled.div`

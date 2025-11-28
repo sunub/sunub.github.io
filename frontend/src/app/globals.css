@@ -17,6 +17,7 @@ body {
 	background: var(--color-background);
 	font-size: 1rem;
 	font-weight: 500;
+	font-family: var(--pretendard-font-regular);
 }
 
 html {

@@ -1,6 +1,5 @@
 import { Provider } from "jotai";
-import type { Metadata } from "next";
-import localFont from "next/font/local";
+import type { Metadata, Viewport } from "next";
 import { cookies, headers } from "next/headers";
 import Script from "next/script";
 import type React from "react";
@@ -11,6 +10,7 @@ import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeVa
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
+import { craftyGirls, pretendardRegular } from "./font";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,13 +42,23 @@ export const metadata: Metadata = {
 	},
 };
 
-const pretendard = localFont({
-	src: "../../public/fonts/PretendardVariable.woff2",
-	display: "swap",
-	style: "normal",
-	variable: "--pretendard-font",
-	fallback: ["system-ui", "sans-serif"],
-});
+export const viewport: Viewport = {
+	themeColor: [
+		{
+			media: "(prefers-color-scheme: light)",
+			color: LIGHT_COLORS["--color-background"],
+		},
+		{
+			media: "(prefers-color-scheme: dark)",
+			color: DARK_COLORS["--color-background"],
+		},
+	],
+	colorScheme: "light dark",
+	initialScale: 1,
+	maximumScale: 1,
+	userScalable: false,
+	width: "device-width",
+};
 
 export default async function RootLayout({
 	children,
@@ -70,7 +80,7 @@ export default async function RootLayout({
 	return (
 		<html
 			lang="ko"
-			className={pretendard.className}
+			className={`${pretendardRegular.variable} ${craftyGirls.variable}`}
 			suppressHydrationWarning={true}
 			data-color-theme={theme}
 			style={themeColors as React.CSSProperties}
