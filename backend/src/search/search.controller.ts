@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { SearchService } from "./search.service";
 
-@Controller("search")
+@Controller("api/search")
 export class SearchController {
 	constructor(private readonly searchService: SearchService) {}
 

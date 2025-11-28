@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import type { RefObject } from "react";
-import { API_HOST } from "@/constants/constants";
 import type { SearchResult } from "../types";
+import { API_HOST } from "@/constants/constants";
 
 export const searchQueryAtom = atom("");
 export const searchResultsAtom = atom<SearchResult[]>([]);
@@ -55,7 +55,7 @@ export const searchActionAtom = atom(
 		const currentController = abortController.current;
 		try {
 			const res = await fetch(
-				`/api/search?query=${encodeURIComponent(query)}`,
+				`${API_HOST}/api/search?query=${encodeURIComponent(query)}`,
 				{
 					signal: currentController.signal,
 				},
