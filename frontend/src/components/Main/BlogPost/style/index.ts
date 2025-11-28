@@ -94,6 +94,7 @@ export const BlogPostListItem = styled(motion.li)<{ $isInitialize?: boolean }>`
   opacity: ${(props) => (props.$isInitialize ? 0 : 1)};
   transform: ${(props) => (props.$isInitialize ? "translateY(-10px)" : "translateY(0)")};
   will-change: transform, opacity;
+  font-family: var(--pretendard-font-regular);
 
   &:not(:first-of-type) {
     margin-top: 2rem;
