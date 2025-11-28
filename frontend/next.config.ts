@@ -1,5 +1,3 @@
-/** @type {import('next').NextConfig} */
-
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
@@ -16,6 +14,7 @@ const nextConfig: NextConfig = {
 			transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
 		},
 	},
+  productionBrowserSourceMaps: false,
 	experimental: {
 		optimizePackageImports: ["lucide-react"],
 	},
