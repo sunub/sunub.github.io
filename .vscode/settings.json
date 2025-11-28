@@ -1,7 +1,7 @@
 // .vscode/settings.json
 {
-  "eslint.useFlatConfig": true,
-  "eslint.workingDirectories": ["frontend", "backend", "fx_utils"],
-  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
-  "prettier.prettierPath": "./node_modules/prettier"
+	"eslint.useFlatConfig": true,
+	"eslint.workingDirectories": ["frontend", "backend", "fx_utils"],
+	"eslint.validate": ["javascript", "typescript", "typescriptreact"],
+	"prettier.prettierPath": "./node_modules/prettier"
 }
