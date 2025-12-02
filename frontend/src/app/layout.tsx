@@ -11,7 +11,10 @@ import ThemeProvider from "@/components/Theme/ThemeProvider";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
 import { craftyGirls, pretendardRegular } from "./font";
-import "./globals.css";
+import { GlobalStyle, ShikiOverrieds } from "./GlobalStyle"; // 새로 만든 파일 import
+
+// ./globals.css 임포트 제거
+// import "./globals.css";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://sunub.vercel.app"),
@@ -55,8 +58,8 @@ export const viewport: Viewport = {
 	],
 	colorScheme: "light dark",
 	initialScale: 1,
-	maximumScale: 1,
-	userScalable: false,
+	maximumScale: 5,
+	userScalable: true,
 	width: "device-width",
 };
 
@@ -66,7 +69,6 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	const cookieStore = await cookies();
-
 	const headersList = await headers();
 	const prefers = headersList.get("sec-ch-prefers-color-scheme");
 
@@ -90,10 +92,6 @@ export default async function RootLayout({
 					name="description"
 					content="sunub가 만든 개인 블로그입니다. 주로 프론트엔드 개발과 관련된 여러 지식들을 다루지만 이외에도 다양한 개발 지식을 공유하기 위한 사이트입니다."
 				/>
-				<meta
-					name="viewport"
-					content="width=device-width, initial-scale=1, user-scalable=1"
-				></meta>
 				<HeroImagePreload theme={theme} />
 				<Script id="theme-script" strategy="beforeInteractive">
 					{initSetColorsByThemeFn}
@@ -112,6 +110,8 @@ export default async function RootLayout({
           `}
 				</script>
 				<StyledComponentsRegistry>
+					<GlobalStyle />
+					<ShikiOverrieds />
 					<ThemeProvider initialTheme={theme}>
 						<Provider>
 							<AnimatePresenceWrapper>{children}</AnimatePresenceWrapper>
