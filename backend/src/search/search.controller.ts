@@ -7,7 +7,6 @@ export class SearchController {
 
 	@Get()
 	search(@Query("query") query: string) {
-		console.log("Search query received:", query);
 		return { results: this.searchService.search(query) };
 	}
 }
