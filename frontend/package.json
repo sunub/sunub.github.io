@@ -72,6 +72,7 @@
 		"@vitest/browser": "^3.2.4",
 		"autoprefixer": "^10.4.22",
 		"fx_utils": "workspace:*",
+		"jsdom": "^27.2.0",
 		"shiki": "^3.15.0",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.2.4"
