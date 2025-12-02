@@ -4,14 +4,14 @@ import { cookies, headers } from "next/headers";
 import Script from "next/script";
 import type React from "react";
 import type { Theme } from "type";
+import { HeroImagePreload } from "@/components/HeroImage/HeroImagePreload";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
 import { craftyGirls, pretendardRegular } from "./font";
-import { GlobalStyle, ShikiOverrieds } from "./GlobalStyle"; // 새로 만든 파일 import
-import { HeroImagePreload } from "@/components/HeroImage/HeroImagePreload";
+import { GlobalStyle, ShikiOverrieds } from "./GlobalStyle";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://sunub.vercel.app"),
