@@ -12,6 +12,7 @@
 		"start": "next start -p 4004",
 		"start:test": "pnpm --filter frontend run build && concurrently -k \"pnpm --filter backend run start\" \"wait-on tcp:4008 && next start -p 4004\"",
 		"lint": "pnpm exec biome lint",
+		"check": "pnpm exec biome check --write",
 		"analyze": "cross-env ANALYZE=true EC2_PUBLIC_API_URL=http://localhost:4008 next build --webpack && xdg-open .next/analyze/client.html",
 		"analyze:client": "cross-env ANALYZE=true EC2_PUBLIC_API_URL=http://localhost:4008 next build --webpack && xdg-open .next/analyze/client.html",
 		"analyze:server": "cross-env ANALYZE=true EC2_PUBLIC_API_URL=http://localhost:4008 next build --webpack && xdg-open .next/analyze/nodejs.html",

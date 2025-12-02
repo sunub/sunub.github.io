@@ -16,6 +16,7 @@
 		"lint:utils": "pnpm exec biome lint ./fx_utils",
 		"lint:write": "pnpm exec biome check --write --unsafe",
 		"format": "pnpm exec biome format --write",
+		"check": "pnpm exec biome check --write",
 		"build:utils": "pnpm --filter fx_utils run build",
 		"bench:stress": "node ./test/runBench.mjs",
 		"bench": "vitest bench",
