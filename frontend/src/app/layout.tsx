@@ -11,6 +11,7 @@ import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
 import { craftyGirls, pretendardRegular } from "./font";
 import { GlobalStyle, ShikiOverrieds } from "./GlobalStyle"; // 새로 만든 파일 import
+import { HeroImagePreload } from "@/components/HeroImage/HeroImagePreload";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://sunub.vercel.app"),
@@ -88,6 +89,7 @@ export default async function RootLayout({
 					name="description"
 					content="sunub가 만든 개인 블로그입니다. 주로 프론트엔드 개발과 관련된 여러 지식들을 다루지만 이외에도 다양한 개발 지식을 공유하기 위한 사이트입니다."
 				/>
+				<HeroImagePreload theme={theme} />
 				<Script id="theme-script" strategy="beforeInteractive">
 					{initSetColorsByThemeFn}
 				</Script>
