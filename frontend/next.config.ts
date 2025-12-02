@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
 				source: "/api/proxy/:path*",
 				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/:path*`,
 			},
+			{
+				source: "/api/:path*",
+				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/api/:path*`,
+			},
 		];
 	},
 	skipTrailingSlashRedirect: true,
