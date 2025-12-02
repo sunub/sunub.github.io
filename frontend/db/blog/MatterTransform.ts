@@ -16,6 +16,9 @@ export class MatterTransform extends Transform {
 			objectMode: true,
 			readableObjectMode: true,
 			writableObjectMode: true,
+			transform: (chunk, encoding, callback) =>
+				this._transform(chunk, encoding, callback),
+			flush: (callback) => this._flush(callback),
 		});
 	}
 

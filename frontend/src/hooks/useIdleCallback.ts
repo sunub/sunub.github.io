@@ -34,7 +34,7 @@ export function useIdleCallback(
 		});
 
 		return () => {
-			if(typeof handle === "number") {
+			if (typeof handle === "number") {
 				cancelIdleCallbackPolyfill(handle);
 			}
 		};
