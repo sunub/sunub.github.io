@@ -33,11 +33,7 @@ export default function DelegatedCard({
 	}
 
 	return (
-		<RootContainer
-			ref={cardRef}
-			data-card-root
-			data-visible={isVisible}
-		>
+		<RootContainer ref={cardRef} data-card-root data-visible={isVisible}>
 			<Wrapper className="cards">
 				<LinkWrapper
 					className="card"

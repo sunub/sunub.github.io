@@ -3,15 +3,11 @@
 import styled from "styled-components";
 
 interface CardGridProps {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 export function PostCardSkeletonGrid({ children }: CardGridProps) {
-  return (
-    <GridContainer>
-      {children}
-    </GridContainer>
-  );
+	return <GridContainer>{children}</GridContainer>;
 }
 
 const GridContainer = styled.div`
