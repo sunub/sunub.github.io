@@ -20,7 +20,7 @@ interface SearchModalProps {
 	close: () => void;
 }
 
-function SearchModal({ close }: SearchModalProps) {
+export default function SearchModal({ close }: SearchModalProps) {
 	const isLoading = useIsSearchLoadingAtom();
 	const hasSearchResults = useHasSearchResultsAtom();
 	const rootRef = useRef<HTMLDivElement>(null);
@@ -85,5 +85,3 @@ function SearchModal({ close }: SearchModalProps) {
 		</ReactFocusLock>
 	);
 }
-
-export { SearchModal };

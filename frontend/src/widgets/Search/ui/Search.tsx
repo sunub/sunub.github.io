@@ -1,10 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useSearchModal } from "../hook/useSearchAtoms";
 import { SearchButton } from "./SearchButton";
-import { SearchModal } from "./SearchModal";
+
+const SearchModal = dynamic(() => import("./SearchModal"), {
+	ssr: false,
+	loading: () => <p>Loading...</p>,
+});
 
 function Search() {
 	const { isOpen, open, close } = useSearchModal();
@@ -16,7 +21,7 @@ function Search() {
 				"blog-search__input-area",
 			) as HTMLDivElement;
 		}
-	});
+	}, []);
 
 	return (
 		<>

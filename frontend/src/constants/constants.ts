@@ -71,11 +71,8 @@ const DARK_COLORS = {
 
 const IS_SERVER = typeof window === "undefined";
 
-const API_HOST =
-	IS_SERVER && process.env.EC2_PUBLIC_API_URL
-		? process.env.EC2_PUBLIC_API_URL
-		: process.env.NEXT_PUBLIC_BASE_URL
-			? `${process.env.NEXT_PUBLIC_BASE_URL}/api/proxy`
-			: "http://localhost:3000/api/proxy";
+const API_HOST = IS_SERVER
+	? process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"
+	: "";
 
 export { LIGHT_COLORS, DARK_COLORS, API_HOST };
