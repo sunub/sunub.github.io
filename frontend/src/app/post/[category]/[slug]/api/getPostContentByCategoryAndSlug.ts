@@ -2,8 +2,8 @@
 
 import { API_HOST } from "@/constants/constants";
 import { getPostContentByCategoryAndSlug as getPostContentByCategoryAndSlugSlow } from "@/db/blog/api";
-import { PostSchema } from "@/db/blog/Schema";
 import type { PostCategory } from "@/db/blog/Schema";
+import { PostSchema } from "@/db/blog/Schema";
 
 const fetchPostContentByCategoryAndSlug = async (
 	category: PostCategory,

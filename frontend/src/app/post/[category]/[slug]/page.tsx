@@ -6,6 +6,8 @@ import CustomMDXRemoteComponents from "@/components/ui/customMdxRemote";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
 import { RootLayout } from "@/features/RootLayout";
 import { Wave } from "@/widgets/Wave";
+import { getAllPosts } from "./api/getAllPosts";
+import { getPostContentByCategoryAndSlug } from "./api/getPostContentByCategoryAndSlug";
 import { ClientArticle } from "./ClientAritcle";
 import {
 	ArticleHeader,
@@ -15,8 +17,6 @@ import {
 	PostTitle,
 	Time,
 } from "./page.style";
-import { getPostContentByCategoryAndSlug } from "./api/getPostContentByCategoryAndSlug";
-import { getAllPosts } from "./api/getAllPosts";
 
 export const revalidate = 43200;
 

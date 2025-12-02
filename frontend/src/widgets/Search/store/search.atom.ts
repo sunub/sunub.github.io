@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import type { RefObject } from "react";
-import type { SearchResult } from "../types";
 import { API_HOST } from "@/constants/constants";
+import type { SearchResult } from "../types";
 
 export const searchQueryAtom = atom("");
 export const searchResultsAtom = atom<SearchResult[]>([]);

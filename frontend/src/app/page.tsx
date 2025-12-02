@@ -1,8 +1,10 @@
+import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import type { Theme } from "type";
 import { Wave } from "@/components/Header/Wave";
 import { HeroImage } from "@/components/HeroImage";
 import { FeatherIcon } from "@/components/Main/NewestPost/FeatherIcon";
+import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 import { RootLayout } from "@/features/RootLayout";
 import {
 	HeaderContentsWrapper,
@@ -10,8 +12,6 @@ import {
 	Title,
 	TitleWrapper,
 } from "./page.style";
-import dynamic from "next/dynamic";
-import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 
 const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
 	loading: () => <FrontMatterLoading length={2} />,

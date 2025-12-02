@@ -3,8 +3,8 @@
 import { createElement } from "react";
 import { MDXComponents } from "@/MDXContents";
 import { Blockquote } from "./BlockQuote";
-import DynamicCodeBlock from "./CodeBlock/ui/DynamicCodeBlock";
 import { InlineCode } from "./CodeBlock";
+import DynamicCodeBlock from "./CodeBlock/ui/DynamicCodeBlock";
 import { CustomLink } from "./CustomLink";
 import { ListItem } from "./ListItem";
 import {

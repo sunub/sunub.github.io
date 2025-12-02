@@ -1,7 +1,7 @@
 import { getPostsMetadataByCategory as getPostsMetadataByCategorySlow } from "db/blog/api";
-import { PostFrontMatterSchema } from "@/db/blog/Schema";
 import { API_HOST } from "@/constants/constants";
 import type { PostCategory } from "@/db/blog/Schema";
+import { PostFrontMatterSchema } from "@/db/blog/Schema";
 
 const fetchPostsMetadataByCategory = async (category: PostCategory) => {
 	try {
