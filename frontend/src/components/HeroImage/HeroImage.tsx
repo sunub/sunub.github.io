@@ -1,15 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useContext } from "react";
 import type { Theme } from "type";
 import { ThemeContext } from "../Theme/ThemeProvider";
-import DarkHeroImage from "./DarkHeroImage";
 import { HeroImageWrapper, RootWrapper } from "./HeroImage.style";
-import LightHeroImage from "./LightHeroImage";
 
 interface HeroImageProps {
 	initialTheme?: Theme;
 }
+
+const DarkHeroImage = dynamic(() => import("./DarkHeroImage"));
+const LightHeroImage = dynamic(() => import("./LightHeroImage"));
 
 function HeroImage({ initialTheme }: HeroImageProps) {
 	const { colorTheme } = useContext(ThemeContext);
