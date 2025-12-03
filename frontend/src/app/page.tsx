@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import type { Theme } from "type";
 import { Wave } from "@/components/Header/Wave";
+import { HeroImage } from "@/components/HeroImage";
 import { FeatherIcon } from "@/components/Main/NewestPost/FeatherIcon";
 import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 import { RootLayout } from "@/features/RootLayout";
@@ -15,8 +16,6 @@ import {
 const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
 	loading: () => <FrontMatterLoading length={2} />,
 });
-
-const HeroImage = dynamic(() => import("@/components/HeroImage/HeroImage"));
 
 export default async function Page() {
 	const savedTheme = (await cookies()).get("color-theme")?.value || "light";
