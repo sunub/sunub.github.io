@@ -44,6 +44,14 @@ const nextConfig: NextConfig = {
 				port: "",
 				pathname: "/**",
 			},
+			{
+				protocol: "https",
+				hostname: 'sunub.site'
+			},
+			{
+				protocol: "https",
+				hostname: 'github.com'
+			}
 		],
 		minimumCacheTTL: 60 * 60 * 24 * 30,
 		deviceSizes: [640, 750, 828, 1080, 1200],
