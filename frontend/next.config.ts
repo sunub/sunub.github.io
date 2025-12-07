@@ -2,120 +2,12 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-	typescript: {
-		ignoreBuildErrors: true,
-	},
-	modularizeImports: {
-		"lodash.throttle": {
-			transform: "lodash.throttle",
-		},
-		"lucide-react": {
-			transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
-		},
-	},
-	productionBrowserSourceMaps: false,
-	experimental: {
-		optimizePackageImports: ["lucide-react"],
-	},
-	basePath: "",
-	reactStrictMode: true,
-	async rewrites() {
-		return [
-			{
-				source: "/api/proxy/:path*",
-				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/:path*`,
-			},
-			{
-				source: "/api/:path*",
-				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/api/:path*`,
-			},
-		];
-	},
-	skipTrailingSlashRedirect: true,
-	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
-
-	images: {
-		formats: ["image/avif", "image/webp"],
-		remotePatterns: [
-			{
-				protocol: "https",
-				hostname: "d2u919r15udwpw.cloudfront.net",
-				port: "",
-				pathname: "/**",
-			},
-			{
-				protocol: "https",
-				hostname: 'sunub.site'
-			},
-			{
-				protocol: "https",
-				hostname: 'github.com'
-			}
-		],
-		minimumCacheTTL: 60 * 60 * 24 * 30,
-		deviceSizes: [640, 750, 828, 1080, 1200],
-		imageSizes: [16, 32, 48, 64, 96],
-		dangerouslyAllowSVG: true,
-	},
-
-	compiler: {
-		styledComponents: {
-			ssr: true,
-			displayName: process.env.NODE_ENV === "development",
-			pure: true,
-			cssProp: false,
-		},
-	},
-	compress: true,
-	async headers() {
-		return [
-			{
-				source: "/(.*)",
-				headers: securityHeaders,
-			},
-			{
-				source:
-					"/assets/(bridge|clouds|cars|dark_bridge|dark_clouds|dark_cars)\\.(avif|webp)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, max-age=31536000, immutable",
-					},
-					{
-						key: "X-Priority",
-						value: "high",
-					},
-				],
-			},
-			{
-				source: "/_next/image",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, max-age=31536000, immutable",
-					},
-				],
-			},
-			{
-				source: "/assets/(.*)",
-				headers: [
-					{
-						key: "Cache-Control",
-						value: "public, max-age=0, s-maxage=86400, stale-while-revalidate",
-					},
-				],
-			},
-		];
-	},
-};
-
 const ContentSecurityPolicy = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src * blob: data:;
+    img-src 'self' blob: data: https://d2u919r15udwpw.cloudfront.net; 
     media-src 'self';
-    connect-src *;
+    connect-src 'self' https://vitals.vercel-insights.com; 
 `;
 
 const securityHeaders = [
@@ -168,6 +60,116 @@ const securityHeaders = [
 		value: "Sec-CH-Prefers-Color-Scheme",
 	},
 ];
+
+const nextConfig: NextConfig = {
+	typescript: {
+		ignoreBuildErrors: true,
+	},
+	modularizeImports: {
+		"lodash.throttle": {
+			transform: "lodash.throttle",
+		},
+		"lucide-react": {
+			transform: "lucide-react/dist/esm/icons/{{kebabCase member}}",
+		},
+	},
+	productionBrowserSourceMaps: false,
+	experimental: {
+		optimizePackageImports: ["lucide-react"],
+	},
+	basePath: "",
+	reactStrictMode: true,
+	async rewrites() {
+		return [
+			{
+				source: "/api/proxy/:path*",
+				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/:path*`,
+			},
+			{
+				source: "/api/:path*",
+				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/api/:path*`,
+			},
+		];
+	},
+	skipTrailingSlashRedirect: true,
+	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+
+	poweredByHeader: false,
+	images: {
+		formats: ["image/avif", "image/webp"],
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "d2u919r15udwpw.cloudfront.net",
+				port: "",
+				pathname: "/**",
+			},
+			{
+				protocol: "https",
+				hostname: "sunub.site",
+			},
+			{
+				protocol: "https",
+				hostname: "github.com",
+			},
+		],
+		minimumCacheTTL: 60 * 60 * 24 * 30,
+		deviceSizes: [640, 750, 828, 1080, 1200],
+		imageSizes: [16, 32, 48, 64, 96],
+		dangerouslyAllowSVG: true,
+		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+	},
+
+	compiler: {
+		styledComponents: {
+			ssr: true,
+			displayName: process.env.NODE_ENV === "development",
+			pure: true,
+			cssProp: false,
+		},
+	},
+	compress: true,
+	async headers() {
+		return [
+			{
+				source: "/(.*)",
+				headers: securityHeaders,
+			},
+			{
+				source:
+					"/assets/(bridge|clouds|cars|dark_bridge|dark_clouds|dark_cars)\\.(avif|webp)",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=31536000, immutable",
+					},
+					{
+						key: "X-Priority",
+						value: "high",
+					},
+				],
+			},
+			{
+				source: "/_next/image",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=31536000, immutable",
+					},
+				],
+			},
+			{
+				source: "/assets/(.*)",
+				headers: [
+					{
+						key: "Cache-Control",
+						value: "public, max-age=0, s-maxage=86400, stale-while-revalidate",
+					},
+				],
+			},
+		];
+	},
+};
 
 const withBundleAnalyzer = bundleAnalyzer({
 	enabled: process.env.ANALYZE === "true",
