@@ -3,11 +3,11 @@ import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
 const ContentSecurityPolicy = `
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://static.cloudflareinsights.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://d2u919r15udwpw.cloudfront.net; 
     media-src 'self';
-    connect-src 'self' https://vitals.vercel-insights.com; 
+    connect-src 'self' https://vitals.vercel-insights.com https://cloudflareinsights.com; 
 `;
 
 const securityHeaders = [
