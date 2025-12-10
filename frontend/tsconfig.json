@@ -1,56 +1,84 @@
 /// <reference types="@vitest/browser/context" />
 {
-	"compilerOptions": {
-		"target": "ES2022",
-		"lib": ["dom", "dom.iterable", "esnext"],
-		"baseUrl": ".",
-		"allowJs": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"forceConsistentCasingInFileNames": true,
-		"noEmit": true,
-		"esModuleInterop": true,
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"resolveJsonModule": true,
-		"isolatedModules": true,
-		"jsx": "preserve",
-		"incremental": true,
-		"allowImportingTsExtensions": true,
-		"plugins": [
-			{
-				"name": "next"
-			}
-		],
-		"paths": {
-			"@/*": ["./src/*"],
-			"@/icon": ["./src/components/icon"],
-			"@/utils/*": ["./src/utils/*"],
-			"@/lib/*": ["./src/lib/*"],
-			"@/components/*": ["./src/components/*"],
-			"@/hooks/*": ["./src/hooks/*"],
-			"@/posts/*": ["./src/app/posts/*"],
-			"@/generated/*": ["./src/generated/*"],
-			"@/public/*": ["./public/*"],
-			"@/shared/*": ["./src/shared/*"],
-			"@/db/*": ["./db/*"]
-		},
-		"sourceMap": true
-	},
-	"include": [
-		"./type.d.ts",
-		"recover/next-env.d.ts",
-		"**/*.js",
-		"**/*.jsx",
-		"**/*.ts",
-		"**/*.tsx",
-		".next/types/**/*.ts",
-		"src/**/*",
-		"src/app/mdx/page.jsx",
-		"db",
-		"test",
-		"../backend/tmp",
-		".next/dev/types/**/*.ts"
-	],
-	"exclude": ["node_modules"]
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "baseUrl": ".",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "allowImportingTsExtensions": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@/icon": [
+        "./src/components/icon"
+      ],
+      "@/utils/*": [
+        "./src/utils/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/posts/*": [
+        "./src/app/posts/*"
+      ],
+      "@/generated/*": [
+        "./src/generated/*"
+      ],
+      "@/public/*": [
+        "./public/*"
+      ],
+      "@/shared/*": [
+        "./src/shared/*"
+      ],
+      "@/db/*": [
+        "./db/*"
+      ]
+    },
+    "sourceMap": true
+  },
+  "include": [
+    "./type.d.ts",
+    "recover/next-env.d.ts",
+    "**/*.js",
+    "**/*.jsx",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/**/*",
+    "src/app/mdx/page.jsx",
+    "db",
+    "test",
+    "../backend/tmp",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
