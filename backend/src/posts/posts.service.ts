@@ -6,34 +6,32 @@ import type { PostCategory } from "../instances/blog/Schema";
 export class PostsService {
 	constructor(private readonly blogService: BlogService) {}
 
-	findAll() {
+	async findAll() {
 		return this.blogService.getAllPosts();
 	}
 
-	findLatest(count: number = 10) {
+	async findLatest(count: number = 10) {
 		const totalCount = this.blogService.getTotalPostCount();
-		const latestFrontmatters = this.blogService
-			.getLatestPosts(count)
-			.map((post) => post.frontmatter);
+		const posts = await this.blogService.getLatestPosts(count);
+		const latestFrontmatters = posts.map((post) => post.frontmatter);
 		return {
 			totalCount,
 			frontmatters: latestFrontmatters,
 		};
 	}
 
-	findLatestInRange(start: number, end: number) {
+	async findLatestInRange(start: number, end: number) {
 		const totalCount = this.blogService.getTotalPostCount();
-		const latestFrontmatters = this.blogService
-			.getPostsInRange(start, end)
-			.map((post) => post.frontmatter);
+		const posts = await this.blogService.getPostsInRange(start, end);
+		const latestFrontmatters = posts.map((post) => post.frontmatter);
 		return {
 			totalCount,
 			frontmatters: latestFrontmatters,
 		};
 	}
 
-	findByCategory(category: PostCategory) {
-		const posts = this.blogService.getPostsByCategory(category);
+	async findByCategory(category: PostCategory) {
+		const posts = await this.blogService.getPostsByCategory(category);
 
 		if (!posts || posts.length === 0) {
 			throw new Error(`${category} 카테고리에 해당하는 게시물이 없습니다.`);
@@ -42,7 +40,7 @@ export class PostsService {
 	}
 
 	async findOne(cateogry: PostCategory, slug: string) {
-		const { frontmatter } = this.blogService.getPostBySlug(cateogry, slug);
+		const frontmatter = await this.blogService.getPostBySlug(cateogry, slug);
 		const { content } = await this.blogService.getPostContent(cateogry, slug);
 		if (!frontmatter || !content) {
 			throw new Error(
