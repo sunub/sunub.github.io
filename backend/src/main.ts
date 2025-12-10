@@ -10,7 +10,7 @@ async function bootstrap() {
 	const originString = configService.get<string>("CORS_ORIGIN") || "";
 	const allowedOrigins = originString.split(",").map((url) => url.trim());
 
-	app.set("turst proxy", 1);
+	app.set("trust proxy", 1);
 
 	app.enableCors({
 		origin: allowedOrigins,
