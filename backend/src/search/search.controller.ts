@@ -6,7 +6,8 @@ export class SearchController {
 	constructor(private readonly searchService: SearchService) {}
 
 	@Get()
-	search(@Query("query") query: string) {
-		return { results: this.searchService.search(query) };
+	async search(@Query("query") query: string) {
+		const searchResults = await this.searchService.search(query);
+		return { results: searchResults };
 	}
 }
