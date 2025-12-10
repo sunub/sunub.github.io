@@ -1,10 +1,10 @@
 import { createReadStream } from "node:fs";
-import { opendir } from "node:fs/promises";
+import { opendir, readFile, writeFile } from "node:fs/promises";
 import { cpus } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { concurrent, filter, map, pipe, toArray } from "fx_utils";
+import { concurrent, filter, map, pipe, take, toArray } from "fx_utils";
 import * as matter from "gray-matter";
 import { FileProcessor } from "./FileProcessor";
 import {
@@ -18,22 +18,18 @@ import {
 export class BlogService implements OnModuleInit {
 	private readonly logger = new Logger(BlogService.name);
 	private readonly POSTS_ROOT_PATH = join(process.cwd(), "../posts");
+	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
 
-	private allPosts: PostFrontMatter[] = [];
-	private postsByCategory: Record<string, PostFrontMatter[]> = {
-		web: [],
-		algorithm: [],
-		code: [],
-		cs: [],
-	};
+	private totalPostCount = 0;
 	private fileProcessor = new FileProcessor();
 
 	async onModuleInit() {
 		this.logger.log("BlogService 초기화를 진행합니다...");
 		try {
-			await this.processAndCacheAllPosts();
+			await this.ensureIndex();
+			this.totalPostCount = await this.countPosts();
 			this.logger.log(
-				`블로그 서비스가 성공적으로 초기화되었습니다. 총 게시물 수: ${this.allPosts.length}`,
+				`블로그 서비스가 성공적으로 초기화되었습니다. 총 게시물 수: ${this.totalPostCount}`,
 			);
 		} catch (error: unknown) {
 			this.logger.error(
@@ -44,30 +40,55 @@ export class BlogService implements OnModuleInit {
 	}
 
 	public getTotalPostCount(): number {
-		return this.allPosts.length;
+		return this.totalPostCount;
 	}
 
-	public getLatestPosts(count: number): PostFrontMatter[] {
-		return this.allPosts.slice(0, count);
+	public async getLatestPosts(count: number): Promise<PostFrontMatter[]> {
+		return pipe(
+			this.readIndexLines(),
+			(iter) => take(count, iter),
+			toArray,
+		);
 	}
 
-	public getPostsInRange(start: number, end: number): PostFrontMatter[] {
-		return this.allPosts.slice(start, end);
+	public async getPostsInRange(
+		start: number,
+		end: number,
+	): Promise<PostFrontMatter[]> {
+		return pipe(
+			this.readIndexLines(),
+			(iter) => {
+				let index = 0;
+				return filter(() => {
+					const keep = index >= start && index < end;
+					index++;
+					return keep;
+				}, iter);
+			},
+			(iter) => take(end - start, iter),
+			toArray,
+		);
 	}
 
-	public getAllPosts(): PostFrontMatter[] {
-		return this.allPosts;
+	public async getAllPosts(): Promise<PostFrontMatter[]> {
+		return pipe(this.readIndexLines(), toArray);
 	}
 
-	public getPostsByCategory(category: PostCategory): PostFrontMatter[] {
-		return this.postsByCategory[category] || [];
+	public async getPostsByCategory(
+		category: PostCategory,
+	): Promise<PostFrontMatter[]> {
+		return pipe(
+			this.readIndexLines(),
+			filter((post) => post.frontmatter.category === category),
+			toArray,
+		);
 	}
 
-	public getPostBySlug(
+	public async getPostBySlug(
 		category: PostCategory,
 		slug: string,
-	): PostFrontMatter | undefined {
-		const posts = this.getPostsByCategory(category);
+	): Promise<PostFrontMatter | undefined> {
+		const posts = await this.getPostsByCategory(category);
 		return posts.find((p) => p.frontmatter.slug === slug);
 	}
 
@@ -79,30 +100,48 @@ export class BlogService implements OnModuleInit {
 		return this.fileProcessor.processFile(filePath);
 	}
 
-	async processAndCacheAllPosts(category: PostCategory | "." = ".") {
-		const iterator = await this.createFrontMatterIterator(category);
-		const allFrontMatters = await toArray(iterator);
+	private async *readIndexLines(): AsyncGenerator<PostFrontMatter> {
+		const stream = createReadStream(this.INDEX_FILE_PATH);
+		const rl = createInterface({ input: stream, crlfDelay: Infinity });
 
+		for await (const line of rl) {
+			if (line.trim()) {
+				yield JSON.parse(line);
+			}
+		}
+	}
+
+	private async countPosts(): Promise<number> {
+		let count = 0;
+		const stream = createReadStream(this.INDEX_FILE_PATH);
+		const rl = createInterface({ input: stream, crlfDelay: Infinity });
+		for await (const _ of rl) {
+			count++;
+		}
+		return count;
+	}
+
+	private async ensureIndex() {
+		try {
+			await readFile(this.INDEX_FILE_PATH);
+			this.logger.log("인덱스 파일(NDJSON)을 확인했습니다.");
+		} catch {
+			this.logger.warn(
+				"인덱스 파일을 찾을 수 없습니다. 파일 시스템에서 생성합니다...",
+			);
+			await this.buildIndexFromFiles();
+		}
+	}
+
+	async buildIndexFromFiles(category: PostCategory | "." = ".") {
+		const allFrontMatters = await this.createFrontMatterIterator(category);
 		const sortedPosts = allFrontMatters.sort((a, b) =>
 			a.frontmatter.date > b.frontmatter.date ? -1 : 1,
 		);
 
-		const categorizedPosts = sortedPosts.reduce(
-			(acc, post) => {
-				const { category } = post.frontmatter;
-				if (acc[category]) {
-					acc[category].push(post);
-				}
-				return acc;
-			},
-			{ web: [], algorithm: [], code: [], cs: [] } as Record<
-				PostCategory,
-				PostFrontMatter[]
-			>,
-		);
-
-		this.allPosts = sortedPosts;
-		this.postsByCategory = categorizedPosts;
+		const content = sortedPosts.map((p) => JSON.stringify(p)).join("\n");
+		await writeFile(this.INDEX_FILE_PATH, content);
+		this.logger.log(`인덱스 파일(NDJSON)을 생성했습니다: ${this.INDEX_FILE_PATH}`);
 	}
 
 	private async createFrontMatterIterator(category: PostCategory | ".") {
@@ -131,6 +170,7 @@ export class BlogService implements OnModuleInit {
 				}),
 				concurrent(maxConcurrency),
 				filter((data): data is PostFrontMatter => data !== null),
+				toArray
 			);
 		} catch (error) {
 			throw new Error(
