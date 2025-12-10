@@ -6,7 +6,9 @@ export const BlogPostListViewTrigger = memo(function BlogPostListViewTrigger() {
 	const observerTarget = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (!observerTarget.current || !hasMore) return;
+		if (!observerTarget.current || !hasMore) {
+			return;
+		}
 
 		const observer = new IntersectionObserver(
 			(entries) => {
