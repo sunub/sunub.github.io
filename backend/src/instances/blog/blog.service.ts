@@ -16,9 +16,9 @@ import {
 
 @Injectable()
 export class BlogService implements OnModuleInit {
-	private readonly logger = new Logger(BlogService.name);
 	private readonly POSTS_ROOT_PATH = join(process.cwd(), "../posts");
 	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
+	public readonly logger = new Logger(BlogService.name);
 
 	private totalPostCount = 0;
 	private fileProcessor = new FileProcessor();
@@ -44,11 +44,7 @@ export class BlogService implements OnModuleInit {
 	}
 
 	public async getLatestPosts(count: number): Promise<PostFrontMatter[]> {
-		return pipe(
-			this.readIndexLines(),
-			(iter) => take(count, iter),
-			toArray,
-		);
+		return pipe(this.readIndexLines(), (iter) => take(count, iter), toArray);
 	}
 
 	public async getPostsInRange(
@@ -141,7 +137,9 @@ export class BlogService implements OnModuleInit {
 
 		const content = sortedPosts.map((p) => JSON.stringify(p)).join("\n");
 		await writeFile(this.INDEX_FILE_PATH, content);
-		this.logger.log(`인덱스 파일(NDJSON)을 생성했습니다: ${this.INDEX_FILE_PATH}`);
+		this.logger.log(
+			`인덱스 파일(NDJSON)을 생성했습니다: ${this.INDEX_FILE_PATH}`,
+		);
 	}
 
 	private async createFrontMatterIterator(category: PostCategory | ".") {
@@ -170,7 +168,7 @@ export class BlogService implements OnModuleInit {
 				}),
 				concurrent(maxConcurrency),
 				filter((data): data is PostFrontMatter => data !== null),
-				toArray
+				toArray,
 			);
 		} catch (error) {
 			throw new Error(
