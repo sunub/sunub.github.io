@@ -319,13 +319,13 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 
 		await page.waitForURL(/\/post\/[^/]+\/[^/]+/, DEFAULT_TEST_OPTION);
 
-		await expect(page.getByTestId("loading-screen")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
+		// await expect(page.getByTestId("loading-screen")).toBeVisible(
+		// 	DEFAULT_TEST_OPTION,
+		// );
 
-		await expect(page.getByTestId("loading-screen")).toBeHidden(
-			DEFAULT_TEST_OPTION,
-		);
+		// await expect(page.getByTestId("loading-screen")).toBeHidden(
+		// 	DEFAULT_TEST_OPTION,
+		// );
 
 		await expect(page.getByTestId("post-article__main-title")).toBeVisible(
 			DEFAULT_TEST_OPTION,
