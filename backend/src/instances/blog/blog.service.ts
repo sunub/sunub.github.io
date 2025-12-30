@@ -16,7 +16,8 @@ import {
 
 @Injectable()
 export class BlogService implements OnModuleInit {
-	private readonly POSTS_ROOT_PATH = join(process.cwd(), "../posts");
+	private readonly POSTS_ROOT_PATH =
+		process.env.BLOG_POSTS_PATH || join(process.cwd(), "../posts");
 	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
 	public readonly logger = new Logger(BlogService.name);
 

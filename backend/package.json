@@ -21,7 +21,10 @@
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json",
-		"test:bench": "jest --rootDir . test/bench/performance.spec.ts"
+		"test:bench": "jest --rootDir . test/bench/performance.spec.ts",
+		"test:bench:posts": "jest --config ./test/bench/jest-bench.json",
+		"bench:setup": "./test/bench/generate-posts.sh",
+		"bench:run": "jest --config ./test/bench/jest-bench.json"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",
