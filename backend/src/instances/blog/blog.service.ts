@@ -16,18 +16,32 @@ import {
 
 @Injectable()
 export class BlogService implements OnModuleInit {
-	private readonly POSTS_ROOT_PATH = join(process.cwd(), "../posts");
+	private readonly POSTS_ROOT_PATH =
+		process.env.BLOG_POSTS_PATH || join(process.cwd(), "../posts");
 	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
 	public readonly logger = new Logger(BlogService.name);
 
 	private totalPostCount = 0;
+	private postsCache: PostFrontMatter[] = [];
 	private fileProcessor = new FileProcessor();
 
 	async onModuleInit() {
 		this.logger.log("BlogService 초기화를 진행합니다...");
 		try {
 			await this.ensureIndex();
-			this.totalPostCount = await this.countPosts();
+			
+			const posts: PostFrontMatter[] = [];
+			const stream = createReadStream(this.INDEX_FILE_PATH);
+			const rl = createInterface({ input: stream, crlfDelay: Infinity });
+
+			for await (const line of rl) {
+				if (line.trim()) {
+					posts.push(JSON.parse(line));
+				}
+			}
+			this.postsCache = posts;
+			this.totalPostCount = this.postsCache.length;
+
 			this.logger.log(
 				`블로그 서비스가 성공적으로 초기화되었습니다. 총 게시물 수: ${this.totalPostCount}`,
 			);
@@ -97,24 +111,9 @@ export class BlogService implements OnModuleInit {
 	}
 
 	private async *readIndexLines(): AsyncGenerator<PostFrontMatter> {
-		const stream = createReadStream(this.INDEX_FILE_PATH);
-		const rl = createInterface({ input: stream, crlfDelay: Infinity });
-
-		for await (const line of rl) {
-			if (line.trim()) {
-				yield JSON.parse(line);
-			}
+		for (const post of this.postsCache) {
+			yield post;
 		}
-	}
-
-	private async countPosts(): Promise<number> {
-		let count = 0;
-		const stream = createReadStream(this.INDEX_FILE_PATH);
-		const rl = createInterface({ input: stream, crlfDelay: Infinity });
-		for await (const _ of rl) {
-			count++;
-		}
-		return count;
 	}
 
 	private async ensureIndex() {
