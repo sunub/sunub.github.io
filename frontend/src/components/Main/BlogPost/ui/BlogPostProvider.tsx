@@ -33,9 +33,7 @@ export function useBlogPostContext() {
 	return context;
 }
 
-const THROTTLE_DELAY = 100;
 const POSTS_PER_PAGE = 10;
-const LOAD_DELAY = 500;
 
 export function BlogPostProvider({
 	children,
@@ -67,13 +65,9 @@ export function BlogPostProvider({
 
 	const [isPending, startTransition] = useTransition();
 	const isLoadingRef = useRef(false);
-	const lastCallTimeRef = useRef(0);
 
 	const loadMore = useCallback(() => {
-		const now = Date.now();
-
 		if (
-			now - lastCallTimeRef.current < THROTTLE_DELAY ||
 			isLoadingRef.current
 		) {
 			return;
@@ -82,19 +76,13 @@ export function BlogPostProvider({
 		if (currentData.frontmatters.length >= currentData.totalCount) {
 			return;
 		}
-
-		lastCallTimeRef.current = now;
 		isLoadingRef.current = true;
 
 		startTransition(async () => {
 			try {
 				const currentLength = currentData.frontmatters.length;
 				const nextEnd = currentLength + POSTS_PER_PAGE;
-
-				const [newPostsData] = await Promise.all([
-					getAdditionalPost(currentLength, nextEnd),
-					new Promise((resolve) => setTimeout(resolve, LOAD_DELAY)),
-				]);
+				const newPostsData = await getAdditionalPost(currentLength, nextEnd);
 
 				const existingKeys = new Set(
 					currentData.frontmatters.map((p) => `${p.category}-${p.slug}`),
