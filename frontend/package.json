@@ -23,6 +23,7 @@
 		"test:e2e:stress": "playwright test --repeat-each=5 --workers=5 -x",
 		"test:e2e:search": "playwright test Search.test.tsx",
 		"test:e2e:app": "playwright test App.test.tsx",
+		"test:e2e:scroll:perf": "playwright test test/e2e/BlogPostInfiniteScrollPerf.test.ts --project=chromium",
 		"test:unit": "vitest --exclude \"**/*.bench.ts\"",
 		"test:unit:watch": "vitest unit watch --exclude \"**/*.bench.ts\""
 	},
