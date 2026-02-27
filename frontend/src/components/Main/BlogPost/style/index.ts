@@ -84,6 +84,7 @@ export const BlogPostWrapper = styled.div`
 
 export const BlogPostList = styled.ul`
   padding-left: 1rem;
+  overflow-anchor: none;
 `;
 
 export const BlogPostListItem = styled(motion.li)<{ $isInitialize?: boolean }>`

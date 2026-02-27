@@ -336,7 +336,6 @@ li.active > a {
 }
 
 .blog-main__landing-page {
-	overflow: hidden;
 	transition:
 		color 350ms ease 0s,
 		background 350ms ease 0s;
