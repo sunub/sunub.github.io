@@ -1,21 +1,23 @@
-import { Suspense } from "react";
-import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 import Spacer from "@/components/Spacer";
-import { BlogPost } from "../BlogPost";
 import { getRecentPost } from "./api/getRecentPost";
 import { RootWrapper } from "./NewestPost.style";
+import { BlogPostListViewComposer } from "../BlogPost/ui/BlogPostListView";
+import { BlogPost } from "../BlogPost";
 
 async function NewestPost() {
-	const recentlyPostedPost = await getRecentPost();
+  const recentlyPostedPost = await getRecentPost();
 
-	return (
-		<RootWrapper>
-			<Spacer axis={"vertical"} size={32} />
-			<Suspense fallback={<FrontMatterLoading length={5} />}>
-				<BlogPost recentlyPublished={recentlyPostedPost} />
-			</Suspense>
-		</RootWrapper>
-	);
+  return (
+    <RootWrapper>
+      <Spacer axis={"vertical"} size={32} />
+
+      <BlogPost recentlyPublished={recentlyPostedPost}>
+        <BlogPostListViewComposer.root>
+          <BlogPostListViewComposer.loader />
+        </BlogPostListViewComposer.root>
+      </BlogPost>
+    </RootWrapper>
+  );
 }
 
 export default NewestPost;
