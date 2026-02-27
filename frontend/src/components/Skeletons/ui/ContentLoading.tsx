@@ -2,9 +2,35 @@
 
 import styled from "styled-components";
 
-function LoadingAnimation() {
+type LoadingAnimationProps = {
+	isListItem?: boolean;
+};
+
+function LoadingAnimation({ isListItem = false }: LoadingAnimationProps) {
+	if (isListItem) {
+		return (
+			<BlogPostLoadingItem>
+				<BlogPostWrapper>
+					<BlogPostTitle>
+						<Title>
+							<ContentBlink $width={30} />
+						</Title>
+					</BlogPostTitle>
+					<BlogPostContent>
+						<ContentBlink $width={40} />
+					</BlogPostContent>
+				</BlogPostWrapper>
+				<Footer>
+					<DateCompo>
+						<ContentBlink $width={7} />
+					</DateCompo>
+				</Footer>
+			</BlogPostLoadingItem>
+		);
+	}
+
 	return (
-		<BlogPostListItem>
+		<BlogPostLoadingItem>
 			<BlogPostWrapper>
 				<BlogPostTitle>
 					<Title>
@@ -20,17 +46,35 @@ function LoadingAnimation() {
 					<ContentBlink $width={7} />
 				</DateCompo>
 			</Footer>
-		</BlogPostListItem>
+		</BlogPostLoadingItem>
 	);
 }
 
-function FrontMatterLoading({ length }: { length: number }) {
+function FrontMatterLoading({
+	length,
+	isListItem = false,
+}: {
+	length: number;
+	isListItem?: boolean;
+}) {
+	const items = Array.from(
+		{ length },
+		(_, index) => `${index}-frontmatter-loading-animation`,
+	);
+
+	if (isListItem) {
+		return (
+			<>
+				{items.map((key) => (
+					<LoadingAnimation key={key} isListItem />
+				))}
+			</>
+		);
+	}
+
 	return (
 		<RootWrapper data-testid="blog-post__front-matter-loading">
-			{Array.from(
-				{ length },
-				(_, index) => `${index}-frontmatter-loading-animation`,
-			).map((key) => (
+			{items.map((key) => (
 				<LoadingAnimation key={key} />
 			))}
 		</RootWrapper>
@@ -88,7 +132,7 @@ const BlogPostWrapper = styled.div`
   transition: transform 250ms cubic-bezier(0.5, 1.25, 0.75, 1.25);
 `;
 
-const BlogPostListItem = styled.li`
+const BlogPostLoadingItem = styled.div`
   &:not(:first-of-type) {
     margin-top: 2rem;
   }
