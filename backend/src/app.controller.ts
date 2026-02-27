@@ -6,4 +6,12 @@ export class AppController {
 	getHello(): string {
 		return "Health Check OK";
 	}
+
+	@Get("healthz")
+	getHealthz(): { status: string; timestamp: number } {
+		return {
+			status: "ok",
+			timestamp: Date.now(),
+		};
+	}
 }
