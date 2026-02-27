@@ -1,20 +1,18 @@
 "use client";
 
 import type { PublishedPost } from "../types";
-import { BlogPostListViewComposer } from "./BlogPostListView";
 import { BlogPostProvider } from "./BlogPostProvider";
 
 export function BlogPost({
-	recentlyPublished,
+  recentlyPublished,
+  children
 }: {
-	recentlyPublished: PublishedPost;
+  recentlyPublished: PublishedPost;
+  children: React.ReactNode;
 }) {
-	return (
-		<BlogPostProvider initialData={recentlyPublished}>
-			<BlogPostListViewComposer.root>
-				<BlogPostListViewComposer.trigger />
-				<BlogPostListViewComposer.loader />
-			</BlogPostListViewComposer.root>
-		</BlogPostProvider>
-	);
+  return (
+    <BlogPostProvider initialData={recentlyPublished}>
+      {children}
+    </BlogPostProvider>
+  );
 }
