@@ -1,7 +1,7 @@
 // MatterTransform.ts 예시
 import { Transform, TransformCallback } from "node:stream";
 import * as matter from "gray-matter";
-import { FrontMatterSchema, MatterTransformData } from "./Schema";
+import { FrontMatterSchema, MatterTransformData } from "@sunub/types";
 
 export class MatterTransform extends Transform {
 	private buffer: Buffer[] = [];

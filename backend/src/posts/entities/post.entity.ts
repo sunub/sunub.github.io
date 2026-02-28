@@ -1,9 +1,9 @@
-import { PostCategory } from "../../instances/blog/Schema";
+import { PostCategory, Tag } from "@sunub/types";
 
 export class PostEntity {
 	title: string;
 	date: Date | string;
-	tags: string[];
+	tags: Tag[];
 	summary: string;
 	slug: string;
 	category: PostCategory;

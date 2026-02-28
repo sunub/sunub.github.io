@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { BlogService } from "src/instances/blog/blog.service";
-import type { PostCategory } from "../instances/blog/Schema";
+import type { PostCategory } from "@sunub/types";
 
 @Injectable()
 export class PostsService {

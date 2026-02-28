@@ -7,10 +7,10 @@ import {
 	ValidationPipe,
 } from "@nestjs/common";
 import { ZodValidationPipe } from "src/common/validation.pipe";
-import type { PostCategory } from "../instances/blog/Schema";
-import { PostCategorySchema } from "../instances/blog/Schema";
 import { GetLatestPostsQueryDto } from "./dto/get-posts.dto";
 import { PostsService } from "./posts.service";
+import { PostCategorySchema } from "@sunub/types";
+import type { PostCategory } from "@sunub/types";
 
 @Controller("posts")
 export class PostsController {

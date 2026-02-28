@@ -4,22 +4,18 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { concurrent, filter, map, pipe, take, toArray } from "fx_utils";
+import { concurrent, filter, map, pipe, toArray } from "@sunub/utils";
 import * as matter from "gray-matter";
 import { FileProcessor } from "./FileProcessor";
-import {
-	FrontMatterSchema,
-	MatterTransformData,
-	type PostCategory,
-	type PostFrontMatter,
-} from "./Schema";
+import { FrontMatterSchema, MatterTransformData } from "@sunub/types";
+import type { PostCategory, PostFrontMatter } from "@sunub/types";
 
 @Injectable()
 export class BlogService implements OnModuleInit {
 	private readonly POSTS_ROOT_PATH =
 		process.env.BLOG_POSTS_PATH || join(process.cwd(), "../posts");
-	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
 	public readonly logger = new Logger(BlogService.name);
+	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
 
 	private totalPostCount = 0;
 	private postsCache: PostFrontMatter[] = [];

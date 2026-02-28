@@ -1,0 +1,16 @@
+{
+	"moduleFileExtensions": ["js", "json", "ts"],
+	"rootDir": ".",
+	"testRegex": ".*/test/bench/.*\\.spec\\.ts$",
+	"collectCoverageFrom": ["**/*.(t|j)s"],
+	"coverageDirectory": "../coverage",
+	"testEnvironment": "node",
+	"transform": {
+		"^.+\\.tsx?$": "ts-jest"
+	},
+	"moduleNameMapper": {
+		"^@/types/(.*)$": "<rootDir>/src/types/$1",
+		"^@sunub/types$": "<rootDir>/../../packages/types/main.ts",
+		"^@sunub/contracts$": "<rootDir>/../../packages/contracts/main.ts"
+	}
+}
