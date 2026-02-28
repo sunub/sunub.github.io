@@ -1,0 +1,30 @@
+{
+	"name": "@sunub/utils",
+	"version": "1.0.0",
+	"description": "공유 유틸리티 라이브러리",
+	"main": "dist/cjs/main.js",
+	"module": "dist/esm/main.js",
+	"types": "dist/types/main.d.ts",
+	"files": [
+		"dist/"
+	],
+	"engines": {
+		"node": ">=14.0.0"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"build:cjs": "tsc -p tsconfig.cjs.json",
+		"build:esm": "tsc -p tsconfig.esm.json",
+		"build:types": "tsc -p tsconfig.types.json",
+		"build": "rm -rf dist && pnpm run build:cjs && pnpm run build:esm && pnpm run build:types",
+		"lint": "pnpm exec biome lint"
+	},
+	"dependencies": {
+		"@fxts/core": "^1.15.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.19.8",
+		"typescript": "^5.0.0",
+		"vitest": "^3.2.4"
+	}
+}
