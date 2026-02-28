@@ -35,7 +35,8 @@ sunub.github.io
     │   ├── bench
     │   ├── unit
     │   └── e2e
-    └── fx_utils
+    ├── packages
+    │   └── utils
 ```
 
 이 프로젝트에서 수행한 테스트는 bnech, unit, e2e 테스트로 나누어져 있습니다. 각각의 테스트는 다음과 같은 목적을 가지고 있습니다.
@@ -137,13 +138,30 @@ const [fileContent, _] = await Promise.all([
 
 ### 기술적 구현
 
-IntersectionObserver와 throttle 활용
+IntersectionObserver + 가상화 렌더링 조합
 
-- 스크롤 하단에 위치한 요소가 화면에 나타날 때마다 IntersectionObserver를 통해 감지하고, throttle(0.5초 제한)로 이벤트 과다 발생을 방지하여 성능 저하 없이 자연스러운 무한 스크롤을 구현했습니다.
+- 무한스크롤 트리거는 `IntersectionObserver`를 사용해 하단 센티넬 가시성 변화 시에만 로딩을 요청하도록 구성해, 스크롤 이벤트 폴링 의존도를 제거했습니다.
+- 리스트 렌더링은 `scroll` 위치 기준 윈도우 렌더링으로 전환해 화면 근처 항목만 유지합니다.
+  - `rendered window = viewportHeight/rowHeight + overscan` 기준으로 동적으로 계산
+  - 위쪽/아래쪽 누적 항목은 spacer로 처리해 스크롤 연속성을 유지
+- 초기에는 `min render` 범위를 보장해 첫 렌더링 체감 성능을 유지하고, 신규 페이지 적재 후 `requestAnimationFrame` 기반으로 렌더 윈도우를 갱신합니다.
 
 비동기 데이터 로딩 및 상태 관리
 
-- 추가 데이터 로딩 시 React의 useTransition을 활용해 UI의 반응성을 높이고, 네트워크 요청 중에는 로딩 상태를 관리하여 사용자에게 명확한 피드백을 제공합니다.
+- 추가 데이터 로딩 시 `useTransition`을 적용해 네트워크 요청 중에도 리스트 반응성을 유지했고, `Set` 기반 키 중복 체크와 로딩 가드(`isLoadingRef`)로 중복 호출과 중복 데이터 삽입을 방어했습니다.
+
+### 측정 항목(교차 검증)
+
+- 교차 검증 대상: 기존 `posts.map` 전체 렌더 대비 IO + 윈도우 렌더링
+- 지표
+  - 스크롤 중 리스트에 실제 마운트된 DOM 노드 수 (`querySelectorAll('[data-testid=\"blog-main__recently-post-list\"] li').length`)
+  - 사이클별 추가 로드 지연 (`loadMore` 트리거 ~ 렌더링 완료까지)
+  - 1초 구간당 `requestAnimationFrame` 지연 평균/최대(=FPS 역추정)
+  - `performance.memory.usedJSHeapSize` 변화량
+- 검증 방식
+  - 동일 장비/브라우저, 동일 seed 데이터(예: 10,000개) 기준으로 3회 반복
+  - 각 항목 95퍼센타일 기준 비교 후 `교차검증 테이블`로 수치 축적
+  - 실행: `pnpm --filter frontend run test:e2e:scroll:perf` (`BENCH_SCROLL_CYCLES`로 사이클 수 조정 가능)
 
 ## 모바일 환경 지원
 
