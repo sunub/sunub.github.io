@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { BlogService } from "src/instances/blog/blog.service";
 import type { PostCategory } from "@sunub/types";
 
@@ -39,15 +39,15 @@ export class PostsService {
 		return posts;
 	}
 
-	async findOne(cateogry: PostCategory, slug: string) {
-		const frontmatter = await this.blogService.getPostBySlug(cateogry, slug);
-		const { content } = await this.blogService.getPostContent(cateogry, slug);
-		if (!frontmatter || !content) {
-			throw new Error(
-				`경로: ${cateogry}/${slug}에 해당하는 게시물을 찾을 수 없습니다.`,
+	async findOne(category: PostCategory, slug: string) {
+		const frontmatter = await this.blogService.getPostBySlug(category, slug);
+		const postContent = await this.blogService.getPostContent(category, slug);
+		if (!frontmatter || !postContent) {
+			throw new NotFoundException(
+				`경로: ${category}/${slug}에 해당하는 게시물을 찾을 수 없습니다.`,
 			);
 		}
 
-		return { frontmatter, content };
+		return { frontmatter, content: postContent.content };
 	}
 }

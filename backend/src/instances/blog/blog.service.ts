@@ -4,7 +4,7 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { concurrent, filter, map, pipe, toArray } from "@sunub/utils";
+import { concurrent, filter, map, pipe, take, toArray } from "@sunub/utils";
 import * as matter from "gray-matter";
 import { FileProcessor } from "./FileProcessor";
 import { FrontMatterSchema, MatterTransformData } from "@sunub/types";

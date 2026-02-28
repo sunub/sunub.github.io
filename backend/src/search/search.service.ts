@@ -7,13 +7,12 @@ import { findMatches } from "./utils/findMatches";
 export class SearchService {
 	constructor(private readonly blogService: BlogService) {}
 
-	async search(query: string) {
+	async search(query: string): Promise<SearchResult[]> {
 		if (!query) {
 			return [];
 		}
 
 		const posts = await this.blogService.getAllPosts();
-		const results = [];
 		const results: SearchResult[] = [];
 		for (const post of posts) {
 			const { title, summary } = post.frontmatter;
