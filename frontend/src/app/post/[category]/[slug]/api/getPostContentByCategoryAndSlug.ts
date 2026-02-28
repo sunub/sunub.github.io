@@ -4,7 +4,11 @@ import { API_PATHS } from "@/shared/api/endpoints";
 import { apiGet } from "@/shared/api/http";
 import { SpecificPostInfoSchema } from "@sunub/types";
 import { NotFoundError } from "@/shared/error";
-import type { PostCategory, SpecificPostInfo, PostFrontMatter } from "@sunub/types";
+import type {
+	PostCategory,
+	SpecificPostInfo,
+	PostFrontMatter,
+} from "@sunub/types";
 
 function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null;
@@ -17,7 +21,10 @@ type ErrorLikeResponse = {
 };
 
 function isErrorLikeResponse(value: unknown): value is ErrorLikeResponse {
-	return isObject(value) && ("statusCode" in value || "error" in value || "message" in value);
+	return (
+		isObject(value) &&
+		("statusCode" in value || "error" in value || "message" in value)
+	);
 }
 
 function getResponseErrorMessage(
@@ -29,11 +36,14 @@ function getResponseErrorMessage(
 
 	const statusCode =
 		typeof value.statusCode === "number" ? value.statusCode : undefined;
-	const message =
-		typeof value.message === "string" ? value.message : undefined;
+	const message = typeof value.message === "string" ? value.message : undefined;
 	const error = typeof value.error === "string" ? value.error : undefined;
 
-	if (statusCode === undefined && message === undefined && error === undefined) {
+	if (
+		statusCode === undefined &&
+		message === undefined &&
+		error === undefined
+	) {
 		return null;
 	}
 
@@ -71,7 +81,9 @@ function getStringContent(value: unknown): string | undefined {
 	return undefined;
 }
 
-async function getPostsMetadataByCategory(category: PostCategory): Promise<PostFrontMatter[]> {
+async function getPostsMetadataByCategory(
+	category: PostCategory,
+): Promise<PostFrontMatter[]> {
 	const data = await apiGet<unknown>(API_PATHS.posts.byCategory(category));
 	if (!Array.isArray(data)) {
 		return [];
@@ -101,8 +113,13 @@ export async function getPostContentByCategoryAndSlug(
 	const data = await apiGet<unknown>(API_PATHS.posts.bySlug(category, slug));
 
 	const responseError = getResponseErrorMessage(data);
-	if (responseError?.statusCode === 404 || responseError?.error === "Not Found") {
-		throw new NotFoundError(responseError.message ?? "요청하신 포스트를 찾을 수 없습니다.");
+	if (
+		responseError?.statusCode === 404 ||
+		responseError?.error === "Not Found"
+	) {
+		throw new NotFoundError(
+			responseError.message ?? "요청하신 포스트를 찾을 수 없습니다.",
+		);
 	}
 	if (responseError?.statusCode && responseError.statusCode >= 500) {
 		throw new Error(
@@ -183,7 +200,9 @@ export async function getPostContentByCategoryAndSlug(
 		}
 
 		const listData = await getPostsMetadataByCategory(category);
-		const matched = listData.find(({ frontmatter }) => frontmatter.slug === slug);
+		const matched = listData.find(
+			({ frontmatter }) => frontmatter.slug === slug,
+		);
 		if (!matched) {
 			return null;
 		}
@@ -202,7 +221,8 @@ export async function getPostContentByCategoryAndSlug(
 		responseError &&
 		([responseError.message, responseError.error]
 			.filter((value): value is string => typeof value === "string")
-			.join(" - ") || null);
+			.join(" - ") ||
+			null);
 
 	const debugData = isObject(data)
 		? {

@@ -281,26 +281,6 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 		);
 	}
 
-	async function expectPostNavigation(page: Page) {
-		const loadingScreen = page.getByTestId("loading-screen");
-		const postTitle = page.getByTestId("post-article__main-title");
-
-		const firstPaintMode = await Promise.race<string>([
-			loadingScreen
-				.waitFor({ state: "visible", timeout: 5000 })
-				.then(() => "loading"),
-			postTitle
-				.waitFor({ state: "visible", timeout: 5000 })
-				.then(() => "content"),
-		]).catch(() => null);
-
-		if (firstPaintMode === "loading") {
-			await expect(loadingScreen).toBeHidden(DEFAULT_TEST_OPTION);
-		}
-
-		await expect(postTitle).toBeVisible(DEFAULT_TEST_OPTION);
-	}
-
 	test("Arrow Down/Up으로 검색 결과를 탐색할 수 있는가?", async ({ page }) => {
 		await pressKeyDownAndVerifyNthOption("ArrowDown", page, 0);
 		await page.waitForTimeout(100);

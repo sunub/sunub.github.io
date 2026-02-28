@@ -50,7 +50,7 @@ export function ClientArticle({ children }: { children: React.ReactNode }) {
 		return () => {
 			isActive = false;
 		};
-	}, [animate]);
+	}, [animate, scope]);
 
 	return (
 		<Article ref={scope} id="blog-post__article-content">

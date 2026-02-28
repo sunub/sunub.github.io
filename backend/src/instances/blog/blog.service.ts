@@ -25,7 +25,7 @@ export class BlogService implements OnModuleInit {
 		this.logger.log("BlogService 초기화를 진행합니다...");
 		try {
 			await this.ensureIndex();
-			
+
 			const posts: PostFrontMatter[] = [];
 			const stream = createReadStream(this.INDEX_FILE_PATH);
 			const rl = createInterface({ input: stream, crlfDelay: Infinity });

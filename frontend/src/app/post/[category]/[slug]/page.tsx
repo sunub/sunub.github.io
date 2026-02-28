@@ -42,14 +42,15 @@ const parseIsoDate = (
 	return date.toISOString();
 };
 
-function isNextNotFoundError(error: unknown): error is Error & { digest: string } {
+function isNextNotFoundError(
+	error: unknown,
+): error is Error & { digest: string } {
 	return (
 		error instanceof Error &&
 		typeof (error as { digest?: unknown }).digest === "string" &&
-		[
-			"NEXT_NOT_FOUND",
-			"NEXT_HTTP_ERROR_FALLBACK;404",
-		].includes((error as { digest: string }).digest)
+		["NEXT_NOT_FOUND", "NEXT_HTTP_ERROR_FALLBACK;404"].includes(
+			(error as { digest: string }).digest,
+		)
 	);
 }
 
@@ -190,9 +191,9 @@ async function Page({ params }: { params: Params }) {
 								headline: frontmatter.title,
 								...(publishedDate
 									? {
-										datePublished: publishedDate,
-										dateModified: publishedDate,
-									}
+											datePublished: publishedDate,
+											dateModified: publishedDate,
+										}
 									: {}),
 								description: frontmatter.summary,
 								author: {

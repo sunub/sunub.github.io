@@ -57,18 +57,26 @@ describe("BlogService Performance Benchmark", () => {
 
 	it("should compare Lazy vs Eager evaluation across multiple fetch sizes", async () => {
 		const FETCH_COUNTS = [10, 100, 1000, 5000, 10000];
-		
+
 		// Helper to measure memory
 		const getMemoryUsage = () => {
 			if (global.gc) global.gc();
 			return process.memoryUsage().heapUsed / 1024 / 1024; // MB
 		};
 
-		console.log("\n========================================================================================");
+		console.log(
+			"\n========================================================================================",
+		);
 		console.log(`Benchmark Results (Total Posts: ${TARGET_COUNT})`);
-		console.log("========================================================================================");
-		console.log("| Fetch Count | Lazy Time (ms) | Eager Time (ms) | Speedup (x) | Lazy Mem (MB) | Eager Mem (MB) | Mem Reduction (x) |");
-		console.log("|------------:|---------------:|----------------:|------------:|--------------:|---------------:|------------------:|");
+		console.log(
+			"========================================================================================",
+		);
+		console.log(
+			"| Fetch Count | Lazy Time (ms) | Eager Time (ms) | Speedup (x) | Lazy Mem (MB) | Eager Mem (MB) | Mem Reduction (x) |",
+		);
+		console.log(
+			"|------------:|---------------:|----------------:|------------:|--------------:|---------------:|------------------:|",
+		);
 
 		for (const count of FETCH_COUNTS) {
 			// Force GC before each run to get clean baseline
@@ -80,7 +88,7 @@ describe("BlogService Performance Benchmark", () => {
 			const lazyResult = await service.getLatestPosts(count);
 			const endLazy = process.hrtime.bigint();
 			const endMemLazy = getMemoryUsage();
-			
+
 			const lazyTime = Number(endLazy - startLazy) / 1e6;
 			const lazyMemory = Math.max(0, endMemLazy - startMemLazy);
 
@@ -107,17 +115,19 @@ describe("BlogService Performance Benchmark", () => {
 			const memReduction = (eagerMemory / (lazyMemory || 0.0001)).toFixed(2);
 
 			console.log(
-				`| ${count.toString().padEnd(11)} | ${lazyTime.toFixed(4).padStart(14)} | ${eagerTime.toFixed(4).padStart(15)} | ${speedup.padStart(11)} | ${lazyMemory.toFixed(4).padStart(13)} | ${eagerMemory.toFixed(4).padStart(14)} | ${memReduction.padStart(17)} |`
+				`| ${count.toString().padEnd(11)} | ${lazyTime.toFixed(4).padStart(14)} | ${eagerTime.toFixed(4).padStart(15)} | ${speedup.padStart(11)} | ${lazyMemory.toFixed(4).padStart(13)} | ${eagerMemory.toFixed(4).padStart(14)} | ${memReduction.padStart(17)} |`,
 			);
 
 			expect(lazyResult.length).toBe(count);
 			expect(eagerResult.length).toBe(count);
-			
+
 			// Lazy should generally be faster for smaller subsets
 			if (count < 5000) {
 				expect(lazyTime).toBeLessThan(eagerTime);
 			}
 		}
-		console.log("========================================================================================\n");
+		console.log(
+			"========================================================================================\n",
+		);
 	});
 });

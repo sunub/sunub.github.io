@@ -30,7 +30,10 @@ const isPathCommandString = (value: unknown): value is string =>
 	/^\s*[Mm]\s/.test(value) &&
 	/[a-zA-Z]/.test(value);
 
-const createPathSequence = (fallback: string, ...paths: Array<string | undefined>) =>
+const createPathSequence = (
+	fallback: string,
+	...paths: Array<string | undefined>
+) =>
 	paths.map((pathValue) =>
 		isPathCommandString(pathValue) ? pathValue : fallback,
 	);

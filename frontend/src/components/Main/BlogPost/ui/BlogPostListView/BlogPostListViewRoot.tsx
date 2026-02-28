@@ -77,24 +77,19 @@ export const BlogPostListViewRoot = memo(function BlogPostListViewRoot({
 		[debugLogger],
 	);
 
-	const {
-		visibleRange,
-		topSpacerPx,
-		bottomSpacerPx,
-		remainingPx,
-		registerItemElement,
-	} = useWindowedRange(
-		listRef,
-		posts.length,
-		buildVirtualRangeConfig({
-			itemHeight,
-			overscan,
-			minRenderCount,
-			viewportHeightPx: preloadThresholdPx,
-			enabled: canLoadMore,
-			onMetrics: registerRangeMetrics,
-		}),
-	);
+	const { visibleRange, topSpacerPx, bottomSpacerPx, remainingPx } =
+		useWindowedRange(
+			listRef,
+			posts.length,
+			buildVirtualRangeConfig({
+				itemHeight,
+				overscan,
+				minRenderCount,
+				viewportHeightPx: preloadThresholdPx,
+				enabled: canLoadMore,
+				onMetrics: registerRangeMetrics,
+			}),
+		);
 
 	const shouldRenderAllPosts = isTerminalMode;
 	const renderedPosts = useMemo(
