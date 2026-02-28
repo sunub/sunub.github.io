@@ -5,7 +5,9 @@ on:
     branches: ['sunub']
     paths:
       - 'frontend/**'
-      - 'fx_utils/**'
+      - 'packages/contracts/**'
+      - 'packages/types/**'
+      - 'packages/utils/**'
       - 'posts/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -14,7 +16,9 @@ on:
     branches: ['sunub']
     paths:
       - 'frontend/**'
-      - 'fx_utils/**'
+      - 'packages/contracts/**'
+      - 'packages/types/**'
+      - 'packages/utils/**'
       - 'posts/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
@@ -53,8 +57,8 @@ jobs:
         working-directory: frontend
         run: pnpm run lint # 실제로는 lint 스크립트가 타입 체크를 수행
 
-      - name: Build frontend
-        run: pnpm build:f
+      - name: Build frontend for E2E
+        run: pnpm --filter frontend run build:e2e
 
       - name: Install Playwright browsers
         working-directory: frontend

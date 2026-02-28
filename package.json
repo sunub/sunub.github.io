@@ -7,25 +7,26 @@
 		"dev": "concurrently \"pnpm --filter frontend run dev\" \"pnpm --filter backend run start:dev\"",
 		"dev:f": "pnpm --filter frontend run dev",
 		"dev:d": "pnpm --filter backend run dev",
-		"build": "pnpm --filter fx_utils run build && pnpm --filter frontend run build && pnpm --filter backend run build",
+		"build": "pnpm -r run build",
 		"build:f": "pnpm --filter frontend run build",
 		"format:check": "pnpm dlx prettier --check .",
 		"lint": "pnpm exec biome lint",
 		"lint:frontend": "pnpm exec biome lint frontend",
 		"lint:backend": "eslint backend/ --ext .js,.ts",
-		"lint:utils": "pnpm exec biome lint ./fx_utils",
+		"lint:utils": "pnpm exec biome lint ./packages/utils",
 		"lint:write": "pnpm exec biome check --write --unsafe",
 		"format": "pnpm exec biome format --write",
 		"check": "pnpm exec biome check --write",
-		"build:utils": "pnpm --filter fx_utils run build",
+		"build:shared": "pnpm --filter @sunub/contracts run build && pnpm --filter @sunub/types run build && pnpm --filter @sunub/utils run build",
+		"build:utils": "pnpm run build:shared",
 		"bench:stress": "node ./test/runBench.mjs",
 		"bench": "vitest bench",
 		"test": "pnpm --filter frontend run test",
 		"test:e2e": "pnpm --filter frontend run test:e2e",
 		"test:e2e:ui": "pnpm --filter frontend run test:e2e:ui",
 		"test:e2e:stress": "pnpm --filter frontend run test:e2e:stress",
-		"dev:prepare": "pnpm build:utils",
-		"postinstall": "pnpm build:utils",
+		"dev:prepare": "pnpm build:shared",
+		"postinstall": "pnpm build:shared",
 		"start:frontend": "pnpm --filter frontend run start"
 	},
 	"dependencies": {
@@ -39,7 +40,8 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.3.6",
 		"concurrently": "^9.2.1",
-		"globals": "^16.3.0"
+		"globals": "^16.3.0",
+		"zod": "^3.25.76"
 	},
 	"resolutions": {
 		"postcss-selector-parser": "^6.0.10"

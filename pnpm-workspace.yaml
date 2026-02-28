@@ -1,7 +1,9 @@
 packages:
   - frontend
   - backend
-  - fx_utils
+  - packages/contracts
+  - packages/types
+  - packages/utils
 
 onlyBuiltDependencies:
   - '@nestjs/core'
@@ -11,3 +13,5 @@ onlyBuiltDependencies:
   - esbuild
   - sharp
   - utf-8-validate
+
+storeDir: /home/sunub/.local/share/pnpm/store/v10

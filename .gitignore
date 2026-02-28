@@ -4,7 +4,6 @@
 /node_modules
 /frontend/node_modules
 /backend/node_modules
-/fx_utils/node_modules
 /.pnp
 .pnp.js
 
@@ -12,7 +11,7 @@
 /dist
 /frontend/dist
 /backend/dist
-/fx_utils/dist
+/packages/*/dist
 /build
 /frontend/build
 /backend/build
@@ -64,9 +63,7 @@ firestore.rules
 node_modules
 tmp
 
-# fx_utils
-/fx_utils/node_modules
-/fx_utils/dist
+
 
 # test & coverage
 /coverage
