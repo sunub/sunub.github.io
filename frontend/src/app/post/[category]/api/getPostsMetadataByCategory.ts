@@ -1,16 +1,11 @@
-import { getPostsMetadataByCategory as getPostsMetadataByCategorySlow } from "db/blog/api";
-import { API_HOST } from "@/constants/constants";
-import type { PostCategory } from "@/db/blog/Schema";
-import { PostFrontMatterSchema } from "@/db/blog/Schema";
+import { API_PATHS } from "@/shared/api/endpoints";
+import { apiGet } from "@/shared/api/http";
+import { PostFrontMatterSchema } from "@sunub/types";
+import type { PostCategory } from "@sunub/types";
 
 const fetchPostsMetadataByCategory = async (category: PostCategory) => {
 	try {
-		const API_URL = `${API_HOST}/posts/${category}`;
-		const data = await fetch(API_URL);
-		if (!data.ok) {
-			return null;
-		}
-		return data.json();
+		return await apiGet(API_PATHS.posts.byCategory(category));
 	} catch (error) {
 		console.error("Error fetching post content:", error);
 		return null;
@@ -23,6 +18,5 @@ export async function getPostsMetadataByCategory(category: PostCategory) {
 	if (parsedData.success) {
 		return parsedData.data;
 	}
-
-	return getPostsMetadataByCategorySlow(category);
+	return [];
 }

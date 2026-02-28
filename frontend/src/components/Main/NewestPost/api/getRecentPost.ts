@@ -1,20 +1,17 @@
 "use server";
 
-import { z } from "zod/v4";
-import { API_HOST } from "@/constants/constants";
-import { getRecentPostsMetadataInRange } from "@/db/blog/api";
-import { FrontMatterSchema } from "@/db/blog/Schema";
+import { API_PATHS } from "@/shared/api/endpoints";
+import { buildApiUrl } from "@/shared/api/config";
+import { PublishedPostSchema, type PublishedPost } from "@sunub/types";
 
-const FrontMattersSchema = z.array(FrontMatterSchema);
-
-const RecentPostSchema = z.object({
-	totalCount: z.number(),
-	frontmatters: FrontMattersSchema,
-});
+const ErrorRecentPost: PublishedPost = {
+	totalCount: 0,
+	frontmatters: [],
+};
 
 async function getRecentPostFetch() {
 	try {
-		const API_URL = `${API_HOST}/posts/latest`;
+		const API_URL = buildApiUrl(API_PATHS.posts.latest());
 		const data = await fetch(API_URL);
 		if (!data.ok) {
 			throw new Error("Failed to fetch recent posts");
@@ -28,14 +25,11 @@ async function getRecentPostFetch() {
 
 export async function getRecentPost() {
 	const data = await getRecentPostFetch();
-	const parsedData = RecentPostSchema.safeParse(data);
-	if (parsedData.success) {
-		return parsedData.data;
+	const parsedData = PublishedPostSchema.safeParse(data);
+	if (!parsedData.success) {
+		console.error("Error parsing recent posts data:", parsedData.error);
+		return ErrorRecentPost;
 	}
 
-	const { totalCount, frontmatters } = await getRecentPostsMetadataInRange(
-		0,
-		10,
-	);
-	return { totalCount, frontmatters };
+	return parsedData.data;
 }

@@ -1,93 +1,59 @@
-import { readdir } from "node:fs/promises";
-import path from "node:path";
-import { describe, expect, test } from "vitest";
-import {
-	getPostsMetadataByCategory,
-	getRecentPostsMetadata,
-} from "../../db/blog/api";
-import { Post } from "../../db/blog/Posts";
-import { FrontMatterSchema } from "../../db/blog/Schema";
+import { describe, expect, test, vi } from "vitest";
+import { beforeEach } from "vitest";
+import type { FrontMatter, PublishedPost } from "@sunub/types";
+import { getAdditionalPost } from "@/components/Main/BlogPost/utils/utils";
+import { getRecentPost } from "@/components/Main/NewestPost/api/getRecentPost";
 
-const postsPath = path.join(process.cwd(), "..", "posts");
-
-describe("블로그 포스트의 카테고리를 잘 처리하는가?", () => {
-	test("Web 개발 카테고리", async () => {
-		const webPostPath = path.join(postsPath, "web");
-		const actualWebPostFiles = await readdir(webPostPath);
-
-		const post = Post.getInstance();
-		await post.createProcessedFrontMatter("web");
-
-		expect(post.web.length).toBe(actualWebPostFiles.length);
-	});
-
-	test("Algorithm 카테고리", async () => {
-		const algorithmPostPath = path.join(postsPath, "algorithm");
-		const actualAlgorithmPostFiles = await readdir(algorithmPostPath);
-
-		const post = Post.getInstance();
-		await post.createProcessedFrontMatter("algorithm");
-
-		expect(post.algorithm.length).toBe(actualAlgorithmPostFiles.length);
-	});
-
-	test("Code 카테고리", async () => {
-		const codePostPath = path.join(postsPath, "code");
-		const actualCodePostFiles = await readdir(codePostPath);
-
-		const post = Post.getInstance();
-		await post.createProcessedFrontMatter("code");
-
-		expect(post.code.length).toBe(actualCodePostFiles.length);
-	});
-
-	test("CS 카테고리", async () => {
-		const csPostPath = path.join(postsPath, "cs");
-		const actualCsPostFiles = await readdir(csPostPath);
-
-		const post = Post.getInstance();
-		await post.createProcessedFrontMatter("cs");
-
-		expect(post.cs.length).toBe(actualCsPostFiles.length);
-	});
+const createFrontMatter = (
+	category: FrontMatter["category"],
+	index: number,
+): FrontMatter => ({
+	title: `${category} 포스트 ${index}`,
+	date: new Date().toISOString(),
+	summary: `${category} 포스트 요약 ${index}`,
+	category,
+	tags: ["test"],
+	slug: `${category}-${index}`,
+	completed: true,
 });
 
+const rangePosts: PublishedPost = {
+	totalCount: 10,
+	frontmatters: [createFrontMatter("web", 1), createFrontMatter("web", 2)],
+};
+
+const recentPosts: PublishedPost = {
+	totalCount: 10,
+	frontmatters: [createFrontMatter("code", 1), createFrontMatter("code", 2)],
+};
+
+function mockJsonResponse(body: unknown): Response {
+	return new Response(JSON.stringify(body), {
+		status: 200,
+		headers: { "Content-Type": "application/json" },
+	});
+}
+
 describe("블로그 포스트 API 테스트", () => {
-	test("정해진 청크 사이즈의 FrontMatter를 반환하는가?", async () => {
-		const batchSize = 20;
-		const recentPosts = await getRecentPostsMetadata(batchSize);
-		const chunkedPosts = await recentPosts.next();
-		expect(chunkedPosts.done).toBe(false);
-		if (!chunkedPosts.done) {
-			expect(chunkedPosts.value.length).toBeLessThanOrEqual(batchSize);
-		}
+	beforeEach(() => {
+		vi.restoreAllMocks();
 	});
 
-	test("FrontMatter가 올바른 형식인가?", async () => {
-		const webPosts = await getPostsMetadataByCategory("web");
-		const algorithmPosts = await getPostsMetadataByCategory("algorithm");
-		const codePosts = await getPostsMetadataByCategory("code");
-		const csPosts = await getPostsMetadataByCategory("cs");
+	test("블로그 포스트 최신 목록 API가 파싱 가능한 형식을 반환한다", async () => {
+		vi.spyOn(globalThis, "fetch").mockResolvedValue(
+			mockJsonResponse(recentPosts),
+		);
 
-		expect(
-			webPosts.map(
-				(post) => FrontMatterSchema.safeParse(post.frontmatter).success,
-			),
-		).toEqual(Array(webPosts.length).fill(true));
-		expect(
-			algorithmPosts.map(
-				(post) => FrontMatterSchema.safeParse(post.frontmatter).success,
-			),
-		).toEqual(Array(algorithmPosts.length).fill(true));
-		expect(
-			codePosts.map(
-				(post) => FrontMatterSchema.safeParse(post.frontmatter).success,
-			),
-		).toEqual(Array(codePosts.length).fill(true));
-		expect(
-			csPosts.map(
-				(post) => FrontMatterSchema.safeParse(post.frontmatter).success,
-			),
-		).toEqual(Array(csPosts.length).fill(true));
+		const parsed = await getRecentPost();
+		expect(parsed).toEqual(recentPosts);
+	});
+
+	test("range 조회 API가 파싱 가능한 형식을 반환한다", async () => {
+		vi.spyOn(globalThis, "fetch").mockResolvedValue(
+			mockJsonResponse(rangePosts),
+		);
+
+		const parsed = await getAdditionalPost(0, 10);
+		expect(parsed).toEqual(rangePosts);
 	});
 });

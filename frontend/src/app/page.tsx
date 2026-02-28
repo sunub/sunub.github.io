@@ -27,12 +27,14 @@ export default async function Page() {
 				<HeroImage initialTheme={initialTheme} />
 				<Wave />
 			</HeaderContentsWrapper>
+
 			<div id="blog-main-wrapper">
 				<MainWrapper id="blog-main__recently-post-list-wrapper">
 					<TitleWrapper>
 						<FeatherIcon />
 						<Title>최신 포스트들</Title>
 					</TitleWrapper>
+
 					<NewestPost />
 				</MainWrapper>
 			</div>

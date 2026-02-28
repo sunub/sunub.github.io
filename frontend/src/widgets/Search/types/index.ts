@@ -1,8 +1,2 @@
-import type { FrontMatter } from "@/db/blog/Schema";
-
-export interface SearchResult {
-	postKey: string;
-	post: {
-		frontmatter: FrontMatter;
-	};
-}
+export type { SearchResult } from "@sunub/types";
+export type { SearchResponse } from "@sunub/types";

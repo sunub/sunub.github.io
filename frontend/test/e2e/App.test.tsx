@@ -1,13 +1,48 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { E2E_TEST_URL } from "./constants";
 import { HomePage } from "./HomePage";
 
 const DEFAULT_TIMEOUT_TIME = 35000;
 const DEFAULT_TEST_OPTION = { timeout: DEFAULT_TIMEOUT_TIME };
+const POST_ITEM_SELECTOR =
+	"li[data-testid^='blog-post__recently-'][data-testid$='-post-item']";
+
+async function enableDeterministicMode(page: Page) {
+	await page.evaluate(() => {
+		document.documentElement.setAttribute("data-test-mode", "true");
+	});
+}
+
+async function getRenderedPostStats(postList: Locator) {
+	return postList.locator(POST_ITEM_SELECTOR).evaluateAll((elements) => {
+		const indexes = elements
+			.map((element) => {
+				const itemId = element.getAttribute("data-testid") ?? "";
+				const match = /blog-post__recently-(\d+)-post-item/.exec(itemId);
+				return match ? Number.parseInt(match[1], 10) : -1;
+			})
+			.filter((index) => index >= 0);
+
+		return {
+			count: indexes.length,
+			maxIndex: indexes.length > 0 ? Math.max(...indexes) : -1,
+		};
+	});
+}
+
+async function scrollToPageBottom(page: Page, repeat = 4) {
+	for (let i = 0; i < repeat; i += 1) {
+		await page.evaluate(() => {
+			window.scrollTo(0, document.body.scrollHeight);
+		});
+		await page.mouse.wheel(0, 1200);
+	}
+}
 
 test.describe("홈 페이지 컴포넌트 테스트", () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto(E2E_TEST_URL);
+		await enableDeterministicMode(page);
 		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
 			{ timeout: DEFAULT_TIMEOUT_TIME },
 		);
@@ -28,9 +63,12 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 	test("홈 페이지 기본 요소로 최근 포스트 10개가 렌더링 되는가?", async ({
 		page,
 	}) => {
-		const listItems = page.getByRole("listitem");
-		await expect(listItems).toHaveCount(10);
-		await expect(listItems.first()).toBeVisible(DEFAULT_TEST_OPTION);
+		const postList = page.getByTestId("blog-main__recently-post-list");
+		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
+
+		const postItems = postList.locator(POST_ITEM_SELECTOR);
+		await expect(postItems).toHaveCount(10);
+		await expect(postItems.first()).toBeVisible(DEFAULT_TEST_OPTION);
 	});
 
 	test("테마 전환 기능이 적절하게 작동하는지 확인", async ({ page }) => {
@@ -51,10 +89,38 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 
 test.describe("무한스크롤 기능 테스트", () => {
 	test.beforeEach(async ({ page }) => {
-		await HomePage.goToHome(page);
+		await page.goto(E2E_TEST_URL);
+		await enableDeterministicMode(page);
 		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
 			DEFAULT_TEST_OPTION,
 		);
+	});
+
+	test("스크롤 액션이 안정적으로 수행되는지 확인", async ({ page }) => {
+		const postList = page.getByTestId("blog-main__recently-post-list");
+		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
+
+		const initialStats = await getRenderedPostStats(postList);
+		expect(initialStats.count).toBe(10);
+		expect(initialStats.maxIndex).toBeGreaterThanOrEqual(9);
+
+		await page.mouse.wheel(0, 1200);
+		await expect
+			.poll(
+				async () => {
+					const currentStats = await getRenderedPostStats(postList);
+					return currentStats.maxIndex;
+				},
+				{
+					intervals: [500, 1000],
+					timeout: DEFAULT_TIMEOUT_TIME,
+				},
+			)
+			.toBeGreaterThanOrEqual(initialStats.maxIndex);
+
+		await expect(
+			postList.getByTestId("blog-post__recently-0-post-item"),
+		).toBeVisible(DEFAULT_TEST_OPTION);
 	});
 
 	test("스크롤을 홈페이지의 아래로 내릴 경우 추가적인 포스트가 로드 되는가?", async ({
@@ -63,20 +129,16 @@ test.describe("무한스크롤 기능 테스트", () => {
 		const postList = page.getByTestId("blog-main__recently-post-list");
 		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
 
-		await expect(postList.getByRole("listitem")).toHaveCount(
-			10,
-			DEFAULT_TEST_OPTION,
-		);
+		const before = await getRenderedPostStats(postList);
 
-		const triggerHelper = page.getByTestId("blog-main__scroll-trigger-helper");
-		await expect(triggerHelper).toBeAttached(DEFAULT_TEST_OPTION);
+		await scrollToPageBottom(page, 6);
 
-		await triggerHelper.scrollIntoViewIfNeeded(DEFAULT_TEST_OPTION);
-
-		await expect(postList.getByRole("listitem")).toHaveCount(
-			20,
-			DEFAULT_TEST_OPTION,
-		);
+		await expect
+			.poll(async () => (await getRenderedPostStats(postList)).maxIndex, {
+				timeout: DEFAULT_TIMEOUT_TIME,
+				intervals: [250, 500, 1000],
+			})
+			.toBeGreaterThan(before.maxIndex);
 	});
 });
 
@@ -85,6 +147,7 @@ test.describe("블로그 포스트 링크 테스트", () => {
 
 	test.beforeEach(async ({ page }) => {
 		await HomePage.goToHome(page);
+		await enableDeterministicMode(page);
 		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
 			{ timeout: DEFAULT_TIMEOUT_TIME },
 		);
@@ -143,10 +206,10 @@ test.describe("블로그 포스트 링크 테스트", () => {
 	}) => {
 		await HomePage.goToHome(page);
 
-		const postlist = page.getByTestId("blog-main__recently-post-list").first();
-		await expect(postlist).toBeVisible(DEFAULT_TEST_OPTION);
+		const postList = page.getByTestId("blog-main__recently-post-list").first();
+		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
 
-		const listItems = postlist.getByRole("listitem");
+		const listItems = postList.locator(POST_ITEM_SELECTOR);
 
 		const firstPostItem = listItems.first();
 		await expect(firstPostItem).toBeVisible(DEFAULT_TEST_OPTION);

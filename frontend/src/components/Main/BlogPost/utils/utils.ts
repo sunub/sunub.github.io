@@ -1,20 +1,16 @@
 "use server";
 
-import { z } from "zod/v4";
-import { API_HOST } from "@/constants/constants";
-import { getRecentPostsMetadataInRange } from "@/db/blog/api";
-import type { FrontMatter } from "@/db/blog/Schema";
-import { FrontMatterSchema } from "@/db/blog/Schema";
+import { API_PATHS } from "@/shared/api/endpoints";
+import { buildApiUrl } from "@/shared/api/config";
+import { PublishedPostSchema, type PublishedPost } from "@sunub/types";
 
-const FrontMattersSchema = z.array(FrontMatterSchema);
-
-const RecentPostSchema = z.object({
-	totalCount: z.number(),
-	frontmatters: FrontMattersSchema,
-});
+const ErrorAdditionalPost: PublishedPost = {
+	totalCount: 0,
+	frontmatters: [],
+} as const;
 
 const getAdditionalPostFetch = async (start: number, end: number) => {
-	const API_URL = `${API_HOST}/posts/latest/range?start=${start}&end=${end}`;
+	const API_URL = buildApiUrl(API_PATHS.posts.latestRange(start, end));
 	const data = await fetch(API_URL);
 	if (!data.ok) {
 		return null;
@@ -25,16 +21,11 @@ const getAdditionalPostFetch = async (start: number, end: number) => {
 export async function getAdditionalPost(
 	start: number,
 	end: number,
-): Promise<{ totalCount: number; frontmatters: FrontMatter[] }> {
+): Promise<PublishedPost> {
 	const data = await getAdditionalPostFetch(start, end);
-	const parsedData = RecentPostSchema.safeParse(data);
+	const parsedData = PublishedPostSchema.safeParse(data);
 	if (parsedData.success) {
 		return parsedData.data;
 	}
-
-	const { totalCount, frontmatters } = await getRecentPostsMetadataInRange(
-		start,
-		end,
-	);
-	return { totalCount, frontmatters };
+	return ErrorAdditionalPost;
 }

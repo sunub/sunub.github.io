@@ -1,49 +1,33 @@
-import { POST_CATEGORY } from "@/utils/post/Post.constant";
+import type {
+	CacheData,
+	Category,
+	Categories,
+	FrontMatter,
+	PostCategory,
+	PostFrontMatter,
+	PublishedPost,
+	Tag,
+	JsonPostFrontMatter,
+	SpecificPostInfo,
+	MatterTransformData,
+} from "@sunub/types";
 
-type Category = (typeof POST_CATEGORY)[number];
+export type { Category, Categories, Tag };
 
-type Files = {
-	[k in Tag]: FileData[];
+export type Theme = "light" | "dark";
+
+export type {
+	CacheData,
+	FrontMatter,
+	JsonPostFrontMatter,
+	MatterTransformData,
+	PostCategory,
+	PostFrontMatter,
+	PublishedPost,
+	SpecificPostInfo,
 };
 
-type Contents = {
-	[k in FrontMatter.slug]: string;
-};
-
-type PostData = {
-	description: FrontMatter;
-	content: string;
-};
-
-type Categories = "web" | "algorithm" | "cs" | "code";
-
-type Tag = (typeof POST_CATEGORY)[number];
-
-interface FrontMatter {
-	title: string;
-	date: string;
-	tags: string[];
-	summary: string;
-	category: string;
-	slug: string;
-}
-
-type MDXFile = {
-	frontmatter: FrontMatter;
-	content: string;
-	slug?: string;
-	category?: string;
-};
-
-type CTX = {
+export interface CTX {
 	isOpen: boolean;
 	setOpen: (value: boolean) => void;
-};
-
-type Theme = "light" | "dark";
-
-interface BlogContent {
-	category: Categories;
-	content: string;
-	metadata: FrontMatter;
 }

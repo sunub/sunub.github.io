@@ -1,4 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
+import {
+	DEFAULT_BACKEND_API_URL,
+	DEFAULT_FRONTEND_BASE_URL,
+	resolveBackendUrls,
+	resolveFrontendUrls,
+} from "@sunub/contracts";
 
 /**
  * Read environment variables from file.
@@ -11,6 +17,22 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+const backendUrls = resolveBackendUrls(process.env, DEFAULT_BACKEND_API_URL);
+const backendUrl = backendUrls.playwright;
+const frontendUrls = resolveFrontendUrls(
+	process.env,
+	DEFAULT_FRONTEND_BASE_URL,
+);
+const testFrontendUrl = process.env.PLAYWRIGHT_FRONTEND_URL ?? frontendUrls.e2e;
+const fallbackBackendPort = new URL(DEFAULT_BACKEND_API_URL).port;
+let backendPort = fallbackBackendPort;
+try {
+	const parsedBackendUrl = new URL(backendUrl);
+	backendPort = parsedBackendUrl.port || fallbackBackendPort;
+} catch {
+	// Keep fallback port when custom URL is not parseable.
+}
+
 export default defineConfig({
 	testDir: "./test/e2e",
 	/* Run tests in files in parallel */
@@ -27,6 +49,7 @@ export default defineConfig({
 	timeout: 60 * 1000,
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
+		baseURL: testFrontendUrl,
 		/* Base URL to use in actions like `await page.goto('/')`. */
 		// baseURL: 'http://localhost:3000',
 
@@ -35,7 +58,7 @@ export default defineConfig({
 		actionTimeout: 15 * 1000,
 		navigationTimeout: 30 * 1000,
 		launchOptions: {
-			slowMo: 100,
+			slowMo: 0,
 		},
 	},
 
@@ -80,8 +103,8 @@ export default defineConfig({
 	/* Run your local dev server before starting the tests */
 	webServer: [
 		{
-			command: "pnpm --filter frontend run start:test",
-			url: "http://localhost:4004",
+			command: "pnpm --filter backend run start:ci",
+			url: `${backendUrl}/healthz`,
 			reuseExistingServer: !process.env.CI,
 			timeout: 180 * 1000, // 빌드 시간 + 서버 구동 시간 고려해서 넉넉하게
 			cwd: ".",
@@ -89,9 +112,23 @@ export default defineConfig({
 			stderr: "pipe",
 			env: {
 				NODE_ENV: "test",
-				PORT: "4008",
-				NEXT_PUBLIC_BASE_URL: "http://localhost:4004",
-				EC2_PUBLIC_API_URL: "http://localhost:4008",
+				PORT: backendPort,
+			},
+		},
+		{
+			command: "pnpm --filter frontend run start",
+			url: testFrontendUrl,
+			reuseExistingServer: !process.env.CI,
+			timeout: 180 * 1000,
+			cwd: ".",
+			stdout: "pipe",
+			stderr: "pipe",
+			env: {
+				NODE_ENV: "test",
+				NEXT_PUBLIC_BASE_URL: testFrontendUrl,
+				NEXT_PUBLIC_BACKEND_URL: backendUrl,
+				BACKEND_API_URL: backendUrl,
+				TEST_BACKEND_URL: backendUrl,
 			},
 		},
 	],

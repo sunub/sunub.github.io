@@ -69,10 +69,4 @@ const DARK_COLORS = {
 	"--sh-comment": "#a19595",
 };
 
-const IS_SERVER = typeof window === "undefined";
-
-const API_HOST = IS_SERVER
-	? process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"
-	: "";
-
-export { LIGHT_COLORS, DARK_COLORS, API_HOST };
+export { LIGHT_COLORS, DARK_COLORS };

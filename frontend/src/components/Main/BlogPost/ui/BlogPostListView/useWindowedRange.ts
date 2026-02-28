@@ -5,125 +5,18 @@ import {
 	useRef,
 	useState,
 } from "react";
-
-type ListBounds = {
-	top: number;
-};
-
-export type VirtualRenderRange = {
-	start: number;
-	end: number;
-};
-
-export type WindowedRangeDebugSample = {
-	timestamp: number;
-	rangeUpdateMs: number;
-	viewportStart: number;
-	viewportEnd: number;
-	visibleRange: VirtualRenderRange;
-	topSpacerPx: number;
-	bottomSpacerPx: number;
-	totalHeightPx: number;
-	remainingPx: number;
-	estimatedHeight: number;
-	preloadThresholdPx: number;
-	itemCount: number;
-	measuredCount: number;
-	pendingCount: number;
-};
-
-export type VirtualScrollConfig = {
-	estimatedHeight: number;
-	overscan: number;
-	minRenderCount: number;
-	enabled: boolean;
-	preloadThresholdPx: number;
-	onMetrics?: (sample: WindowedRangeDebugSample) => void;
-};
-
-export type UseWindowedRangeResult = {
-	visibleRange: VirtualRenderRange;
-	topSpacerPx: number;
-	bottomSpacerPx: number;
-	totalHeightPx: number;
-	remainingPx: number;
-	registerItemElement: (index: number, el: HTMLElement | null) => void;
-};
-
-type WindowedMetrics = Omit<UseWindowedRangeResult, "registerItemElement">;
-
-const clamp = (value: number, min: number, max: number) => {
-	return Math.max(min, Math.min(max, value));
-};
-
-const getListBounds = (list: HTMLUListElement): ListBounds => {
-	const rect = list.getBoundingClientRect();
-	return {
-		top: rect.top,
-	};
-};
-
-const getViewportPixels = (list: HTMLUListElement) => {
-	const listBounds = getListBounds(list);
-	const viewportStart = Math.floor(Math.max(-listBounds.top, 0));
-	const viewportEnd = Math.floor(Math.max(window.innerHeight - listBounds.top, 0));
-
-	return { viewportStart, viewportEnd };
-};
-
-const findItemIndexAtOffset = (prefixHeights: number[], offsetPx: number) => {
-	if (prefixHeights.length <= 1) {
-		return 0;
-	}
-
-	const lastIndex = Math.max(prefixHeights.length - 2, 0);
-	const totalHeight = prefixHeights[prefixHeights.length - 1] ?? 0;
-	const normalizedOffset = clamp(offsetPx, 0, totalHeight);
-
-	let low = 0;
-	let high = prefixHeights.length - 1;
-
-	while (low < high) {
-		const mid = Math.floor((low + high + 1) / 2);
-		if (prefixHeights[mid] <= normalizedOffset) {
-			low = mid;
-		} else {
-			high = mid - 1;
-		}
-	}
-
-	return Math.min(low, lastIndex);
-};
-
-const getElementOuterHeight = (element: HTMLElement) => {
-	const rectHeight = element.getBoundingClientRect().height;
-	const styles = getComputedStyle(element);
-
-	const marginTop = Number.parseFloat(styles.marginTop);
-	const marginBottom = Number.parseFloat(styles.marginBottom);
-
-	const nextHeight = Math.max(
-		1,
-		Math.ceil(
-			rectHeight +
-				(Number.isNaN(marginTop) ? 0 : marginTop) +
-				(Number.isNaN(marginBottom) ? 0 : marginBottom),
-		),
-	);
-
-	return nextHeight;
-};
-
-const buildPrefixHeights = (
-	itemCount: number,
-	getHeight: (index: number) => number,
-) => {
-	const prefixHeights = new Array(itemCount + 1).fill(0);
-	for (let i = 0; i < itemCount; i += 1) {
-		prefixHeights[i + 1] = prefixHeights[i] + getHeight(i);
-	}
-	return prefixHeights;
-};
+import {
+	buildPrefixHeights,
+	clamp,
+	findItemIndexAtOffset,
+	getElementOuterHeight,
+	getViewportPixels,
+} from "./utils/rootUtils";
+import type {
+	VirtualScrollConfig,
+	UseWindowedRangeResult,
+	WindowedMetrics,
+} from "./types/windowedRange";
 
 const createInitialMetrics = (
 	itemCount: number,
@@ -421,7 +314,7 @@ export function useWindowedRange(
 				scheduleRangeUpdate();
 			}
 		},
-		[scheduleRangeUpdate],
+		[scheduleRangeUpdate, isEnabled],
 	);
 
 	const registerItemElement = useCallback(
@@ -607,17 +500,17 @@ export function useWindowedRange(
 				return prev;
 			}
 
-				return {
-					visibleRange: {
-						start: nextStart,
-						end: nextEnd,
-					},
-					topSpacerPx: 0,
-					bottomSpacerPx: nextBottomSpacerPx,
-					totalHeightPx: itemCount * estimatedHeight,
-					remainingPx: Math.max(0, itemCount * estimatedHeight),
-				};
-			});
+			return {
+				visibleRange: {
+					start: nextStart,
+					end: nextEnd,
+				},
+				topSpacerPx: 0,
+				bottomSpacerPx: nextBottomSpacerPx,
+				totalHeightPx: itemCount * estimatedHeight,
+				remainingPx: Math.max(0, itemCount * estimatedHeight),
+			};
+		});
 
 		scheduleRangeUpdate();
 	}, [

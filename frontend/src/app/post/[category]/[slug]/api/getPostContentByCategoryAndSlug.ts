@@ -1,35 +1,22 @@
 "use server";
 
-import { API_HOST } from "@/constants/constants";
-import { getPostContentByCategoryAndSlug as getPostContentByCategoryAndSlugSlow } from "@/db/blog/api";
-import type { PostCategory } from "@/db/blog/Schema";
-import { PostSchema } from "@/db/blog/Schema";
-
-const fetchPostContentByCategoryAndSlug = async (
-	category: PostCategory,
-	slug: string,
-) => {
-	try {
-		const API_URL = `${API_HOST}/posts/${category}/${slug}`;
-		const data = await fetch(API_URL);
-		if (!data.ok) {
-			return null;
-		}
-		return data.json();
-	} catch (error) {
-		console.error("Error fetching post content:", error);
-		return null;
-	}
-};
+import { API_PATHS } from "@/shared/api/endpoints";
+import { apiGet } from "@/shared/api/http";
+import { SpecificPostInfoSchema } from "@sunub/types";
+import type { FrontMatter, PostCategory } from "@sunub/types";
 
 export async function getPostContentByCategoryAndSlug(
 	category: PostCategory,
 	slug: string,
 ) {
-	const data = await fetchPostContentByCategoryAndSlug(category, slug);
-	const parsedData = PostSchema.safeParse(data);
-	if (parsedData.success) {
-		return parsedData.data;
+	const data = await apiGet(API_PATHS.posts.bySlug(category, slug));
+	const parsedData = SpecificPostInfoSchema.safeParse(data);
+	if (!parsedData.success) {
+		return {
+			frontmatter: {} as FrontMatter,
+			content: "",
+		};
 	}
-	return await getPostContentByCategoryAndSlugSlow(category, slug);
+
+	return parsedData.data;
 }

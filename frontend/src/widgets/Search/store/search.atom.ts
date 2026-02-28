@@ -1,7 +1,8 @@
 import { atom } from "jotai";
 import type { RefObject } from "react";
-import { API_HOST } from "@/constants/constants";
-import type { SearchResult } from "../types";
+import { API_PATHS } from "@/shared/api/endpoints";
+import { buildApiUrl } from "@/shared/api/config";
+import { SearchResponseSchema, type SearchResult } from "@sunub/types";
 
 export const searchQueryAtom = atom("");
 export const searchResultsAtom = atom<SearchResult[]>([]);
@@ -54,12 +55,9 @@ export const searchActionAtom = atom(
 		abortController.current = new AbortController();
 		const currentController = abortController.current;
 		try {
-			const res = await fetch(
-				`${API_HOST}/api/search?query=${encodeURIComponent(query)}`,
-				{
-					signal: currentController.signal,
-				},
-			);
+			const res = await fetch(buildApiUrl(API_PATHS.search(query)), {
+				signal: currentController.signal,
+			});
 			if (currentController.signal.aborted) {
 				return;
 			}
@@ -68,9 +66,14 @@ export const searchActionAtom = atom(
 				throw new Error(`검색 요청 실패: ${res.status} ${res.statusText}`);
 			}
 
-			const data = (await res.json()) as { results?: SearchResult[] };
+			const data = SearchResponseSchema.safeParse(await res.json());
+			if (!data.success) {
+				console.error("Invalid search response:", data.error);
+				throw new Error("검색 응답 스키마가 유효하지 않습니다");
+			}
+
 			if (!currentController.signal.aborted) {
-				set(searchResultsAtom, data.results || []);
+				set(searchResultsAtom, data.data.results);
 			}
 		} catch (error) {
 			if (error instanceof Error && error.name === "AbortError") {

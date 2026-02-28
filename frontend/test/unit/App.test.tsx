@@ -3,13 +3,15 @@ import {
 	screen,
 	cleanup as unmountComponent,
 } from "@testing-library/react";
-import { getRecentPostsMetadataInRange } from "db/blog/api";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { PublishedPost } from "@/components/Main/BlogPost/types";
 import NewestPost from "@/components/Main/NewestPost/NewestPost";
-import type { FrontMatter } from "@/db/blog/Schema";
+import { getRecentPost } from "@/components/Main/NewestPost/api/getRecentPost";
+import type { FrontMatter } from "@sunub/types";
 
-vi.mock("db/blog/api");
+vi.mock("@/components/Main/NewestPost/api/getRecentPost", () => ({
+	getRecentPost: vi.fn(),
+}));
 
 const demoFrontMatters: FrontMatter[] = Array.from(
 	{ length: 10 },
@@ -36,9 +38,7 @@ describe("블로그 메인 서버 컴포넌트 테스트", () => {
 	});
 
 	test("최근 블로그 포스트 10개가 잘 렌더링 되는가?", async () => {
-		vi.mocked(getRecentPostsMetadataInRange).mockResolvedValue(
-			demoPublishedPosts,
-		);
+		vi.mocked(getRecentPost).mockResolvedValue(demoPublishedPosts);
 
 		render(await NewestPost());
 

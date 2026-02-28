@@ -1,27 +1,15 @@
 "use server";
 
-import { API_HOST } from "@/constants/constants";
-import { getAllPosts as getAllPostsSlow } from "@/db/blog/api";
-import { PostFrontMatterSchema } from "@/db/blog/Schema";
-
-async function fetchAllPostFrontmatter() {
-	try {
-		const data = await fetch(`${API_HOST}/posts/all`);
-		if (!data.ok) {
-			throw new Error("Failed to fetch all posts");
-		}
-		return data.json();
-	} catch (error) {
-		console.error("Error fetching all posts:", error);
-		return [];
-	}
-}
+import { API_PATHS } from "@/shared/api/endpoints";
+import { apiGet } from "@/shared/api/http";
+import { PostFrontMatterSchema } from "@sunub/types";
 
 export async function getAllPosts() {
-	const data = await fetchAllPostFrontmatter();
+	const data = await apiGet(API_PATHS.posts.all());
 	const parsedData = PostFrontMatterSchema.array().safeParse(data);
-	if (parsedData.success) {
-		return parsedData.data;
+	if (!parsedData.success) {
+		return [];
 	}
-	return getAllPostsSlow();
+
+	return parsedData.data;
 }

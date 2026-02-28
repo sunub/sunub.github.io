@@ -13,7 +13,7 @@ import {
 	ResultLink,
 	ResultTitle,
 } from "../styles/index";
-import type { SearchResult } from "../types";
+import type { SearchResult } from "@sunub/types";
 import { handleKeyArrowDown } from "../utils/handleKeyArrowDown";
 import { handleKeyUp } from "../utils/handleKeyArrowUp";
 import { handleKeyEnter } from "../utils/handleKeyEnter";

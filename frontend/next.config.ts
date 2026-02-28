@@ -1,6 +1,10 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import {
+	DEFAULT_REWRITE_TARGET_URL,
+	resolveRewriteTargetUrl,
+} from "@sunub/contracts";
 
 const ContentSecurityPolicy = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://static.cloudflareinsights.com;
@@ -61,6 +65,11 @@ const securityHeaders = [
 	},
 ];
 
+const rewriteTarget = resolveRewriteTargetUrl({
+	env: process.env,
+	fallback: DEFAULT_REWRITE_TARGET_URL,
+});
+
 const nextConfig: NextConfig = {
 	typescript: {
 		ignoreBuildErrors: true,
@@ -83,11 +92,11 @@ const nextConfig: NextConfig = {
 		return [
 			{
 				source: "/api/proxy/:path*",
-				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/:path*`,
+				destination: `${rewriteTarget}/:path*`,
 			},
 			{
 				source: "/api/:path*",
-				destination: `${process.env.EC2_PUBLIC_API_URL || "http://localhost:4000"}/api/:path*`,
+				destination: `${rewriteTarget}/api/:path*`,
 			},
 		];
 	},

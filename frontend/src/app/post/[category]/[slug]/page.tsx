@@ -1,4 +1,3 @@
-import type { FrontMatter } from "db/blog/Schema";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -9,6 +8,7 @@ import { Wave } from "@/widgets/Wave";
 import { getAllPosts } from "./api/getAllPosts";
 import { getPostContentByCategoryAndSlug } from "./api/getPostContentByCategoryAndSlug";
 import { ClientArticle } from "./ClientAritcle";
+import type { FrontMatter, PostCategory } from "@sunub/types";
 import {
 	ArticleHeader,
 	ArticleRootWrapper,
@@ -20,10 +20,8 @@ import {
 
 export const revalidate = 43200;
 
-type Category = "code" | "web" | "cs" | "algorithm";
-
 type Params = Promise<{
-	category: Category;
+	category: PostCategory;
 	slug: string;
 }>;
 
@@ -49,11 +47,16 @@ export async function generateMetadata({
 			category,
 			slug,
 		);
-		if (!specificFrontmatter) {
+
+		if (
+			specificFrontmatter.content === "" ||
+			!specificFrontmatter.frontmatter.title
+		) {
 			notFound();
 		}
 
 		const { title, summary, date, tags } = specificFrontmatter.frontmatter;
+
 		return {
 			title,
 			description: summary,

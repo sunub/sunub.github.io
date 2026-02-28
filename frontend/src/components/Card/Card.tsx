@@ -1,6 +1,6 @@
 "use client";
 
-import type { FrontMatter } from "db/blog/Schema";
+import type { FrontMatter } from "@sunub/types";
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";

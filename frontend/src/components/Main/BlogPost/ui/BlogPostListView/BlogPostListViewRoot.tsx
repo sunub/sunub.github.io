@@ -1,61 +1,29 @@
 "use client";
 
 import { motion, type Variants } from "motion/react";
-import {
-	type CSSProperties,
-	memo,
-	type ReactNode,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import { memo, useCallback, useMemo, useRef } from "react";
+
 import { BlogPostList } from "../../style";
 import { BlogPostItem } from "../BlogPostItem";
 import { useBlogPostContext } from "../BlogPostProvider";
+import { useWindowedRange } from "./useWindowedRange";
+import type { WindowedRangeDebugSample } from "./types/windowedRange";
+import type { BlogPostListViewRootProps } from "./types/type";
+import { useListTerminalMode } from "./hooks/useListTerminalMode";
+import { useWindowedRangeLoadMore } from "./hooks/useWindowedRangeLoadMore";
 import {
-	useWindowedRange,
-	type VirtualScrollConfig,
-	type WindowedRangeDebugSample,
-} from "./useWindowedRange";
-
-const DEBUG_QUERY_PARAM = "blogWindowRangeDebug";
-const DEBUG_LOCAL_STORAGE_KEY = "blogWindowRangeDebug";
-const DEBUG_EVENT_LIMIT = 500;
-
-type BlogPostRangeDebugEvent =
-	| {
-			type: "range_update";
-			timestamp: number;
-			frameMs: number;
-			viewportStart: number;
-			viewportEnd: number;
-			visibleRangeStart: number;
-			visibleRangeEnd: number;
-			remainingPx: number;
-			preloadThresholdPx: number;
-			measuredCount: number;
-			pendingCount: number;
-			totalHeightPx: number;
-	  }
-	| {
-			type: "load_more_invoked";
-			timestamp: number;
-			loadMoreReactionMs: number;
-			remainingPx: number;
-			reason: "remainingPx" | "remainingItems" | "both";
-			preloadReservePx: number;
-			visibleRangeStart: number;
-			visibleRangeEnd: number;
-			hasMore: boolean;
-			isPending: boolean;
-			itemCount: number;
-	  };
-
-type WindowWithBlogPostRangeDebug = Window & {
-	__blogPostWindowRangeDebug?: BlogPostRangeDebugEvent[];
-};
+	BLOG_POST_LIST_IDS,
+	DEFAULT_VIRTUAL_RANGE_CONFIG,
+	buildVirtualRangeConfig,
+	createDebugLogger,
+	createListChildStyle,
+	createListSpacerStyle,
+	getPreloadReservePx,
+	getPreloadThresholdPx,
+	getRangeUpdateDebugEvent,
+	getRenderedPosts,
+	resolveWindowedRangeDebugEnabled,
+} from "./utils/rootUtils";
 
 const MotionBlogPostList = motion.create(BlogPostList);
 
@@ -68,148 +36,38 @@ const containerVariants: Variants = {
 	},
 };
 
-const LIST_ID = "blog-post__recently-post-list";
-const LIST_TEST_ID = "blog-main__recently-post-list";
-
-const DEFAULT_VIRTUAL_CONFIG: Readonly<
-	VirtualScrollConfig & { minRenderCount: number }
-> = {
-	estimatedHeight: 170,
-	overscan: 4,
-	enabled: true,
-	minRenderCount: 10,
-	preloadThresholdPx: 1440,
-};
-
-type BlogPostListViewRootProps = {
-	children?: ReactNode;
-	itemHeight?: number;
-	overscan?: number;
-	minRenderCount?: number;
-};
-
-function buildVirtualConfig({
-	itemHeight,
-	overscan,
-	minRenderCount,
-	viewportHeightPx,
-	enabled,
-	onMetrics,
-}: {
-	itemHeight: number;
-	overscan: number;
-	minRenderCount: number;
-	viewportHeightPx: number;
-	enabled: boolean;
-	onMetrics?: (sample: WindowedRangeDebugSample) => void;
-}): VirtualScrollConfig {
-	return {
-		estimatedHeight: itemHeight,
-		overscan,
-		minRenderCount,
-		preloadThresholdPx: viewportHeightPx,
-		enabled,
-		onMetrics,
-	};
-}
-
-function createSpacerStyle(heightPx: number): CSSProperties {
-	return {
-		height: `${heightPx}px`,
-		pointerEvents: "none",
-		listStyle: "none",
-		margin: 0,
-		padding: 0,
-	};
-}
-
-const createChildStyle = (): CSSProperties => ({
-	listStyle: "none",
-	margin: 0,
-	padding: 0,
-});
-
-const clamp = (value: number, min: number, max: number) => {
-	return Math.max(min, Math.min(max, value));
-};
-
-const resolveWindowedRangeDebugEnabled = () => {
-	if (typeof window === "undefined") {
-		return false;
-	}
-
-	const query = new URLSearchParams(window.location.search);
-	if (query.get(DEBUG_QUERY_PARAM) === "1") {
-		return true;
-	}
-
-	try {
-		return window.localStorage.getItem(DEBUG_LOCAL_STORAGE_KEY) === "1";
-	} catch {
-		return false;
-	}
-};
-
-const createDebugLogger = (isEnabled: boolean) => {
-	if (!isEnabled) {
-		return undefined;
-	}
-
-	return (event: BlogPostRangeDebugEvent) => {
-		const debugWindow = window as WindowWithBlogPostRangeDebug;
-		const events = debugWindow.__blogPostWindowRangeDebug ?? [];
-		const nextEvents = events.slice(-Math.max(DEBUG_EVENT_LIMIT - 1, 0));
-		nextEvents.push(event);
-		debugWindow.__blogPostWindowRangeDebug = nextEvents;
-	};
-};
-
-function getPreloadThresholdPx() {
-	if (typeof window === "undefined") {
-		return 1200;
-	}
-	return Math.ceil(window.innerHeight * 1.35);
-}
+const LIST_ID = BLOG_POST_LIST_IDS.id;
+const LIST_TEST_ID = BLOG_POST_LIST_IDS.testId;
 
 export const BlogPostListViewRoot = memo(function BlogPostListViewRoot({
 	children,
-	itemHeight = DEFAULT_VIRTUAL_CONFIG.estimatedHeight,
-	overscan = DEFAULT_VIRTUAL_CONFIG.overscan,
-	minRenderCount = DEFAULT_VIRTUAL_CONFIG.minRenderCount,
+	itemHeight = DEFAULT_VIRTUAL_RANGE_CONFIG.estimatedHeight,
+	overscan = DEFAULT_VIRTUAL_RANGE_CONFIG.overscan,
+	minRenderCount = DEFAULT_VIRTUAL_RANGE_CONFIG.minRenderCount,
 }: BlogPostListViewRootProps) {
 	const { posts, hasMore, totalCount, loadMore, isPending } =
 		useBlogPostContext();
 	const canLoadMore = hasMore && posts.length < totalCount;
 	const listRef = useRef<HTMLUListElement>(null);
+
 	const debugLogger = useMemo(
 		() => createDebugLogger(resolveWindowedRangeDebugEnabled()),
 		[],
 	);
-	const preloadSignalAtRef = useRef<number | null>(null);
 	const preloadThresholdPx = getPreloadThresholdPx();
-	const preloadReservePx = clamp(preloadThresholdPx, 560, 2200);
-	const [isTerminalMode, setIsTerminalMode] = useState(false);
+	const preloadReservePx = getPreloadReservePx(preloadThresholdPx);
+	const isTerminalMode = useListTerminalMode({
+		canLoadMore,
+		isPending,
+	});
+
 	const registerRangeMetrics = useCallback(
 		(sample: WindowedRangeDebugSample) => {
 			if (!debugLogger) {
 				return;
 			}
 
-			const event: BlogPostRangeDebugEvent = {
-				type: "range_update",
-				timestamp: sample.timestamp,
-				frameMs: sample.rangeUpdateMs,
-				viewportStart: sample.viewportStart,
-				viewportEnd: sample.viewportEnd,
-				visibleRangeStart: sample.visibleRange.start,
-				visibleRangeEnd: sample.visibleRange.end,
-				remainingPx: sample.remainingPx,
-				preloadThresholdPx: sample.preloadThresholdPx,
-				measuredCount: sample.measuredCount,
-				pendingCount: sample.pendingCount,
-				totalHeightPx: sample.totalHeightPx,
-			};
-
+			const event = getRangeUpdateDebugEvent(sample);
 			debugLogger(event);
 
 			if (process.env.NODE_ENV !== "production") {
@@ -228,7 +86,7 @@ export const BlogPostListViewRoot = memo(function BlogPostListViewRoot({
 	} = useWindowedRange(
 		listRef,
 		posts.length,
-		buildVirtualConfig({
+		buildVirtualRangeConfig({
 			itemHeight,
 			overscan,
 			minRenderCount,
@@ -238,103 +96,23 @@ export const BlogPostListViewRoot = memo(function BlogPostListViewRoot({
 		}),
 	);
 
-	useEffect(() => {
-		if (canLoadMore || isPending) {
-			if (isTerminalMode) {
-				setIsTerminalMode(false);
-			}
-			return;
-		}
-
-		if (typeof window === "undefined") {
-			return;
-		}
-
-		const frameId = requestAnimationFrame(() => {
-			setIsTerminalMode(true);
-		});
-
-		return () => {
-			cancelAnimationFrame(frameId);
-		};
-	}, [canLoadMore, isPending, isTerminalMode]);
-
 	const shouldRenderAllPosts = isTerminalMode;
-	const renderedPosts = useMemo(() => {
-		if (shouldRenderAllPosts) {
-			return posts;
-		}
+	const renderedPosts = useMemo(
+		() => getRenderedPosts(posts, visibleRange, shouldRenderAllPosts),
+		[posts, shouldRenderAllPosts, visibleRange],
+	);
 
-		return posts.slice(visibleRange.start, visibleRange.end);
-	}, [posts, shouldRenderAllPosts, visibleRange]);
-
-	useEffect(() => {
-		if (!canLoadMore) {
-			preloadSignalAtRef.current = null;
-			return;
-		}
-
-		const shouldPreloadByPx = remainingPx <= preloadReservePx;
-		const shouldPreloadByItems = posts.length - visibleRange.end <= 4;
-		const now =
-			typeof performance === "undefined" ? Date.now() : performance.now();
-
-		if (!isPending && (shouldPreloadByPx || shouldPreloadByItems)) {
-			if (preloadSignalAtRef.current === null) {
-				preloadSignalAtRef.current = now;
-			}
-		} else {
-			preloadSignalAtRef.current = null;
-		}
-
-		if (
-			canLoadMore &&
-			!isPending &&
-			(shouldPreloadByPx || shouldPreloadByItems)
-		) {
-			const reason =
-				shouldPreloadByPx && shouldPreloadByItems
-					? "both"
-					: shouldPreloadByPx
-						? "remainingPx"
-						: "remainingItems";
-			const loadMoreReactionMs =
-				preloadSignalAtRef.current === null
-					? 0
-					: now - preloadSignalAtRef.current;
-
-			if (debugLogger) {
-				const event: BlogPostRangeDebugEvent = {
-					type: "load_more_invoked",
-					timestamp: now,
-					loadMoreReactionMs,
-					remainingPx,
-					reason,
-					preloadReservePx,
-					visibleRangeStart: visibleRange.start,
-					visibleRangeEnd: visibleRange.end,
-					hasMore: canLoadMore,
-					isPending,
-					itemCount: posts.length,
-				};
-
-				debugLogger(event);
-			}
-
-			preloadSignalAtRef.current = null;
-			loadMore();
-		}
-	}, [
+	useWindowedRangeLoadMore({
 		canLoadMore,
 		isPending,
-		posts.length,
-		visibleRange.end,
+		postsLength: posts.length,
+		visibleRangeStart: visibleRange.start,
+		visibleRangeEnd: visibleRange.end,
 		remainingPx,
 		preloadReservePx,
 		loadMore,
 		debugLogger,
-		visibleRange.start,
-	]);
+	});
 
 	return (
 		<MotionBlogPostList
@@ -347,7 +125,7 @@ export const BlogPostListViewRoot = memo(function BlogPostListViewRoot({
 		>
 			{!shouldRenderAllPosts && topSpacerPx > 0 && (
 				<li
-					style={createSpacerStyle(topSpacerPx)}
+					style={createListSpacerStyle(topSpacerPx)}
 					aria-hidden="true"
 					role="presentation"
 				/>
@@ -366,13 +144,13 @@ export const BlogPostListViewRoot = memo(function BlogPostListViewRoot({
 			})}
 			{!shouldRenderAllPosts && bottomSpacerPx > 0 && (
 				<li
-					style={createSpacerStyle(bottomSpacerPx)}
+					style={createListSpacerStyle(bottomSpacerPx)}
 					aria-hidden="true"
 					role="presentation"
 				/>
 			)}
 			{children && (
-				<li style={createChildStyle()} aria-hidden="true">
+				<li style={createListChildStyle()} aria-hidden="true">
 					{children}
 				</li>
 			)}

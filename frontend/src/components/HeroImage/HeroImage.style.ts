@@ -4,7 +4,7 @@ import Image from "next/image";
 import styled from "styled-components";
 
 interface BgImageProps {
-  $bgUrl: string;
+	$bgUrl: string;
 }
 
 export const RootWrapper = styled.div`
@@ -61,7 +61,7 @@ export const Clouds = styled.span<BgImageProps>`
   }
 `;
 
-export const Moon = styled(Image) <{ $opacity: string }>`
+export const Moon = styled(Image)<{ $opacity: string }>`
   position: absolute;
   top: 0px;
   left: 0px;

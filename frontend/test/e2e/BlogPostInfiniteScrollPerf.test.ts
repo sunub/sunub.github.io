@@ -300,6 +300,23 @@ async function setupPageMonitors(page: import("@playwright/test").Page) {
 	});
 }
 
+async function preloadByScroll(
+	page: import("@playwright/test").Page,
+): Promise<void> {
+	for (let attempt = 0; attempt < 6; attempt += 1) {
+		await page.evaluate(() => {
+			const scroller = document.scrollingElement ?? document.documentElement;
+			scroller.scrollTo({
+				top: scroller.scrollHeight,
+				left: 0,
+				behavior: "auto",
+			});
+		});
+		await page.mouse.wheel(0, 1200);
+		await page.waitForTimeout(120);
+	}
+}
+
 async function getCurrentPerfState(
 	page: import("@playwright/test").Page,
 ): Promise<ScrollPerfState> {
@@ -331,27 +348,12 @@ test.describe("무한스크롤 성능 측정", () => {
 			page.getByTestId("blog-main__recently-post-list").getByRole("listitem"),
 		).toHaveCount(10);
 
-		const trigger = page.getByTestId("blog-main__scroll-trigger-helper");
-		const shouldMeasure = (await trigger.count()) > 0;
-		test.skip(
-			!shouldMeasure,
-			"더 로드할 데이터가 없어 성능 측정이 불가합니다.",
-		);
-
 		const targetCycles = Number(
 			process.env.BENCH_SCROLL_CYCLES ?? DEFAULT_CYCLES,
 		);
 		const results: BenchResult[] = [];
 
 		for (let cycle = 1; cycle <= targetCycles; cycle += 1) {
-			const triggerExists = (await trigger.count()) > 0;
-			if (!triggerExists) {
-				break;
-			}
-			const loadingIndicator = page.getByTestId(
-				"blog-post__front-matter-loading",
-			);
-
 			const beforeState = await getCurrentPerfState(page);
 			const beforeMaxIndex = beforeState.list.maxRenderedIndex;
 			const beforeRenderedCount = beforeState.list.renderedListItems;
@@ -382,7 +384,7 @@ test.describe("무한스크롤 성능 측정", () => {
 				perf.clearFrameSamples();
 				perf.startFrameSampling();
 			});
-			await trigger.scrollIntoViewIfNeeded();
+			await preloadByScroll(page);
 
 			const hasProgress = await page
 				.waitForFunction(
@@ -395,13 +397,11 @@ test.describe("무한스크롤 성능 측정", () => {
 						const hasExpandedWindow =
 							nowList.maxRenderedIndex > args.maxRenderedIndex;
 						const hasMountedGrowth = nowList.mountedListItems > args.mounted;
-						const hasLoadingState = nowList.hasLoading;
 						return (
 							hasCall ||
 							hasAddedListItem ||
 							hasExpandedWindow ||
-							hasMountedGrowth ||
-							(hasLoadingState && !args.beforeLoading)
+							hasMountedGrowth
 						);
 					},
 					{
@@ -409,7 +409,6 @@ test.describe("무한스크롤 성능 측정", () => {
 						rendered: beforeRenderedCount,
 						maxRenderedIndex: beforeMaxIndex,
 						mounted: beforeMountedCount,
-						beforeLoading: beforeState.list.hasLoading,
 					},
 					{ timeout: LOAD_WAIT_TIMEOUT },
 				)
@@ -423,39 +422,29 @@ test.describe("무한스크롤 성능 측정", () => {
 				break;
 			}
 
-			if (await loadingIndicator.isVisible().catch(() => false)) {
-				await loadingIndicator
-					.waitFor({ state: "hidden", timeout: LOAD_WAIT_TIMEOUT })
-					.catch(() => {
-						console.warn(
-							`사이클 ${cycle}: 로딩 인디케이터가 사라지지 않아 타임아웃으로 측정 종료.`,
+			await page
+				.waitForFunction(
+					(args) => {
+						const perf = (window as unknown as ScrollPerfWindow).__scrollPerf;
+						const nowList = (perf.getListStats as () => ListSnapshot)();
+						return (
+							nowList.renderedListItems > args.rendered ||
+							nowList.maxRenderedIndex > args.maxRenderedIndex ||
+							nowList.mountedListItems > args.mounted
 						);
-					});
-			} else {
-				await page
-					.waitForFunction(
-						(args) => {
-							const perf = (window as unknown as ScrollPerfWindow).__scrollPerf;
-							const nowList = (perf.getListStats as () => ListSnapshot)();
-							return (
-								nowList.renderedListItems > args.rendered ||
-								nowList.maxRenderedIndex > args.maxRenderedIndex ||
-								nowList.mountedListItems > args.mounted
-							);
-						},
-						{
-							rendered: beforeRenderedCount,
-							maxRenderedIndex: beforeMaxIndex,
-							mounted: beforeMountedCount,
-						},
-						{ timeout: LOAD_WAIT_TIMEOUT },
-					)
-					.catch(() => {
-						console.warn(
-							`사이클 ${cycle}: 렌더 반영이 미완료되어 이후 계산을 보수적으로 진행합니다.`,
-						);
-					});
-			}
+					},
+					{
+						rendered: beforeRenderedCount,
+						maxRenderedIndex: beforeMaxIndex,
+						mounted: beforeMountedCount,
+					},
+					{ timeout: LOAD_WAIT_TIMEOUT },
+				)
+				.catch(() => {
+					console.warn(
+						`사이클 ${cycle}: 렌더 반영이 미완료되어 이후 계산을 보수적으로 진행합니다.`,
+					);
+				});
 
 			const endedAt = await page.evaluate(() => performance.now());
 			await page.waitForTimeout(250);

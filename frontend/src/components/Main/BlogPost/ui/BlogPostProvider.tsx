@@ -1,6 +1,6 @@
 "use client";
 
-import type { FrontMatter } from "db/blog/Schema";
+import type { FrontMatter } from "@sunub/types";
 import { useAtom } from "jotai";
 import {
 	createContext,
@@ -95,12 +95,14 @@ export function BlogPostProvider({
 						(post) => `${post.category}-${post.slug}`,
 					),
 				);
-				const filteredNewPosts = newPostsData.frontmatters.filter((post) => {
-					const key = `${post.category}-${post.slug}`;
-					if (existingKeys.has(key)) return false;
-					existingKeys.add(key);
-					return true;
-				});
+				const filteredNewPosts = newPostsData.frontmatters.filter(
+					(post: FrontMatter) => {
+						const key = `${post.category}-${post.slug}`;
+						if (existingKeys.has(key)) return false;
+						existingKeys.add(key);
+						return true;
+					},
+				);
 
 				const nextLength = currentLength + filteredNewPosts.length;
 				const nextHasMore =
