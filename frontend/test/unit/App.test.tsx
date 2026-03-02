@@ -5,11 +5,11 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { PublishedPost } from "@/components/Main/BlogPost/types";
-import NewestPost from "@/components/Main/NewestPost/NewestPost";
-import { getRecentPost } from "@/components/Main/NewestPost/api/getRecentPost";
+import FeaturedPost from "@/components/Main/FeaturedPost/ui/FeaturedPost";
+import { getRecentPost } from "@/components/Main/FeaturedPost/api/getRecentPost";
 import type { FrontMatter } from "@sunub/types";
 
-vi.mock("@/components/Main/NewestPost/api/getRecentPost", () => ({
+vi.mock("@/components/Main/FeaturedPost/api/getRecentPost", () => ({
 	getRecentPost: vi.fn(),
 }));
 
@@ -40,7 +40,7 @@ describe("블로그 메인 서버 컴포넌트 테스트", () => {
 	test("최근 블로그 포스트 10개가 잘 렌더링 되는가?", async () => {
 		vi.mocked(getRecentPost).mockResolvedValue(demoPublishedPosts);
 
-		render(await NewestPost());
+		render(await FeaturedPost());
 
 		for (const post of demoFrontMatters) {
 			expect(screen.getByText(post.title)).toBeInTheDocument();

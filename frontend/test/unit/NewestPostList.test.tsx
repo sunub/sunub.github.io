@@ -1,21 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { FrontMatter } from "@sunub/types";
-import { BlogPostListViewRoot } from "@/components/Main/BlogPost/ui/BlogPostListView/BlogPostListViewRoot";
-import { useBlogPostContext } from "@/components/Main/BlogPost/ui/BlogPostProvider";
-import { useWindowedRange } from "@/components/Main/BlogPost/ui/BlogPostListView/useWindowedRange";
-import type { UseWindowedRangeResult } from "@/components/Main/BlogPost/ui/BlogPostListView/types/windowedRange";
+import { NewestPostList } from "@/components/Main/NewestPostList";
+import { useBlogPostContext } from "@/components/Main/BlogPost/provider/BlogPostProvider";
+import { useWindowedRange } from "@/components/Main/NewestPostList/hooks/useWindowedRange";
+import type { UseWindowedRangeResult } from "@/components/Main/NewestPostList/types/windowedRange";
 
-vi.mock("@/components/Main/BlogPost/ui/BlogPostProvider", () => ({
+vi.mock("@/components/Main/BlogPost/provider/BlogPostProvider", () => ({
 	useBlogPostContext: vi.fn(),
 }));
 
-vi.mock(
-	"@/components/Main/BlogPost/ui/BlogPostListView/useWindowedRange",
-	() => ({
-		useWindowedRange: vi.fn(),
-	}),
-);
+vi.mock("@/components/Main/NewestPostList/hooks/useWindowedRange", () => ({
+	useWindowedRange: vi.fn(),
+}));
 
 const mockedUseBlogPostContext = vi.mocked(useBlogPostContext);
 const mockedUseWindowedRange = vi.mocked(useWindowedRange);
@@ -70,10 +67,10 @@ const contextTemplate: BlogPostContextShape = {
 
 function renderRootWithContext(contextValue: BlogPostContextShape) {
 	mockedUseBlogPostContext.mockReturnValue(contextValue);
-	return render(<BlogPostListViewRoot />);
+	return render(<NewestPostList />);
 }
 
-describe("BlogPostListViewRoot", () => {
+describe("NewestPostList", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockedUseWindowedRange.mockReturnValue(
