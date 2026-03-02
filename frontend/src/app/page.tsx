@@ -1,9 +1,7 @@
-import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
 import type { Theme } from "type";
 import { Wave } from "@/components/Header/Wave";
 import { HeroImage } from "@/components/HeroImage";
-import { FeatherIcon } from "@/components/Main/NewestPost/FeatherIcon";
 import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 import { RootLayout } from "@/features/RootLayout";
 import {
@@ -12,10 +10,9 @@ import {
 	Title,
 	TitleWrapper,
 } from "./page.style";
-
-const NewestPost = dynamic(() => import("@/components/Main/NewestPost"), {
-	loading: () => <FrontMatterLoading length={2} />,
-});
+import { FeatherIcon } from "@/components/Main/Icon";
+import { Suspense } from "react";
+import { FeaturedPost } from "@/components/Main/FeaturedPost";
 
 export default async function Page() {
 	const savedTheme = (await cookies()).get("color-theme")?.value || "light";
@@ -35,7 +32,9 @@ export default async function Page() {
 						<Title>최신 포스트들</Title>
 					</TitleWrapper>
 
-					<NewestPost />
+					<Suspense fallback={<FrontMatterLoading length={2} />}>
+						<FeaturedPost />
+					</Suspense>
 				</MainWrapper>
 			</div>
 		</RootLayout>
