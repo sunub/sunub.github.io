@@ -1,80 +1,180 @@
-name: Test and Build
+name: CI Pipeline
 
 on:
   push:
-    branches: ['sunub']
+    branches: [ main, master, dev ]
   pull_request:
-    branches: ['sunub']
+    branches: [ main, master, dev ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test-and-build:
+  lint-and-typecheck:
+    name: Lint and Type Check
     runs-on: ubuntu-latest
-    env:
-      HOME: ${{ github.workspace }}/.ci-home
-      NODE_OPTIONS: --dns-result-order=ipv4first
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare writable pnpm home
-        run: |
-          mkdir -p "${HOME}"
-          mkdir -p "${HOME}/.pnpm-store"
-
-      - name: Setup pnpm
+      - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10.30.3
-          run_install: false
-
-      - name: Configure pnpm for CI
-        run: |
-          cat > "${HOME}/.npmrc" <<EOF
-          store-dir=${HOME}/.pnpm-store
-          fetch-retries=5
-          fetch-retry-factor=2
-          fetch-retry-mintimeout=10000
-          fetch-retry-maxtimeout=120000
-          fetch-timeout=120000
-          child-concurrency=4
-          manage-package-manager-versions=false
-          EOF
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: 20
           cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Verify pnpm runtime
-        run: |
-          which pnpm
-          pnpm --version
-          pnpm config get manage-package-manager-versions
-          pnpm config get store-dir
 
       - name: Install dependencies
-        run: |
-          set -euo pipefail
-          PNPM_BIN="$(command -v pnpm)"
+        run: pnpm install --frozen-lockfile
 
-          for attempt in 1 2 3; do
-            echo "pnpm install attempt ${attempt}/3"
-            if "${PNPM_BIN}" install --frozen-lockfile --prefer-offline --network-concurrency 8; then
-              exit 0
-            fi
+      - name: Build shared packages
+        run: pnpm build:shared
 
-            echo "Install failed on attempt ${attempt}; retrying..."
-            sleep $((attempt * 10))
-          done
+      - name: Lint code
+        run: pnpm exec biome ci --reporter=github
 
-          echo "pnpm install failed after 3 attempts"
-          exit 1
+      - name: Type Check
+        run: pnpm -r exec tsc --noEmit
 
-      - name: Run build
-        run: pnpm build
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    timeout-minutes: 15
 
-      - name: Run lint
-        run: pnpm lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.30.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm build:shared
+
+      - name: Run Backend Unit Tests
+        run: pnpm --filter backend run test
+
+      - name: Run Frontend Unit Tests
+        run: pnpm --filter frontend run test:unit
+
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.30.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm build:shared
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "version=$(pnpm list --filter frontend --depth 0 @playwright/test --json | jq -r '.[0].devDependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps
+        working-directory: frontend
+
+      - name: Install Playwright dependencies (if cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps
+        working-directory: frontend
+
+      - name: Run Frontend E2E Tests
+        run: pnpm --filter frontend run test:e2e
+        env:
+          PORT: 4008
+          FRONTEND_PORT: 4004
+          NODE_ENV: test
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7
+
+  build:
+    name: Production Build
+    runs-on: ubuntu-latest
+    needs: e2e-tests
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.30.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm build:shared
+
+      - name: Build Backend
+        run: pnpm --filter backend run build
+
+      - name: Build Frontend
+        run: pnpm --filter frontend run build
+        env:
+          PORT: 4008
+          EC2_PUBLIC_API_URL: http://localhost:4008
+          NEXT_PUBLIC_BASE_URL: http://localhost:3000
+          NEXT_PUBLIC_BACKEND_URL: http://localhost:4008
