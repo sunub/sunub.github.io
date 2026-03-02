@@ -2,36 +2,43 @@ name: E2E Tests
 
 on:
   push:
-    branches: ['sunub']
+    branches: ["sunub"]
     paths:
-      - 'frontend/**'
-      - 'packages/contracts/**'
-      - 'packages/types/**'
-      - 'packages/utils/**'
-      - 'posts/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/e2e.yml'
+      - "frontend/**"
+      - "backend/**"
+      - "packages/contracts/**"
+      - "packages/types/**"
+      - "packages/utils/**"
+      - "posts/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/e2e.yml"
   pull_request:
-    branches: ['sunub']
+    branches: ["sunub"]
     paths:
-      - 'frontend/**'
-      - 'packages/contracts/**'
-      - 'packages/types/**'
-      - 'packages/utils/**'
-      - 'posts/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/e2e.yml'
+      - "frontend/**"
+      - "backend/**"
+      - "packages/contracts/**"
+      - "packages/types/**"
+      - "packages/utils/**"
+      - "posts/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/e2e.yml"
 
 jobs:
   e2e-test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    
+    env:
+      HOME: ${{ github.workspace }}/.ci-home
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Prepare writable pnpm home
+        run: mkdir -p "${HOME}"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -40,7 +47,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -53,24 +60,28 @@ jobs:
           pnpm lint:frontend
           pnpm lint:utils
 
-      - name: Type check # <--- 개선: 스텝의 목적을 명확히 하기 위해 이름 변경 고려
+      - name: Type check
         working-directory: frontend
-        run: pnpm run lint # 실제로는 lint 스크립트가 타입 체크를 수행
+        run: pnpm run lint
 
       - name: Build frontend for E2E
-        run: pnpm --filter frontend run build:e2e
+        run: pnpm --filter frontend run build
+
+      - name: Build backend for E2E
+        run: pnpm --filter backend run build
 
       - name: Install Playwright browsers
         working-directory: frontend
         run: pnpm exec playwright install --with-deps chromium firefox webkit
 
-      - name: Run unit tests
-        working-directory: frontend
-        run: pnpm run test:unit
+      - name: Run backend unit tests
+        run: pnpm run test:be:unit
 
-      - name: Run E2E tests
-        working-directory: frontend
-        run: pnpm run test:e2e
+      - name: Run frontend unit tests
+        run: pnpm run test:fe:unit
+
+      - name: Run frontend e2e tests
+        run: pnpm run test:fe:e2e
         env:
           CI: true
 
