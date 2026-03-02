@@ -6,12 +6,25 @@ import {
 	resolveRewriteTargetUrl,
 } from "@sunub/contracts";
 
+const rewriteTarget = resolveRewriteTargetUrl({
+	env: process.env,
+	fallback: DEFAULT_REWRITE_TARGET_URL,
+});
+const rewriteOrigin = (() => {
+	try {
+		return new URL(rewriteTarget).origin;
+	} catch {
+		return "";
+	}
+})();
+const backendConnectSource = rewriteOrigin || "http://localhost:4008";
+
 const ContentSecurityPolicy = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://static.cloudflareinsights.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://d2u919r15udwpw.cloudfront.net; 
     media-src 'self';
-    connect-src 'self' https://vitals.vercel-insights.com https://cloudflareinsights.com; 
+    connect-src 'self' ${backendConnectSource} https://vitals.vercel-insights.com https://cloudflareinsights.com; 
 `;
 
 const securityHeaders = [
@@ -64,11 +77,6 @@ const securityHeaders = [
 		value: "Sec-CH-Prefers-Color-Scheme",
 	},
 ];
-
-const rewriteTarget = resolveRewriteTargetUrl({
-	env: process.env,
-	fallback: DEFAULT_REWRITE_TARGET_URL,
-});
 
 const nextConfig: NextConfig = {
 	typescript: {

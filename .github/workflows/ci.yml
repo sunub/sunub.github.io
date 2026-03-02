@@ -9,10 +9,15 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    env:
+      HOME: ${{ github.workspace }}/.ci-home
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Prepare writable pnpm home
+        run: mkdir -p "${HOME}"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4

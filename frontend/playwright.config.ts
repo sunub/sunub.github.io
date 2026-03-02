@@ -1,10 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
-import {
-	DEFAULT_BACKEND_API_URL,
-	DEFAULT_FRONTEND_BASE_URL,
-	resolveBackendUrls,
-	resolveFrontendUrls,
-} from "@sunub/contracts";
+import { resolveBackendUrls, resolveFrontendUrls } from "@sunub/contracts";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+
+const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
 
 /**
  * Read environment variables from file.
@@ -17,21 +16,14 @@ import {
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-const backendUrls = resolveBackendUrls(process.env, DEFAULT_BACKEND_API_URL);
-const backendUrl = backendUrls.playwright;
-const frontendUrls = resolveFrontendUrls(
-	process.env,
-	DEFAULT_FRONTEND_BASE_URL,
-);
-const testFrontendUrl = process.env.PLAYWRIGHT_FRONTEND_URL ?? frontendUrls.e2e;
-const fallbackBackendPort = new URL(DEFAULT_BACKEND_API_URL).port;
-let backendPort = fallbackBackendPort;
-try {
-	const parsedBackendUrl = new URL(backendUrl);
-	backendPort = parsedBackendUrl.port || fallbackBackendPort;
-} catch {
-	// Keep fallback port when custom URL is not parseable.
-}
+const testFrontendUrl = "http://localhost:4004";
+const backendUrl = "http://localhost:4008";
+const frontendUrls = resolveFrontendUrls(process.env, testFrontendUrl);
+const backendUrls = resolveBackendUrls(process.env, backendUrl);
+const resolvedFrontendUrl = frontendUrls.e2e;
+const resolvedBackendUrl = backendUrls.playwright;
+const resolvedBackendPort = new URL(resolvedBackendUrl).port || "4008";
+const repoRootPath = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
 	testDir: "./test/e2e",
@@ -49,7 +41,7 @@ export default defineConfig({
 	timeout: 60 * 1000,
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
-		baseURL: testFrontendUrl,
+		baseURL: resolvedFrontendUrl,
 		/* Base URL to use in actions like `await page.goto('/')`. */
 		// baseURL: 'http://localhost:3000',
 
@@ -78,61 +70,31 @@ export default defineConfig({
 			name: "webkit",
 			use: { ...devices["Desktop Safari"] },
 		},
-
-		/* Test against mobile viewports. */
-		// {
-		//   name: 'Mobile Chrome',
-		//   use: { ...devices['Pixel 5'] },
-		// },
-		// {
-		//   name: 'Mobile Safari',
-		//   use: { ...devices['iPhone 12'] },
-		// },
-
-		/* Test against branded browsers. */
-		// {
-		//   name: 'Microsoft Edge',
-		//   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-		// },
-		// {
-		//   name: 'Google Chrome',
-		//   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-		// },
 	],
 
 	/* Run your local dev server before starting the tests */
-	webServer: [
-		{
-			command: "pnpm --filter backend run start:ci",
-			url: `${backendUrl}/healthz`,
-			reuseExistingServer: !process.env.CI,
-			timeout: 180 * 1000, // 빌드 시간 + 서버 구동 시간 고려해서 넉넉하게
-			cwd: ".",
-			stdout: "pipe",
-			stderr: "pipe",
-			env: {
-				NODE_ENV: "test",
-				PORT: backendPort,
-			},
-		},
-		{
-			command: "pnpm --filter frontend run start",
-			url: testFrontendUrl,
-			reuseExistingServer: !process.env.CI,
-			timeout: 180 * 1000,
-			cwd: ".",
-			stdout: "pipe",
-			stderr: "pipe",
-			env: {
-				NODE_ENV: "test",
-				NEXT_PUBLIC_BASE_URL: testFrontendUrl,
-				NEXT_PUBLIC_BACKEND_URL: backendUrl,
-				BACKEND_API_URL: backendUrl,
-				TEST_BACKEND_URL: backendUrl,
-			},
-		},
-	],
-
-	/* 전역 설정으로 서버 준비 대기 */
-	// globalSetup: './test/global-setup.ts',
+	webServer: skipWebServer
+		? undefined
+		: [
+				{
+					command: "pnpm run start:all",
+					url: resolvedFrontendUrl,
+					reuseExistingServer: !process.env.CI,
+					timeout: 240 * 1000, // 빌드 시간 포함하여 더 넉넉하게
+					cwd: ".",
+					stdout: "pipe",
+					stderr: "pipe",
+					env: {
+						NODE_ENV: "test",
+						NEXT_PUBLIC_BASE_URL: resolvedFrontendUrl,
+						NEXT_PUBLIC_BACKEND_URL: resolvedBackendUrl,
+						BACKEND_API_URL: resolvedBackendUrl,
+						TEST_BACKEND_URL: resolvedBackendUrl,
+						PLAYWRIGHT_BACKEND_URL: resolvedBackendUrl,
+						PLAYWRIGHT_FRONTEND_URL: resolvedFrontendUrl,
+						BLOG_POSTS_PATH: path.resolve(repoRootPath, "../posts"),
+						PORT: resolvedBackendPort,
+					},
+				},
+			],
 });

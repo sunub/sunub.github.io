@@ -21,13 +21,13 @@
 		"build:utils": "pnpm run build:shared",
 		"bench:stress": "node ./test/runBench.mjs",
 		"bench": "vitest bench",
-		"test": "pnpm --filter frontend run test",
-		"test:e2e": "pnpm --filter frontend run test:e2e",
-		"test:e2e:ui": "pnpm --filter frontend run test:e2e:ui",
-		"test:e2e:stress": "pnpm --filter frontend run test:e2e:stress",
+		"test:fe:unit": "pnpm --filter frontend run test:unit",
+		"test:fe:e2e": "pnpm --filter frontend run test:e2e",
+		"test:be:unit": "pnpm --filter backend run test",
+		"test:fe:e2e:ui": "pnpm --filter frontend run test:e2e:ui",
+		"test:fe:e2e:stress": "pnpm --filter frontend run test:e2e:stress",
 		"dev:prepare": "pnpm build:shared",
-		"postinstall": "pnpm build:shared",
-		"start:frontend": "pnpm --filter frontend run start"
+		"postinstall": "pnpm build:shared"
 	},
 	"dependencies": {
 		"@nestjs/mapped-types": "*",
