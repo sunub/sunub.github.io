@@ -32,25 +32,44 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HOME: ${{ github.workspace }}/.ci-home
+      NODE_OPTIONS: --dns-result-order=ipv4first
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Prepare writable pnpm home
-        run: mkdir -p "${HOME}"
+        run: |
+          mkdir -p "${HOME}"
+          mkdir -p "${HOME}/.pnpm-store"
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 10.25.0
+          run_install: false
 
       - name: Setup Node.js and pnpm cache
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Configure pnpm for CI
+        run: |
+          pnpm config set store-dir "${HOME}/.pnpm-store"
+          pnpm config set fetch-retries 5
+          pnpm config set fetch-retry-factor 2
+          pnpm config set fetch-retry-mintimeout 10000
+          pnpm config set fetch-retry-maxtimeout 120000
+          pnpm config set fetch-timeout 120000
+
+      - name: Clean stale workspace install state
+        run: rm -rf node_modules
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --network-concurrency 10
+        run: pnpm install --frozen-lockfile --prefer-offline --network-concurrency 8
 
       - name: Build utilities
         run: pnpm build:utils
