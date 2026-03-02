@@ -54,9 +54,12 @@ export const PublishedPostSchema = z.object({
 
 export const SearchResultSchema = z.object({
 	postKey: z.string(),
-	post: z.object({
-		frontmatter: FrontMatterSchema,
-	}),
+	post: z
+		.object({
+			frontmatter: FrontMatterSchema,
+			filePath: z.string().optional(),
+		})
+		.passthrough(),
 	titleMatches: z.array(z.string()),
 	summaryMatches: z.array(z.string()),
 });
@@ -99,11 +102,14 @@ export interface PublishedPost {
 	frontmatters: FrontMatter[];
 }
 
+export type SearchResultPost = {
+	frontmatter: FrontMatter;
+	filePath?: string;
+};
+
 export interface SearchResult {
 	postKey: string;
-	post: {
-		frontmatter: FrontMatter;
-	};
+	post: SearchResultPost;
 	titleMatches: string[];
 	summaryMatches: string[];
 }

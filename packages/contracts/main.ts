@@ -1,5 +1,5 @@
 export const DEFAULT_BACKEND_API_URL = "http://localhost:4008";
-export const DEFAULT_REWRITE_TARGET_URL = "http://localhost:4000";
+export const DEFAULT_REWRITE_TARGET_URL = DEFAULT_BACKEND_API_URL;
 export const DEFAULT_FRONTEND_BASE_URL = "http://localhost:3000";
 export const DEFAULT_FRONTEND_TEST_URL = "http://localhost:4004";
 
@@ -153,21 +153,24 @@ export function resolvePlaywrightFrontendUrl({
 	return (
 		getEnvValue(env, FRONTEND_URL_ENV_KEYS.PLAYWRIGHT_FRONTEND_URL) ??
 		getEnvValue(env, FRONTEND_URL_ENV_KEYS.FRONTEND_E2E_BASE_URL) ??
-		resolveFrontendBaseUrl({ env, fallback: DEFAULT_FRONTEND_BASE_URL }) ??
+		resolveFrontendBaseUrl({
+			env,
+			fallback,
+		}) ??
 		fallback
 	);
 }
 
 export function resolveFrontendUrls(env: FrontendUrlEnv, fallback?: string) {
 	const defaultBaseUrl = fallback ?? DEFAULT_FRONTEND_BASE_URL;
-	const defaultTestUrl = fallback ?? DEFAULT_FRONTEND_TEST_URL;
+	const defaultTestUrl = DEFAULT_FRONTEND_TEST_URL;
 	const baseUrl = resolveFrontendBaseUrl({ env, fallback: defaultBaseUrl });
 
 	return {
 		base: baseUrl,
 		e2e: resolvePlaywrightFrontendUrl({
 			env,
-			fallback: defaultTestUrl ?? baseUrl,
+			fallback: defaultTestUrl,
 		}),
 	};
 }
