@@ -6,12 +6,10 @@ packages:
   - packages/utils
 
 onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@swc/core'
-  - '@vercel/speed-insights'
+  - "@nestjs/core"
+  - "@swc/core"
+  - "@vercel/speed-insights"
   - bufferutil
   - esbuild
   - sharp
   - utf-8-validate
-
-storeDir: /home/sunub/.local/share/pnpm/store/v10
