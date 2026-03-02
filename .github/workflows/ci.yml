@@ -30,13 +30,16 @@ jobs:
 
       - name: Configure pnpm for CI
         run: |
-          pnpm config set store-dir "${HOME}/.pnpm-store"
-          pnpm config set fetch-retries 5
-          pnpm config set fetch-retry-factor 2
-          pnpm config set fetch-retry-mintimeout 10000
-          pnpm config set fetch-retry-maxtimeout 120000
-          pnpm config set fetch-timeout 120000
-          pnpm config set child-concurrency 4
+          cat > "${HOME}/.npmrc" <<EOF
+          store-dir=${HOME}/.pnpm-store
+          fetch-retries=5
+          fetch-retry-factor=2
+          fetch-retry-mintimeout=10000
+          fetch-retry-maxtimeout=120000
+          fetch-timeout=120000
+          child-concurrency=4
+          manage-package-manager-versions=false
+          EOF
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,14 +52,17 @@ jobs:
         run: |
           which pnpm
           pnpm --version
+          pnpm config get manage-package-manager-versions
+          pnpm config get store-dir
 
       - name: Install dependencies
         run: |
           set -euo pipefail
+          PNPM_BIN="$(command -v pnpm)"
 
           for attempt in 1 2 3; do
             echo "pnpm install attempt ${attempt}/3"
-            if pnpm install --frozen-lockfile --prefer-offline --network-concurrency 8; then
+            if "${PNPM_BIN}" install --frozen-lockfile --prefer-offline --network-concurrency 8; then
               exit 0
             fi
 
