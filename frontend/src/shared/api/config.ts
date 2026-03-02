@@ -4,7 +4,7 @@ import {
 	type BackendRuntime,
 } from "@sunub/contracts";
 
-const runtime: BackendRuntime = (() => {
+const getBackendRuntime = (): BackendRuntime => {
 	if (typeof window !== "undefined") {
 		return "browser";
 	}
@@ -14,17 +14,41 @@ const runtime: BackendRuntime = (() => {
 	}
 
 	return "server";
-})();
+};
 
-const baseUrl = resolveBackendApiBaseUrl(runtime, {
-	env: process.env,
-	fallback: DEFAULT_BACKEND_API_URL,
-});
+const normalizePath = (path: string) =>
+	path.startsWith("/") ? path : `/${path}`;
+
+const resolveBrowserBaseUrl = () => "";
+
+const resolveBackendBaseUrl = (runtime: BackendRuntime): string => {
+	return resolveBackendApiBaseUrl(runtime, {
+		env: process.env,
+		fallback: DEFAULT_BACKEND_API_URL,
+	});
+};
+
+const resolveFrontendSafeBaseUrl = (): string => {
+	const runtime = getBackendRuntime();
+
+	if (runtime === "browser") {
+		return resolveBrowserBaseUrl();
+	}
+
+	return resolveBackendBaseUrl(runtime);
+};
 
 export const API_CONFIG = {
-	baseUrl,
+	get baseUrl() {
+		return resolveFrontendSafeBaseUrl();
+	},
 };
 
 export function buildApiUrl(path: string) {
-	return `${API_CONFIG.baseUrl}${path}`;
+	const normalizedPath = normalizePath(path);
+	const currentRuntime = getBackendRuntime();
+	const baseUrl =
+		currentRuntime === "browser" ? "" : resolveBackendBaseUrl(currentRuntime);
+
+	return `${baseUrl}${normalizedPath}`;
 }
