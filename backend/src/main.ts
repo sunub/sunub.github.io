@@ -19,13 +19,26 @@ const parsePort = (value: string | undefined): number => {
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 	const configService = app.get(ConfigService);
-	const originString = configService.get<string>("CORS_ORIGIN") || "";
-	const allowedOrigins = originString.split(",").map((url) => url.trim());
+	const originString =
+		configService.get<string>("CORS_ORIGIN") ||
+		configService.get<string>("CORS_ORIGINS") ||
+		"";
+	const allowedOrigins = originString
+		.split(",")
+		.map((url) => url.trim())
+		.filter(Boolean);
+	const fallbackOrigins = [
+		`http://localhost:3000`,
+		`http://localhost:4004`,
+		`http://127.0.0.1:3000`,
+		`http://127.0.0.1:4004`,
+	];
+	const corsOrigins = allowedOrigins.length ? allowedOrigins : fallbackOrigins;
 
 	app.set("trust proxy", 1);
 
 	app.enableCors({
-		origin: allowedOrigins,
+		origin: corsOrigins,
 		credentials: true,
 	});
 	app.useGlobalPipes(

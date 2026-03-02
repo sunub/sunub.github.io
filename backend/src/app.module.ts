@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { join } from "node:path";
 import { AppController } from "./app.controller";
 import { PostsModule } from "./posts/posts.module";
 import { SearchModule } from "./search/search.module";
@@ -10,6 +11,7 @@ import { SearchModule } from "./search/search.module";
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
+			envFilePath: [join(__dirname, "..", ".env"), join(process.cwd(), ".env")],
 		}),
 		ThrottlerModule.forRoot([
 			{

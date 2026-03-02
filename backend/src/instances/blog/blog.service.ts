@@ -101,9 +101,28 @@ export class BlogService implements OnModuleInit {
 	public async getPostContent(
 		category: PostCategory,
 		slug: string,
+		filePath?: string,
 	): Promise<MatterTransformData | null> {
-		const filePath = join(this.POSTS_ROOT_PATH, category, `${slug}.mdx`);
-		return this.fileProcessor.processFile(filePath);
+		const candidates: string[] = [];
+		if (filePath) {
+			candidates.push(filePath);
+		}
+
+		const mdxPath = join(this.POSTS_ROOT_PATH, category, `${slug}.mdx`);
+		const mdPath = join(this.POSTS_ROOT_PATH, category, `${slug}.md`);
+		candidates.push(mdxPath, mdPath);
+
+		for (const candidatePath of candidates) {
+			try {
+				const postData = await this.fileProcessor.processFile(candidatePath);
+				if (postData?.contentLength > 0) {
+					return postData;
+				}
+			} catch {
+				// 파일이 존재하지 않거나 처리 중 오류가 발생한 경우, 다음 후보 경로로 넘어갑니다.
+			}
+		}
+		return null;
 	}
 
 	private async *readIndexLines(): AsyncGenerator<PostFrontMatter> {
