@@ -65,8 +65,10 @@ jobs:
           pnpm config set fetch-retry-maxtimeout 120000
           pnpm config set fetch-timeout 120000
 
-      - name: Clean stale workspace install state
-        run: rm -rf node_modules
+      - name: Verify pnpm runtime
+        run: |
+          which pnpm
+          pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline --network-concurrency 8
