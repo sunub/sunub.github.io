@@ -281,6 +281,35 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 		);
 	}
 
+	async function expectPostNavigationFromSearch(
+		page: Page,
+		expectedPath: string,
+	) {
+		await expect(async () => {
+			const hasPost = await page
+				.getByTestId("post-article__main-title")
+				.isVisible()
+				.catch(() => false);
+			const hasNotFound = await page
+				.getByTestId("not-found-title")
+				.isVisible()
+				.catch(() => false);
+
+			if (hasNotFound) {
+				throw new Error(
+					`검색 결과 이동이 404 페이지로 종료됨: ${expectedPath}`,
+				);
+			}
+
+			if (!hasPost) {
+				throw new Error("아직 포스트 본문 페이지 로딩이 완료되지 않음");
+			}
+		}, `검색 결과 이동 검증 (${expectedPath})`).toPass({
+			timeout: DEFAULT_TIMEOUT_TIME,
+			intervals: [200, 500, 1000],
+		});
+	}
+
 	test("Arrow Down/Up으로 검색 결과를 탐색할 수 있는가?", async ({ page }) => {
 		await pressKeyDownAndVerifyNthOption("ArrowDown", page, 0);
 		await page.waitForTimeout(100);
@@ -312,23 +341,16 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 
 		const selectedOption = page.getByRole("option", { selected: true });
 		const selectedOptionLink = selectedOption.getByRole("link");
+		const selectedHref = (await selectedOptionLink.getAttribute("href")) ?? "";
+		if (!selectedHref) {
+			throw new Error("선택된 검색 결과에 href가 없습니다.");
+		}
 
 		await expect(selectedOptionLink).toBeFocused(DEFAULT_TEST_OPTION);
 
 		await selectedOptionLink.press("Enter");
 
 		await page.waitForURL(/\/post\/[^/]+\/[^/]+/, DEFAULT_TEST_OPTION);
-
-		// await expect(page.getByTestId("loading-screen")).toBeVisible(
-		// 	DEFAULT_TEST_OPTION,
-		// );
-
-		// await expect(page.getByTestId("loading-screen")).toBeHidden(
-		// 	DEFAULT_TEST_OPTION,
-		// );
-
-		await expect(page.getByTestId("post-article__main-title")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
+		await expectPostNavigationFromSearch(page, selectedHref);
 	});
 });

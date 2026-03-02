@@ -1,11 +1,9 @@
 import {
-	DEFAULT_FRONTEND_BASE_URL,
+	DEFAULT_FRONTEND_TEST_URL,
 	resolveFrontendUrls,
 } from "@sunub/contracts";
 
-const frontendUrls = resolveFrontendUrls(
+export const E2E_TEST_URL = resolveFrontendUrls(
 	process.env,
-	DEFAULT_FRONTEND_BASE_URL,
-);
-
-export const E2E_TEST_URL = frontendUrls.e2e;
+	DEFAULT_FRONTEND_TEST_URL,
+).e2e;

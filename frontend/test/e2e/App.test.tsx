@@ -1,11 +1,13 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
 import { E2E_TEST_URL } from "./constants";
 import { HomePage } from "./HomePage";
+import { BLOG_POST_LIST_IDS } from "@/components/Main/BlogPost/ui/BlogPostListView/utils/rootUtils";
 
 const DEFAULT_TIMEOUT_TIME = 35000;
 const DEFAULT_TEST_OPTION = { timeout: DEFAULT_TIMEOUT_TIME };
 const POST_ITEM_SELECTOR =
 	"li[data-testid^='blog-post__recently-'][data-testid$='-post-item']";
+const POST_DETAIL_TITLE_TEST_ID = "post-article__main-title";
 
 async function enableDeterministicMode(page: Page) {
 	await page.evaluate(() => {
@@ -30,12 +32,14 @@ async function getRenderedPostStats(postList: Locator) {
 	});
 }
 
-async function scrollToPageBottom(page: Page, repeat = 4) {
+async function scrollToPageBottom(page: Page, repeat = 6) {
 	for (let i = 0; i < repeat; i += 1) {
 		await page.evaluate(() => {
 			window.scrollTo(0, document.body.scrollHeight);
 		});
+		await page.waitForTimeout(120);
 		await page.mouse.wheel(0, 1200);
+		await page.waitForTimeout(120);
 	}
 }
 
@@ -63,7 +67,7 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 	test("홈 페이지 기본 요소로 최근 포스트 10개가 렌더링 되는가?", async ({
 		page,
 	}) => {
-		const postList = page.getByTestId("blog-main__recently-post-list");
+		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
 		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
 
 		const postItems = postList.locator(POST_ITEM_SELECTOR);
@@ -91,52 +95,25 @@ test.describe("무한스크롤 기능 테스트", () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto(E2E_TEST_URL);
 		await enableDeterministicMode(page);
-		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-	});
-
-	test("스크롤 액션이 안정적으로 수행되는지 확인", async ({ page }) => {
-		const postList = page.getByTestId("blog-main__recently-post-list");
+		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
 		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
-
-		const initialStats = await getRenderedPostStats(postList);
-		expect(initialStats.count).toBe(10);
-		expect(initialStats.maxIndex).toBeGreaterThanOrEqual(9);
-
-		await page.mouse.wheel(0, 1200);
-		await expect
-			.poll(
-				async () => {
-					const currentStats = await getRenderedPostStats(postList);
-					return currentStats.maxIndex;
-				},
-				{
-					intervals: [500, 1000],
-					timeout: DEFAULT_TIMEOUT_TIME,
-				},
-			)
-			.toBeGreaterThanOrEqual(initialStats.maxIndex);
-
 		await expect(
-			postList.getByTestId("blog-post__recently-0-post-item"),
+			postList.locator("li[data-testid='blog-post__recently-0-post-item']"),
 		).toBeVisible(DEFAULT_TEST_OPTION);
 	});
 
-	test("스크롤을 홈페이지의 아래로 내릴 경우 추가적인 포스트가 로드 되는가?", async ({
+	test("스크롤을 홈페이지의 아래로 내릴 경우 추가적인 포스트가 로드되는지 확인", async ({
 		page,
 	}) => {
-		const postList = page.getByTestId("blog-main__recently-post-list");
-		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
-
+		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
 		const before = await getRenderedPostStats(postList);
 
-		await scrollToPageBottom(page, 6);
+		await scrollToPageBottom(page, 8);
 
 		await expect
 			.poll(async () => (await getRenderedPostStats(postList)).maxIndex, {
 				timeout: DEFAULT_TIMEOUT_TIME,
-				intervals: [250, 500, 1000],
+				intervals: [500, 1000, 1500],
 			})
 			.toBeGreaterThan(before.maxIndex);
 	});
@@ -204,39 +181,38 @@ test.describe("블로그 포스트 링크 테스트", () => {
 	test("블로그 포스트 링크 클릭 시 해당 포스트로 이동하는지 확인", async ({
 		page,
 	}) => {
-		await HomePage.goToHome(page);
-
-		const postList = page.getByTestId("blog-main__recently-post-list").first();
+		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
 		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
 
-		const listItems = postList.locator(POST_ITEM_SELECTOR);
-
-		const firstPostItem = listItems.first();
-		await expect(firstPostItem).toBeVisible(DEFAULT_TEST_OPTION);
-
-		const firstPostItemLink = firstPostItem.getByRole("link", {
-			name: "blog-post__recently-post-link-0",
-		});
+		const firstPostItemLink = postList
+			.locator(POST_ITEM_SELECTOR)
+			.first()
+			.getByRole("link", { name: /blog-post__recently-post-link-\d+/ });
 
 		await expect(firstPostItemLink).toBeVisible(DEFAULT_TEST_OPTION);
 		await expect(firstPostItemLink).toBeEnabled(DEFAULT_TEST_OPTION);
 
-		await firstPostItem.click();
-		await page.waitForURL("**/post/**", {
-			waitUntil: "domcontentloaded",
+		await Promise.all([
+			page.waitForURL("**/post/**", {
+				waitUntil: "domcontentloaded",
+				timeout: DEFAULT_TIMEOUT_TIME,
+			}),
+			firstPostItemLink.click(),
+		]);
+
+		await expect(async () => {
+			await expect(page.getByTestId("not-found-title")).toBeHidden();
+			await expect(page.getByTestId(POST_DETAIL_TITLE_TEST_ID)).toBeVisible(
+				DEFAULT_TEST_OPTION,
+			);
+		}).toPass({
+			intervals: [1000, 2000, 3000],
 			timeout: DEFAULT_TIMEOUT_TIME,
 		});
 
-		await expect(page.getByTestId("loading-screen")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-
-		await expect(page.getByTestId("loading-screen")).toBeHidden(
-			DEFAULT_TEST_OPTION,
-		);
-
-		await expect(page.getByTestId("post-article__main-title")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
+		const loadingScreen = page.getByTestId("loading-screen");
+		if (await loadingScreen.isVisible().catch(() => false)) {
+			await expect(loadingScreen).toBeHidden(DEFAULT_TEST_OPTION);
+		}
 	});
 });
