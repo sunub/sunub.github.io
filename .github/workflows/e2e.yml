@@ -46,15 +46,8 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.25.0
+          version: 10.30.3
           run_install: false
-
-      - name: Setup Node.js and pnpm cache
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: "pnpm"
-          cache-dependency-path: pnpm-lock.yaml
 
       - name: Configure pnpm for CI
         run: |
@@ -64,6 +57,14 @@ jobs:
           pnpm config set fetch-retry-mintimeout 10000
           pnpm config set fetch-retry-maxtimeout 120000
           pnpm config set fetch-timeout 120000
+          pnpm config set child-concurrency 4
+
+      - name: Setup Node.js and pnpm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Verify pnpm runtime
         run: |
@@ -71,7 +72,24 @@ jobs:
           pnpm --version
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline --network-concurrency 8
+        run: |
+          set -euo pipefail
+          rm -rf "${GITHUB_WORKSPACE}/node_modules"
+
+          for attempt in 1 2 3; do
+            echo "pnpm install attempt ${attempt}/3"
+            if pnpm install --frozen-lockfile --prefer-offline --network-concurrency 8; then
+              exit 0
+            fi
+
+            echo "Install failed on attempt ${attempt}; pruning store and retrying..."
+            rm -rf "${GITHUB_WORKSPACE}/node_modules"
+            pnpm store prune || true
+            sleep $((attempt * 10))
+          done
+
+          echo "pnpm install failed after 3 attempts"
+          exit 1
 
       - name: Build utilities
         run: pnpm build:utils
