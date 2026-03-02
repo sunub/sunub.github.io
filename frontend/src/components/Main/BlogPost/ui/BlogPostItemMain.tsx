@@ -14,7 +14,7 @@ export function BlogPostItemMain({
 }: BlogPostItemMainProps) {
 	return (
 		<BlogPostWrapper>
-			<Link href={href} {...rest}>
+			<Link href={href} prefetch={false} {...rest}>
 				{children}
 			</Link>
 		</BlogPostWrapper>

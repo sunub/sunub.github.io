@@ -1,8 +1,8 @@
 "use client";
 
 import type { PublishedPost } from "../types";
-import { BlogPostProvider } from "./BlogPostProvider";
-import { RootWrapper } from "../../NewestPost/NewestPost.style";
+import { BlogPostProvider } from "../provider/BlogPostProvider";
+import { RootWrapper } from "../../FeaturedPost/style/NewestPost.style";
 
 export function BlogPost({
 	recentlyPublished,
