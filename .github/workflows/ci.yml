@@ -53,7 +53,6 @@ jobs:
       - name: Install dependencies
         run: |
           set -euo pipefail
-          rm -rf "${GITHUB_WORKSPACE}/node_modules"
 
           for attempt in 1 2 3; do
             echo "pnpm install attempt ${attempt}/3"
@@ -61,9 +60,7 @@ jobs:
               exit 0
             fi
 
-            echo "Install failed on attempt ${attempt}; pruning store and retrying..."
-            rm -rf "${GITHUB_WORKSPACE}/node_modules"
-            pnpm store prune || true
+            echo "Install failed on attempt ${attempt}; retrying..."
             sleep $((attempt * 10))
           done
 
