@@ -1,12 +1,7 @@
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import type { RefObject } from "react";
 import { scrollToElement } from "./scrollToElement";
 
-export function handleKeyUp(
-	e: KeyboardEvent,
-	indexRef: RefObject<number>,
-	router: AppRouterInstance,
-) {
+export function handleKeyUp(e: KeyboardEvent, indexRef: RefObject<number>) {
 	const key = e.key;
 	if (key !== "ArrowUp") {
 		return;
@@ -28,11 +23,6 @@ export function handleKeyUp(
 
 	const currentItem = listItems[indexRef.current];
 	const link = currentItem.querySelector("a");
-	const href = link?.getAttribute("href");
-	if (link && href) {
-		router.prefetch(href);
-	}
-
 	if (link && searchResultList) {
 		currentItem.setAttribute("aria-selected", "true");
 		scrollToElement(currentItem as HTMLElement, searchResultList);

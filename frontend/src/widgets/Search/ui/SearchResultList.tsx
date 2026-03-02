@@ -1,7 +1,6 @@
 "use client";
 
 import { useAtomValue } from "jotai";
-import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
 import { ListIndicator } from "@/shared/style/List";
@@ -16,7 +15,6 @@ import {
 import type { SearchResult } from "@sunub/types";
 import { handleKeyArrowDown } from "../utils/handleKeyArrowDown";
 import { handleKeyUp } from "../utils/handleKeyArrowUp";
-import { handleKeyEnter } from "../utils/handleKeyEnter";
 
 interface SearchResultsListProps {
 	onResultClick: () => Promise<void>;
@@ -25,11 +23,13 @@ interface SearchResultsListProps {
 export function SearchResultsList({ onResultClick }: SearchResultsListProps) {
 	const indexRef = useRef(-1);
 	const results = useAtomValue(searchResultsAtom);
-	const router = useRouter();
 
-	useKeyPress("ArrowDown", handleKeyArrowDown, indexRef, router);
-	useKeyPress("ArrowUp", handleKeyUp, indexRef, router);
-	useKeyPress("Enter", handleKeyEnter, indexRef, router, onResultClick);
+	useKeyPress("ArrowDown", handleKeyArrowDown, indexRef);
+	useKeyPress("ArrowUp", handleKeyUp, indexRef);
+
+	const handleResultActivate = () => {
+		onResultClick();
+	};
 
 	return (
 		<>
@@ -41,7 +41,12 @@ export function SearchResultsList({ onResultClick }: SearchResultsListProps) {
 					<ResultItem role="option" key={`${postKey}-${frontmatter.title}`}>
 						<VisuallyHidden>{`${frontmatter.title}로 이동하는 링크`}</VisuallyHidden>
 						<ListIndicator />
-						<ResultLink href={url} onClick={() => onResultClick} tabIndex={0}>
+						<ResultLink
+							prefetch={false}
+							href={url}
+							onClick={handleResultActivate}
+							tabIndex={0}
+						>
 							<ResultTitle>{frontmatter.title}</ResultTitle>
 							<ResultDescription>{frontmatter.summary}</ResultDescription>
 						</ResultLink>
