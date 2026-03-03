@@ -1,8 +1,8 @@
+import { SearchResponseSchema, type SearchResult } from "@sunub/types";
 import { atom } from "jotai";
 import type { RefObject } from "react";
-import { API_PATHS } from "@/shared/api/endpoints";
 import { buildApiUrl } from "@/shared/api/config";
-import { SearchResponseSchema, type SearchResult } from "@sunub/types";
+import { API_PATHS } from "@/shared/api/endpoints";
 
 export const searchQueryAtom = atom("");
 export const searchResultsAtom = atom<SearchResult[]>([]);

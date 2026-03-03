@@ -1,7 +1,7 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig, devices } from "@playwright/test";
 import { resolveBackendUrls, resolveFrontendUrls } from "@sunub/contracts";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
 
 const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
 

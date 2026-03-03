@@ -1,8 +1,8 @@
+import type { FrontMatter } from "@sunub/types";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import type { FrontMatter } from "@sunub/types";
-import { NewestPostList } from "@/components/Main/NewestPostList";
 import { useBlogPostContext } from "@/components/Main/BlogPost/provider/BlogPostProvider";
+import { NewestPostList } from "@/components/Main/NewestPostList";
 import { useWindowedRange } from "@/components/Main/NewestPostList/hooks/useWindowedRange";
 import type { UseWindowedRangeResult } from "@/components/Main/NewestPostList/types/windowedRange";
 

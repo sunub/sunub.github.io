@@ -5,6 +5,11 @@ import {
 	useRef,
 	useState,
 } from "react";
+import type {
+	UseWindowedRangeResult,
+	VirtualScrollConfig,
+	WindowedMetrics,
+} from "../types/windowedRange";
 import {
 	buildPrefixHeights,
 	clamp,
@@ -12,11 +17,6 @@ import {
 	getElementOuterHeight,
 	getViewportPixels,
 } from "../utils/rootUtils";
-import type {
-	VirtualScrollConfig,
-	UseWindowedRangeResult,
-	WindowedMetrics,
-} from "../types/windowedRange";
 
 const createInitialMetrics = (
 	itemCount: number,

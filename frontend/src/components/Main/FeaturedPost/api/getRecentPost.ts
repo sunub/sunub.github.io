@@ -1,8 +1,8 @@
 "use server";
 
-import { API_PATHS } from "@/shared/api/endpoints";
+import { type PublishedPost, PublishedPostSchema } from "@sunub/types";
 import { buildApiUrl } from "@/shared/api/config";
-import { PublishedPostSchema, type PublishedPost } from "@sunub/types";
+import { API_PATHS } from "@/shared/api/endpoints";
 
 const ErrorRecentPost: PublishedPost = {
 	totalCount: 0,

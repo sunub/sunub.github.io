@@ -1,15 +1,15 @@
+import type { FrontMatter, PostCategory } from "@sunub/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";
 import CustomMDXRemoteComponents from "@/components/ui/customMdxRemote";
-import { NotFoundError } from "@/shared/error";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
 import { RootLayout } from "@/features/RootLayout";
+import { NotFoundError } from "@/shared/error";
 import { Wave } from "@/widgets/Wave";
 import { getAllPosts } from "./api/getAllPosts";
 import { getPostContentByCategoryAndSlug } from "./api/getPostContentByCategoryAndSlug";
 import { ClientArticle } from "./ClientAritcle";
-import type { FrontMatter, PostCategory } from "@sunub/types";
 import {
 	ArticleHeader,
 	ArticleRootWrapper,
@@ -41,18 +41,6 @@ const parseIsoDate = (
 
 	return date.toISOString();
 };
-
-function isNextNotFoundError(
-	error: unknown,
-): error is Error & { digest: string } {
-	return (
-		error instanceof Error &&
-		typeof (error as { digest?: unknown }).digest === "string" &&
-		["NEXT_NOT_FOUND", "NEXT_HTTP_ERROR_FALLBACK;404"].includes(
-			(error as { digest: string }).digest,
-		)
-	);
-}
 
 export async function generateStaticParams() {
 	const allPosts = await getAllPosts();
@@ -113,9 +101,6 @@ export async function generateMetadata({
 			},
 		};
 	} catch (error) {
-		if (isNextNotFoundError(error)) {
-			throw error;
-		}
 		if (error instanceof NotFoundError) {
 			notFound();
 		}
@@ -221,9 +206,6 @@ async function Page({ params }: { params: Params }) {
 			</RootLayout>
 		);
 	} catch (error) {
-		if (isNextNotFoundError(error)) {
-			throw error;
-		}
 		console.error("MDX 콘텐츠를 불러오는 중 오류가 발생했습니다:", error);
 		if (error instanceof NotFoundError) {
 			notFound();

@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
+import type { BlogPostRangeDebugEvent } from "../types/type";
 import {
 	createLoadMoreInvokedEvent,
-	isPreloadByItems,
 	getLoadMoreReason,
+	isPreloadByItems,
 } from "../utils/rootUtils";
-import type { BlogPostRangeDebugEvent } from "../types/type";
 
 type WindowedRangeLoadMoreOptions = {
 	canLoadMore: boolean;

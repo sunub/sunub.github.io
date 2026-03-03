@@ -1,14 +1,14 @@
 "use server";
 
-import { API_PATHS } from "@/shared/api/endpoints";
-import { apiGet } from "@/shared/api/http";
-import { SpecificPostInfoSchema } from "@sunub/types";
-import { NotFoundError } from "@/shared/error";
 import type {
 	PostCategory,
-	SpecificPostInfo,
 	PostFrontMatter,
+	SpecificPostInfo,
 } from "@sunub/types";
+import { SpecificPostInfoSchema } from "@sunub/types";
+import { API_PATHS } from "@/shared/api/endpoints";
+import { apiGet } from "@/shared/api/http";
+import { NotFoundError } from "@/shared/error";
 
 function isObject(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null;

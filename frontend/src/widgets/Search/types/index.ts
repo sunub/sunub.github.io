@@ -1,2 +1,1 @@
-export type { SearchResult } from "@sunub/types";
-export type { SearchResponse } from "@sunub/types";
+export type { SearchResponse, SearchResult } from "@sunub/types";

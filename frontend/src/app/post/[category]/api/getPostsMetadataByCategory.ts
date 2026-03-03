@@ -1,7 +1,7 @@
+import type { PostCategory } from "@sunub/types";
+import { PostFrontMatterSchema } from "@sunub/types";
 import { API_PATHS } from "@/shared/api/endpoints";
 import { apiGet } from "@/shared/api/http";
-import { PostFrontMatterSchema } from "@sunub/types";
-import type { PostCategory } from "@sunub/types";
 
 const fetchPostsMetadataByCategory = async (category: PostCategory) => {
 	try {

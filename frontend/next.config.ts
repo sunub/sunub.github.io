@@ -1,10 +1,10 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
-import type { NextConfig } from "next";
 import {
 	DEFAULT_REWRITE_TARGET_URL,
 	resolveRewriteTargetUrl,
 } from "@sunub/contracts";
+import type { NextConfig } from "next";
 
 const rewriteTarget = resolveRewriteTargetUrl({
 	env: process.env,

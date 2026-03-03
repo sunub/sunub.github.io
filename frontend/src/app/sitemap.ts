@@ -1,20 +1,7 @@
-import { API_PATHS } from "@/shared/api/endpoints";
-import { buildApiUrl } from "@/shared/api/config";
+import { type PostFrontMatter, PostFrontMatterSchema } from "@sunub/types";
 import type { MetadataRoute } from "next";
-import { PostFrontMatterSchema, type PostFrontMatter } from "@sunub/types";
-
-const parseIsoDate = (dateString: string | undefined): string | null => {
-	if (!dateString) {
-		return null;
-	}
-
-	const date = new Date(dateString);
-	if (Number.isNaN(date.getTime())) {
-		return null;
-	}
-
-	return date.toISOString();
-};
+import { buildApiUrl } from "@/shared/api/config";
+import { API_PATHS } from "@/shared/api/endpoints";
 
 function isPostFrontMatter(data: unknown): data is PostFrontMatter[] {
 	const parsedData = PostFrontMatterSchema.array().safeParse(data);
@@ -47,12 +34,15 @@ function updateCatetoryDate(allBlogPosts: PostFrontMatter[]) {
 		algorithm: new Date(),
 	};
 	allBlogPosts.forEach(({ frontmatter }) => {
-		const postDateText = parseIsoDate(frontmatter.date);
+		const postDateText = frontmatter.date;
 		if (!postDateText) {
 			return;
 		}
+		let postDate = postDateText;
+		if (typeof postDate === "string") {
+			postDate = new Date(postDate);
+		}
 
-		const postDate = new Date(postDateText);
 		const category = frontmatter.category;
 		if (postDate > result[category]) {
 			result[category] = postDate;
@@ -66,9 +56,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const categoryLatestUpdates = updateCatetoryDate(allBlogPosts);
 	const blogXML = allBlogPosts.flatMap(({ frontmatter }, i) => {
-		const lastModified = parseIsoDate(frontmatter.date);
-		if (!lastModified) {
+		if (!frontmatter.date) {
 			return [];
+		}
+
+		let lastModified = frontmatter.date;
+		if (lastModified instanceof Date) {
+			lastModified = lastModified.toISOString();
 		}
 
 		return [

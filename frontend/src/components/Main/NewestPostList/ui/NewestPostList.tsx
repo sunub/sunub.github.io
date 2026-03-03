@@ -2,20 +2,19 @@
 
 import { motion, type Variants } from "motion/react";
 import { memo, useMemo, useRef } from "react";
-
+import { useBlogPostContext } from "../../BlogPost/provider/BlogPostProvider";
 import { BlogPostList } from "../../BlogPost/style";
 import { BlogPostItem } from "../../BlogPost/ui/BlogPostItem";
-import { useBlogPostContext } from "../../BlogPost/provider/BlogPostProvider";
-import { useWindowedRange } from "../hooks/useWindowedRange";
-import type { NewestPostListRootProps } from "../types/type";
 import { useListTerminalMode } from "../hooks/useListTerminalMode";
+import { useWindowedRange } from "../hooks/useWindowedRange";
 import { useWindowedRangeLoadMore } from "../hooks/useWindowedRangeLoadMore";
+import type { NewestPostListRootProps } from "../types/type";
 import {
 	BLOG_POST_LIST_IDS,
-	DEFAULT_VIRTUAL_RANGE_CONFIG,
 	buildVirtualRangeConfig,
 	createListChildStyle,
 	createListSpacerStyle,
+	DEFAULT_VIRTUAL_RANGE_CONFIG,
 	getPreloadReservePx,
 	getPreloadThresholdPx,
 	getRenderedPosts,

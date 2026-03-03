@@ -1,9 +1,9 @@
 import type { PostCategory, PostFrontMatter } from "@sunub/types";
 import { PostFrontMatterSchema } from "@sunub/types";
+import { buildApiUrl } from "@/shared/api/config";
+import { API_PATHS } from "@/shared/api/endpoints";
 import { CardGrid } from "./CardGrid";
 import DelegatedCard from "./DelegatedCard";
-import { API_PATHS } from "@/shared/api/endpoints";
-import { buildApiUrl } from "@/shared/api/config";
 
 function isValidPostList(data: unknown): data is PostFrontMatter[] {
 	const parsed = PostFrontMatterSchema.array().safeParse(data);

@@ -3,9 +3,9 @@ export type {
 	FrontMatter,
 	JsonPostFrontMatter,
 	MatterTransformData,
-	PublishedPost,
 	PostCategory,
 	PostFrontMatter,
+	PublishedPost,
 	SpecificPostInfo,
 } from "@sunub/types";
 
@@ -14,8 +14,8 @@ export {
 	DateStringSchema,
 	FrontMatterSchema,
 	JsonPostFrontMatterSchema,
-	PublishedPostSchema,
 	PostCategorySchema,
 	PostFrontMatterSchema,
+	PublishedPostSchema,
 	SpecificPostInfoSchema,
 } from "@sunub/types";

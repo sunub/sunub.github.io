@@ -1,7 +1,7 @@
 import {
+	type BackendRuntime,
 	DEFAULT_BACKEND_API_URL,
 	resolveBackendApiBaseUrl,
-	type BackendRuntime,
 } from "@sunub/contracts";
 
 const getBackendRuntime = (): BackendRuntime => {

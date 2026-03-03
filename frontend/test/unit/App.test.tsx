@@ -1,3 +1,4 @@
+import type { FrontMatter } from "@sunub/types";
 import {
 	render,
 	screen,
@@ -5,9 +6,8 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { PublishedPost } from "@/components/Main/BlogPost/types";
-import FeaturedPost from "@/components/Main/FeaturedPost/ui/FeaturedPost";
 import { getRecentPost } from "@/components/Main/FeaturedPost/api/getRecentPost";
-import type { FrontMatter } from "@sunub/types";
+import FeaturedPost from "@/components/Main/FeaturedPost/ui/FeaturedPost";
 
 vi.mock("@/components/Main/FeaturedPost/api/getRecentPost", () => ({
 	getRecentPost: vi.fn(),

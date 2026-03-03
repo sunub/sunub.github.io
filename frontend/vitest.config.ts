@@ -1,12 +1,12 @@
-import react from "@vitejs/plugin-react";
-import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config";
 import {
 	DEFAULT_BACKEND_API_URL,
 	DEFAULT_FRONTEND_BASE_URL,
 	resolveBackendUrls,
 	resolveFrontendUrls,
 } from "@sunub/contracts";
+import react from "@vitejs/plugin-react";
+import tsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig } from "vitest/config";
 
 const backendUrls = resolveBackendUrls(process.env, DEFAULT_BACKEND_API_URL);
 const frontendUrls = resolveFrontendUrls(

@@ -1,5 +1,6 @@
 "use client";
 
+import type { SearchResult } from "@sunub/types";
 import { useAtomValue } from "jotai";
 import { useRef } from "react";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
@@ -12,7 +13,6 @@ import {
 	ResultLink,
 	ResultTitle,
 } from "../styles/index";
-import type { SearchResult } from "@sunub/types";
 import { handleKeyArrowDown } from "../utils/handleKeyArrowDown";
 import { handleKeyUp } from "../utils/handleKeyArrowUp";
 

@@ -1,7 +1,10 @@
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 import type { Theme } from "type";
 import { Wave } from "@/components/Header/Wave";
 import { HeroImage } from "@/components/HeroImage";
+import { FeaturedPost } from "@/components/Main/FeaturedPost";
+import { FeatherIcon } from "@/components/Main/Icon";
 import { FrontMatterLoading } from "@/components/Skeletons/ui/ContentLoading";
 import { RootLayout } from "@/features/RootLayout";
 import {
@@ -10,9 +13,6 @@ import {
 	Title,
 	TitleWrapper,
 } from "./page.style";
-import { FeatherIcon } from "@/components/Main/Icon";
-import { Suspense } from "react";
-import { FeaturedPost } from "@/components/Main/FeaturedPost";
 
 export default async function Page() {
 	const savedTheme = (await cookies()).get("color-theme")?.value || "light";

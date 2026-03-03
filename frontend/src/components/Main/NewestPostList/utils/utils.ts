@@ -1,4 +1,4 @@
 export {
-	buildVirtualRangeConfig as buildVirtualConfig,
 	type BlogPostListVirtualConfigInput,
+	buildVirtualRangeConfig as buildVirtualConfig,
 } from "./rootUtils";

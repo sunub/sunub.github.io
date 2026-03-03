@@ -1,8 +1,8 @@
 "use server";
 
+import { PostFrontMatterSchema } from "@sunub/types";
 import { API_PATHS } from "@/shared/api/endpoints";
 import { apiGet } from "@/shared/api/http";
-import { PostFrontMatterSchema } from "@sunub/types";
 
 export async function getAllPosts() {
 	try {
