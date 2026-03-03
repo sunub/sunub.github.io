@@ -1,9 +1,9 @@
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
+import type { PostFrontMatter } from "@sunub/types";
 import * as request from "supertest";
 import { AppModule } from "./app.module";
 import { BlogService } from "./instances/blog/blog.service";
-import type { PostFrontMatter } from "@sunub/types";
 
 const posts: PostFrontMatter[] = [
 	{

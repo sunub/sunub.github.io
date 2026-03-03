@@ -1,7 +1,7 @@
 import { createReadStream } from "node:fs";
-import { Semaphore } from "./Semaphore";
 import { MatterTransformData } from "@sunub/types";
 import { MatterTransform } from "./MatterTransform";
+import { Semaphore } from "./Semaphore";
 
 function isMatterTransformData(obj: unknown): obj is MatterTransformData {
 	return (

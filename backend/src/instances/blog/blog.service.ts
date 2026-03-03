@@ -4,11 +4,11 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import type { PostCategory, PostFrontMatter } from "@sunub/types";
+import { FrontMatterSchema, MatterTransformData } from "@sunub/types";
 import { concurrent, filter, map, pipe, take, toArray } from "@sunub/utils";
 import * as matter from "gray-matter";
 import { FileProcessor } from "./FileProcessor";
-import { FrontMatterSchema, MatterTransformData } from "@sunub/types";
-import type { PostCategory, PostFrontMatter } from "@sunub/types";
 
 @Injectable()
 export class BlogService implements OnModuleInit {

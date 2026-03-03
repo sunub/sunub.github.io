@@ -2,8 +2,8 @@ import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
-import { AppModule } from "./app.module";
 import { DEFAULT_BACKEND_API_URL } from "@sunub/contracts";
+import { AppModule } from "./app.module";
 
 const parsePort = (value: string | undefined): number => {
 	const defaultPort = Number(new URL(DEFAULT_BACKEND_API_URL).port);

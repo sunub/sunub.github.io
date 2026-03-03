@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { SearchService } from "./search.service";
 import type { SearchResponse } from "@sunub/types";
+import { SearchService } from "./search.service";
 
 @Controller("api/search")
 export class SearchController {

@@ -1,15 +1,15 @@
 export type {
 	CacheData,
+	Categories,
+	Category,
 	FrontMatter,
 	JsonPostFrontMatter,
-	Tag,
-	Category,
-	Categories,
 	MatterTransformData,
 	PostCategory,
 	PostFrontMatter,
-	SpecificPostInfo,
 	PublishedPost,
+	SpecificPostInfo,
+	Tag,
 } from "@sunub/types";
 
 export {

@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { BlogService } from "src/instances/blog/blog.service";
 import type {
 	PostCategory,
-	PublishedPost,
 	PostFrontMatter,
+	PublishedPost,
 } from "@sunub/types";
+import { BlogService } from "src/instances/blog/blog.service";
 
 @Injectable()
 export class PostsService {
