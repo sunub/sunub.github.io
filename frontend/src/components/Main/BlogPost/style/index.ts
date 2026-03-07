@@ -85,15 +85,14 @@ export const BlogPostWrapper = styled.div`
 export const BlogPostList = styled.ul`
   padding-left: 1rem;
   overflow-anchor: none;
+  position: relative;
 `;
 
-export const BlogPostListItem = styled(motion.li)<{ $isInitialize?: boolean }>`
+export const BlogPostListItem = styled(motion.li)`
   width: fit-content;
   text-wrap: pretty;
   word-break: keep-all;
 
-  opacity: ${(props) => (props.$isInitialize ? 0 : 1)};
-  transform: ${(props) => (props.$isInitialize ? "translateY(-10px)" : "translateY(0)")};
   will-change: transform, opacity;
   font-family: var(--pretendard-font-regular);
 
