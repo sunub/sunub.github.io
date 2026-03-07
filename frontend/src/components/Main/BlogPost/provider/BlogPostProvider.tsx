@@ -82,7 +82,6 @@ export function BlogPostProvider({
 		}
 
 		isLoadingRef.current = true;
-
 		startTransition(async () => {
 			try {
 				const currentLength = currentData.frontmatters.length;
@@ -105,8 +104,7 @@ export function BlogPostProvider({
 				);
 
 				const nextLength = currentLength + filteredNewPosts.length;
-				const nextHasMore =
-					filteredNewPosts.length > 0 && nextLength < nextTotalCount;
+				const nextHasMore = nextLength < nextTotalCount;
 
 				if (filteredNewPosts.length > 0) {
 					setAtomState((prev) => ({
