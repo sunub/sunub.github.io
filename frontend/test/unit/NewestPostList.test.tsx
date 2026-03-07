@@ -1,8 +1,9 @@
 import type { FrontMatter } from "@sunub/types";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { useBlogPostContext } from "@/components/Main/BlogPost/provider/BlogPostProvider";
 import { NewestPostList } from "@/components/Main/NewestPostList";
+import { useListTerminalMode } from "@/components/Main/NewestPostList/hooks/useListTerminalMode";
 import { useWindowedRange } from "@/components/Main/NewestPostList/hooks/useWindowedRange";
 import type { UseWindowedRangeResult } from "@/components/Main/NewestPostList/types/windowedRange";
 
@@ -14,8 +15,37 @@ vi.mock("@/components/Main/NewestPostList/hooks/useWindowedRange", () => ({
 	useWindowedRange: vi.fn(),
 }));
 
+vi.mock(
+	"@/components/Main/NewestPostList/hooks/useResetScrollOnReload",
+	() => ({
+		useResetScrollOnReload: vi.fn(),
+	}),
+);
+
+vi.mock("@/components/Main/NewestPostList/hooks/useListTerminalMode", () => ({
+	useListTerminalMode: vi.fn(() => false),
+}));
+
+vi.mock("@/components/Main/BlogPost/ui/BlogPostItem", () => ({
+	BlogPostItem: ({
+		index,
+		animationMode,
+	}: {
+		index: number;
+		animationMode: string;
+	}) => (
+		<li
+			data-testid={`blog-post-item-${index}`}
+			data-animation-mode={animationMode}
+		>
+			{index}
+		</li>
+	),
+}));
+
 const mockedUseBlogPostContext = vi.mocked(useBlogPostContext);
 const mockedUseWindowedRange = vi.mocked(useWindowedRange);
+const mockedUseListTerminalMode = vi.mocked(useListTerminalMode);
 
 function createFrontMatter(index: number): FrontMatter {
 	return {
@@ -42,8 +72,6 @@ function createRangeResult(overrides: Partial<UseWindowedRangeResult> = {}) {
 		},
 		topSpacerPx: 0,
 		bottomSpacerPx: 0,
-		totalHeightPx: 0,
-		remainingPx: 1000,
 		registerItemElement: vi.fn(),
 		...overrides,
 	} as UseWindowedRangeResult;
@@ -58,106 +86,67 @@ type BlogPostContextShape = {
 };
 
 const contextTemplate: BlogPostContextShape = {
-	posts: createPosts(10),
-	totalCount: 20,
+	posts: createPosts(25),
+	totalCount: 40,
 	isPending: false,
 	hasMore: true,
 	loadMore: vi.fn(),
 };
 
-function renderRootWithContext(contextValue: BlogPostContextShape) {
-	mockedUseBlogPostContext.mockReturnValue(contextValue);
-	return render(<NewestPostList />);
-}
-
 describe("NewestPostList", () => {
+	let currentRangeResult: UseWindowedRangeResult;
+
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockedUseWindowedRange.mockReturnValue(
-			createRangeResult({
-				visibleRange: { start: 0, end: 10 },
-				remainingPx: 800,
-			}),
+		vi.useRealTimers();
+
+		currentRangeResult = createRangeResult({
+			visibleRange: { start: 0, end: 10 },
+		});
+
+		mockedUseWindowedRange.mockImplementation(() => currentRangeResult);
+		mockedUseBlogPostContext.mockReturnValue(contextTemplate);
+		mockedUseListTerminalMode.mockReturnValue(false);
+	});
+
+	test("가상화 모드에서 렌더 범위에 해당하는 아이템만 렌더링된다", () => {
+		render(<NewestPostList />);
+		expect(screen.getAllByTestId(/blog-post-item-/)).toHaveLength(10);
+	});
+
+	test("초기 리빌 페이즈에서는 아이템이 initial 모드로 렌더링된다", () => {
+		render(<NewestPostList />);
+		expect(screen.getByTestId("blog-post-item-0")).toHaveAttribute(
+			"data-animation-mode",
+			"initial",
 		);
 	});
 
-	test("remainingPx 기반 preload 조건에서 loadMore가 호출되는지 검증한다", () => {
-		const loadMore = vi.fn();
-		mockedUseWindowedRange.mockReturnValueOnce(
-			createRangeResult({
-				visibleRange: { start: 0, end: 10 },
-				remainingPx: 200,
-			}),
+	test("초기 리빌 페이즈가 끝나면 아이템이 soft 모드로 렌더링된다", () => {
+		vi.useFakeTimers();
+
+		const { rerender } = render(
+			<NewestPostList>
+				<span data-testid="render-trigger">a</span>
+			</NewestPostList>,
 		);
-		renderRootWithContext({
-			...contextTemplate,
-			posts: createPosts(10),
-			totalCount: 30,
-			loadMore,
+
+		act(() => {
+			vi.advanceTimersByTime(710);
 		});
 
-		expect(loadMore).toHaveBeenCalledTimes(1);
-	});
-
-	test("아이템 잔여 개수 기준으로 마지막 구간일 때 loadMore가 호출되는지 검증한다", () => {
-		const loadMore = vi.fn();
-		mockedUseWindowedRange.mockReturnValueOnce(
-			createRangeResult({
-				visibleRange: { start: 6, end: 10 },
-				remainingPx: 4_000,
-			}),
+		currentRangeResult = createRangeResult({
+			visibleRange: { start: 10, end: 20 },
+		});
+		rerender(
+			<NewestPostList>
+				<span data-testid="render-trigger">b</span>
+			</NewestPostList>,
 		);
-		renderRootWithContext({
-			...contextTemplate,
-			posts: createPosts(10),
-			totalCount: 30,
-			loadMore,
-		});
 
-		expect(loadMore).toHaveBeenCalledTimes(1);
-	});
-
-	test("스크롤 중단 상태일 때는 loadMore가 호출되지 않는다", () => {
-		const loadMore = vi.fn();
-		renderRootWithContext({
-			...contextTemplate,
-			posts: createPosts(10),
-			totalCount: 30,
-			isPending: true,
-			loadMore,
-		});
-
-		expect(loadMore).not.toHaveBeenCalled();
-	});
-
-	test("canLoadMore가 false면 loadMore가 호출되지 않는다", () => {
-		const loadMore = vi.fn();
-		renderRootWithContext({
-			...contextTemplate,
-			posts: createPosts(10),
-			totalCount: 10,
-			hasMore: false,
-			loadMore,
-		});
-
-		expect(loadMore).not.toHaveBeenCalled();
-	});
-
-	test("가상화 모드에서 렌더 범위에 해당하는 카드 수만 렌더링되는지 검증한다", () => {
-		const loadMore = vi.fn();
-		mockedUseWindowedRange.mockReturnValueOnce(
-			createRangeResult({
-				visibleRange: { start: 0, end: 10 },
-				remainingPx: 800,
-			}),
+		expect(screen.getByTestId("blog-post-item-10")).toHaveAttribute(
+			"data-animation-mode",
+			"soft",
 		);
-		renderRootWithContext({
-			...contextTemplate,
-			posts: createPosts(25),
-			totalCount: 40,
-			loadMore,
-		});
-
-		expect(screen.getAllByRole("listitem")).toHaveLength(10);
 	});
 });

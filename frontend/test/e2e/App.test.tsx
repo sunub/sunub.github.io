@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
-import { BLOG_POST_LIST_IDS } from "@/components/Main/NewestPostList/utils/rootUtils";
+import { BLOG_POST_LIST_IDS } from "@/components/Main/NewestPostList/utils/virtualListUtils";
 import { E2E_TEST_URL } from "./constants";
 import { HomePage } from "./HomePage";
 
