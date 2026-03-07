@@ -1,13 +1,13 @@
+import type { Dispatch, RefObject, SetStateAction } from "react";
 import { useCallback } from "react";
+import type { WindowedMetrics } from "../types/windowedRange";
+import { calculateWindowMetrics } from "../utils/calculateWindowMetrics";
 import {
 	createDisabledMetrics,
 	EMPTY_WINDOW_METRICS,
 	resolveNextWindowedMetrics,
 } from "../utils/generateMetrics";
-import type { WindowedMetrics } from "../types/windowedRange";
-import type { Dispatch, RefObject, SetStateAction } from "react";
 import { getViewportRangeWithinList } from "../utils/virtualListUtils";
-import { calculateWindowMetrics } from "../utils/calculateWindowMetrics";
 
 export type RangeConfig = {
 	isEnabled: boolean;

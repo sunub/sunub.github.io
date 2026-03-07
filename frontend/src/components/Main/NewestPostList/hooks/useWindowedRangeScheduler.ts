@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 interface UseWindowedRangeSchedulerOptions {
 	enabled: boolean;

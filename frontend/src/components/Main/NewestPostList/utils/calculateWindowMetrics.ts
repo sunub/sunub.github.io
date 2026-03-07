@@ -1,10 +1,10 @@
+import type { RefObject } from "react";
+import type { WindowedMetrics } from "../types/windowedRange";
 import {
 	buildCumulativeItemHeights,
 	clampNumber,
 	findItemIndexForOffset,
 } from "./virtualListUtils";
-import type { WindowedMetrics } from "../types/windowedRange";
-import type { RefObject } from "react";
 
 export type CalculateWindowMetricsConfig = {
 	itemCount: number;

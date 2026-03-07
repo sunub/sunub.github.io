@@ -7,6 +7,7 @@ import { BlogPostList } from "../../BlogPost/style";
 import { BlogPostItem } from "../../BlogPost/ui/BlogPostItem";
 import { useListTerminalMode } from "../hooks/useListTerminalMode";
 import { useResetScrollOnReload } from "../hooks/useResetScrollOnReload";
+import { useRevealPhase } from "../hooks/useRevealPhase";
 import { useWindowedRange } from "../hooks/useWindowedRange";
 import { useWindowedRangeLoadMore } from "../hooks/useWindowedRangeLoadMore";
 import type { NewestPostListRootProps } from "../types/type";
@@ -19,7 +20,6 @@ import {
 	getLoadMoreViewportThresholdPx,
 	getPostsInRenderRange,
 } from "../utils/virtualListUtils";
-import { useRevealPhase } from "../hooks/useRevealPhase";
 
 const MotionBlogPostList = motion.create(BlogPostList);
 const LIST_ID = BLOG_POST_LIST_IDS.id;
