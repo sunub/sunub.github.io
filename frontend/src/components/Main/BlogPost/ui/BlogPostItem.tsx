@@ -1,18 +1,20 @@
 "use client";
-
 import type { FrontMatter } from "@sunub/types";
 import { memo, useCallback, useMemo } from "react";
 import { BlogPostItemComposer } from "./BlogPostItemComposer";
+import type { BlogPostItemAnimationMode } from "./BlogPostItemRoot";
 
 interface BlogPostItemProps {
 	post: FrontMatter;
 	index: number;
-	registerItemElement?: (index: number, el: HTMLElement | null) => void;
+	registerItemElement?: (index: number, el: HTMLLIElement | null) => void;
+	animationMode: BlogPostItemAnimationMode;
 }
 
 export const BlogPostItem = memo(function BlogPostItem({
 	post,
 	index,
+	animationMode,
 	registerItemElement,
 }: BlogPostItemProps) {
 	const titleId = `blog-post__recently-post-title-${index}`;
@@ -30,8 +32,8 @@ export const BlogPostItem = memo(function BlogPostItem({
 
 	return (
 		<BlogPostItemComposer.root
+			animationMode={animationMode}
 			itemRef={itemRef}
-			index={index}
 			aria-labelledby={titleId}
 			data-testid={`blog-post__recently-${index}-post-item`}
 		>

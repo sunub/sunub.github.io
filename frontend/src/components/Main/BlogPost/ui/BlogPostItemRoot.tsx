@@ -3,40 +3,52 @@
 import type { HTMLMotionProps, Variants } from "motion/react";
 import { BlogPostListItem } from "../style";
 
+export type BlogPostItemAnimationMode = "initial" | "soft" | "animate";
+
 interface BlogPostItemProps extends Omit<HTMLMotionProps<"li">, "itemRef"> {
 	itemRef?: (el: HTMLLIElement | null) => void;
 	children: React.ReactNode;
-	index: number;
+	animationMode: BlogPostItemAnimationMode;
 }
 
 const itemVariants: Variants = {
 	hidden: {
-		y: -10,
+		y: -8,
 		opacity: 0,
 	},
-	visible: {
+	softHidden: {
+		y: -2,
+		opacity: 0.78,
+	},
+	visible: (mode: BlogPostItemAnimationMode) => ({
 		y: 0,
 		opacity: 1,
 		transition: {
-			duration: 0.8,
+			duration: mode === "soft" ? 0.24 : 0.38,
 			ease: "easeOut",
 		},
-	},
+	}),
 };
 
 export function BlogPostItemRoot({
 	itemRef,
 	children,
-	index,
+	animationMode,
 	...props
 }: BlogPostItemProps) {
 	return (
 		<BlogPostListItem
 			ref={itemRef}
 			variants={itemVariants}
-			initial="hidden"
+			custom={animationMode}
+			initial={
+				animationMode === "initial"
+					? "hidden"
+					: animationMode === "soft"
+						? "softHidden"
+						: false
+			}
 			animate="visible"
-			$isInitialize={index < 10}
 			className="blog-post__recently-post-item"
 			{...props}
 		>
