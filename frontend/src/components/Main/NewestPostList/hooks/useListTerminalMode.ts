@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 
 type UseListTerminalModeOptions = {
-	canLoadMore: boolean;
-	isPending: boolean;
+	shouldEnterTerminalMode: boolean;
 };
 
 export const useListTerminalMode = ({
-	canLoadMore,
-	isPending,
+	shouldEnterTerminalMode,
 }: UseListTerminalModeOptions): boolean => {
 	const [isTerminalMode, setIsTerminalMode] = useState(false);
 
 	useEffect(() => {
-		if (canLoadMore || isPending) {
+		if (!shouldEnterTerminalMode) {
 			if (isTerminalMode) {
 				setIsTerminalMode(false);
 			}
@@ -30,7 +28,7 @@ export const useListTerminalMode = ({
 		return () => {
 			cancelAnimationFrame(frameId);
 		};
-	}, [canLoadMore, isPending, isTerminalMode]);
+	}, [shouldEnterTerminalMode, isTerminalMode]);
 
 	return isTerminalMode;
 };
