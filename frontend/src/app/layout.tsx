@@ -1,17 +1,16 @@
+import "./globals.css";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
-import { cookies, headers } from "next/headers";
 import Script from "next/script";
 import type React from "react";
-import type { Theme } from "type";
-import { HeroImagePreload } from "@/components/HeroImage/HeroImagePreload";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
 import ThemeProvider from "@/components/Theme/ThemeProvider";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
+import { getRequestTheme } from "@/utils/theme";
 import { craftyGirls, pretendardRegular } from "./font";
-import { GlobalStyle, ShikiOverrieds } from "./GlobalStyle";
+import { ShikiOverrieds } from "./GlobalStyle";
 
 export const metadata: Metadata = {
 	metadataBase: new URL("https://sunub.vercel.app"),
@@ -65,16 +64,7 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const cookieStore = await cookies();
-	const headersList = await headers();
-	const prefers = headersList.get("sec-ch-prefers-color-scheme");
-
-	const theme: Theme = cookieStore.has("color-theme")
-		? (cookieStore.get("color-theme")?.value as Theme)
-		: prefers === "dark"
-			? "dark"
-			: "light";
-	const themeColors = theme === "light" ? LIGHT_COLORS : DARK_COLORS;
+	const theme = await getRequestTheme();
 
 	return (
 		<html
@@ -82,14 +72,19 @@ export default async function RootLayout({
 			className={`${pretendardRegular.variable} ${craftyGirls.variable}`}
 			suppressHydrationWarning={true}
 			data-color-theme={theme}
-			style={themeColors as React.CSSProperties}
 		>
 			<head>
 				<meta
 					name="description"
 					content="sunub가 만든 개인 블로그입니다. 주로 프론트엔드 개발과 관련된 여러 지식들을 다루지만 이외에도 다양한 개발 지식을 공유하기 위한 사이트입니다."
 				/>
-				<HeroImagePreload theme={theme} />
+				<link
+					key="/assets/favicon.ico"
+					rel="icon"
+					href="/assets/favicon.ico"
+					type="image/x-icon"
+					sizes="32x32"
+				/>
 				<Script id="theme-script" strategy="beforeInteractive">
 					{initSetColorsByThemeFn}
 				</Script>
@@ -107,7 +102,6 @@ export default async function RootLayout({
           `}
 				</script>
 				<StyledComponentsRegistry>
-					<GlobalStyle />
 					<ShikiOverrieds />
 					<ThemeProvider initialTheme={theme}>
 						<Provider>
