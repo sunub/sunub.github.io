@@ -66,7 +66,7 @@ export const Clouds = styled.span`
   }
 `;
 
-export const Moon = styled(Image) <{ $opacity: string }>`
+export const Moon = styled(Image)<{ $opacity: string }>`
   position: absolute;
   top: 0px;
   left: 50%;
