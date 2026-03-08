@@ -3,7 +3,6 @@
 import Cookies from "js-cookie";
 import React, { useCallback } from "react";
 import type { Theme } from "type";
-import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 
 interface ThemeContextProps {
 	colorTheme: Theme;
@@ -29,13 +28,7 @@ function ThemeProvider({
 	const updateTheme = useCallback((nextTheme: Theme) => {
 		const root = document.documentElement;
 
-		const colors = nextTheme === "light" ? LIGHT_COLORS : DARK_COLORS;
-
 		root.setAttribute("data-color-theme", nextTheme);
-		Object.entries(colors).forEach(([key, value]) => {
-			root.style.setProperty(key, value as string);
-		});
-
 		Cookies.set("color-theme", nextTheme, { expires: 1000 });
 		rawSetColorTheme(nextTheme);
 	}, []);
