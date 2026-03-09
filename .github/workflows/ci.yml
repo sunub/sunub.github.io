@@ -168,11 +168,8 @@ jobs:
       - name: Build shared packages
         run: pnpm build:shared
 
-      - name: Build Backend
-        run: pnpm --filter backend run build
-
-      - name: Build Frontend
-        run: pnpm --filter frontend run build
+      - name: Build Services
+        run: pnpm run build
         env:
           PORT: 4008
           EC2_PUBLIC_API_URL: http://localhost:4008
