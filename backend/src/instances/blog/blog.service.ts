@@ -1,7 +1,7 @@
-import { createReadStream } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { opendir, readFile, writeFile } from "node:fs/promises";
 import { cpus } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import type { PostCategory, PostFrontMatter } from "@sunub/types";
@@ -10,10 +10,24 @@ import { concurrent, filter, map, pipe, take, toArray } from "@sunub/utils";
 import * as matter from "gray-matter";
 import { FileProcessor } from "./FileProcessor";
 
+const resolvePostsRootPath = (): string => {
+	if (process.env.BLOG_POSTS_PATH) {
+		return process.env.BLOG_POSTS_PATH;
+	}
+
+	const candidates = [
+		resolve(__dirname, "../../../../posts"),
+		resolve(process.cwd(), "posts"),
+		resolve(process.cwd(), "../posts"),
+	];
+
+	const resolvedPath = candidates.find((candidate) => existsSync(candidate));
+	return resolvedPath ?? candidates[0];
+};
+
 @Injectable()
 export class BlogService implements OnModuleInit {
-	private readonly POSTS_ROOT_PATH =
-		process.env.BLOG_POSTS_PATH || join(process.cwd(), "../posts");
+	private readonly POSTS_ROOT_PATH = resolvePostsRootPath();
 	public readonly logger = new Logger(BlogService.name);
 	private readonly INDEX_FILE_PATH = join(this.POSTS_ROOT_PATH, "posts.jsonl");
 

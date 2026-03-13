@@ -1,6 +1,6 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import type {
 	MatterTransformData,
 	PostCategory,
@@ -128,6 +128,17 @@ describe("BlogService", () => {
 
 		expect(content).toBeNull();
 		expect(mockProcessFile).toHaveBeenCalledTimes(2);
+	});
+
+	it("should resolve posts root relative to the backend location when cwd differs", () => {
+		delete process.env.BLOG_POSTS_PATH;
+		jest.spyOn(process, "cwd").mockReturnValue("/tmp/unrelated-working-dir");
+
+		const fallbackService = new BlogService();
+
+		expect(fallbackService.getPostsRootPath()).toBe(
+			resolve(__dirname, "../../../../posts"),
+		);
 	});
 
 	it("rebuildIndexAndReloadCache should include newly added nested posts", async () => {
