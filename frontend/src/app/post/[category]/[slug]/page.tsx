@@ -14,6 +14,11 @@ import {
 	ArticleHeader,
 	ArticleRootWrapper,
 	ArticleWrapper,
+	HeaderEyebrow,
+	HeaderMetaRow,
+	HeaderSummary,
+	HeaderTag,
+	HeaderTagList,
 	Main,
 	PostTitle,
 	Time,
@@ -26,6 +31,11 @@ type Params = Promise<{
 	category: PostCategory;
 	slug: string;
 }>;
+
+const formatCategoryLabel = (category: FrontMatter["category"]) =>
+	category
+		.replace(/-/g, " ")
+		.replace(/\b\w/g, (letter) => letter.toUpperCase());
 
 const parseIsoDate = (
 	dateString: FrontMatter["date"] | undefined,
@@ -114,14 +124,23 @@ export async function generateMetadata({
 }
 
 async function HeaderSection({ frontmatter }: { frontmatter: FrontMatter }) {
-	const { title, date } = frontmatter;
+	const { title, date, summary, tags, category } = frontmatter;
 	const publishDateIso = parseIsoDate(date);
 	if (!publishDateIso) {
 		return (
 			<ArticleHeader>
+				<HeaderEyebrow>{formatCategoryLabel(category)}</HeaderEyebrow>
 				<PostTitle data-testid={"post-article__main-title"}>{title}</PostTitle>
+				{summary ? <HeaderSummary>{summary}</HeaderSummary> : null}
 				<React.Suspense fallback={<p>...</p>}>
-					<Time dateTime="">날짜 정보 없음</Time>
+					<HeaderMetaRow>
+						<Time dateTime="">날짜 정보 없음</Time>
+						<HeaderTagList>
+							{tags.map((tag) => (
+								<HeaderTag key={tag}>{tag}</HeaderTag>
+							))}
+						</HeaderTagList>
+					</HeaderMetaRow>
 				</React.Suspense>
 			</ArticleHeader>
 		);
@@ -130,15 +149,24 @@ async function HeaderSection({ frontmatter }: { frontmatter: FrontMatter }) {
 	const publishDate = new Date(publishDateIso);
 	return (
 		<ArticleHeader>
+			<HeaderEyebrow>{formatCategoryLabel(category)}</HeaderEyebrow>
 			<PostTitle data-testid={"post-article__main-title"}>{title}</PostTitle>
+			{summary ? <HeaderSummary>{summary}</HeaderSummary> : null}
 			<React.Suspense fallback={<p>...</p>}>
-				<Time dateTime={publishDateIso}>
-					{new Intl.DateTimeFormat("ko-KR", {
-						year: "numeric",
-						month: "long",
-						day: "numeric",
-					}).format(publishDate)}
-				</Time>
+				<HeaderMetaRow>
+					<Time dateTime={publishDateIso}>
+						{new Intl.DateTimeFormat("ko-KR", {
+							year: "numeric",
+							month: "long",
+							day: "numeric",
+						}).format(publishDate)}
+					</Time>
+					<HeaderTagList>
+						{tags.map((tag) => (
+							<HeaderTag key={tag}>{tag}</HeaderTag>
+						))}
+					</HeaderTagList>
+				</HeaderMetaRow>
 			</React.Suspense>
 		</ArticleHeader>
 	);
