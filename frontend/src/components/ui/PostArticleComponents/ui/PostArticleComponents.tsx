@@ -1,13 +1,13 @@
-"use client";
-
-import { createElement } from "react";
+import React, { createElement } from "react";
 import { MDXComponents } from "@/MDXContents";
 import { Blockquote } from "./BlockQuote";
-import { InlineCode } from "./CodeBlock";
-import DynamicCodeBlock from "./CodeBlock/ui/DynamicCodeBlock";
+import { CodeBlock, InlineCode } from "./CodeBlock";
 import { CustomLink } from "./CustomLink";
+import { HorizontalRule } from "./HorizontalRule";
 import { ListItem } from "./ListItem";
+import { OrderedList } from "./OrderedList";
 import {
+	Emphasis,
 	H1,
 	H2,
 	H3,
@@ -17,8 +17,19 @@ import {
 	LinkAnchor,
 	LinkSVG,
 	P,
+	ParagraphFlow,
+	Pre,
+	Strong,
 } from "./PostArticleComponents.style";
 import { PostImage } from "./PostImage";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeaderCell,
+	TableRow,
+} from "./Table";
 import { UnOrderedList } from "./UnOrderedList";
 import { Video } from "./Video";
 
@@ -45,7 +56,12 @@ function LinkIcon() {
 }
 
 function slugify(str: string) {
-	return str.toString().trim().replace(/ /g, "-");
+	return str
+		.toString()
+		.trim()
+		.toLowerCase()
+		.replace(/\s+/g, "-")
+		.replace(/[^\p{L}\p{N}-]/gu, "");
 }
 
 const headers = [H1, H2, H3, H4, H5, H6];
@@ -54,9 +70,26 @@ function getHeaderByLevel(level: number) {
 	return headers[level - 1] || H1;
 }
 
+function getTextContent(node: React.ReactNode): string {
+	if (typeof node === "string" || typeof node === "number") {
+		return String(node);
+	}
+
+	if (Array.isArray(node)) {
+		return node.map(getTextContent).join(" ");
+	}
+
+	if (React.isValidElement<{ children?: React.ReactNode }>(node)) {
+		return getTextContent(node.props.children);
+	}
+
+	return "";
+}
+
 function createHeadingComponent(level: number) {
-	const HeadingComponent = ({ children }: { children: string }) => {
-		const slug = slugify(children);
+	const HeadingComponent = ({ children }: { children: React.ReactNode }) => {
+		const textContent = getTextContent(children).replace(/\s+/g, " ").trim();
+		const slug = slugify(textContent);
 		const header = getHeaderByLevel(level);
 		return createElement(header, { id: slug }, [
 			createElement(LinkAnchor, { href: `#${slug}`, key: `${slug}` }, [
@@ -75,9 +108,62 @@ function createHeadingComponent(level: number) {
 }
 
 type CodeProps = {
-	className: string;
+	className?: string;
 	children: React.ReactNode;
 };
+
+type PreProps = React.HTMLAttributes<HTMLPreElement> & {
+	children: React.ReactNode;
+};
+
+function extractCodePropsFromPre(children: React.ReactNode) {
+	const [firstChild] = React.Children.toArray(children);
+
+	if (
+		!React.isValidElement<{
+			className?: string;
+			children?: React.ReactNode;
+		}>(firstChild)
+	) {
+		return null;
+	}
+
+	return {
+		className: firstChild.props.className,
+		children: firstChild.props.children,
+	};
+}
+
+const blockElementTags = new Set([
+	"blockquote",
+	"div",
+	"figure",
+	"hr",
+	"img",
+	"ol",
+	"pre",
+	"table",
+	"ul",
+	"video",
+]);
+
+function hasBlockChild(children: React.ReactNode): boolean {
+	return React.Children.toArray(children).some((child) => {
+		if (!React.isValidElement<{ children?: React.ReactNode }>(child)) {
+			return false;
+		}
+
+		if (child.type === React.Fragment) {
+			return hasBlockChild(child.props.children);
+		}
+
+		if (child.type === PostImage || child.type === Video) {
+			return true;
+		}
+
+		return typeof child.type === "string" && blockElementTags.has(child.type);
+	});
+}
 
 const PostArticleComponents = {
 	h1: createHeadingComponent(1),
@@ -86,20 +172,46 @@ const PostArticleComponents = {
 	h4: createHeadingComponent(4),
 	h5: createHeadingComponent(5),
 	h6: createHeadingComponent(6),
-	p: ({ children }: { children: React.ReactNode }) => <P>{children}</P>,
+	p: ({ children }: { children: React.ReactNode }) => {
+		if (hasBlockChild(children)) {
+			return <ParagraphFlow>{children}</ParagraphFlow>;
+		}
+
+		return <P>{children}</P>;
+	},
 	img: PostImage,
 	Video,
-	pre: ({ children }: { children: React.ReactNode }) => children,
+	pre: ({ children, ...props }: PreProps) => {
+		const codeProps = extractCodePropsFromPre(children);
+
+		if (codeProps) {
+			return <CodeBlock {...props} {...codeProps} />;
+		}
+
+		return <Pre {...props}>{children}</Pre>;
+	},
 	code: ({ className, ...props }: CodeProps) => {
 		if (className?.startsWith("language-")) {
-			return <DynamicCodeBlock className={className} {...props} />;
+			return <CodeBlock className={className} {...props} />;
 		}
+
 		return <InlineCode className={className} {...props} />;
 	},
+
 	ul: UnOrderedList,
+	ol: OrderedList,
 	li: ListItem,
 	blockquote: Blockquote,
 	a: CustomLink,
+	hr: HorizontalRule,
+	table: Table,
+	thead: TableHead,
+	tbody: TableBody,
+	tr: TableRow,
+	th: TableHeaderCell,
+	td: TableCell,
+	strong: Strong,
+	em: Emphasis,
 	...MDXComponents,
 };
 

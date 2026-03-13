@@ -1,20 +1,51 @@
 import React from "react";
 import * as shiki from "shiki";
-import { CodeBlockWrapper, InlineCodeStyle } from "../style";
+import {
+	CodeBlockContent,
+	CodeBlockFilename,
+	CodeBlockHeader,
+	CodeBlockWrapper,
+	InlineCodeStyle,
+} from "../style";
 import { Clipboard } from "./Clipboard";
 
 const languageMap = {
 	"language-html": "html",
 	"language-js": "javascript",
+	"language-javascript": "javascript",
 	"language-jsx": "jsx",
 	"language-ts": "typescript",
+	"language-typescript": "typescript",
 	"language-tsx": "tsx",
 	"language-sh": "bash",
+	"language-bash": "bash",
 	"language-md": "markdown",
 	"language-yaml": "yaml",
 	"language-json": "json",
 	"language-css": "css",
+	"language-sql": "sql",
+	"language-c": "c",
 	"language-c++": "cpp",
+	"language-text": "plaintext",
+	"language-plaintext": "plaintext",
+	"language-plantext": "plaintext",
+} as const;
+
+const languageLabelMap = {
+	html: "HTML",
+	javascript: "JAVASCRIPT",
+	jsx: "JSX",
+	typescript: "TYPESCRIPT",
+	tsx: "TSX",
+	bash: "BASH",
+	markdown: "MARKDOWN",
+	yaml: "YAML",
+	json: "JSON",
+	css: "CSS",
+	sql: "SQL",
+	c: "C",
+	cpp: "C++",
+	plaintext: "PLAINTEXT",
 } as const;
 
 const highlighterPromise = shiki.createHighlighter({
@@ -30,22 +61,55 @@ const highlighterPromise = shiki.createHighlighter({
 		"yaml",
 		"json",
 		"css",
+		"sql",
+		"c",
 		"cpp",
 		"plaintext",
 	],
 });
 
 type LanguageKey = keyof typeof languageMap;
+type SupportedLanguage = (typeof languageMap)[LanguageKey] | "plaintext";
 
-interface ColdeBlockProps extends React.HTMLAttributes<HTMLElement> {
-	className: string;
+interface CodeBlockProps extends React.HTMLAttributes<HTMLElement> {
+	className?: string;
 	children: React.ReactNode;
 }
 
-async function CodeBlock({ className, children, ...props }: ColdeBlockProps) {
-	const codeToString = React.Children.toArray(children)
-		.filter((child) => typeof child === "string")
+function extractCodeText(children: React.ReactNode): string {
+	return React.Children.toArray(children)
+		.map((child) => {
+			if (typeof child === "string") return child;
+
+			if (
+				React.isValidElement<{ children?: React.ReactNode }>(child) &&
+				child.props?.children
+			) {
+				return React.Children.toArray(child.props.children)
+					.map((nestedChild) =>
+						typeof nestedChild === "string" ? nestedChild : "",
+					)
+					.join("");
+			}
+
+			return "";
+		})
 		.join("");
+}
+
+function resolveLanguage(className?: string): SupportedLanguage {
+	if (!className) {
+		return "plaintext";
+	}
+
+	const normalizedClassName = className.trim().toLowerCase();
+	return languageMap[normalizedClassName as LanguageKey] || "plaintext";
+}
+
+async function CodeBlock({ className, children, ...props }: CodeBlockProps) {
+	const codeToString = extractCodeText(children);
+	const language = resolveLanguage(className);
+	const languageLabel = languageLabelMap[language] || "PLAINTEXT";
 
 	try {
 		const highlighter = await highlighterPromise;
@@ -54,13 +118,20 @@ async function CodeBlock({ className, children, ...props }: ColdeBlockProps) {
 				light: "vitesse-light",
 				dark: "tokyo-night",
 			},
-			lang: languageMap[className as LanguageKey] || "plaintext",
+			lang: language,
 		});
+
 		return (
-			<CodeBlockWrapper>
-				{/* biome-ignore  lint/security/noDangerouslySetInnerHtml: CodeBlock needs inject html code */}
-				<div dangerouslySetInnerHTML={{ __html: html }} />
-				<Clipboard text={codeToString} />
+			<CodeBlockWrapper {...props}>
+				<CodeBlockHeader>
+					<CodeBlockFilename>{languageLabel}</CodeBlockFilename>
+					<Clipboard text={codeToString} />
+				</CodeBlockHeader>
+
+				<CodeBlockContent>
+					{/* biome-ignore lint/security/noDangerouslySetInnerHtml: CodeBlock needs inject html code */}
+					<div dangerouslySetInnerHTML={{ __html: html }} />
+				</CodeBlockContent>
 			</CodeBlockWrapper>
 		);
 	} catch (error) {
@@ -68,10 +139,20 @@ async function CodeBlock({ className, children, ...props }: ColdeBlockProps) {
 			"Shiki를 사용하여 코드 하이라이팅을 변환하는 동안 오류가 발생했습니다.",
 			error,
 		);
+
 		return (
-			<pre {...props}>
-				<code>{codeToString}</code>
-			</pre>
+			<CodeBlockWrapper {...props}>
+				<CodeBlockHeader>
+					<CodeBlockFilename>{languageLabel}</CodeBlockFilename>
+					<Clipboard text={codeToString} />
+				</CodeBlockHeader>
+
+				<CodeBlockContent>
+					<pre>
+						<code>{codeToString}</code>
+					</pre>
+				</CodeBlockContent>
+			</CodeBlockWrapper>
 		);
 	}
 }

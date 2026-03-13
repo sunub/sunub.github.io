@@ -2,36 +2,40 @@
 
 import type React from "react";
 import styled from "styled-components";
+import { postContentThemeVariables } from "./sharedTheme";
 
 const BlockquoteStyle = styled.blockquote`
-  position: relative;
-  container-name: blockquote;
-  container-type: inline-size;
+	${postContentThemeVariables}
 
-  background: oklch(96.5% 0.013 31.07);
-  color: oklch(21.08% 0.055 34.69); /* 기존 색상 - 가독성 좋음 */
-  border-radius: 1rem;
-  padding-top: 2.25rem;
-  padding-bottom: 2.25rem;
-  padding-right: 2rem;
-  padding-left: 5cqw;
-  margin-bottom: 1.5rem;
+	position: relative;
+	margin: 2.25rem 0;
+	border-left: 6px solid var(--post-quote-border);
+	border-top: 2px solid var(--post-border-strong);
+	border-right: 2px solid var(--post-border-strong);
+	border-bottom: 2px solid var(--post-border-strong);
+	border-radius: 0 1rem 1rem 0;
+	padding: 1.6rem 1.75rem 1.6rem 2rem;
+	background: var(--post-quote-bg);
+	color: var(--post-body);
+	box-shadow: 4px 4px 0 var(--post-shadow-accent);
 
-  & > h1,
-  & > h2,
-  & > h3,
-  & > h4,
-  & > h5,
-  & > h6 {
-    margin-top: 0;
-  }
+	& > h1,
+	& > h2,
+	& > h3,
+	& > h4,
+	& > h5,
+	& > h6 {
+		margin-top: 0;
+	}
 `;
 
 const Bookmark = styled.div`
-  position: absolute;
-  left: 4cqw;
-  top: 1.5cqh;
-  color: oklch(73.44% 0.152 21.47);
+	${postContentThemeVariables}
+
+	position: absolute;
+	left: 1rem;
+	top: 1rem;
+	color: var(--post-accent);
 `;
 
 function BookmarIcon() {
@@ -40,8 +44,8 @@ function BookmarIcon() {
 			<svg
 				aria-hidden="true"
 				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
+				width="20"
+				height="20"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"

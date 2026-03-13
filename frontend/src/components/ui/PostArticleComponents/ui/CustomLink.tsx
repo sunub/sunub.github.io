@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import styled from "styled-components";
+import { postContentThemeVariables } from "./sharedTheme";
 
 function CustomLink({
 	href,
@@ -23,17 +24,23 @@ function CustomLink({
 }
 
 const LinkComponent = styled(Link)`
-  word-break: break-all;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  padding: 4px 4px;
-  transition: background 250ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
-  color: oklch(64.86% 0.181 249.54);
-  border-radius: 2px;
+	${postContentThemeVariables}
 
-  :hover {
-    background: oklch(82.48% 0 105 / 0.3);
-  }
+	word-break: break-all;
+	text-decoration: none;
+	border-bottom: 2px dotted var(--post-accent);
+	padding: 0.1rem 0.05rem;
+	transition:
+		background 180ms ease,
+		border-bottom-style 180ms ease;
+	color: var(--post-accent);
+	border-radius: 2px;
+	font-weight: 700;
+
+	:hover {
+		background: var(--post-link-hover-bg);
+		border-bottom-style: solid;
+	}
 `;
 
 export { CustomLink };
