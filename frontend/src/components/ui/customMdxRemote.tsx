@@ -1,5 +1,7 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { cache } from "react";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 import { PostArticleComponents } from "./PostArticleComponents";
 
 function convertTableBlockToHTML(tableLines: string[]): string {
@@ -62,6 +64,15 @@ const transformMarkdownTables = cache((content: string): string => {
 export default async function MDXWrapper({ content }: { content: string }) {
 	const transformedContent = transformMarkdownTables(content);
 	return (
-		<MDXRemote source={transformedContent} components={PostArticleComponents} />
+		<MDXRemote
+			source={transformedContent}
+			components={PostArticleComponents}
+			options={{
+				mdxOptions: {
+					remarkPlugins: [remarkMath],
+					rehypePlugins: [rehypeKatex],
+				},
+			}}
+		/>
 	);
 }

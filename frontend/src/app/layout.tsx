@@ -1,4 +1,5 @@
 import "./globals.css";
+import "katex/dist/katex.min.css";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";

@@ -609,4 +609,25 @@ html[data-color-theme="dark"] .shiki span {
 	font-weight: var(--shiki-dark-font-weight) !important;
 	text-decoration: var(--shiki-dark-text-decoration) !important;
 }
+
+#blog-post__article-content .katex {
+	color: var(--color-text);
+	font-size: 1.02em;
+}
+
+#blog-post__article-content .katex-display {
+	margin: 1.5rem 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0.35rem 0;
+}
+
+#blog-post__article-content .katex-display > .katex {
+	display: inline-block;
+	padding: 1rem 1.25rem;
+	border-radius: 0.75rem;
+	border: 1px solid color-mix(in oklch, var(--color-text), var(--color-primary) 90%);
+	background: var(--color-codeBlock);
+	box-shadow: 4px 4px 0 color-mix(in oklch, var(--color-highlight) 28%, transparent);
+}
 `;
