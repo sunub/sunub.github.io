@@ -5,14 +5,18 @@ const require = createRequire(import.meta.url);
 const nextBin = require.resolve("next/dist/bin/next");
 const suppressedMessage = "[baseline-browser-mapping]";
 
-const child = spawn(process.execPath, [nextBin, "build", ...process.argv.slice(2)], {
-	env: {
-		...process.env,
-		BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA: "true",
-		BROWSERSLIST_IGNORE_OLD_DATA: "true",
+const child = spawn(
+	process.execPath,
+	[nextBin, "build", ...process.argv.slice(2)],
+	{
+		env: {
+			...process.env,
+			BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA: "true",
+			BROWSERSLIST_IGNORE_OLD_DATA: "true",
+		},
+		stdio: ["inherit", "pipe", "pipe"],
 	},
-	stdio: ["inherit", "pipe", "pipe"],
-});
+);
 
 const forwardStream = (stream, target) => {
 	stream.setEncoding("utf8");
