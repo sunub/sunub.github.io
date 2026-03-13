@@ -57,7 +57,7 @@
 			"utf-8-validate"
 		],
 		"overrides": {
-			"baseline-browser-mapping": "latest"
+			"baseline-browser-mapping": "2.10.7"
 		},
 		"ignoredBuiltDependencies": [
 			"@nestjs/core"
