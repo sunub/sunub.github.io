@@ -4,7 +4,9 @@ import styled from "styled-components";
 
 export const RootWrapper = styled.div`
   transition: all 350ms ease 0s;
-  background: var(--color-headerBackground);
+  position: relative;
+  z-index: 1;
+  background: transparent;
   padding-top: 1rem;
 `;
 
