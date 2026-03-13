@@ -1,3 +1,5 @@
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type {
 	MatterTransformData,
@@ -24,7 +26,7 @@ const createPost = (
 });
 
 describe("BlogService", () => {
-	const postsRoot = "/tmp/test-posts";
+	let postsRoot = "/tmp/test-posts";
 	const samplePosts: PostFrontMatter[] = [
 		createPost("web", "a", "Post A"),
 		createPost("web", "b", "Post B"),
@@ -47,6 +49,12 @@ describe("BlogService", () => {
 	afterEach(() => {
 		delete process.env.BLOG_POSTS_PATH;
 		jest.restoreAllMocks();
+	});
+
+	afterAll(async () => {
+		if (postsRoot.startsWith(join(tmpdir(), "blog-service-"))) {
+			await rm(postsRoot, { recursive: true, force: true });
+		}
 	});
 
 	it("getLatestPosts should return first N posts from cache", async () => {
@@ -120,5 +128,60 @@ describe("BlogService", () => {
 
 		expect(content).toBeNull();
 		expect(mockProcessFile).toHaveBeenCalledTimes(2);
+	});
+
+	it("rebuildIndexAndReloadCache should include newly added nested posts", async () => {
+		postsRoot = await mkdtemp(join(tmpdir(), "blog-service-"));
+		process.env.BLOG_POSTS_PATH = postsRoot;
+		service = new BlogService();
+
+		await mkdir(join(postsRoot, "web", "nested"), { recursive: true });
+		await writeFile(
+			join(postsRoot, "web", "first-post.mdx"),
+			`---
+title: First Post
+date: 2024-01-01
+tags:
+  - test
+summary: first summary
+slug: first-post
+category: web
+completed: true
+---
+
+# First
+`,
+		);
+
+		await service.onModuleInit();
+
+		await writeFile(
+			join(postsRoot, "web", "nested", "second-post.mdx"),
+			`---
+title: Second Post
+date: 2024-01-02
+tags:
+  - test
+summary: second summary
+slug: second-post
+category: web
+completed: true
+---
+
+# Second
+`,
+		);
+
+		await service.rebuildIndexAndReloadCache("test nested post add");
+
+		const posts = await service.getAllPosts();
+		const indexFile = await readFile(join(postsRoot, "posts.jsonl"), "utf-8");
+
+		expect(posts).toHaveLength(2);
+		expect(posts.map((post) => post.frontmatter.slug)).toEqual([
+			"second-post",
+			"first-post",
+		]);
+		expect(indexFile).toContain('"slug":"second-post"');
 	});
 });

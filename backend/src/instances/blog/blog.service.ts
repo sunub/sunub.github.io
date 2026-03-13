@@ -20,23 +20,14 @@ export class BlogService implements OnModuleInit {
 	private totalPostCount = 0;
 	private postsCache: PostFrontMatter[] = [];
 	private fileProcessor = new FileProcessor();
+	private isReloadingIndex = false;
+	private shouldReloadIndexAgain = false;
 
 	async onModuleInit() {
 		this.logger.log("BlogService 초기화를 진행합니다...");
 		try {
 			await this.ensureIndex();
-
-			const posts: PostFrontMatter[] = [];
-			const stream = createReadStream(this.INDEX_FILE_PATH);
-			const rl = createInterface({ input: stream, crlfDelay: Infinity });
-
-			for await (const line of rl) {
-				if (line.trim()) {
-					posts.push(JSON.parse(line));
-				}
-			}
-			this.postsCache = posts;
-			this.totalPostCount = this.postsCache.length;
+			await this.reloadPostsCacheFromIndex();
 
 			this.logger.log(
 				`블로그 서비스가 성공적으로 초기화되었습니다. 총 게시물 수: ${this.totalPostCount}`,
@@ -51,6 +42,14 @@ export class BlogService implements OnModuleInit {
 
 	public getTotalPostCount(): number {
 		return this.totalPostCount;
+	}
+
+	public getPostsRootPath(): string {
+		return this.POSTS_ROOT_PATH;
+	}
+
+	public getIndexFilePath(): string {
+		return this.INDEX_FILE_PATH;
 	}
 
 	public async getLatestPosts(count: number): Promise<PostFrontMatter[]> {
@@ -125,10 +124,47 @@ export class BlogService implements OnModuleInit {
 		return null;
 	}
 
+	public async rebuildIndexAndReloadCache(reason = "manual"): Promise<void> {
+		if (this.isReloadingIndex) {
+			this.shouldReloadIndexAgain = true;
+			this.logger.debug(
+				`인덱스 재구성이 이미 진행 중입니다. 추가 재시도를 예약합니다. 사유: ${reason}`,
+			);
+			return;
+		}
+
+		this.isReloadingIndex = true;
+		try {
+			do {
+				this.shouldReloadIndexAgain = false;
+				this.logger.log(`인덱스 재구성을 시작합니다. 사유: ${reason}`);
+				await this.buildIndexFromFiles();
+				await this.reloadPostsCacheFromIndex();
+			} while (this.shouldReloadIndexAgain);
+		} finally {
+			this.isReloadingIndex = false;
+		}
+	}
+
 	private async *readIndexLines(): AsyncGenerator<PostFrontMatter> {
 		for (const post of this.postsCache) {
 			yield post;
 		}
+	}
+
+	private async reloadPostsCacheFromIndex() {
+		const posts: PostFrontMatter[] = [];
+		const stream = createReadStream(this.INDEX_FILE_PATH);
+		const rl = createInterface({ input: stream, crlfDelay: Infinity });
+
+		for await (const line of rl) {
+			if (line.trim()) {
+				posts.push(JSON.parse(line));
+			}
+		}
+
+		this.postsCache = posts;
+		this.totalPostCount = posts.length;
 	}
 
 	private async ensureIndex() {
