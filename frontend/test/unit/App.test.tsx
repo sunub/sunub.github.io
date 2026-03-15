@@ -7,7 +7,7 @@ import {
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { PublishedPost } from "@/components/Main/BlogPost/types";
 import { getRecentPost } from "@/components/Main/FeaturedPost/api/getRecentPost";
-import FeaturedPost from "@/components/Main/FeaturedPost/ui/FeaturedPost";
+import { FeaturedPost } from "@/components/Main/FeaturedPost/ui/FeaturedPost";
 
 vi.mock("@/components/Main/FeaturedPost/api/getRecentPost", () => ({
 	getRecentPost: vi.fn(),
