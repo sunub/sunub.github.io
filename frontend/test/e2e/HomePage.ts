@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+import { BLOG_POST_LIST_IDS } from "@/components/Main/NewestPostList/utils/virtualListUtils";
 import { ROUTES } from "@/shared/constants";
 import { E2E_TEST_URL } from "./constants";
 
@@ -8,7 +9,7 @@ export class HomePage {
 
 	constructor(page: Page) {
 		this.page = page;
-		this.postList = page.getByTestId("post-list");
+		this.postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
 	}
 
 	static async goToHome(page: Page) {
