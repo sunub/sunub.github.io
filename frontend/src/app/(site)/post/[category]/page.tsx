@@ -3,7 +3,6 @@ import { PostCards } from "@/components/Card/PostCard";
 import { Wave } from "@/components/Header/Wave";
 import { CardsSkeleton } from "@/components/Skeletons";
 import Spacer from "@/components/Spacer";
-import { RootLayout } from "@/features/RootLayout";
 import { RootContainer, Title, TitleContainer } from "./page.style";
 
 type Cateogry = "code" | "web" | "cs" | "algorithm";
@@ -32,7 +31,7 @@ export default async function Page({ params }: { params: Params }) {
 	};
 
 	return (
-		<RootLayout>
+		<>
 			<TitleContainer>
 				<Title>{`${title[category]}`}</Title>
 			</TitleContainer>
@@ -43,6 +42,6 @@ export default async function Page({ params }: { params: Params }) {
 					<PostCards category={category} />
 				</Suspense>
 			</RootContainer>
-		</RootLayout>
+		</>
 	);
 }

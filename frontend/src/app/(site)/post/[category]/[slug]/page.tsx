@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import React from "react";
 import CustomMDXRemoteComponents from "@/components/ui/customMdxRemote";
-import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
-import { RootLayout } from "@/features/RootLayout";
 import { NotFoundError } from "@/shared/error";
 import { Wave } from "@/widgets/Wave";
 import { getAllPosts } from "./api/getAllPosts";
@@ -193,45 +191,43 @@ async function Page({ params }: { params: Params }) {
 		const { content, frontmatter } = postContentData;
 		const publishedDate = parseIsoDate(frontmatter.date);
 		return (
-			<RootLayout>
-				<AnimatePresenceWrapper>
-					<Wave />
-					<Main>
-						<script type="application/ld+json" suppressHydrationWarning>
-							{JSON.stringify({
-								"@context": "https://schema.org",
-								"@type": "BlogPosting",
-								headline: frontmatter.title,
-								...(publishedDate
-									? {
-											datePublished: publishedDate,
-											dateModified: publishedDate,
-										}
-									: {}),
-								description: frontmatter.summary,
-								author: {
-									"@type": "Person",
-									name: "sun_ub",
-									url: "https://sunub.vercel.app",
-								},
-								image: "https://sunub.vercel.app/assets/default-og-image.jpg",
-								mainEntryOfPage: {
-									"@type": "WebPage",
-									"@id": `https://sunub.vercel.app/post/${category}/${slug}`,
-								},
-							})}
-						</script>
-						<ArticleRootWrapper id="blog-post__article-root">
-							<HeaderSection frontmatter={frontmatter} />
-							<ArticleWrapper id="blog-post__article">
-								<ClientArticle>
-									<CustomMDXRemoteComponents content={content} />
-								</ClientArticle>
-							</ArticleWrapper>
-						</ArticleRootWrapper>
-					</Main>
-				</AnimatePresenceWrapper>
-			</RootLayout>
+			<>
+				<Wave />
+				<Main>
+					<script type="application/ld+json" suppressHydrationWarning>
+						{JSON.stringify({
+							"@context": "https://schema.org",
+							"@type": "BlogPosting",
+							headline: frontmatter.title,
+							...(publishedDate
+								? {
+										datePublished: publishedDate,
+										dateModified: publishedDate,
+									}
+								: {}),
+							description: frontmatter.summary,
+							author: {
+								"@type": "Person",
+								name: "sun_ub",
+								url: "https://sunub.vercel.app",
+							},
+							image: "https://sunub.vercel.app/assets/default-og-image.jpg",
+							mainEntryOfPage: {
+								"@type": "WebPage",
+								"@id": `https://sunub.vercel.app/post/${category}/${slug}`,
+							},
+						})}
+					</script>
+					<ArticleRootWrapper id="blog-post__article-root">
+						<HeaderSection frontmatter={frontmatter} />
+						<ArticleWrapper id="blog-post__article">
+							<ClientArticle>
+								<CustomMDXRemoteComponents content={content} />
+							</ClientArticle>
+						</ArticleWrapper>
+					</ArticleRootWrapper>
+				</Main>
+			</>
 		);
 	} catch (error) {
 		console.error("MDX 콘텐츠를 불러오는 중 오류가 발생했습니다:", error);
