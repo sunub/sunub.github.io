@@ -11,8 +11,14 @@ const ErrorRecentPost: PublishedPost = {
 
 async function getRecentPostFetch() {
 	try {
-		const API_URL = buildApiUrl(API_PATHS.posts.latest());
-		const data = await fetch(API_URL);
+		const apiUrl = buildApiUrl(API_PATHS.posts.latest());
+		const data = await fetch(apiUrl, {
+			cache: "force-cache",
+			next: {
+				revalidate: 300,
+				tags: ["posts", "posts:latest"],
+			},
+		});
 		if (!data.ok) {
 			throw new Error("Failed to fetch recent posts");
 		}
