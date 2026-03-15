@@ -1,21 +1,26 @@
-"use client";
+import { memo } from "react";
+import {
+  Bridge,
+  Cars,
+  Clouds,
+  CloudsFrame,
+  HeroImageSurface,
+  HeroShadow,
+} from "./HeroImage.style";
 
-import { useContext } from "react";
-import type { Theme } from "type";
-import { ThemeContext } from "../Theme/ThemeProvider";
-import DarkHeroImage from "./DarkHeroImage";
-import LightHeroImage from "./LightHeroImage";
+const HeroImage = memo(() => {
+  return (
+    <HeroImageSurface>
+      <CloudsFrame>
+        <Clouds />
+      </CloudsFrame>
+      <Bridge />
+      <Cars />
+      <HeroShadow />
+    </HeroImageSurface>
+  );
+});
 
-interface HeroImageProps {
-	initialTheme?: Theme;
-}
-
-function HeroImage({ initialTheme }: HeroImageProps) {
-	const { colorTheme } = useContext(ThemeContext);
-	const currentTheme = colorTheme || initialTheme || "light";
-	const isDarkTheme = currentTheme === "dark";
-
-	return isDarkTheme ? <DarkHeroImage /> : <LightHeroImage />;
-}
+HeroImage.displayName = "HeroImage";
 
 export default HeroImage;

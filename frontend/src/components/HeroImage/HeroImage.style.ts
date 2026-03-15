@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -104,37 +102,19 @@ export const Cars = styled.span`
     }
   }
 `;
-export const LightShadow = styled.span`
+export const HeroShadow = styled.span`
   position: relative;
   top: -28px;
   display: inline-block;
   width: 100%;
   height: 7px;
-  background-color: oklch(50.81% 0.191 29.05);
+  background-color: var(--hero-shadow-color);
   mix-blend-mode: darken;
   filter: blur(10px);
   opacity: var(--hero-shadow-opacity);
 `;
 
-export const DarkShadow = styled.span`
-  position: relative;
-  top: -28px;
-  display: inline-block;
-  width: 100%;
-  height: 7px;
-  background-color: oklch(15.29% 0.034 262.59 / 85%);
-  mix-blend-mode: darken;
-  filter: blur(10px);
-  opacity: var(--hero-shadow-opacity);
-`;
-
-export const DrakHeroImageWapper = styled.div`
-  position: relative;
-  grid-area: hero-image;
-  transform: translateY(45px);
-`;
-
-export const LightHeroImageWapper = styled.div`
+export const HeroImageSurface = styled.div`
   position: relative;
   grid-area: hero-image;
   transform: translateY(45px);
