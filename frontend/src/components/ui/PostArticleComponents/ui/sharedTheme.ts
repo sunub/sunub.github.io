@@ -1,5 +1,3 @@
-"use client";
-
 import { css } from "styled-components";
 
 export const postContentThemeVariables = css`
@@ -61,7 +59,7 @@ export const postContentThemeVariables = css`
 `;
 
 export const postContentDisplayFont =
-	"var(--pretendard-font-regular), system-ui, sans-serif";
+  "var(--pretendard-font-regular), system-ui, sans-serif";
 
 export const postContentMonoFont =
-	"ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
+  "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace";
