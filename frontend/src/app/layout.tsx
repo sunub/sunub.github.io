@@ -6,10 +6,7 @@ import Script from "next/script";
 import type React from "react";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
-import ThemeProvider from "@/components/Theme/ThemeProvider";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
-import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
-import { getRequestTheme } from "@/utils/theme";
 import { craftyGirls, pretendardRegular } from "./font";
 import { ShikiOverrieds } from "./GlobalStyle";
 
@@ -60,19 +57,16 @@ export const viewport: Viewport = {
 	width: "device-width",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const theme = await getRequestTheme();
-
 	return (
 		<html
 			lang="ko"
 			className={`${pretendardRegular.variable} ${craftyGirls.variable}`}
 			suppressHydrationWarning={true}
-			data-color-theme={theme}
 		>
 			<head>
 				<meta
@@ -104,16 +98,15 @@ export default async function RootLayout({
 				</script>
 				<StyledComponentsRegistry>
 					<ShikiOverrieds />
-					<ThemeProvider initialTheme={theme}>
-						<Provider>
-							<AnimatePresenceWrapper>{children}</AnimatePresenceWrapper>
-							<div id="mobile-nav-portal" />
-							<div
-								id="blog-search__input-area"
-								data-testid={"blog-search__input-area"}
-							/>
-						</Provider>
-					</ThemeProvider>
+					<Provider>
+						<div id="mobile-nav-portal" />
+						<div
+							id="blog-search__input-area"
+							data-testid={"blog-search__input-area"}
+						/>
+
+						{children}
+					</Provider>
 				</StyledComponentsRegistry>
 			</body>
 		</html>
