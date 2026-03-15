@@ -1,4 +1,3 @@
-import Spacer from "@/components/Spacer";
 import { BlogPost } from "../../BlogPost";
 import {
 	NewestPostList,
@@ -11,13 +10,9 @@ export async function FeaturedPost() {
 
 	return (
 		<BlogPost recentlyPublished={recentlyPostedPost}>
-			<Spacer axis={"vertical"} size={32} />
-
 			<NewestPostList>
 				<NewestPostListLoadMoreRow />
 			</NewestPostList>
 		</BlogPost>
 	);
 }
-
-export default FeaturedPost;
