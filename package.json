@@ -60,7 +60,8 @@
 			"baseline-browser-mapping": "2.10.7"
 		},
 		"ignoredBuiltDependencies": [
-			"@nestjs/core"
+			"@nestjs/core",
+			"core-js"
 		]
 	},
 	"packageManager": "pnpm@10.30.3"
