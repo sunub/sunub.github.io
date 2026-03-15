@@ -40,10 +40,12 @@ function ThemeIcon({
 	colorTheme: string;
 	maskId: string;
 }) {
+	const isPrimary = colorTheme === "dark";
+
 	return (
 		<Styled.SunAndMoon
 			{...delegated}
-			$colorTheme={colorTheme}
+			$primary={isPrimary}
 			width="24"
 			height="24"
 			viewBox="0 0 24 24"
@@ -51,14 +53,14 @@ function ThemeIcon({
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<Styled.Sun
-				$colorTheme={colorTheme}
+				$primary={isPrimary}
 				cx="12"
 				cy="12"
 				r="5"
 				fill="#2D0D06"
 				mask={`url(#${maskId})`}
 			/>
-			<Styled.SunAndBeams $colorTheme={colorTheme}>
+			<Styled.SunAndBeams $primary={isPrimary}>
 				<path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
 				<path
 					d="M5.63604 5.63604L6.01039 6.01039"
@@ -85,7 +87,7 @@ function ThemeIcon({
 				/>
 			</Styled.SunAndBeams>
 			<Styled.Moon
-				$colorTheme={colorTheme}
+				$primary={isPrimary}
 				id={maskId}
 				maskUnits={"userSpaceOnUse"}
 				maskContentUnits={"userSpaceOnUse"}
