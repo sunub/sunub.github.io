@@ -1,27 +1,27 @@
 import type { Theme } from "type";
 import {
-  DARK_CRICAL_IMAGE_URLS,
-  LIGHT_CRICAL_IMAGE_URLS,
+	DARK_CRICAL_IMAGE_URLS,
+	LIGHT_CRICAL_IMAGE_URLS,
 } from "@/resources/images";
 
 export function getCriticalImageUrls(theme: Theme) {
-  return theme === "light" ? LIGHT_CRICAL_IMAGE_URLS : DARK_CRICAL_IMAGE_URLS;
+	return theme === "light" ? LIGHT_CRICAL_IMAGE_URLS : DARK_CRICAL_IMAGE_URLS;
 }
 
 export function getNextTheme(theme: Theme): Theme {
-  return theme === "light" ? "dark" : "light";
+	return theme === "light" ? "dark" : "light";
 }
 
 export function pickImageType(src: string) {
-  const extension = src.split(".").pop();
+	const extension = src.split(".").pop();
 
-  if (extension === "avif") {
-    return "image/avif";
-  }
+	if (extension === "avif") {
+		return "image/avif";
+	}
 
-  if (extension === "webp") {
-    return "image/webp";
-  }
+	if (extension === "webp") {
+		return "image/webp";
+	}
 
-  return undefined;
+	return undefined;
 }

@@ -1,24 +1,24 @@
 import { memo } from "react";
 import {
-  Bridge,
-  Cars,
-  Clouds,
-  CloudsFrame,
-  HeroImageSurface,
-  HeroShadow,
+	Bridge,
+	Cars,
+	Clouds,
+	CloudsFrame,
+	HeroImageSurface,
+	HeroShadow,
 } from "./HeroImage.style";
 
 const HeroImage = memo(() => {
-  return (
-    <HeroImageSurface>
-      <CloudsFrame>
-        <Clouds />
-      </CloudsFrame>
-      <Bridge />
-      <Cars />
-      <HeroShadow />
-    </HeroImageSurface>
-  );
+	return (
+		<HeroImageSurface>
+			<CloudsFrame>
+				<Clouds />
+			</CloudsFrame>
+			<Bridge />
+			<Cars />
+			<HeroShadow />
+		</HeroImageSurface>
+	);
 });
 
 HeroImage.displayName = "HeroImage";

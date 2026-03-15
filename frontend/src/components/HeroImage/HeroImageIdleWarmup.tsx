@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useTheme } from "@/components/Theme/ThemeProvider";
 import {
 	getCriticalImageUrls,
 	getNextTheme,
 } from "@/components/HeroImage/heroImageResources";
 import { preloadImages } from "@/components/HeroImage/imagePreloadRegistry";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 
 type NetworkInformationLike = {
 	effectiveType?: string;
@@ -38,7 +38,9 @@ function canWarmupHeroImages() {
 		return false;
 	}
 
-	return connection.effectiveType !== "slow-2g" && connection.effectiveType !== "2g";
+	return (
+		connection.effectiveType !== "slow-2g" && connection.effectiveType !== "2g"
+	);
 }
 
 function requestIdleWork(callback: () => void) {

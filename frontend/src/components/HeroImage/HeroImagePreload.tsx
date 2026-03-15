@@ -1,9 +1,6 @@
-import type { Theme } from "type";
 import { preload } from "react-dom";
-import {
-	getCriticalImageUrls,
-	pickImageType,
-} from "./heroImageResources";
+import type { Theme } from "type";
+import { getCriticalImageUrls, pickImageType } from "./heroImageResources";
 
 interface Props {
 	theme: Theme;
