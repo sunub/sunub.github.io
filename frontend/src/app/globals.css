@@ -642,6 +642,7 @@ html[data-color-theme="light"] {
 	--bridge-opacity: 1;
 	--cars-opacity: 1;
 	--clouds-opacity: 1;
+	--hero-shadow-color: oklch(50.81% 0.191 29.05);
 	--hero-shadow-opacity: 1;
 
 	color-scheme: light;
@@ -694,6 +695,7 @@ html[data-color-theme="dark"] {
 	--bridge-opacity: 1;
 	--cars-opacity: 1;
 	--clouds-opacity: 1;
+	--hero-shadow-color: oklch(15.29% 0.034 262.59 / 85%);
 	--hero-shadow-opacity: 1;
 
 	color-scheme: dark;
