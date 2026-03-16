@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { getNextTheme } from "@/components/HeroImage/heroImageResources";
+import { getNextTheme } from "@/components/HeroImage/utils/heroImageResources.ts";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
 import { ThemeIcon } from "./ThemeIcon.tsx";
