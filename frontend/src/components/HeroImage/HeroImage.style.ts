@@ -24,24 +24,11 @@ export const HeroImageWrapper = styled.div`
   overflow: hidden;
 `;
 
-export const Bridge = styled.span`
-  display: inline-block;
-  position: relative;
-  width: 100dvw;
-  height: 120px;
-  z-index: 2;
-  background-size: contain;
-  background-repeat: repeat-x;
-  background-image: var(--bridge-bg-url);
-  opacity: var(--bridge-opacity);
-`;
-
 export const CloudsFrame = styled.div`
   position: relative;
   z-index: 1;
   width: 100%;
   height: 200px;
-  background: var(--clouds-fallback-bg);
 `;
 
 export const Clouds = styled.span`
@@ -86,7 +73,7 @@ export const Cars = styled.span`
   width: 100%;
   height: 100%;
 
-  transform: translateY(-100px);
+  transform: translateY(28px);
   animation: pan-cars 50s linear infinite;
   will-change: background-position;
 
@@ -118,4 +105,82 @@ export const HeroImageSurface = styled.div`
   position: relative;
   grid-area: hero-image;
   transform: translateY(45px);
+`;
+
+export const HeroOverlayLayer = styled.div`
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+
+  &[data-visible='true'] {
+    opacity: 1;
+  }
+`;
+
+export const HeroPosterSurface = styled.div`
+  position: relative;
+  z-index: 0;
+  transform: translateY(45px);
+  transition: opacity 180ms ease;
+  pointer-events: none;
+`;
+
+export const HeroPosterCloudsFrame = styled.div<{ $primary: boolean }>`
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+
+  opacity: ${({ $primary }) => ($primary ? 0 : 1)};
+  will-change: opacity;
+`;
+
+export const HeroPosterBridge = styled.div`
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+`;
+
+export const HeroPosterCars = styled.div<{ $primary: boolean }>`
+  position: relative;
+  width: 100%;
+  height: 14px;
+  overflow: hidden;
+  transform: translateY(-92px);
+
+  opacity: ${({ $primary }) => ($primary ? 0 : 1)};
+  will-change: opacity, transform;
+`;
+
+export const HeroPosterShadow = styled.span`
+  position: relative;
+  top: -28px;
+  display: inline-block;
+  width: 100%;
+  height: 7px;
+  background-color: var(--hero-shadow-color);
+  mix-blend-mode: darken;
+  filter: blur(10px);
+  opacity: var(--hero-shadow-opacity);
+`;
+
+export const HeroPosterTrack = styled.div`
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  min-width: 100%;
+  pointer-events: none;
+  user-select: none;
+`;
+
+export const HeroPosterTile = styled(Image)`
+  display: block;
+  flex: none;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
 `;

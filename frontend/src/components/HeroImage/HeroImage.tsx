@@ -1,12 +1,5 @@
 import { memo } from "react";
-import {
-	Bridge,
-	Cars,
-	Clouds,
-	CloudsFrame,
-	HeroImageSurface,
-	HeroShadow,
-} from "./HeroImage.style";
+import { Cars, Clouds, CloudsFrame, HeroImageSurface } from "./HeroImage.style";
 
 const HeroImage = memo(() => {
 	return (
@@ -14,9 +7,7 @@ const HeroImage = memo(() => {
 			<CloudsFrame>
 				<Clouds />
 			</CloudsFrame>
-			<Bridge />
 			<Cars />
-			<HeroShadow />
 		</HeroImageSurface>
 	);
 });

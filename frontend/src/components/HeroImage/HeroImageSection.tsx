@@ -1,14 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import { Wave } from "@/components/Header/Wave";
-import { HeroImage } from "@/components/HeroImage";
-import { HeroImageWrapper } from "./HeroImage.style";
 import { HeroImageIdleWarmup } from "./HeroImageIdleWarmup";
+import {
+	HeroImageDesktopOnly,
+	HeroImageSectionWrapper,
+} from "./HeroImageSection.style";
+import { HeroPoster } from "./HeroPoster";
 
 export function HeroImageSection() {
+	const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+
 	return (
-		<HeroImageWrapper>
-			<HeroImageIdleWarmup />
-			<HeroImage />
+		<HeroImageSectionWrapper>
+			<HeroImageDesktopOnly>
+				<HeroPoster hidden={isOverlayVisible} />
+				<HeroImageIdleWarmup onOverlayVisibleChange={setIsOverlayVisible} />
+			</HeroImageDesktopOnly>
 			<Wave />
-		</HeroImageWrapper>
+		</HeroImageSectionWrapper>
 	);
 }

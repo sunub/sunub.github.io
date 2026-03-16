@@ -1,19 +1,21 @@
 import { preload } from "react-dom";
 import type { Theme } from "type";
-import { getCriticalImageUrls, pickImageType } from "./heroImageResources";
+import {
+	getHeroSceneImageUrls,
+	pickImageType,
+} from "./utils/heroImageResources";
 
 interface Props {
 	theme: Theme;
 }
 
 export function HeroImagePreload({ theme }: Props) {
-	const criticalImageUrls = getCriticalImageUrls(theme);
+	const { clouds } = getHeroSceneImageUrls(theme);
 
-	criticalImageUrls.forEach((src) => {
-		preload(src, {
-			as: "image",
-			type: pickImageType(src),
-		});
+	preload(clouds, {
+		as: "image",
+		type: pickImageType(clouds),
+		fetchPriority: "high",
 	});
 
 	return null;
