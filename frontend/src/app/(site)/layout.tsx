@@ -1,5 +1,4 @@
 import ThemeProvider from "@/components/Theme/ThemeProvider";
-import { AnimatePresenceWrapper } from "@/features/AnimatePresenceWrapper";
 import { SiteShell } from "@/features/SiteShell";
 import { getRequestTheme } from "@/utils/theme";
 
@@ -12,9 +11,7 @@ export default async function SiteLayout({
 
 	return (
 		<ThemeProvider initialTheme={theme}>
-			<SiteShell>
-				<AnimatePresenceWrapper>{children}</AnimatePresenceWrapper>
-			</SiteShell>
+			<SiteShell>{children}</SiteShell>
 		</ThemeProvider>
 	);
 }

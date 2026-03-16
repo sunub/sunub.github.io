@@ -7,6 +7,7 @@ import type React from "react";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
+import { getRequestTheme } from "@/utils/theme";
 import { craftyGirls, pretendardRegular } from "./font";
 import { ShikiOverrieds } from "./GlobalStyle";
 
@@ -57,15 +58,18 @@ export const viewport: Viewport = {
 	width: "device-width",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
+	const theme = await getRequestTheme();
+
 	return (
 		<html
 			lang="ko"
 			className={`${pretendardRegular.variable} ${craftyGirls.variable}`}
+			data-color-theme={theme}
 			suppressHydrationWarning={true}
 		>
 			<head>
