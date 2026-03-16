@@ -68,7 +68,7 @@ export function HeroPoster({ hidden = false }: { hidden?: boolean }) {
 
 	return (
 		<HeroPosterSurface aria-hidden={true}>
-			<HeroPosterCloudsFrame $primary={hidden}>
+			<HeroPosterCloudsFrame data-hidden={hidden}>
 				<RepeatedPosterStrip
 					src={clouds}
 					width={CLOUDS_WIDTH}
@@ -87,7 +87,7 @@ export function HeroPoster({ hidden = false }: { hidden?: boolean }) {
 					alt=""
 				/>
 			</HeroPosterBridge>
-			<HeroPosterCars $primary={hidden}>
+			<HeroPosterCars data-hidden={hidden}>
 				<RepeatedPosterStrip
 					src={cars}
 					width={CARS_WIDTH}

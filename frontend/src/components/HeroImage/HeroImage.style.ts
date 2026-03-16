@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import Image from "next/image";
 import styled from "styled-components";
 
@@ -39,7 +40,13 @@ export const Clouds = styled.span`
   opacity: var(--clouds-opacity);
 
   animation: pan 100s linear infinite;
+  animation-play-state: paused;
   will-change: background-position;
+
+  &[data-playing="true"] {
+    animation-play-state: running;
+  }
+
   @keyframes pan {
     0% {
       background-position: 0% 0%;
@@ -75,10 +82,16 @@ export const Cars = styled.span`
 
   transform: translateY(28px);
   animation: pan-cars 50s linear infinite;
+  animation-play-state: paused;
   will-change: background-position;
 
   background-image: var(--cars-bg-url);
   opacity: var(--cars-opacity);
+
+  &[data-playing="true"] {
+    animation-play-state: running;
+  }
+
   @keyframes pan-cars {
     0% {
       background-position: 0% 0%;
@@ -107,35 +120,32 @@ export const HeroImageSurface = styled.div`
   transform: translateY(45px);
 `;
 
-export const HeroOverlayLayer = styled.div`
+export const HeroOverlayLayer = styled(motion.div)`
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 220ms ease;
-
-  &[data-visible='true'] {
-    opacity: 1;
-  }
 `;
 
 export const HeroPosterSurface = styled.div`
   position: relative;
   z-index: 0;
   transform: translateY(45px);
-  transition: opacity 180ms ease;
   pointer-events: none;
 `;
 
-export const HeroPosterCloudsFrame = styled.div<{ $primary: boolean }>`
+export const HeroPosterCloudsFrame = styled.div`
   position: relative;
   width: 100%;
   height: 200px;
   overflow: hidden;
-
-  opacity: ${({ $primary }) => ($primary ? 0 : 1)};
+  opacity: 1;
+  transition: opacity 220ms ease;
   will-change: opacity;
+
+  &[data-hidden="true"] {
+    opacity: 0;
+  }
 `;
 
 export const HeroPosterBridge = styled.div`
@@ -145,15 +155,19 @@ export const HeroPosterBridge = styled.div`
   overflow: hidden;
 `;
 
-export const HeroPosterCars = styled.div<{ $primary: boolean }>`
+export const HeroPosterCars = styled.div`
   position: relative;
   width: 100%;
   height: 14px;
   overflow: hidden;
   transform: translateY(-92px);
+  opacity: 1;
+  transition: opacity 220ms ease;
+  will-change: opacity;
 
-  opacity: ${({ $primary }) => ($primary ? 0 : 1)};
-  will-change: opacity, transform;
+  &[data-hidden="true"] {
+    opacity: 0;
+  }
 `;
 
 export const HeroPosterShadow = styled.span`

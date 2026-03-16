@@ -1,13 +1,13 @@
 import { memo } from "react";
 import { Cars, Clouds, CloudsFrame, HeroImageSurface } from "./HeroImage.style";
 
-const HeroImage = memo(() => {
+const HeroImage = memo(({ isPlaying = true }: { isPlaying?: boolean }) => {
 	return (
 		<HeroImageSurface>
 			<CloudsFrame>
-				<Clouds />
+				<Clouds data-playing={isPlaying} />
 			</CloudsFrame>
-			<Cars />
+			<Cars data-playing={isPlaying} />
 		</HeroImageSurface>
 	);
 });
