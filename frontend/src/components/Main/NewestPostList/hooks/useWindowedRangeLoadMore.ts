@@ -23,7 +23,7 @@ export const useWindowedRangeLoadMore = ({
 	loadMore,
 }: WindowedRangeLoadMoreOptions): void => {
 	const preloadSignalAtRef = useRef<number | null>(null);
-	const lastTriggerAtRef = useRef<number>(0);
+	const lastTriggerAtRef = useRef<number | null>(null);
 
 	const shouldPreloadNow = useCallback(
 		(
@@ -52,7 +52,7 @@ export const useWindowedRangeLoadMore = ({
 
 		if (!canLoadMore) {
 			preloadSignalAtRef.current = null;
-			lastTriggerAtRef.current = 0;
+			lastTriggerAtRef.current = null;
 			return;
 		}
 
@@ -70,7 +70,7 @@ export const useWindowedRangeLoadMore = ({
 		}
 
 		const cooldownElapsed =
-			lastTriggerAtRef.current === 0
+			lastTriggerAtRef.current === null
 				? Number.MAX_SAFE_INTEGER
 				: now - lastTriggerAtRef.current;
 		if (cooldownElapsed < TRIGGER_COOLDOWN_MS) {

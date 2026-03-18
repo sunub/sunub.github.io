@@ -169,15 +169,11 @@ export function useMeasuredItemHeight({
 
 			observedElementsRef.current.set(index, element);
 			element.dataset.virtualListIndex = String(index);
+			pendingHeightsRef.current.set(index, measureElementOuterHeight(element));
 
 			if (hasResizeObserver) {
 				ensureResizeObserver();
 				resizeObserverRef.current?.observe(element);
-			} else {
-				pendingHeightsRef.current.set(
-					index,
-					measureElementOuterHeight(element),
-				);
 			}
 
 			onMeasurementChange();

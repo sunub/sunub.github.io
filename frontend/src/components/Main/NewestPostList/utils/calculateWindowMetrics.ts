@@ -55,7 +55,7 @@ export function calculateWindowMetrics(
 		Math.max(config.itemCount - 1, 0),
 	);
 	const visibleWindow = Math.max(
-		visibleEndCandidate - visibleStart + 1 + config.overscan,
+		visibleEndCandidate - visibleStart + 1 + config.overscan * 2,
 		config.minRenderCount,
 	);
 	const end = clampNumber(start + visibleWindow, start + 1, config.itemCount);
