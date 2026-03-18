@@ -49,7 +49,10 @@ vi.mock("@/components/Main/BlogPost/ui/BlogPostItem", () => ({
 	}: {
 		index: number;
 		animationMode: string;
-		registerItemElement?: (index: number, element: HTMLLIElement | null) => void;
+		registerItemElement?: (
+			index: number,
+			element: HTMLLIElement | null,
+		) => void;
 	}) => (
 		<li
 			ref={(element) => {
@@ -261,7 +264,9 @@ function WindowedRangeHarness({
 	}, []);
 
 	const renderedIndexes = Array.from(
-		{ length: windowedRange.visibleRange.end - windowedRange.visibleRange.start },
+		{
+			length: windowedRange.visibleRange.end - windowedRange.visibleRange.start,
+		},
 		(_, relativeIndex) => windowedRange.visibleRange.start + relativeIndex,
 	);
 
@@ -325,8 +330,8 @@ describe("useWindowedRange", () => {
 
 	test("가변 높이가 섞여도 실제 viewport에 걸친 아이템이 렌더 범위에서 이탈하지 않는다", () => {
 		const heights = [
-			60, 240, 90, 220, 80, 260, 110, 180, 70, 230, 100, 210, 120, 200, 95,
-			250, 105, 190, 85, 240, 115, 175, 75, 225,
+			60, 240, 90, 220, 80, 260, 110, 180, 70, 230, 100, 210, 120, 200, 95, 250,
+			105, 190, 85, 240, 115, 175, 75, 225,
 		];
 
 		render(<WindowedRangeHarness heights={heights} />);
@@ -509,7 +514,10 @@ describe("NewestPostList terminal mode", () => {
 		const loadMore = vi.fn();
 		const posts = createPosts(12);
 
-		testState.currentItemHeights = Array.from({ length: posts.length }, () => 100);
+		testState.currentItemHeights = Array.from(
+			{ length: posts.length },
+			() => 100,
+		);
 		testState.context = {
 			posts,
 			totalCount: 20,
@@ -526,9 +534,9 @@ describe("NewestPostList terminal mode", () => {
 		advanceFrames(64);
 
 		expect(screen.getAllByTestId(/blog-post-item-/)).toHaveLength(3);
-		expect(container.querySelectorAll('[role="presentation"]').length).toBeGreaterThan(
-			0,
-		);
+		expect(
+			container.querySelectorAll('[role="presentation"]').length,
+		).toBeGreaterThan(0);
 
 		testState.context = {
 			posts,
@@ -544,9 +552,9 @@ describe("NewestPostList terminal mode", () => {
 			</NewestPostList>,
 		);
 		expect(screen.getAllByTestId(/blog-post-item-/)).toHaveLength(3);
-		expect(container.querySelectorAll('[role="presentation"]').length).toBeGreaterThan(
-			0,
-		);
+		expect(
+			container.querySelectorAll('[role="presentation"]').length,
+		).toBeGreaterThan(0);
 
 		advanceFrames(32);
 		expect(screen.getAllByTestId(/blog-post-item-/)).toHaveLength(posts.length);
