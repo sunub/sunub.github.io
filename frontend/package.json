@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "next dev --turbo",
 		"build:dev": "node ./scripts/run-next-build.mjs",
-		"build": "concurrently --kill-others --success first \"wait-on tcp:4008 && node ./scripts/run-next-build.mjs\" \"pnpm --filter backend run start:ci\"",
+		"build": "node ./scripts/build-with-backend.mjs",
 		"build:workers": "tsc -p tsconfig.worker.json",
 		"start": "next start -p 4004",
 		"start:test": "cross-env PORT=4004 next start",
