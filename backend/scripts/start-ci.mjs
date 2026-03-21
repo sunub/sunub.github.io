@@ -29,7 +29,8 @@ await rm(indexFilePath, { force: true });
 const child = spawn(process.execPath, [nestBin, "start"], {
 	env: {
 		...process.env,
-		NODE_ENV: "production",
+		// Use test mode so the backend boots from source without enabling dev-only watchers.
+		NODE_ENV: "test",
 	},
 	stdio: "inherit",
 });
