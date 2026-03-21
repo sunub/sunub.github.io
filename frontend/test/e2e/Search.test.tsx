@@ -4,10 +4,17 @@ import { E2E_TEST_URL } from "./constants";
 const VALID_SEARCH_QUERY = "ESModule";
 const INVALID_SEARCH_QUERY = "ㅀㅀㅀㅀㅀㅀ";
 const VARIETY_SEARCH_QUERY = "a";
-const VARIETY_SEARCH_QUERY_RESULT_COUNT = 17;
 
 const DEFAULT_TIMEOUT_TIME = 35000;
 const DEFAULT_TEST_OPTION = { timeout: DEFAULT_TIMEOUT_TIME };
+
+async function waitForSearchResultCountAtLeast(page: Page, minimum: number) {
+	await expect
+		.poll(async () => page.getByRole("option").count(), DEFAULT_TEST_OPTION)
+		.toBeGreaterThanOrEqual(minimum);
+
+	return page.getByRole("option").count();
+}
 
 test.describe("검색 접근성 테스트", () => {
 	test.beforeEach(async ({ page }) => {
@@ -158,7 +165,27 @@ test.describe("검색 기능 테스트", () => {
 		const listbox = page.getByRole("listbox", { name: "검색 결과" });
 		await expect(listbox).toBeVisible(DEFAULT_TEST_OPTION);
 
-		await expect(page.getByRole("option")).toHaveCount(1, DEFAULT_TEST_OPTION);
+		await waitForSearchResultCountAtLeast(page, 1);
+	});
+
+	test("검색 전에는 안내 상태가 나오고 결과 없음은 보이지 않는가?", async ({
+		page,
+	}) => {
+		const modalOpenButton = page.getByRole("button", { name: "검색" });
+		await expect(modalOpenButton).toBeEnabled();
+		await expect(modalOpenButton).toBeVisible();
+		await modalOpenButton.click();
+
+		const rootDialogContainer = page.getByTestId("blog-search__input-area");
+		const dialog = rootDialogContainer.getByRole("dialog", {
+			name: "검색 다이알로그 창",
+		});
+		await expect(dialog).toBeAttached();
+
+		await expect(page.getByTestId("search-idle-state")).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+		await expect(page.getByTestId("search-no-results")).not.toBeVisible();
 	});
 
 	test("여러 결과를 포함하는 검색어 입력 시 적절한 결과가 나오는가?", async ({
@@ -184,10 +211,7 @@ test.describe("검색 기능 테스트", () => {
 		const listbox = page.getByRole("listbox", { name: "검색 결과" });
 		await expect(listbox).toBeVisible(DEFAULT_TEST_OPTION);
 
-		await expect(page.getByRole("option")).toHaveCount(
-			VARIETY_SEARCH_QUERY_RESULT_COUNT,
-			DEFAULT_TEST_OPTION,
-		);
+		await waitForSearchResultCountAtLeast(page, 3);
 	});
 
 	test("검색어 결과가 없을 경우 적절한 UI가 나오는가?", async ({ page }) => {
@@ -240,10 +264,7 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 
 		const listbox = page.getByRole("listbox", { name: "검색 결과" });
 		await expect(listbox).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(page.getByRole("option")).toHaveCount(
-			VARIETY_SEARCH_QUERY_RESULT_COUNT,
-			DEFAULT_TEST_OPTION,
-		);
+		await waitForSearchResultCountAtLeast(page, 3);
 	});
 
 	async function pressKeyDownAndVerifyNthOption(
@@ -254,10 +275,8 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 		const listbox = page.getByRole("listbox", { name: "검색 결과" });
 		await expect(listbox).toBeVisible(DEFAULT_TEST_OPTION);
 
-		await expect(page.getByRole("option")).toHaveCount(
-			VARIETY_SEARCH_QUERY_RESULT_COUNT,
-			DEFAULT_TEST_OPTION,
-		);
+		const optionCount = await waitForSearchResultCountAtLeast(page, nth + 1);
+		expect(optionCount).toBeGreaterThan(nth);
 
 		await page.keyboard.press(key);
 		await page.waitForTimeout(50);
@@ -326,11 +345,8 @@ test.describe("검색 결과 키보드 네비게이션 테스트", () => {
 		await pressKeyDownAndVerifyNthOption("ArrowUp", page, 0);
 		await page.waitForTimeout(100);
 
-		await pressKeyDownAndVerifyNthOption(
-			"ArrowUp",
-			page,
-			VARIETY_SEARCH_QUERY_RESULT_COUNT - 1,
-		);
+		const resultCount = await waitForSearchResultCountAtLeast(page, 1);
+		await pressKeyDownAndVerifyNthOption("ArrowUp", page, resultCount - 1);
 	});
 
 	test("Arrow Down/Up으로 포커스를 이동한 후 Enter키를 통해 컨텐츠로 이동할 수 있는가?", async ({

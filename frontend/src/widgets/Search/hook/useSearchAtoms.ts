@@ -9,7 +9,7 @@ import {
 	searchActionAtom,
 	searchQueryAtom,
 	searchResultsAtom,
-	shouldShowResultsAtom,
+	searchViewStateAtom,
 } from "../store/search.atom";
 
 export function useSearchAtoms() {
@@ -18,7 +18,7 @@ export function useSearchAtoms() {
 	const isLoading = useAtomValue(isSearchLoadingAtom);
 	const [isModalOpen, setIsModalOpen] = useAtom(isSearchModalOpenAtom);
 	const hasResults = useAtomValue(hasSearchResultsAtom);
-	const shouldShowResults = useAtomValue(shouldShowResultsAtom);
+	const searchViewState = useAtomValue(searchViewStateAtom);
 
 	const search = useSetAtom(searchActionAtom);
 	const clearSearch = useSetAtom(clearSearchAtom);
@@ -32,7 +32,7 @@ export function useSearchAtoms() {
 		isModalOpen,
 		setIsModalOpen,
 		hasResults,
-		shouldShowResults,
+		searchViewState,
 
 		// Actions
 		search,
@@ -60,6 +60,10 @@ export function useIsSearchLoadingAtom() {
 
 export function useHasSearchResultsAtom() {
 	return useAtomValue(hasSearchResultsAtom);
+}
+
+export function useSearchViewStateAtom() {
+	return useAtomValue(searchViewStateAtom);
 }
 
 export function useSearchModal() {

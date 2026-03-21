@@ -33,7 +33,7 @@ export const NewestPostList = memo(function NewestPostList({
 }: NewestPostListRootProps) {
 	useResetScrollOnReload();
 
-	const { posts, hasMore, totalCount, loadMore, isPending } =
+	const { posts, hasMore, totalCount, loadMore, loadMoreError, isFetching } =
 		useBlogPostContext();
 	const canLoadMore = hasMore && posts.length < totalCount;
 	const listRef = useRef<HTMLUListElement>(null);
@@ -42,7 +42,7 @@ export const NewestPostList = memo(function NewestPostList({
 	const preloadThresholdPx = getLoadMoreViewportThresholdPx();
 	const itemCount = posts.length;
 
-	const shouldEnterTerminalMode = !isPending && !canLoadMore;
+	const shouldEnterTerminalMode = !isFetching && !canLoadMore;
 	const isTerminalMode = useListTerminalMode({
 		shouldEnterTerminalMode,
 	});
@@ -89,8 +89,7 @@ export const NewestPostList = memo(function NewestPostList({
 	);
 
 	useWindowedRangeLoadMore({
-		canLoadMore,
-		isPending,
+		canLoadMore: canLoadMore && !loadMoreError,
 		postsLength: itemCount,
 		visibleRangeEnd: visibleRange.end,
 		remainingPx,

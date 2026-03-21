@@ -3,7 +3,6 @@ import { shouldLoadMoreFromRemainingItems } from "../utils/virtualListUtils";
 
 type WindowedRangeLoadMoreOptions = {
 	canLoadMore: boolean;
-	isPending: boolean;
 	postsLength: number;
 	visibleRangeEnd: number;
 	remainingPx: number;
@@ -15,15 +14,13 @@ const TRIGGER_COOLDOWN_MS = 250;
 
 export const useWindowedRangeLoadMore = ({
 	canLoadMore,
-	isPending,
 	postsLength,
 	visibleRangeEnd,
 	remainingPx,
 	preloadReservePx,
 	loadMore,
 }: WindowedRangeLoadMoreOptions): void => {
-	const preloadSignalAtRef = useRef<number | null>(null);
-	const lastTriggerAtRef = useRef<number | null>(null);
+	const lastRequestedAtRef = useRef<number | null>(null);
 
 	const shouldPreloadNow = useCallback(
 		(
@@ -51,39 +48,38 @@ export const useWindowedRangeLoadMore = ({
 			typeof performance === "undefined" ? Date.now() : performance.now();
 
 		if (!canLoadMore) {
-			preloadSignalAtRef.current = null;
-			lastTriggerAtRef.current = null;
+			lastRequestedAtRef.current = null;
 			return;
 		}
 
 		if (!shouldPreload) {
-			preloadSignalAtRef.current = null;
 			return;
-		}
-
-		if (isPending) {
-			return;
-		}
-
-		if (preloadSignalAtRef.current === null) {
-			preloadSignalAtRef.current = now;
 		}
 
 		const cooldownElapsed =
-			lastTriggerAtRef.current === null
+			lastRequestedAtRef.current === null
 				? Number.MAX_SAFE_INTEGER
-				: now - lastTriggerAtRef.current;
-		if (cooldownElapsed < TRIGGER_COOLDOWN_MS) {
+				: now - lastRequestedAtRef.current;
+		if (cooldownElapsed >= TRIGGER_COOLDOWN_MS) {
+			lastRequestedAtRef.current = now;
+			loadMore();
 			return;
 		}
-		preloadSignalAtRef.current = null;
-		lastTriggerAtRef.current = now;
-		loadMore();
+
+		const retryDelayMs = TRIGGER_COOLDOWN_MS - cooldownElapsed;
+		const timeoutId = window.setTimeout(() => {
+			lastRequestedAtRef.current =
+				typeof performance === "undefined" ? Date.now() : performance.now();
+			loadMore();
+		}, retryDelayMs);
+
+		return () => {
+			window.clearTimeout(timeoutId);
+		};
 	}, [
 		canLoadMore,
 		loadMore,
 		visibleRangeEnd,
-		isPending,
 		remainingPx,
 		postsLength,
 		shouldPreloadNow,

@@ -6,11 +6,9 @@ import { useKeyPress } from "../hook/useKeyPress";
 import { useModalEnterAnimation } from "../hook/useModalEnterAnimation";
 import { useOpenCloseAnimations } from "../hook/useOpenCloseAnimations";
 import { useOutsideClick } from "../hook/useOutsideClick";
-import {
-	useHasSearchResultsAtom,
-	useIsSearchLoadingAtom,
-} from "../hook/useSearchAtoms";
+import { useSearchViewStateAtom } from "../hook/useSearchAtoms";
 import { ResultsList, SearchContainer, SearchOverlay } from "../styles";
+import { IdleSearchState } from "./IdleSearchState";
 import { LoadingComponent } from "./LoadingComponent";
 import { NoResult } from "./NoResult";
 import { SearchInputHeader } from "./SearchInputHeader";
@@ -21,8 +19,7 @@ interface SearchModalProps {
 }
 
 export default function SearchModal({ close }: SearchModalProps) {
-	const isLoading = useIsSearchLoadingAtom();
-	const hasSearchResults = useHasSearchResultsAtom();
+	const searchViewState = useSearchViewStateAtom();
 	const rootRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 
@@ -61,12 +58,14 @@ export default function SearchModal({ close }: SearchModalProps) {
 						aria-label={"검색 결과"}
 						data-slot="search-dialog-results-list"
 					>
-						{isLoading ? (
+						{searchViewState === "loading" ? (
 							<LoadingComponent />
-						) : hasSearchResults ? (
+						) : searchViewState === "results" ? (
 							<SearchResultsList onResultClick={handleClose} />
-						) : (
+						) : searchViewState === "empty" ? (
 							<NoResult />
+						) : (
+							<IdleSearchState />
 						)}
 					</ResultsList>
 				</SearchContainer>

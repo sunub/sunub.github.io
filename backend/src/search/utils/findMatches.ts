@@ -1,6 +1,19 @@
 import { eqKr, eqKrPos, isKr } from "./preprocess";
 
-export function findMatches(query: string, data: string): string[] {
+interface FindMatchesOptions {
+	limit?: number;
+}
+
+export function findMatches(
+	query: string,
+	data: string,
+	options: FindMatchesOptions = {},
+): string[] {
+	const { limit = Number.POSITIVE_INFINITY } = options;
+	if (!query || !data || limit <= 0) {
+		return [];
+	}
+
 	const qLower = query.toLowerCase();
 	const dLower = data.toLowerCase();
 
@@ -42,6 +55,9 @@ export function findMatches(query: string, data: string): string[] {
 		}
 		if (ok) {
 			results.push(data.slice(i, i + ql));
+			if (results.length >= limit) {
+				return results;
+			}
 		}
 	}
 

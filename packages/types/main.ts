@@ -62,6 +62,10 @@ export const SearchResultSchema = z.object({
 		.passthrough(),
 	titleMatches: z.array(z.string()),
 	summaryMatches: z.array(z.string()),
+	tagMatches: z.array(z.string()),
+	categoryMatches: z.array(z.string()),
+	headingMatches: z.array(z.string()),
+	bodyMatches: z.array(z.string()),
 });
 
 export const SearchResponseSchema = z.object({
@@ -112,6 +116,10 @@ export interface SearchResult {
 	post: SearchResultPost;
 	titleMatches: string[];
 	summaryMatches: string[];
+	tagMatches: string[];
+	categoryMatches: string[];
+	headingMatches: string[];
+	bodyMatches: string[];
 }
 
 export interface SearchResponse {

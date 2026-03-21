@@ -5,11 +5,6 @@ import { type PublishedPost, PublishedPostSchema } from "@sunub/types";
 import { buildApiUrl } from "@/shared/api/config";
 import { API_PATHS } from "@/shared/api/endpoints";
 
-const ErrorAdditionalPost: PublishedPost = {
-	totalCount: 0,
-	frontmatters: [],
-} as const;
-
 const toLatestRangePath = (start: number, end: number) => {
 	const resolveRangePath = API_PATHS?.posts?.latestRange;
 	if (typeof resolveRangePath !== "function") {
@@ -66,7 +61,7 @@ const getAdditionalPostFetch = async (start: number, end: number) => {
 		}
 	}
 
-	return null;
+	throw new Error("Failed to fetch additional posts");
 };
 
 export async function getAdditionalPost(
@@ -78,5 +73,6 @@ export async function getAdditionalPost(
 	if (parsedData.success) {
 		return parsedData.data;
 	}
-	return ErrorAdditionalPost;
+
+	throw new Error("Failed to parse additional posts data");
 }

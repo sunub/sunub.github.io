@@ -4,6 +4,8 @@ import type { RefObject } from "react";
 import { buildApiUrl } from "@/shared/api/config";
 import { API_PATHS } from "@/shared/api/endpoints";
 
+export type SearchViewState = "idle" | "loading" | "results" | "empty";
+
 export const searchQueryAtom = atom("");
 export const searchResultsAtom = atom<SearchResult[]>([]);
 export const isSearchLoadingAtom = atom(false);
@@ -13,11 +15,24 @@ const selectedSearchIndexAtom = atom(-1);
 export const hasSearchResultsAtom = atom(
 	(get) => get(searchResultsAtom).length > 0,
 );
-export const shouldShowResultsAtom = atom((get) => {
-	const query = get(searchQueryAtom);
+export const searchViewStateAtom = atom<SearchViewState>((get) => {
+	const query = get(searchQueryAtom).trim();
 	const isLoading = get(isSearchLoadingAtom);
 	const hasResults = get(searchResultsAtom).length > 0;
-	return query.length > 0 && (isLoading || hasResults);
+
+	if (!query) {
+		return "idle";
+	}
+
+	if (isLoading) {
+		return "loading";
+	}
+
+	if (hasResults) {
+		return "results";
+	}
+
+	return "empty";
 });
 
 export const searchActionAtom = atom(

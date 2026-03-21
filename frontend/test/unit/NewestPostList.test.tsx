@@ -1,18 +1,28 @@
 import type { FrontMatter } from "@sunub/types";
-import { act, render, renderHook, screen } from "@testing-library/react";
+import {
+	act,
+	fireEvent,
+	render,
+	renderHook,
+	screen,
+} from "@testing-library/react";
 import { useLayoutEffect, useRef } from "react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { NewestPostList } from "@/components/Main/NewestPostList";
 import { useWindowedRange } from "@/components/Main/NewestPostList/hooks/useWindowedRange";
 import { useWindowedRangeLoadMore } from "@/components/Main/NewestPostList/hooks/useWindowedRangeLoadMore";
 import type { VirtualScrollConfig } from "@/components/Main/NewestPostList/types/windowedRange";
+import { NewestPostListLoadMoreRow } from "@/components/Main/NewestPostList/ui/NewestPostListLoadMoreRow";
 
 type BlogPostContextShape = {
 	posts: FrontMatter[];
 	totalCount: number;
-	isPending: boolean;
+	isFetching: boolean;
+	pendingLoadCount: number;
+	loadMoreError: string | null;
 	hasMore: boolean;
 	loadMore: () => void;
+	retryLoadMore: () => void;
 };
 
 const testState = vi.hoisted(() => ({
@@ -426,13 +436,12 @@ describe("useWindowedRangeLoadMore", () => {
 		vi.spyOn(performance, "now").mockImplementation(() => nowMs);
 	});
 
-	test("preload 조건이 유지되어도 cooldown과 pending 동안 loadMore를 중복 호출하지 않는다", () => {
+	test("preload 조건이 유지되어도 cooldown 동안 즉시 중복 호출하지 않고 cooldown 이후 재시도한다", () => {
 		const loadMore = vi.fn();
 
 		const { rerender } = renderHook(useWindowedRangeLoadMore, {
 			initialProps: {
 				canLoadMore: true,
-				isPending: false,
 				postsLength: 30,
 				visibleRangeEnd: 29,
 				remainingPx: 120,
@@ -446,7 +455,6 @@ describe("useWindowedRangeLoadMore", () => {
 		nowMs = 100;
 		rerender({
 			canLoadMore: true,
-			isPending: false,
 			postsLength: 30,
 			visibleRangeEnd: 29,
 			remainingPx: 80,
@@ -455,27 +463,15 @@ describe("useWindowedRangeLoadMore", () => {
 		});
 		expect(loadMore).toHaveBeenCalledTimes(1);
 
-		nowMs = 180;
-		rerender({
-			canLoadMore: true,
-			isPending: true,
-			postsLength: 30,
-			visibleRangeEnd: 29,
-			remainingPx: 60,
-			preloadReservePx: 400,
-			loadMore,
+		act(() => {
+			nowMs = 249;
+			vi.advanceTimersByTime(149);
 		});
 		expect(loadMore).toHaveBeenCalledTimes(1);
 
-		nowMs = 320;
-		rerender({
-			canLoadMore: true,
-			isPending: false,
-			postsLength: 40,
-			visibleRangeEnd: 39,
-			remainingPx: 90,
-			preloadReservePx: 400,
-			loadMore,
+		act(() => {
+			nowMs = 250;
+			vi.advanceTimersByTime(1);
 		});
 		expect(loadMore).toHaveBeenCalledTimes(2);
 	});
@@ -521,9 +517,12 @@ describe("NewestPostList terminal mode", () => {
 		testState.context = {
 			posts,
 			totalCount: 20,
-			isPending: false,
+			isFetching: false,
+			pendingLoadCount: 0,
+			loadMoreError: null,
 			hasMore: true,
 			loadMore,
+			retryLoadMore: vi.fn(),
 		};
 
 		const { rerender, container } = render(
@@ -541,9 +540,12 @@ describe("NewestPostList terminal mode", () => {
 		testState.context = {
 			posts,
 			totalCount: posts.length,
-			isPending: false,
+			isFetching: false,
+			pendingLoadCount: 0,
+			loadMoreError: null,
 			hasMore: false,
 			loadMore,
+			retryLoadMore: vi.fn(),
 		};
 
 		rerender(
@@ -569,5 +571,72 @@ describe("NewestPostList terminal mode", () => {
 
 		expect(screen.getAllByTestId(/blog-post-item-/)).toHaveLength(posts.length);
 		expect(container.querySelectorAll('[role="presentation"]')).toHaveLength(0);
+	});
+});
+
+describe("NewestPostListLoadMoreRow", () => {
+	test("큐 작업이 남아 있으면 사용자에게 로딩 피드백을 노출한다", () => {
+		testState.context = {
+			posts: createPosts(20),
+			totalCount: 70,
+			isFetching: true,
+			pendingLoadCount: 3,
+			loadMoreError: null,
+			hasMore: true,
+			loadMore: vi.fn(),
+			retryLoadMore: vi.fn(),
+		};
+
+		render(<NewestPostListLoadMoreRow />);
+
+		expect(
+			screen.getByText(
+				"추가 포스트를 불러오는 중입니다. 3개의 로드 작업이 순차적으로 처리되고 있어요.",
+			),
+		).toBeInTheDocument();
+	});
+
+	test("큐 작업이 없으면 로딩 row를 렌더링하지 않는다", () => {
+		testState.context = {
+			posts: createPosts(20),
+			totalCount: 70,
+			isFetching: false,
+			pendingLoadCount: 0,
+			loadMoreError: null,
+			hasMore: true,
+			loadMore: vi.fn(),
+			retryLoadMore: vi.fn(),
+		};
+
+		const { container } = render(<NewestPostListLoadMoreRow />);
+
+		expect(container).toBeEmptyDOMElement();
+	});
+
+	test("loadMore 에러가 있으면 다시 시도 버튼과 함께 에러 피드백을 노출한다", () => {
+		const retryLoadMore = vi.fn();
+
+		testState.context = {
+			posts: createPosts(20),
+			totalCount: 70,
+			isFetching: false,
+			pendingLoadCount: 0,
+			loadMoreError:
+				"추가 포스트를 불러오지 못했습니다. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.",
+			hasMore: true,
+			loadMore: vi.fn(),
+			retryLoadMore,
+		};
+
+		render(<NewestPostListLoadMoreRow />);
+
+		expect(
+			screen.getByText(
+				"추가 포스트를 불러오지 못했습니다. 네트워크 상태를 확인한 뒤 다시 시도해 주세요.",
+			),
+		).toBeInTheDocument();
+
+		fireEvent.click(screen.getByRole("button", { name: "다시 시도" }));
+		expect(retryLoadMore).toHaveBeenCalledTimes(1);
 	});
 });

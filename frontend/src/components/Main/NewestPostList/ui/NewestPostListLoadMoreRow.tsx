@@ -6,32 +6,90 @@ import { useBlogPostContext } from "../../BlogPost/provider/BlogPostProvider";
 
 const loadingRowStyle: CSSProperties = {
 	listStyle: "none",
-	margin: 0,
+	margin: "2rem 0 0",
 	padding: 0,
-	pointerEvents: "none",
-	position: "absolute",
-	left: 0,
-	right: 0,
-	top: "auto",
-	height: 0,
-	overflow: "visible",
-	width: "100%",
 	display: "block",
-	zIndex: 1,
-	opacity: 1,
+};
+
+const loadingStatusStyle: CSSProperties = {
+	display: "flex",
+	flexDirection: "column",
+	gap: "0.75rem",
+};
+
+const loadingCaptionStyle: CSSProperties = {
+	fontSize: "0.875rem",
+	lineHeight: 1.5,
+	color: "color-mix(in oklch, var(--color-text) 72%, transparent)",
+};
+
+const errorStatusStyle: CSSProperties = {
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "flex-start",
+	gap: "0.75rem",
+	padding: "1rem 0",
+};
+
+const errorCaptionStyle: CSSProperties = {
+	fontSize: "0.9375rem",
+	lineHeight: 1.6,
+	color: "var(--color-text)",
+};
+
+const retryButtonStyle: CSSProperties = {
+	padding: "0.625rem 0.9rem",
+	borderRadius: "0.75rem",
+	border: "1px solid color-mix(in oklch, var(--color-text) 16%, transparent)",
+	background: "transparent",
+	color: "var(--color-text)",
+	font: "inherit",
+	cursor: "pointer",
 };
 
 export function NewestPostListLoadMoreRow() {
-	const { isPending, hasMore, posts, totalCount } = useBlogPostContext();
+	const {
+		hasMore,
+		loadMoreError,
+		pendingLoadCount,
+		posts,
+		retryLoadMore,
+		totalCount,
+	} = useBlogPostContext();
 	const canLoadMore = hasMore && posts.length < totalCount;
 
-	if (!(isPending && canLoadMore)) {
+	if (loadMoreError && canLoadMore) {
+		return (
+			<li style={loadingRowStyle}>
+				<div role="alert" style={errorStatusStyle}>
+					<p style={errorCaptionStyle}>{loadMoreError}</p>
+					<button
+						type="button"
+						style={retryButtonStyle}
+						onClick={retryLoadMore}
+					>
+						다시 시도
+					</button>
+				</div>
+			</li>
+		);
+	}
+
+	if (!(pendingLoadCount > 0 && canLoadMore)) {
 		return null;
 	}
 
+	const loadingMessage =
+		pendingLoadCount > 1
+			? `추가 포스트를 불러오는 중입니다. ${pendingLoadCount}개의 로드 작업이 순차적으로 처리되고 있어요.`
+			: "추가 포스트를 불러오는 중입니다.";
+
 	return (
-		<li style={loadingRowStyle} aria-hidden="true">
-			<FrontMatterLoading length={1} isListItem />
+		<li style={loadingRowStyle}>
+			<div aria-live="polite" style={loadingStatusStyle}>
+				<FrontMatterLoading length={1} isListItem />
+				<p style={loadingCaptionStyle}>{loadingMessage}</p>
+			</div>
 		</li>
 	);
 }

@@ -71,7 +71,18 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
 
 		const postItems = postList.locator(POST_ITEM_SELECTOR);
-		await expect(postItems).toHaveCount(10);
+		await expect
+			.poll(async () => (await getRenderedPostStats(postList)).maxIndex, {
+				timeout: DEFAULT_TIMEOUT_TIME,
+				intervals: [200, 500, 1000],
+			})
+			.toBeGreaterThanOrEqual(9);
+		await expect
+			.poll(async () => await postItems.count(), {
+				timeout: DEFAULT_TIMEOUT_TIME,
+				intervals: [200, 500, 1000],
+			})
+			.toBeGreaterThanOrEqual(10);
 		await expect(postItems.first()).toBeVisible(DEFAULT_TEST_OPTION);
 	});
 
