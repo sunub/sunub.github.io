@@ -21,6 +21,8 @@ const resolvePostsRootPath = () => {
 
 const postsRootPath = resolvePostsRootPath();
 const indexFilePath = path.join(postsRootPath, "posts.jsonl");
+const TERMINATION_SIGNALS = ["SIGINT", "SIGTERM", "SIGHUP"];
+const FORCE_KILL_TIMEOUT_MS = 5_000;
 
 await rm(indexFilePath, { force: true });
 
@@ -32,7 +34,60 @@ const child = spawn(process.execPath, [nestBin, "start"], {
 	stdio: "inherit",
 });
 
+let forcedKillTimer;
+const signalHandlers = new Map();
+
+const clearForcedKillTimer = () => {
+	if (forcedKillTimer) {
+		clearTimeout(forcedKillTimer);
+		forcedKillTimer = undefined;
+	}
+};
+
+const removeSignalHandlers = () => {
+	for (const signal of TERMINATION_SIGNALS) {
+		const handler = signalHandlers.get(signal);
+
+		if (handler) {
+			process.off(signal, handler);
+		}
+	}
+	clearForcedKillTimer();
+};
+
+const handleTerminationSignal = (signal) => {
+	if (child.exitCode !== null || child.signalCode !== null) {
+		removeSignalHandlers();
+		process.kill(process.pid, signal);
+		return;
+	}
+
+	child.kill(signal);
+	clearForcedKillTimer();
+	forcedKillTimer = setTimeout(() => {
+		if (child.exitCode === null && child.signalCode === null) {
+			child.kill("SIGKILL");
+		}
+	}, FORCE_KILL_TIMEOUT_MS);
+	forcedKillTimer.unref?.();
+};
+
+for (const signal of TERMINATION_SIGNALS) {
+	const handler = () => {
+		handleTerminationSignal(signal);
+	};
+	signalHandlers.set(signal, handler);
+	process.on(signal, handler);
+}
+
+child.on("error", (error) => {
+	removeSignalHandlers();
+	throw error;
+});
+
 child.on("exit", (code, signal) => {
+	removeSignalHandlers();
+
 	if (signal) {
 		process.kill(process.pid, signal);
 		return;

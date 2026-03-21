@@ -4,6 +4,8 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const nextBin = require.resolve("next/dist/bin/next");
 const suppressedMessage = "[baseline-browser-mapping]";
+const TERMINATION_SIGNALS = ["SIGINT", "SIGTERM", "SIGHUP"];
+const FORCE_KILL_TIMEOUT_MS = 5_000;
 
 const child = spawn(
 	process.execPath,
@@ -18,6 +20,52 @@ const child = spawn(
 		stdio: ["inherit", "pipe", "pipe"],
 	},
 );
+
+let forcedKillTimer;
+const signalHandlers = new Map();
+
+const clearForcedKillTimer = () => {
+	if (forcedKillTimer) {
+		clearTimeout(forcedKillTimer);
+		forcedKillTimer = undefined;
+	}
+};
+
+const removeSignalHandlers = () => {
+	for (const signal of TERMINATION_SIGNALS) {
+		const handler = signalHandlers.get(signal);
+
+		if (handler) {
+			process.off(signal, handler);
+		}
+	}
+	clearForcedKillTimer();
+};
+
+const handleTerminationSignal = (signal) => {
+	if (child.exitCode !== null || child.signalCode !== null) {
+		removeSignalHandlers();
+		process.kill(process.pid, signal);
+		return;
+	}
+
+	child.kill(signal);
+	clearForcedKillTimer();
+	forcedKillTimer = setTimeout(() => {
+		if (child.exitCode === null && child.signalCode === null) {
+			child.kill("SIGKILL");
+		}
+	}, FORCE_KILL_TIMEOUT_MS);
+	forcedKillTimer.unref?.();
+};
+
+for (const signal of TERMINATION_SIGNALS) {
+	const handler = () => {
+		handleTerminationSignal(signal);
+	};
+	signalHandlers.set(signal, handler);
+	process.on(signal, handler);
+}
 
 const forwardStream = (stream, target) => {
 	stream.setEncoding("utf8");
@@ -51,7 +99,14 @@ const forwardStream = (stream, target) => {
 forwardStream(child.stdout, process.stdout);
 forwardStream(child.stderr, process.stderr);
 
+child.on("error", (error) => {
+	removeSignalHandlers();
+	throw error;
+});
+
 child.on("exit", (code, signal) => {
+	removeSignalHandlers();
+
 	if (signal) {
 		process.kill(process.pid, signal);
 		return;
