@@ -5,12 +5,12 @@ import {
 } from "@sunub/contracts";
 
 const getBackendRuntime = (): BackendRuntime => {
-	if (typeof window !== "undefined") {
-		return "browser";
-	}
-
 	if (process.env.NODE_ENV === "test") {
 		return "test";
+	}
+
+	if (typeof window !== "undefined") {
+		return "browser";
 	}
 
 	return "server";
@@ -58,4 +58,30 @@ export function buildApiUrl(
 	}
 
 	return `${baseUrl}${normalizedPath}${searchParams ? `?${searchParams}` : ""}`;
+}
+
+export function buildApiRequestCandidates(path: string): string[] {
+	const normalizedPath = normalizePath(path);
+	const runtime = getBackendRuntime();
+	if (runtime === "browser") {
+		// In the browser, prefer same-origin requests so Next.js rewrites can proxy
+		// to the backend without exposing us to CORS or mixed-content failures.
+		return [normalizedPath];
+	}
+
+	const preferredAbsoluteUrl = `${resolveBackendBaseUrl(
+		runtime,
+	)}${normalizedPath}`;
+	const localFallbackCandidates = [
+		`${DEFAULT_BACKEND_API_URL}${normalizedPath}`,
+		`http://127.0.0.1:4008${normalizedPath}`,
+		`http://localhost:4008${normalizedPath}`,
+	];
+	const candidates = [
+		buildApiUrl(path),
+		preferredAbsoluteUrl,
+		...localFallbackCandidates,
+	];
+
+	return [...new Set(candidates.filter(Boolean))];
 }

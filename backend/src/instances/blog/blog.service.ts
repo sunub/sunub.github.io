@@ -4,7 +4,14 @@ import { cpus } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import type { PostCategory, PostFrontMatter } from "@sunub/types";
+import type {
+	ArchiveCategoryCounts,
+	ArchiveCategoryFilter,
+	ArchiveSummary,
+	PostCategory,
+	PostFrontMatter,
+	PublishedPost,
+} from "@sunub/types";
 import { FrontMatterSchema, MatterTransformData } from "@sunub/types";
 import { concurrent, filter, map, pipe, take, toArray } from "@sunub/utils";
 import * as matter from "gray-matter";
@@ -25,6 +32,20 @@ const resolvePostsRootPath = (): string => {
 	return resolvedPath ?? candidates[0];
 };
 
+const EMPTY_ARCHIVE_COUNTS: ArchiveCategoryCounts = {
+	all: 0,
+	web: 0,
+	algorithm: 0,
+	cs: 0,
+	code: 0,
+};
+
+const EMPTY_ARCHIVE_SUMMARY: ArchiveSummary = {
+	totalCount: 0,
+	coveredYears: 0,
+	counts: EMPTY_ARCHIVE_COUNTS,
+};
+
 @Injectable()
 export class BlogService implements OnModuleInit {
 	private readonly POSTS_ROOT_PATH = resolvePostsRootPath();
@@ -33,6 +54,7 @@ export class BlogService implements OnModuleInit {
 
 	private totalPostCount = 0;
 	private postsCache: PostFrontMatter[] = [];
+	private archiveSummaryCache: ArchiveSummary = EMPTY_ARCHIVE_SUMMARY;
 	private fileProcessor = new FileProcessor();
 	private isReloadingIndex = false;
 	private shouldReloadIndexAgain = false;
@@ -64,6 +86,10 @@ export class BlogService implements OnModuleInit {
 
 	public getIndexFilePath(): string {
 		return this.INDEX_FILE_PATH;
+	}
+
+	public getArchiveSummary(): ArchiveSummary {
+		return this.archiveSummaryCache;
 	}
 
 	public async getLatestPosts(count: number): Promise<PostFrontMatter[]> {
@@ -109,6 +135,55 @@ export class BlogService implements OnModuleInit {
 	): Promise<PostFrontMatter | undefined> {
 		const posts = await this.getPostsByCategory(category);
 		return posts.find((p) => p.frontmatter.slug === slug);
+	}
+
+	public getArchivePostsInRange(
+		category: ArchiveCategoryFilter,
+		start: number,
+		end: number,
+	): PublishedPost {
+		const safeStart = Math.max(0, Math.floor(start));
+		const safeEnd = Math.max(safeStart, Math.floor(end));
+
+		if (category === "all") {
+			return {
+				totalCount: this.totalPostCount,
+				frontmatters: this.postsCache
+					.slice(safeStart, safeEnd)
+					.map((post) => post.frontmatter),
+			};
+		}
+
+		const totalCount = this.archiveSummaryCache.counts[category];
+		if (safeStart >= totalCount) {
+			return {
+				totalCount,
+				frontmatters: [],
+			};
+		}
+
+		const frontmatters: PublishedPost["frontmatters"] = [];
+		let matchedIndex = 0;
+
+		for (const post of this.postsCache) {
+			if (post.frontmatter.category !== category) {
+				continue;
+			}
+
+			if (matchedIndex >= safeStart && matchedIndex < safeEnd) {
+				frontmatters.push(post.frontmatter);
+			}
+
+			matchedIndex += 1;
+			if (matchedIndex >= safeEnd) {
+				break;
+			}
+		}
+
+		return {
+			totalCount,
+			frontmatters,
+		};
 	}
 
 	public async getPostContent(
@@ -179,6 +254,29 @@ export class BlogService implements OnModuleInit {
 
 		this.postsCache = posts;
 		this.totalPostCount = posts.length;
+		this.archiveSummaryCache = this.buildArchiveSummary(posts);
+	}
+
+	private buildArchiveSummary(posts: PostFrontMatter[]): ArchiveSummary {
+		const counts: ArchiveCategoryCounts = {
+			all: posts.length,
+			web: 0,
+			algorithm: 0,
+			cs: 0,
+			code: 0,
+		};
+		const coveredYears = new Set<number>();
+
+		for (const post of posts) {
+			counts[post.frontmatter.category] += 1;
+			coveredYears.add(new Date(post.frontmatter.date).getFullYear());
+		}
+
+		return {
+			totalCount: posts.length,
+			coveredYears: coveredYears.size,
+			counts,
+		};
 	}
 
 	private async ensureIndex() {

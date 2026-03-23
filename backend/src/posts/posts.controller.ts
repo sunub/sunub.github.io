@@ -9,7 +9,11 @@ import {
 import type { PostCategory } from "@sunub/types";
 import { PostCategorySchema } from "@sunub/types";
 import { ZodValidationPipe } from "src/common/validation.pipe";
-import { GetLatestPostsQueryDto } from "./dto/get-posts.dto";
+import {
+	GetArchivePostsInRangeQueryDto,
+	GetLatestPostsInRangeQueryDto,
+	GetLatestPostsQueryDto,
+} from "./dto/get-posts.dto";
 import { PostsService } from "./posts.service";
 
 @Controller("posts")
@@ -32,9 +36,22 @@ export class PostsController {
 	@Get("latest/range")
 	getLatestPostsInRange(
 		@Query(new ValidationPipe({ transform: true }))
-		{ start, end }: { start: number; end: number },
+		{ start, end }: GetLatestPostsInRangeQueryDto,
 	) {
 		return this.postsService.findLatestInRange(start, end);
+	}
+
+	@Get("archive/summary")
+	getArchiveSummary() {
+		return this.postsService.getArchiveSummary();
+	}
+
+	@Get("archive/range")
+	getArchivePostsInRange(
+		@Query(new ValidationPipe({ transform: true }))
+		{ category, start, end }: GetArchivePostsInRangeQueryDto,
+	) {
+		return this.postsService.findArchivePostsInRange(category, start, end);
 	}
 
 	@Get(":category")

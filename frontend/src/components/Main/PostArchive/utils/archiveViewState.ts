@@ -1,8 +1,9 @@
 import type { FrontMatter } from "@sunub/types";
 import type { PostArchiveCategoryFilter } from "../types";
 import {
-	POST_ARCHIVE_CATEGORY_OPTIONS,
 	POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
+	POST_ARCHIVE_LOAD_MORE_COUNT,
+	parsePostArchiveCategoryFilter,
 } from "./index";
 
 const ARCHIVE_VIEW_STATE_VERSION = 1;
@@ -12,10 +13,6 @@ const ARCHIVE_CATEGORY_QUERY_PARAM = "category";
 const ARCHIVE_VIEW_STATE_MAX_AGE_MS = 1000 * 60 * 30;
 const ARCHIVE_SCROLL_ALIGNMENT_OFFSET_PX = 32;
 
-const VALID_ARCHIVE_CATEGORIES = new Set<PostArchiveCategoryFilter>(
-	POST_ARCHIVE_CATEGORY_OPTIONS.map(({ value }) => value),
-);
-
 export interface PersistedPostArchiveViewState {
 	version: typeof ARCHIVE_VIEW_STATE_VERSION;
 	pathname: string;
@@ -24,6 +21,54 @@ export interface PersistedPostArchiveViewState {
 	anchorPostKey: string | null;
 	anchorIndex: number | null;
 	updatedAt: number;
+}
+
+export function hasArchiveRestoreAnchor(
+	snapshot: PersistedPostArchiveViewState,
+) {
+	return snapshot.anchorPostKey !== null || snapshot.anchorIndex !== null;
+}
+
+export function getArchiveRestoreTargetVisibleCount(
+	snapshot: PersistedPostArchiveViewState,
+	totalCount: number,
+) {
+	const anchorVisibleCount =
+		snapshot.anchorIndex === null
+			? snapshot.visibleCount
+			: snapshot.anchorIndex + 1 + POST_ARCHIVE_LOAD_MORE_COUNT;
+
+	return Math.min(
+		totalCount,
+		Math.max(
+			POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
+			Math.min(snapshot.visibleCount, anchorVisibleCount),
+		),
+	);
+}
+
+export function getNextArchiveRestoreVisibleCount({
+	snapshot,
+	currentVisibleCount,
+	totalCount,
+}: {
+	snapshot: PersistedPostArchiveViewState;
+	currentVisibleCount: number;
+	totalCount: number;
+}) {
+	const targetVisibleCount = getArchiveRestoreTargetVisibleCount(
+		snapshot,
+		totalCount,
+	);
+
+	if (targetVisibleCount <= currentVisibleCount) {
+		return null;
+	}
+
+	return Math.min(
+		targetVisibleCount,
+		currentVisibleCount + POST_ARCHIVE_LOAD_MORE_COUNT,
+	);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -43,19 +88,6 @@ function normalizeVisibleCount(value: unknown) {
 		POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
 		Math.floor(Number(value)),
 	);
-}
-
-export function parsePostArchiveCategoryFilter(
-	value: string | null | undefined,
-): PostArchiveCategoryFilter {
-	if (
-		value &&
-		VALID_ARCHIVE_CATEGORIES.has(value as PostArchiveCategoryFilter)
-	) {
-		return value as PostArchiveCategoryFilter;
-	}
-
-	return "all";
 }
 
 function normalizePersistedArchiveViewState(

@@ -7,6 +7,11 @@ export const PostCategorySchema = z.union([
 	z.literal("code"),
 ]);
 
+export const ArchiveCategoryFilterSchema = z.union([
+	z.literal("all"),
+	PostCategorySchema,
+]);
+
 export const DateStringSchema = z.union([z.string(), z.date()]);
 
 export const FrontMatterSchema = z.object({
@@ -52,6 +57,20 @@ export const PublishedPostSchema = z.object({
 	frontmatters: z.array(FrontMatterSchema),
 });
 
+export const ArchiveCategoryCountsSchema = z.object({
+	all: z.number(),
+	web: z.number(),
+	algorithm: z.number(),
+	code: z.number(),
+	cs: z.number(),
+});
+
+export const ArchiveSummarySchema = z.object({
+	totalCount: z.number(),
+	coveredYears: z.number(),
+	counts: ArchiveCategoryCountsSchema,
+});
+
 export const SearchResultSchema = z.object({
 	postKey: z.string(),
 	post: z
@@ -73,8 +92,11 @@ export const SearchResponseSchema = z.object({
 });
 
 export type PostCategory = z.infer<typeof PostCategorySchema>;
+export type ArchiveCategoryFilter = z.infer<typeof ArchiveCategoryFilterSchema>;
 export type FrontMatter = z.infer<typeof FrontMatterSchema>;
 export type CacheData = z.infer<typeof CacheDataSchema>;
+export type ArchiveCategoryCounts = z.infer<typeof ArchiveCategoryCountsSchema>;
+export type ArchiveSummary = z.infer<typeof ArchiveSummarySchema>;
 
 export interface PostFrontMatter {
 	frontmatter: FrontMatter;

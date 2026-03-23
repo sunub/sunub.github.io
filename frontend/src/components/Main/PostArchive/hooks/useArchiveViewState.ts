@@ -1,24 +1,42 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
-import type { PostArchiveCategoryFilter } from "../types";
-import { POST_ARCHIVE_INITIAL_VISIBLE_COUNT } from "../utils";
+import { useAtom } from "jotai";
 import {
+	type SetStateAction,
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useState,
+} from "react";
+import {
+	archiveCategoryViewStateAtom,
+	getArchiveCategoryViewState,
+	normalizeArchiveVisibleCount,
+} from "../store/archive.atom";
+import type { PostArchiveCategoryFilter } from "../types";
+import {
+	hasArchiveRestoreAnchor,
 	type PersistedPostArchiveViewState,
 	persistArchiveViewState,
 	readArchiveCategoryFromLocation,
 	readPersistedArchiveViewState,
 } from "../utils/archiveViewState";
 
-export function useArchiveViewState() {
-	const [selectedCategory, setSelectedCategory] =
-		useState<PostArchiveCategoryFilter>("all");
-	const [visibleCount, setVisibleCount] = useState(
-		POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
+export function useArchiveViewState(
+	initialCategory: PostArchiveCategoryFilter,
+) {
+	const [categoryViewState, setCategoryViewState] = useAtom(
+		archiveCategoryViewStateAtom,
 	);
+	const [selectedCategory, setSelectedCategory] =
+		useState<PostArchiveCategoryFilter>(initialCategory);
 	const [pendingRestore, setPendingRestore] =
 		useState<PersistedPostArchiveViewState | null>(null);
 	const [isReady, setIsReady] = useState(false);
+	const visibleCount = getArchiveCategoryViewState(
+		categoryViewState,
+		selectedCategory,
+	).visibleCount;
 
 	useLayoutEffect(() => {
 		const categoryFromUrl = readArchiveCategoryFromLocation();
@@ -26,11 +44,8 @@ export function useArchiveViewState() {
 
 		setSelectedCategory(snapshot?.category ?? categoryFromUrl);
 
-		if (snapshot) {
-			setVisibleCount(snapshot.visibleCount);
-			if (snapshot.anchorPostKey || snapshot.anchorIndex !== null) {
-				setPendingRestore(snapshot);
-			}
+		if (snapshot && hasArchiveRestoreAnchor(snapshot)) {
+			setPendingRestore(snapshot);
 		}
 
 		setIsReady(true);
@@ -49,8 +64,53 @@ export function useArchiveViewState() {
 		});
 	}, [isReady, selectedCategory, visibleCount]);
 
+	const setVisibleCount = useCallback(
+		(nextVisibleCount: SetStateAction<number>) => {
+			setCategoryViewState((currentState) => {
+				const currentCategoryState = getArchiveCategoryViewState(
+					currentState,
+					selectedCategory,
+				);
+				const resolvedVisibleCount =
+					typeof nextVisibleCount === "function"
+						? nextVisibleCount(currentCategoryState.visibleCount)
+						: nextVisibleCount;
+				const normalizedVisibleCount =
+					normalizeArchiveVisibleCount(resolvedVisibleCount);
+
+				if (currentCategoryState.visibleCount === normalizedVisibleCount) {
+					return currentState;
+				}
+
+				return {
+					...currentState,
+					[selectedCategory]: {
+						...currentCategoryState,
+						visibleCount: normalizedVisibleCount,
+					},
+				};
+			});
+		},
+		[selectedCategory, setCategoryViewState],
+	);
+
 	const captureAnchor = useCallback(
 		(postKey: string, anchorIndex: number) => {
+			setCategoryViewState((currentState) => {
+				const currentCategoryState = getArchiveCategoryViewState(
+					currentState,
+					selectedCategory,
+				);
+
+				return {
+					...currentState,
+					[selectedCategory]: {
+						...currentCategoryState,
+						anchorPostKey: postKey,
+						anchorIndex,
+					},
+				};
+			});
 			persistArchiveViewState({
 				category: selectedCategory,
 				visibleCount,
@@ -58,18 +118,33 @@ export function useArchiveViewState() {
 				anchorIndex,
 			});
 		},
-		[selectedCategory, visibleCount],
+		[selectedCategory, setCategoryViewState, visibleCount],
 	);
 
 	const completeRestore = useCallback(() => {
 		setPendingRestore(null);
+		setCategoryViewState((currentState) => {
+			const currentCategoryState = getArchiveCategoryViewState(
+				currentState,
+				selectedCategory,
+			);
+
+			return {
+				...currentState,
+				[selectedCategory]: {
+					...currentCategoryState,
+					anchorPostKey: null,
+					anchorIndex: null,
+				},
+			};
+		});
 		persistArchiveViewState({
 			category: selectedCategory,
 			visibleCount,
 			anchorPostKey: null,
 			anchorIndex: null,
 		});
-	}, [selectedCategory, visibleCount]);
+	}, [selectedCategory, setCategoryViewState, visibleCount]);
 
 	return {
 		selectedCategory,

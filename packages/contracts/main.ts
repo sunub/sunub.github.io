@@ -39,6 +39,9 @@ export type FrontendUrlResolveInput = {
 export const API_PATHS = {
 	posts: {
 		all: () => "/posts/all",
+		archiveSummary: () => "/posts/archive/summary",
+		archiveRange: (category: string, start: number, end: number) =>
+			`/posts/archive/range?category=${encodeURIComponent(category)}&start=${start}&end=${end}`,
 		byCategory: (category: string) => `/posts/${category}`,
 		bySlug: (category: string, slug: string) => `/posts/${category}/${slug}`,
 		latest: () => "/posts/latest",

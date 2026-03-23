@@ -63,6 +63,40 @@ describe("Backend API", () => {
 					.mockImplementation((start: number, end: number) =>
 						Promise.resolve(posts.slice(start, end)),
 					),
+				getArchiveSummary: jest.fn().mockReturnValue({
+					totalCount: posts.length,
+					coveredYears: 1,
+					counts: {
+						all: posts.length,
+						web: 1,
+						algorithm: 1,
+						code: 1,
+						cs: 0,
+					},
+				}),
+				getArchivePostsInRange: jest
+					.fn()
+					.mockImplementation(
+						(
+							category: "all" | "web" | "algorithm" | "code" | "cs",
+							start: number,
+							end: number,
+						) => {
+							const filteredPosts =
+								category === "all"
+									? posts
+									: posts.filter(
+											(post) => post.frontmatter.category === category,
+										);
+
+							return {
+								totalCount: filteredPosts.length,
+								frontmatters: filteredPosts
+									.slice(start, end)
+									.map((post) => post.frontmatter),
+							};
+						},
+					),
 				getPostsByCategory: jest
 					.fn()
 					.mockImplementation((category: string) =>
@@ -140,6 +174,35 @@ describe("Backend API", () => {
 		expect(response.body.frontmatters).toEqual(
 			expect.arrayContaining([posts[1].frontmatter, posts[2].frontmatter]),
 		);
+	});
+
+	it("should return archive summary", async () => {
+		const response = await request(app.getHttpServer())
+			.get("/posts/archive/summary")
+			.expect(200);
+
+		expect(response.body).toEqual({
+			totalCount: posts.length,
+			coveredYears: 1,
+			counts: {
+				all: posts.length,
+				web: 1,
+				algorithm: 1,
+				code: 1,
+				cs: 0,
+			},
+		});
+	});
+
+	it("should return archive posts in range by category", async () => {
+		const response = await request(app.getHttpServer())
+			.get("/posts/archive/range?category=algorithm&start=0&end=2")
+			.expect(200);
+
+		expect(response.body).toEqual({
+			totalCount: 1,
+			frontmatters: [posts[1].frontmatter],
+		});
 	});
 
 	it("should return post by category", async () => {

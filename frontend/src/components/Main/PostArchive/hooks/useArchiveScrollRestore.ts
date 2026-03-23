@@ -18,7 +18,9 @@ export function useArchiveScrollRestore({
 	columnCount,
 	estimatedRowHeight,
 	pendingRestore,
+	isRestoreReady,
 	getPostKey,
+	onBeforeScroll,
 	onComplete,
 }: {
 	listRef: React.RefObject<HTMLUListElement | null>;
@@ -26,7 +28,9 @@ export function useArchiveScrollRestore({
 	columnCount: number;
 	estimatedRowHeight: number;
 	pendingRestore: PersistedPostArchiveViewState | null;
+	isRestoreReady: boolean;
 	getPostKey: (post: FrontMatter) => string;
+	onBeforeScroll?: () => void;
 	onComplete: () => void;
 }) {
 	const anchorIndex = useMemo(() => {
@@ -42,6 +46,10 @@ export function useArchiveScrollRestore({
 			return;
 		}
 
+		if (!isRestoreReady) {
+			return;
+		}
+
 		if (anchorIndex < 0) {
 			onComplete();
 			return;
@@ -53,6 +61,7 @@ export function useArchiveScrollRestore({
 		}
 
 		const targetRowIndex = Math.floor(anchorIndex / Math.max(columnCount, 1));
+		onBeforeScroll?.();
 		window.scrollTo({
 			top: getArchiveRestoreScrollTop({
 				list,
@@ -65,13 +74,19 @@ export function useArchiveScrollRestore({
 		anchorIndex,
 		columnCount,
 		estimatedRowHeight,
+		isRestoreReady,
 		listRef,
+		onBeforeScroll,
 		onComplete,
 		pendingRestore,
 	]);
 
 	useEffect(() => {
 		if (!pendingRestore) {
+			return;
+		}
+
+		if (!isRestoreReady) {
 			return;
 		}
 
@@ -95,6 +110,7 @@ export function useArchiveScrollRestore({
 			if (list) {
 				const card = findArchiveCardElement(list, targetPostKey);
 				if (card) {
+					onBeforeScroll?.();
 					window.scrollTo({
 						top: getArchiveAlignedCardTop(card),
 						behavior: "auto",
@@ -119,5 +135,12 @@ export function useArchiveScrollRestore({
 				window.cancelAnimationFrame(rafId);
 			}
 		};
-	}, [anchorIndex, listRef, onComplete, pendingRestore]);
+	}, [
+		anchorIndex,
+		isRestoreReady,
+		listRef,
+		onBeforeScroll,
+		onComplete,
+		pendingRestore,
+	]);
 }

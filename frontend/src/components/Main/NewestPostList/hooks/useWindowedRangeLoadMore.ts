@@ -8,6 +8,7 @@ type WindowedRangeLoadMoreOptions = {
 	remainingPx: number;
 	preloadReservePx: number;
 	loadMore: () => void;
+	enableRemainingItemsCheck?: boolean;
 };
 
 const TRIGGER_COOLDOWN_MS = 250;
@@ -19,6 +20,7 @@ export const useWindowedRangeLoadMore = ({
 	remainingPx,
 	preloadReservePx,
 	loadMore,
+	enableRemainingItemsCheck = true,
 }: WindowedRangeLoadMoreOptions): void => {
 	const lastRequestedAtRef = useRef<number | null>(null);
 
@@ -29,13 +31,15 @@ export const useWindowedRangeLoadMore = ({
 			currentVisibleRangeEnd: number,
 		) => {
 			const shouldPreloadByPx = currentRemainingPx <= preloadReservePx;
-			const shouldPreloadByItems = shouldLoadMoreFromRemainingItems(
-				currentPostsLength,
-				currentVisibleRangeEnd,
-			);
+			const shouldPreloadByItems =
+				enableRemainingItemsCheck &&
+				shouldLoadMoreFromRemainingItems(
+					currentPostsLength,
+					currentVisibleRangeEnd,
+				);
 			return shouldPreloadByPx || shouldPreloadByItems;
 		},
-		[preloadReservePx],
+		[enableRemainingItemsCheck, preloadReservePx],
 	);
 
 	useEffect(() => {

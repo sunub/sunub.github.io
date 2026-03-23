@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import type {
+	ArchiveCategoryFilter,
+	ArchiveSummary,
 	PostCategory,
 	PostFrontMatter,
 	PublishedPost,
@@ -45,6 +47,23 @@ export class PostsService {
 			totalCount,
 			frontmatters: latestFrontmatters,
 		};
+	}
+
+	getArchiveSummary(): ArchiveSummary {
+		return this.blogService.getArchiveSummary();
+	}
+
+	findArchivePostsInRange(
+		category: ArchiveCategoryFilter,
+		start: number,
+		end: number,
+	): PublishedPost {
+		const { safeStart, safeEnd } = this.normalizeRange(start, end);
+		return this.blogService.getArchivePostsInRange(
+			category,
+			safeStart,
+			safeEnd,
+		);
 	}
 
 	async findByCategory(category: PostCategory) {

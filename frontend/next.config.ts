@@ -99,6 +99,10 @@ const nextConfig: NextConfig = {
 	async rewrites() {
 		return [
 			{
+				source: "/posts/:path*",
+				destination: `${rewriteTarget}/posts/:path*`,
+			},
+			{
 				source: "/api/proxy/:path*",
 				destination: `${rewriteTarget}/:path*`,
 			},

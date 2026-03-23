@@ -1,8 +1,7 @@
 "use server";
 
-import { DEFAULT_BACKEND_API_URL } from "@sunub/contracts";
 import { type PublishedPost, PublishedPostSchema } from "@sunub/types";
-import { buildApiUrl } from "@/shared/api/config";
+import { buildApiRequestCandidates } from "@/shared/api/config";
 import { API_PATHS } from "@/shared/api/endpoints";
 
 const toLatestRangePath = (start: number, end: number) => {
@@ -17,32 +16,11 @@ const toLatestRangePath = (start: number, end: number) => {
 	return resolveRangePath(start, end);
 };
 
-const toAbsoluteUrl = (path: string) => {
-	const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-	const builtUrl = buildApiUrl(path);
-
-	if (/^https?:\/\//i.test(builtUrl)) {
-		return builtUrl;
-	}
-
-	return `${DEFAULT_BACKEND_API_URL}${normalizedPath}`;
-};
-
 const getAdditionalPostFetch = async (start: number, end: number) => {
 	const path = toLatestRangePath(start, end);
-	const candidates = [
-		toAbsoluteUrl(path),
-		`http://127.0.0.1:4008${path}`,
-		`http://localhost:4008${path}`,
-	];
-	const visited = new Set<string>();
+	const candidates = buildApiRequestCandidates(path);
 
 	for (const apiUrl of candidates) {
-		if (visited.has(apiUrl)) {
-			continue;
-		}
-		visited.add(apiUrl);
-
 		try {
 			const data = await fetch(apiUrl, {
 				cache: "no-store",
