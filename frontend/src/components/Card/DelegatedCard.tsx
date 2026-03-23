@@ -6,6 +6,7 @@ import { useMemo } from "react";
 import styled from "styled-components";
 import Elevation from "@/constants/Elevation";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { getPostDetailHref } from "@/shared/utils/postRoute";
 
 export default function DelegatedCard({
 	frontMatter,
@@ -13,6 +14,7 @@ export default function DelegatedCard({
 	frontMatter: FrontMatter;
 }) {
 	const { title, date, slug, category } = frontMatter;
+	const href = getPostDetailHref({ category, slug });
 
 	const [cardRef, isVisible] = useIntersectionObserver<HTMLDivElement>({
 		rootMargin: "100px",
@@ -35,12 +37,7 @@ export default function DelegatedCard({
 	return (
 		<RootContainer ref={cardRef} data-card-root data-visible={isVisible}>
 			<Wrapper className="cards">
-				<LinkWrapper
-					className="card"
-					href={`/post/${category}/${slug}`}
-					tabIndex={0}
-					prefetch={false}
-				>
+				<LinkWrapper className="card" href={href} tabIndex={0} prefetch={false}>
 					<Header>{title}</Header>
 					<Footer>{formattedDate}</Footer>
 				</LinkWrapper>

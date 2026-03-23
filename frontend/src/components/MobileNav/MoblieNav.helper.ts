@@ -6,7 +6,7 @@ interface RefObjects {
 	pathMidRef: React.RefObject<SVGPathElement | null>;
 	pathEndRef: React.RefObject<SVGPathElement | null>;
 	gradientRef: React.RefObject<SVGLinearGradientElement | null>;
-	svgRef: React.RefObject<SVGSVGElement | null>;
+	floodWrapperRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const animateSVGAttribute = async (
@@ -58,27 +58,27 @@ const paths = {
 };
 
 const validateRefs = (refObjects: RefObjects) => {
-	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, floodWrapperRef } =
 		refObjects;
 	return (
 		pathStartRef.current &&
 		pathMidRef.current &&
 		pathEndRef.current &&
 		gradientRef.current &&
-		svgRef.current
+		floodWrapperRef.current
 	);
 };
 
 export const getMoblieOpenAnimationTimeline = (refObjects: RefObjects) => {
-	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, floodWrapperRef } =
 		refObjects;
 
 	return {
 		play: async () => {
 			if (!validateRefs(refObjects)) return;
 
-			if (svgRef.current) {
-				svgRef.current.style.transform = "translateX(-100%)";
+			if (floodWrapperRef.current) {
+				floodWrapperRef.current.style.transform = "translateX(-100%)";
 			}
 			if (pathStartRef.current)
 				pathStartRef.current.setAttribute("d", paths.step1.unfilled);
@@ -130,9 +130,9 @@ export const getMoblieOpenAnimationTimeline = (refObjects: RefObjects) => {
 								inBetweenDuration,
 							),
 						]),
-					svgRef.current &&
+					floodWrapperRef.current &&
 						animate(
-							svgRef.current,
+							floodWrapperRef.current,
 							{ x: "0%" },
 							{ duration: inBetweenDuration },
 						),
@@ -185,15 +185,15 @@ export const getMoblieOpenAnimationTimeline = (refObjects: RefObjects) => {
 };
 
 export const getMoblieCloseAnimationTimeline = (refObjects: RefObjects) => {
-	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, svgRef } =
+	const { pathStartRef, pathMidRef, pathEndRef, gradientRef, floodWrapperRef } =
 		refObjects;
 
 	return {
 		play: async () => {
 			if (!validateRefs(refObjects)) return;
 
-			if (svgRef.current) {
-				svgRef.current.style.transform = "translateX(0)";
+			if (floodWrapperRef.current) {
+				floodWrapperRef.current.style.transform = "translateX(0)";
 			}
 			if (pathStartRef.current)
 				pathStartRef.current.setAttribute("d", paths.step1.filled);
@@ -274,9 +274,9 @@ export const getMoblieCloseAnimationTimeline = (refObjects: RefObjects) => {
 								toUnfilledDuration,
 							),
 						]),
-					svgRef.current &&
+					floodWrapperRef.current &&
 						animate(
-							svgRef.current,
+							floodWrapperRef.current,
 							{ x: "-100%" },
 							{ duration: toUnfilledDuration },
 						),

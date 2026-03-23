@@ -1,30 +1,6 @@
-import { type PostFrontMatter, PostFrontMatterSchema } from "@sunub/types";
+import type { PostFrontMatter } from "@sunub/types";
 import type { MetadataRoute } from "next";
-import { buildApiUrl } from "@/shared/api/config";
-import { API_PATHS } from "@/shared/api/endpoints";
-
-function isPostFrontMatter(data: unknown): data is PostFrontMatter[] {
-	const parsedData = PostFrontMatterSchema.array().safeParse(data);
-	return parsedData.success;
-}
-
-async function getAllPostsFromBackend() {
-	try {
-		const response = await fetch(buildApiUrl(API_PATHS.posts.all()));
-		if (!response.ok) {
-			return [];
-		}
-
-		const data = await response.json();
-		if (!isPostFrontMatter(data)) {
-			return [];
-		}
-		return data;
-	} catch (error) {
-		console.error("Error fetching all posts for sitemap:", error);
-		return [];
-	}
-}
+import { getAllPostsFromIndex } from "@/server/posts";
 
 function updateCatetoryDate(allBlogPosts: PostFrontMatter[]) {
 	const result = {
@@ -52,7 +28,7 @@ function updateCatetoryDate(allBlogPosts: PostFrontMatter[]) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const allBlogPosts = await getAllPostsFromBackend();
+	const allBlogPosts = await getAllPostsFromIndex();
 
 	const categoryLatestUpdates = updateCatetoryDate(allBlogPosts);
 	const blogXML = allBlogPosts.flatMap(({ frontmatter }, i) => {

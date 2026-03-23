@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import {
 	DEFAULT_BACKEND_API_URL,
 	DEFAULT_FRONTEND_BASE_URL,
@@ -22,6 +23,13 @@ const frontendBaseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? frontendUrls.base;
 
 export default defineConfig({
 	plugins: [react(), tsconfigPaths()],
+	resolve: {
+		alias: {
+			"server-only": fileURLToPath(
+				new URL("./test/mocks/server-only.ts", import.meta.url),
+			),
+		},
+	},
 	test: {
 		env: {
 			NODE_ENV: "test",

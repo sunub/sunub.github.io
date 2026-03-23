@@ -5,9 +5,11 @@ import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import Elevation from "@/constants/Elevation";
+import { getPostDetailHref } from "@/shared/utils/postRoute";
 
 export default function Card({ frontMatter }: { frontMatter: FrontMatter }) {
 	const { title, date, slug, category } = frontMatter;
+	const href = getPostDetailHref({ category, slug });
 	const containerRef = useRef<HTMLDivElement>(null);
 	const formattedDate = React.useMemo(() => {
 		return new Intl.DateTimeFormat("ko-kr", {
@@ -45,12 +47,7 @@ export default function Card({ frontMatter }: { frontMatter: FrontMatter }) {
 	return (
 		<RootContainer ref={containerRef}>
 			<Wrapper className="cards">
-				<LinkWrapper
-					className="card"
-					href={`/post/${category}/${slug}`}
-					tabIndex={0}
-					prefetch={false}
-				>
+				<LinkWrapper className="card" href={href} tabIndex={0} prefetch={false}>
 					<Header>{title}</Header>
 					<Footer>{formattedDate}</Footer>
 				</LinkWrapper>

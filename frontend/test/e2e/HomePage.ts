@@ -1,15 +1,21 @@
 import type { Locator, Page } from "@playwright/test";
-import { BLOG_POST_LIST_IDS } from "@/components/Main/NewestPostList/utils/virtualListUtils";
 import { ROUTES } from "@/shared/constants";
 import { E2E_TEST_URL } from "./constants";
 
+const FRESH_CHRONICLES_CARD_SELECTOR =
+	"[data-testid^='fresh-chronicles-card-']";
+
 export class HomePage {
 	readonly page: Page;
-	readonly postList: Locator;
+	readonly freshChroniclesSection: Locator;
+	readonly freshChroniclesGrid: Locator;
+	readonly archiveCard: Locator;
 
 	constructor(page: Page) {
 		this.page = page;
-		this.postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
+		this.freshChroniclesSection = page.getByTestId("fresh-chronicles-section");
+		this.freshChroniclesGrid = page.getByTestId("fresh-chronicles-grid");
+		this.archiveCard = page.getByTestId("fresh-chronicles-archive-card");
 	}
 
 	static async goToHome(page: Page) {
@@ -18,23 +24,32 @@ export class HomePage {
 
 	async goto() {}
 
-	getPostByIndex(index: number) {
-		return this.postList.getByRole("link").nth(index);
+	getCardByIndex(index: number) {
+		return this.freshChroniclesGrid
+			.locator(FRESH_CHRONICLES_CARD_SELECTOR)
+			.nth(index);
 	}
 
-	getFristPostLink() {
-		return this.postList.getByRole("link").first();
+	getFirstPostCard() {
+		return this.getCardByIndex(0);
 	}
 
 	async clickFirstPost() {
-		await this.getPostByIndex(0).getByRole("link").click();
+		await this.getFirstPostCard().click();
+	}
+
+	async clickArchiveCard() {
+		await this.archiveCard.click();
+	}
+
+	async getCardCount() {
+		return this.freshChroniclesGrid
+			.locator(FRESH_CHRONICLES_CARD_SELECTOR)
+			.count();
 	}
 
 	async getFirstPostTitleContent(): Promise<string | null> {
-		const title = this.postList
-			.getByRole("listitem")
-			.first()
-			.getByRole("heading");
+		const title = this.getFirstPostCard().locator("h3");
 		return title.textContent();
 	}
 }

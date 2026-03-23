@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
 	CardGrid,
 	SectionEyebrow,
@@ -12,12 +13,14 @@ export function FreshChroniclesGrid({
 	cards,
 	title,
 	eyebrow,
+	children,
 }: {
 	cards: FreshChroniclesCardData[];
 	title: string;
 	eyebrow: string;
+	children?: ReactNode;
 }) {
-	if (cards.length === 0) {
+	if (cards.length === 0 && !children) {
 		return null;
 	}
 
@@ -35,6 +38,7 @@ export function FreshChroniclesGrid({
 						index={index}
 					/>
 				))}
+				{children}
 			</CardGrid>
 		</SectionRoot>
 	);

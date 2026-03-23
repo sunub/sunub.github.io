@@ -44,11 +44,18 @@ export const API_CONFIG = {
 	},
 };
 
-export function buildApiUrl(path: string) {
+export function buildApiUrl(
+	path: string,
+	searchParams?: URLSearchParams | string,
+): string {
 	const normalizedPath = normalizePath(path);
 	const currentRuntime = getBackendRuntime();
 	const baseUrl =
 		currentRuntime === "browser" ? "" : resolveBackendBaseUrl(currentRuntime);
 
-	return `${baseUrl}${normalizedPath}`;
+	if (searchParams instanceof URLSearchParams) {
+		searchParams = searchParams.toString();
+	}
+
+	return `${baseUrl}${normalizedPath}${searchParams ? `?${searchParams}` : ""}`;
 }

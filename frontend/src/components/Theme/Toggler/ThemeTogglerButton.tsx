@@ -28,7 +28,9 @@ export default function ThemeTogglerButton({
 			onClick={() => handleClick()}
 		>
 			<VisuallyHidden>테마 변경 버튼</VisuallyHidden>
-			<ThemeIcon colorTheme={colorTheme} maskId={maskId} />
+			<Styled.ToggleIconWrapper aria-hidden="true">
+				<ThemeIcon colorTheme={colorTheme} maskId={maskId} />
+			</Styled.ToggleIconWrapper>
 		</Styled.ToggleBtn>
 	);
 }

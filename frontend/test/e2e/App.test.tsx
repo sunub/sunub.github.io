@@ -1,13 +1,14 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
-import { BLOG_POST_LIST_IDS } from "@/components/Main/NewestPostList/utils/virtualListUtils";
+import { ARCHIVE_TOP_HREF } from "@/shared/utils/archiveRoute";
 import { E2E_TEST_URL } from "./constants";
 import { HomePage } from "./HomePage";
 
 const DEFAULT_TIMEOUT_TIME = 35000;
 const DEFAULT_TEST_OPTION = { timeout: DEFAULT_TIMEOUT_TIME };
-const POST_ITEM_SELECTOR =
-	"li[data-testid^='blog-post__recently-'][data-testid$='-post-item']";
+const ARCHIVE_VIEW_STATE_STORAGE_KEY = "post-archive:view:v1";
 const POST_DETAIL_TITLE_TEST_ID = "post-article__main-title";
+const FRESH_CHRONICLES_CARD_SELECTOR =
+	"[data-testid^='fresh-chronicles-card-']";
 
 async function enableDeterministicMode(page: Page) {
 	await page.evaluate(() => {
@@ -15,32 +16,32 @@ async function enableDeterministicMode(page: Page) {
 	});
 }
 
-async function getRenderedPostStats(postList: Locator) {
-	return postList.locator(POST_ITEM_SELECTOR).evaluateAll((elements) => {
-		const indexes = elements
-			.map((element) => {
-				const itemId = element.getAttribute("data-testid") ?? "";
-				const match = /blog-post__recently-(\d+)-post-item/.exec(itemId);
-				return match ? Number.parseInt(match[1], 10) : -1;
-			})
-			.filter((index) => index >= 0);
-
-		return {
-			count: indexes.length,
-			maxIndex: indexes.length > 0 ? Math.max(...indexes) : -1,
-		};
-	});
+async function getFreshChroniclesCardCount(grid: Locator) {
+	return grid.locator(FRESH_CHRONICLES_CARD_SELECTOR).count();
 }
 
-async function scrollToPageBottom(page: Page, repeat = 6) {
-	for (let i = 0; i < repeat; i += 1) {
-		await page.evaluate(() => {
-			window.scrollTo(0, document.body.scrollHeight);
-		});
-		await page.waitForTimeout(120);
-		await page.mouse.wheel(0, 1200);
-		await page.waitForTimeout(120);
-	}
+async function openArchiveFromHeader(page: Page) {
+	await Promise.all([
+		page.waitForURL(`**${ARCHIVE_TOP_HREF}`, {
+			waitUntil: "domcontentloaded",
+			timeout: DEFAULT_TIMEOUT_TIME,
+		}),
+		page
+			.getByRole("navigation", { name: "추가 페이지 바로가기" })
+			.getByRole("link")
+			.click(),
+	]);
+
+	await expect(page.getByTestId("post-archive-section")).toBeVisible(
+		DEFAULT_TEST_OPTION,
+	);
+}
+
+async function readArchiveViewSnapshot(page: Page) {
+	return page.evaluate((storageKey) => {
+		const raw = window.sessionStorage.getItem(storageKey);
+		return raw ? JSON.parse(raw) : null;
+	}, ARCHIVE_VIEW_STATE_STORAGE_KEY);
 }
 
 test.describe("홈 페이지 컴포넌트 테스트", () => {
@@ -56,34 +57,41 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
 			DEFAULT_TEST_OPTION,
 		);
-		await expect(page.getByRole("button", { name: "카테고리들" })).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
 		await expect(page.getByRole("button", { name: "검색" })).toBeVisible(
 			DEFAULT_TEST_OPTION,
 		);
+		await expect(page.getByTestId("desktop-theme-toggler-button")).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+		await expect(page.getByTestId("fresh-chronicles-section")).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+		await expect(
+			page.getByRole("heading", { level: 2, name: "최신 포스트들" }),
+		).toBeVisible(DEFAULT_TEST_OPTION);
 	});
 
-	test("홈 페이지 기본 요소로 최근 포스트 10개가 렌더링 되는가?", async ({
+	test("홈 페이지에서 Fresh Chronicles 카드와 아카이브 카드가 렌더링 되는가?", async ({
 		page,
 	}) => {
-		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
-		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
-
-		const postItems = postList.locator(POST_ITEM_SELECTOR);
+		const homePage = new HomePage(page);
+		await expect(homePage.freshChroniclesGrid).toBeVisible(DEFAULT_TEST_OPTION);
 		await expect
-			.poll(async () => (await getRenderedPostStats(postList)).maxIndex, {
-				timeout: DEFAULT_TIMEOUT_TIME,
-				intervals: [200, 500, 1000],
-			})
-			.toBeGreaterThanOrEqual(9);
-		await expect
-			.poll(async () => await postItems.count(), {
-				timeout: DEFAULT_TIMEOUT_TIME,
-				intervals: [200, 500, 1000],
-			})
-			.toBeGreaterThanOrEqual(10);
-		await expect(postItems.first()).toBeVisible(DEFAULT_TEST_OPTION);
+			.poll(
+				async () => getFreshChroniclesCardCount(homePage.freshChroniclesGrid),
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [200, 500, 1000],
+				},
+			)
+			.toBeGreaterThanOrEqual(1);
+		await expect(homePage.getFirstPostCard()).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(homePage.getFirstPostCard()).toHaveAttribute(
+			"data-card-variant",
+			"wide",
+			DEFAULT_TEST_OPTION,
+		);
+		await expect(homePage.archiveCard).toBeVisible(DEFAULT_TEST_OPTION);
 	});
 
 	test("테마 전환 기능이 적절하게 작동하는지 확인", async ({ page }) => {
@@ -102,35 +110,111 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 	});
 });
 
-test.describe("무한스크롤 기능 테스트", () => {
+test.describe("아카이브 페이지 탐색 테스트", () => {
 	test.beforeEach(async ({ page }) => {
-		await page.goto(E2E_TEST_URL);
+		await HomePage.goToHome(page);
 		await enableDeterministicMode(page);
-		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
-		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(
-			postList.locator("li[data-testid='blog-post__recently-0-post-item']"),
-		).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
+			{
+				timeout: DEFAULT_TIMEOUT_TIME,
+			},
+		);
 	});
 
-	test("스크롤을 홈페이지의 아래로 내릴 경우 추가적인 포스트가 로드되는지 확인", async ({
+	test("헤더 아카이브 링크 클릭 시 아카이브 페이지로 이동하는지 확인", async ({
 		page,
 	}) => {
-		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
-		const before = await getRenderedPostStats(postList);
+		await openArchiveFromHeader(page);
 
-		await scrollToPageBottom(page, 8);
+		await expect(
+			page.getByRole("heading", { level: 1, name: "Post Archive" }),
+		).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(page.getByTestId("post-archive-filter-all")).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+	});
+
+	test("아카이브에서 스크롤로 로드된 상태가 상세 진입 후 뒤로가기에도 유지되는지 확인", async ({
+		page,
+	}) => {
+		await openArchiveFromHeader(page);
 
 		await expect
-			.poll(async () => (await getRenderedPostStats(postList)).maxIndex, {
+			.poll(
+				async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [200, 500, 1000],
+				},
+			)
+			.toBeGreaterThanOrEqual(9);
+
+		const initialVisibleCount =
+			(await readArchiveViewSnapshot(page))?.visibleCount ?? 0;
+		let expandedVisibleCount = initialVisibleCount;
+
+		await expect
+			.poll(
+				async () => {
+					await page.evaluate(() => {
+						window.scrollTo(0, document.body.scrollHeight);
+					});
+					expandedVisibleCount =
+						(await readArchiveViewSnapshot(page))?.visibleCount ?? 0;
+					return expandedVisibleCount;
+				},
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [200, 500, 1000, 1500],
+				},
+			)
+			.toBeGreaterThan(initialVisibleCount);
+
+		const targetCardIndex = Math.min(expandedVisibleCount - 1, 18);
+		const targetCard = page.getByTestId(`post-archive-card-${targetCardIndex}`);
+		await targetCard.scrollIntoViewIfNeeded();
+		await expect(targetCard).toBeVisible(DEFAULT_TEST_OPTION);
+
+		const scrollBeforeOpen = await page.evaluate(() => window.scrollY);
+
+		await Promise.all([
+			page.waitForURL("**/post/*/*", {
+				waitUntil: "domcontentloaded",
 				timeout: DEFAULT_TIMEOUT_TIME,
-				intervals: [500, 1000, 1500],
+			}),
+			targetCard.click(),
+		]);
+
+		await expect(page.getByTestId(POST_DETAIL_TITLE_TEST_ID)).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+
+		await page.goBack({ waitUntil: "domcontentloaded" });
+		await expect(page.getByTestId("post-archive-section")).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+
+		await expect
+			.poll(
+				async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [200, 500, 1000],
+				},
+			)
+			.toBeGreaterThanOrEqual(expandedVisibleCount);
+
+		await expect(targetCard).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect
+			.poll(async () => page.evaluate(() => window.scrollY), {
+				timeout: DEFAULT_TIMEOUT_TIME,
+				intervals: [200, 500, 1000],
 			})
-			.toBeGreaterThan(before.maxIndex);
+			.toBeGreaterThan(Math.max(160, Math.floor(scrollBeforeOpen * 0.4)));
 	});
 });
 
-test.describe("블로그 포스트 링크 테스트", () => {
+test.describe("404 및 블로그 포스트 링크 테스트", () => {
 	const WRONG_PAGE_URL = `${E2E_TEST_URL}/non-existent-route`;
 
 	test.beforeEach(async ({ page }) => {
@@ -189,26 +273,29 @@ test.describe("블로그 포스트 링크 테스트", () => {
 		}).toPass({ intervals: [2000, 3000, 4000], timeout: DEFAULT_TIMEOUT_TIME });
 	});
 
-	test("블로그 포스트 링크 클릭 시 해당 포스트로 이동하는지 확인", async ({
+	test("Fresh Chronicles 카드 클릭 시 해당 포스트로 이동하는지 확인", async ({
 		page,
 	}) => {
-		const postList = page.getByTestId(BLOG_POST_LIST_IDS.testId);
-		await expect(postList).toBeVisible(DEFAULT_TEST_OPTION);
-
-		const firstPostItemLink = postList
-			.locator(POST_ITEM_SELECTOR)
-			.first()
-			.getByRole("link", { name: /blog-post__recently-post-link-\d+/ });
-
-		await expect(firstPostItemLink).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(firstPostItemLink).toBeEnabled(DEFAULT_TEST_OPTION);
+		const homePage = new HomePage(page);
+		await expect(homePage.freshChroniclesGrid).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect
+			.poll(
+				async () => getFreshChroniclesCardCount(homePage.freshChroniclesGrid),
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [200, 500, 1000],
+				},
+			)
+			.toBeGreaterThanOrEqual(1);
+		await expect(homePage.getFirstPostCard()).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(homePage.getFirstPostCard()).toBeEnabled(DEFAULT_TEST_OPTION);
 
 		await Promise.all([
-			page.waitForURL("**/post/**", {
+			page.waitForURL("**/post/*/*", {
 				waitUntil: "domcontentloaded",
 				timeout: DEFAULT_TIMEOUT_TIME,
 			}),
-			firstPostItemLink.click(),
+			homePage.clickFirstPost(),
 		]);
 
 		await expect(async () => {

@@ -198,13 +198,20 @@ export const Svg = styled.svg`
   }
 `;
 
-export const FloodSVG = styled.svg`
+export const FloodWrapper = styled.div`
   z-index: 1000;
   position: fixed;
   height: 100%;
   top: 0px;
   left: 0px;
   transform: translateX(-100%);
+  will-change: transform;
+`;
+
+export const FloodSVG = styled.svg`
+  display: block;
+  height: 100%;
+
   & > path {
     transition: all 300ms ease;
   }

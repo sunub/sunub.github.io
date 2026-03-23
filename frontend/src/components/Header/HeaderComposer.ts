@@ -1,6 +1,7 @@
 import { Search } from "@/widgets/Search";
 import Hamburger from "../MobileNav/Hamburger";
 import { ThemeToggler } from "../Theme/Toggler/ThemeToggler";
+import { Archive } from "./Archive";
 import { HeaderLayout } from "./HeaderLayout";
 import { HeaderLeftSide } from "./HeaderLeftSide";
 import { HeaderRightSide } from "./HeaderRightSide";
@@ -16,6 +17,7 @@ const Composer = {
 	search: Search,
 	hamburger: Hamburger,
 	themeToggler: ThemeToggler,
+	archive: Archive,
 };
 
 export const HeaderComposer = Object.freeze(Composer);

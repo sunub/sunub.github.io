@@ -635,6 +635,39 @@ html[data-color-theme="light"] {
 		oklch(97.14% 0.011 31.07) 0.41%,
 		oklch(87.44% 0.067 30.96) -0.89%
 	);
+	--post-card-surface-base: var(--color-frontWave);
+	--post-card-surface-strong: color-mix(
+		in oklch,
+		var(--color-background) 96%,
+		white 4%
+	);
+	--post-card-border: color-mix(in oklch, var(--color-text) 10%, transparent);
+	--post-card-muted-text: color-mix(
+		in oklch,
+		var(--color-text) 72%,
+		transparent
+	);
+	--post-card-subtle-text: color-mix(
+		in oklch,
+		var(--color-text) 58%,
+		transparent
+	);
+	--post-card-tag-bg: color-mix(in oklch, var(--color-text) 4%, transparent);
+	--post-card-tag-text: color-mix(in oklch, var(--color-text) 72%, transparent);
+	--post-card-icon-surface: color-mix(
+		in oklch,
+		white 92%,
+		var(--color-background) 8%
+	);
+	--post-card-icon-text: color-mix(
+		in oklch,
+		var(--color-text) 44%,
+		transparent
+	);
+	--post-card-code-visual-surface: oklch(95% 0.03 300);
+	--post-card-web-visual-surface: oklch(95% 0.03 242);
+	--post-card-cs-visual-surface: oklch(96% 0.03 168);
+	--post-card-algorithm-visual-surface: oklch(96% 0.04 86);
 	--bridge-bg-url: url("/assets/light_bridge.webp");
 	--cars-bg-url: url("/assets/light_cars.webp");
 	--clouds-bg-url: url("/assets/light_clouds.webp");
@@ -688,6 +721,19 @@ html[data-color-theme="dark"] {
 		oklch(76.95% 0.12588555394033804 289.2710106250223) 0.41%,
 		oklch(43.6% 0.073 290.15) -0.89%
 	);
+	--post-card-surface-base: var(--color-frontWave);
+	--post-card-surface-strong: #27272a;
+	--post-card-border: rgba(255, 255, 255, 0.08);
+	--post-card-muted-text: #9ca3af;
+	--post-card-subtle-text: #a1a1aa;
+	--post-card-tag-bg: rgba(255, 255, 255, 0.05);
+	--post-card-tag-text: #d1d5db;
+	--post-card-icon-surface: #27272a;
+	--post-card-icon-text: #d4d4d8;
+	--post-card-code-visual-surface: #1e1e2e;
+	--post-card-web-visual-surface: #172033;
+	--post-card-cs-visual-surface: #122a22;
+	--post-card-algorithm-visual-surface: #2c2118;
 	--bridge-bg-url: url("/assets/dark_bridge.webp");
 	--cars-bg-url: url("/assets/dark_cars.webp");
 	--clouds-bg-url: url("/assets/dark_clouds.webp");

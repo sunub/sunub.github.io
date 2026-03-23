@@ -63,6 +63,12 @@ describe("BlogService", () => {
 		expect(posts).toEqual(samplePosts);
 	});
 
+	it("getLatestPosts should return exactly the requested number of posts", async () => {
+		const posts = await service.getLatestPosts(2);
+
+		expect(posts).toEqual(samplePosts.slice(0, 2));
+	});
+
 	it("getPostsInRange should slice by [start, end)", async () => {
 		const posts = await service.getPostsInRange(1, 3);
 

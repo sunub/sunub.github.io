@@ -1,26 +1,34 @@
 import { isIterable } from "./utils/isIterable";
 
 function* takeSync<T>(limit: number, iterable: Iterable<T>) {
+	if (limit <= 0) {
+		return;
+	}
+
 	const iterator = iterable[Symbol.iterator]();
-	while (true) {
+	while (limit > 0) {
 		const { done, value } = iterator.next();
 		if (done) {
 			break;
 		}
 		yield value;
-		if (limit-- === 0) break;
+		limit--;
 	}
 }
 
 async function* takeAsync<T>(limit: number, iterable: AsyncIterable<T>) {
+	if (limit <= 0) {
+		return;
+	}
+
 	const iterator = iterable[Symbol.asyncIterator]();
-	while (true) {
+	while (limit > 0) {
 		const { done, value } = await iterator.next();
 		if (done) {
 			break;
 		}
 		yield value;
-		if (limit-- === 0) break;
+		limit--;
 	}
 }
 

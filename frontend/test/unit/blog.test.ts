@@ -2,6 +2,11 @@ import type { FrontMatter, PublishedPost } from "@sunub/types";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getAdditionalPost } from "@/components/Main/BlogPost/utils/utils";
 import { getRecentPost } from "@/components/Main/FeaturedPost/api/getRecentPost";
+import { getLatestPublishedPosts } from "@/server/posts";
+
+vi.mock("@/server/posts", () => ({
+	getLatestPublishedPosts: vi.fn(),
+}));
 
 const createFrontMatter = (
 	category: FrontMatter["category"],
@@ -39,12 +44,11 @@ describe("블로그 포스트 API 테스트", () => {
 	});
 
 	test("블로그 포스트 최신 목록 API가 파싱 가능한 형식을 반환한다", async () => {
-		vi.spyOn(globalThis, "fetch").mockResolvedValue(
-			mockJsonResponse(recentPosts),
-		);
+		vi.mocked(getLatestPublishedPosts).mockResolvedValue(recentPosts);
 
 		const parsed = await getRecentPost();
 		expect(parsed).toEqual(recentPosts);
+		expect(getLatestPublishedPosts).toHaveBeenCalledWith(4);
 	});
 
 	test("range 조회 API가 파싱 가능한 형식을 반환한다", async () => {

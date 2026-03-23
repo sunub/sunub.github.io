@@ -1,6 +1,7 @@
 "use client";
 import type { FrontMatter } from "@sunub/types";
 import { memo, useCallback, useMemo } from "react";
+import { getPostDetailHref } from "@/shared/utils/postRoute";
 import { BlogPostItemComposer } from "./BlogPostItemComposer";
 import type { BlogPostItemAnimationMode } from "./BlogPostItemRoot";
 
@@ -20,7 +21,7 @@ export const BlogPostItem = memo(function BlogPostItem({
 	const titleId = `blog-post__recently-post-title-${index}`;
 	const titleLinkId = `blog-post__recently-post-link-${index}`;
 
-	const href = `/post/${post.category}/${post.slug}`;
+	const href = getPostDetailHref(post);
 
 	const dateISO = useMemo(() => new Date(post.date).toISOString(), [post.date]);
 	const itemRef = useCallback(

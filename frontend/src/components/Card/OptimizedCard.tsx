@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Elevation from "@/constants/Elevation";
 import { useIdleCallback } from "@/hooks/useIdleCallback";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { getPostDetailHref } from "@/shared/utils/postRoute";
 
 export default function OptimizedCard({
 	frontMatter,
@@ -14,6 +15,7 @@ export default function OptimizedCard({
 	frontMatter: FrontMatter;
 }) {
 	const { title, date, slug, category } = frontMatter;
+	const href = getPostDetailHref({ category, slug });
 
 	const [cardRef, isVisible] = useIntersectionObserver<HTMLDivElement>({
 		rootMargin: "50px",
@@ -64,12 +66,7 @@ export default function OptimizedCard({
 			data-hydrated={isVisible}
 		>
 			<Wrapper className="cards">
-				<LinkWrapper
-					className="card"
-					href={`/post/${category}/${slug}`}
-					tabIndex={0}
-					prefetch={false}
-				>
+				<LinkWrapper className="card" href={href} tabIndex={0} prefetch={false}>
 					<Header>{title}</Header>
 					<Footer>{formattedDate}</Footer>
 				</LinkWrapper>

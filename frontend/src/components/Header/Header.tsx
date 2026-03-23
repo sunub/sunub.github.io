@@ -6,6 +6,7 @@ async function Header() {
 		<HeaderComposer.layout>
 			<HeaderComposer.leftSide>
 				<HeaderComposer.logo />
+				<HeaderComposer.archive />
 				<HeaderComposer.navigation />
 			</HeaderComposer.leftSide>
 

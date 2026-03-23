@@ -5,7 +5,7 @@ import { getNextTheme } from "@/components/HeroImage/utils/heroImageResources.ts
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
 import { ThemeIcon } from "./ThemeIcon.tsx";
-import { ToggleBtn } from "./ThemeToggler.style";
+import { ToggleBtn, ToggleIconWrapper } from "./ThemeToggler.style";
 
 export function ThemeToggler({
 	maskId,
@@ -31,7 +31,9 @@ export function ThemeToggler({
 			onClick={handleClick}
 		>
 			<VisuallyHidden>테마 변경 버튼</VisuallyHidden>
-			<ThemeIcon colorTheme={colorTheme} maskId={maskId} />
+			<ToggleIconWrapper aria-hidden="true">
+				<ThemeIcon colorTheme={colorTheme} maskId={maskId} />
+			</ToggleIconWrapper>
 		</ToggleBtn>
 	);
 }

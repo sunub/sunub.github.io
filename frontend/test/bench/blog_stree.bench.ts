@@ -1,5 +1,23 @@
+import fs from "node:fs";
+import { resolve } from "node:path";
 import { beforeEach, bench, describe } from "vitest";
-import postsGenerated from "../../src/generated/posts.generated.json";
+
+const resolvePostsIndexPath = () => {
+	const candidates = [
+		resolve(process.cwd(), "../posts/posts.jsonl"),
+		resolve(process.cwd(), "posts/posts.jsonl"),
+	];
+
+	return (
+		candidates.find((candidate) => fs.existsSync(candidate)) ?? candidates[0]
+	);
+};
+
+const POSTS_FROM_INDEX = fs
+	.readFileSync(resolvePostsIndexPath(), "utf8")
+	.split("\n")
+	.filter((line) => line.trim().length > 0)
+	.map((line) => JSON.parse(line));
 
 describe("대규모 포스트 약 10000개", () => {
 	beforeEach(() => {
@@ -11,7 +29,7 @@ describe("대규모 포스트 약 10000개", () => {
 	bench(
 		"포스트 카테고리별 집계 처리",
 		async () => {
-			const categories = postsGenerated.all.reduce(
+			const categories = POSTS_FROM_INDEX.reduce(
 				(acc, item) => {
 					const category = item.frontmatter.category;
 					acc[category] = (acc[category] ?? 0) + 1;

@@ -1,6 +1,7 @@
 import type { FrontMatter } from "@sunub/types";
 import { ArrowRight, Binary, Boxes, Cpu, Globe2 } from "lucide-react";
-import type { CSSProperties } from "react";
+import { createPostCardCssVariables } from "@/components/Main/shared/postCardTheme";
+import { getPostDetailHref } from "@/shared/utils/postRoute";
 import {
 	CardAction,
 	CardBadge,
@@ -10,6 +11,7 @@ import {
 	CardFooter,
 	CardLink,
 	CardMeta,
+	CardMetaRow,
 	CardSummary,
 	CardTitle,
 	CardVisual,
@@ -23,35 +25,6 @@ import type {
 	FreshChroniclesCardData,
 	FreshChroniclesCardVariant,
 } from "../types";
-
-type CategoryTheme = {
-	accent: string;
-	surface: string;
-	visualSurface: string;
-};
-
-const CATEGORY_THEME: Record<FrontMatter["category"], CategoryTheme> = {
-	code: {
-		accent: "oklch(63% 0.21 302)",
-		surface: "color-mix(in oklch, var(--color-background) 92%, white 8%)",
-		visualSurface: "oklch(95% 0.03 300)",
-	},
-	web: {
-		accent: "oklch(67% 0.16 244)",
-		surface: "color-mix(in oklch, var(--color-background) 93%, white 7%)",
-		visualSurface: "oklch(95% 0.03 242)",
-	},
-	cs: {
-		accent: "oklch(69% 0.16 165)",
-		surface: "color-mix(in oklch, var(--color-background) 92%, white 8%)",
-		visualSurface: "oklch(96% 0.03 168)",
-	},
-	algorithm: {
-		accent: "oklch(76% 0.17 82)",
-		surface: "color-mix(in oklch, var(--color-background) 92%, white 8%)",
-		visualSurface: "oklch(96% 0.04 86)",
-	},
-};
 
 function formatDate(date: FrontMatter["date"]) {
 	return new Intl.DateTimeFormat("ko-KR", {
@@ -72,16 +45,6 @@ function getCategoryIcon(category: FrontMatter["category"]) {
 		default:
 			return Boxes;
 	}
-}
-
-function createCardCssVariables(post: FrontMatter): CSSProperties {
-	const theme = CATEGORY_THEME[post.category];
-
-	return {
-		["--fresh-chronicles-accent" as string]: theme.accent,
-		["--fresh-chronicles-surface" as string]: theme.surface,
-		["--fresh-chronicles-visual-surface" as string]: theme.visualSurface,
-	};
 }
 
 function DefaultFreshChroniclesCardMedia({
@@ -112,18 +75,19 @@ export function FreshChroniclesCard({
 	index: number;
 }) {
 	const { post, variant, media, badge, eyebrow } = card;
-	const href = `/post/${post.category}/${post.slug}`;
+	const href = getPostDetailHref(post);
 	const formattedDate = formatDate(post.date);
 
 	return (
 		<CardLink
 			href={href}
 			$variant={variant}
-			style={createCardCssVariables(post)}
+			style={createPostCardCssVariables(post)}
 			aria-label={`${post.title} 글 보기`}
 			data-testid={`fresh-chronicles-card-${index}`}
 			data-card-key={`${post.category}/${post.slug}`}
 			data-card-variant={variant}
+			data-card-category={post.category}
 		>
 			<CardVisual $variant={variant}>
 				{media ? (
@@ -133,12 +97,14 @@ export function FreshChroniclesCard({
 				)}
 			</CardVisual>
 			<CardContent $variant={variant}>
-				{badge ? <CardBadge>{badge}</CardBadge> : null}
 				<CardMeta>
+					<CardMetaRow>
+						{badge ? <CardBadge>{badge}</CardBadge> : null}
+						<CardDate dateTime={new Date(post.date).toISOString()}>
+							{formattedDate}
+						</CardDate>
+					</CardMetaRow>
 					<CardEyebrow>{eyebrow}</CardEyebrow>
-					<CardDate dateTime={new Date(post.date).toISOString()}>
-						{formattedDate}
-					</CardDate>
 				</CardMeta>
 				<CardTitle $variant={variant}>{post.title}</CardTitle>
 				<CardSummary $variant={variant}>{post.summary}</CardSummary>

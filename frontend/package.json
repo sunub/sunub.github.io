@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "next dev --turbo",
 		"build:dev": "node ./scripts/run-next-build.mjs",
-		"build": "node ./scripts/build-with-backend.mjs",
+		"build": "node ./scripts/run-next-build.mjs",
 		"build:workers": "tsc -p tsconfig.worker.json",
 		"start": "next start -p 4004",
 		"start:test": "cross-env PORT=4004 next start",

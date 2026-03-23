@@ -1,103 +1,198 @@
 "use client";
 
-import { Code, Cpu, Globe, Pi } from "lucide-react";
+import { Code, Cpu, Globe, type LucideIcon, Pi } from "lucide-react";
 import Link from "next/link";
-import { memo, useEffect, useRef, useState } from "react";
+import {
+	useCallback,
+	useEffect,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
-import useToggle from "@/hooks/use-toggle";
-import { PostNaviation } from "../Header.style";
+import { HeaderWaveUnderline } from "../HeaderWaveUnderline";
+
+const MENU_OFFSET_Y = 12;
+const MENU_CARET_HALF_WIDTH = 16;
+
+const CATEGORY_LINKS = [
+	{
+		href: "/post/cs",
+		label: "cs",
+		screenReaderLabel: "CS 카데고리로 이동하는 링크",
+		icon: Cpu,
+	},
+	{
+		href: "/post/web",
+		label: "web",
+		screenReaderLabel: "Web 카데고리로 이동하는 링크",
+		icon: Globe,
+	},
+	{
+		href: "/post/code",
+		label: "code",
+		screenReaderLabel: "Code 카데고리로 이동하는 링크",
+		icon: Code,
+	},
+	{
+		href: "/post/algorithm",
+		label: "algorithm",
+		screenReaderLabel: "Algorithm 카데고리로 이동하는 링크",
+		icon: Pi,
+	},
+] as const satisfies ReadonlyArray<{
+	href: string;
+	label: string;
+	screenReaderLabel: string;
+	icon: LucideIcon;
+}>;
+
+type PortalPosition = {
+	top: number;
+	left: number;
+	caretLeft: number;
+};
 
 function Navigation() {
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const portalRef = useRef<HTMLDivElement | null>(null);
-	const [isOpen, toggleOpen] = useToggle(false);
-	const [isScroll, setIsScroll] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
+	const [portalPosition, setPortalPosition] = useState<PortalPosition | null>(
+		null,
+	);
 
-	useEffect(() => {
-		function handleClick(e: MouseEvent) {
-			const currTarget = e.target as Node;
-			if (
-				portalRef.current &&
-				!portalRef.current.contains(currTarget) &&
-				!buttonRef.current?.contains(currTarget)
-			) {
-				toggleOpen();
-			}
-		}
-
-		if (isOpen) {
-			window.addEventListener("click", handleClick);
-		} else {
-			window.removeEventListener("click", handleClick);
-		}
-
-		return () => window.removeEventListener("click", handleClick);
-	}, [isOpen, toggleOpen]);
-
-	useEffect(() => {
-		function scrollHandler() {
-			const scrollTop = document.documentElement.scrollTop;
-			setIsScroll(scrollTop >= 100);
-		}
-
-		window.addEventListener("scroll", scrollHandler);
-		return () => window.removeEventListener("scroll", scrollHandler);
+	const closeMenu = useCallback(() => {
+		setIsOpen(false);
 	}, []);
 
+	const toggleMenu = useCallback(() => {
+		setIsOpen((prev) => !prev);
+	}, []);
+
+	const syncPortalPosition = useCallback(() => {
+		const button = buttonRef.current;
+
+		if (!button) {
+			return;
+		}
+
+		const rect = button.getBoundingClientRect();
+		const nextPosition = {
+			top: Math.round(rect.bottom + MENU_OFFSET_Y),
+			left: Math.round(rect.left),
+			caretLeft: Math.max(
+				12,
+				Math.round(rect.width / 2 - MENU_CARET_HALF_WIDTH),
+			),
+		};
+
+		setPortalPosition((prev) => {
+			if (
+				prev &&
+				prev.top === nextPosition.top &&
+				prev.left === nextPosition.left &&
+				prev.caretLeft === nextPosition.caretLeft
+			) {
+				return prev;
+			}
+
+			return nextPosition;
+		});
+	}, []);
+
+	useLayoutEffect(() => {
+		if (!isOpen) {
+			return;
+		}
+
+		syncPortalPosition();
+	}, [isOpen, syncPortalPosition]);
+
+	useEffect(() => {
+		if (!isOpen) {
+			return;
+		}
+
+		function handleOutsideClick(event: MouseEvent) {
+			const currentTarget = event.target;
+
+			if (!(currentTarget instanceof Node)) {
+				return;
+			}
+
+			if (buttonRef.current?.contains(currentTarget)) {
+				return;
+			}
+
+			if (portalRef.current?.contains(currentTarget)) {
+				return;
+			}
+
+			closeMenu();
+		}
+
+		function handleViewportChange() {
+			syncPortalPosition();
+		}
+
+		window.addEventListener("click", handleOutsideClick);
+		window.addEventListener("resize", handleViewportChange);
+		window.addEventListener("scroll", handleViewportChange, { passive: true });
+
+		return () => {
+			window.removeEventListener("click", handleOutsideClick);
+			window.removeEventListener("resize", handleViewportChange);
+			window.removeEventListener("scroll", handleViewportChange);
+		};
+	}, [closeMenu, isOpen, syncPortalPosition]);
+
+	const portalNode = portalRef.current;
+
 	return (
-		<NavigationWrapper id="blog-main__post-navigation" className="pl-4">
-			<PostNaviation>
+		<NavigationWrapper id="blog-main__post-navigation">
+			<TriggerWrapper>
 				<Button
-					disabled={isOpen}
-					onClick={toggleOpen}
+					type="button"
 					ref={buttonRef}
-					className="select-none"
+					onClick={toggleMenu}
+					aria-controls="post-dropdown-menu"
+					aria-expanded={isOpen}
+					aria-haspopup="true"
 				>
-					<VisuallyHidden>카테고리에 관한 링크</VisuallyHidden>
-					카테고리들
-					<UnderLineWaveIcon />
+					<ButtonLabel>카테고리들</ButtonLabel>
+					<UnderLineWaveSlot aria-hidden="true">
+						<UnderLineWaveIcon />
+					</UnderLineWaveSlot>
 				</Button>
-				<PortalRef
-					id="post-dropdown-portal"
-					ref={portalRef}
-					$isScroll={isScroll}
-				/>
-			</PostNaviation>
-			{isOpen &&
-				portalRef.current &&
-				createPortal(
-					<DropDownMenu toggleOpen={toggleOpen} />,
-					portalRef.current,
-				)}
+			</TriggerWrapper>
+			<PortalRef
+				id="post-dropdown-menu"
+				ref={portalRef}
+				$position={portalPosition}
+			/>
+			{isOpen && portalNode && portalPosition
+				? createPortal(<DropDownMenu closeMenu={closeMenu} />, portalNode)
+				: null}
 		</NavigationWrapper>
 	);
 }
 
-function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
+function DropDownMenu({ closeMenu }: { closeMenu: () => void }) {
 	return (
 		<DropDownMenuWrapper>
-			<LinkTag href={"/post/cs"} onClick={toggleOpen}>
-				<VisuallyHidden>CS 카데고리로 이동하는 링크</VisuallyHidden>
-				<Cpu size={16} />
-				cs
-			</LinkTag>
-			<LinkTag href={"/post/web"} onClick={toggleOpen}>
-				<VisuallyHidden>Web 카데고리로 이동하는 링크</VisuallyHidden>
-				<Globe size={16} />
-				web
-			</LinkTag>
-			<LinkTag href={"/post/code"} onClick={toggleOpen}>
-				<VisuallyHidden>Code 카데고리로 이동하는 링크</VisuallyHidden>
-				<Code size={16} />
-				code
-			</LinkTag>
-			<LinkTag href={"/post/algorithm"} onClick={toggleOpen}>
-				<VisuallyHidden>Algorithm 카데고리로 이동하는 링크</VisuallyHidden>
-				<Pi size={16} />
-				algorithm
-			</LinkTag>
+			{CATEGORY_LINKS.map((item) => {
+				const Icon = item.icon;
+
+				return (
+					<LinkTag key={item.href} href={item.href} onClick={closeMenu}>
+						<VisuallyHidden>{item.screenReaderLabel}</VisuallyHidden>
+						<Icon size={16} />
+						{item.label}
+					</LinkTag>
+				);
+			})}
 		</DropDownMenuWrapper>
 	);
 }
@@ -105,114 +200,116 @@ function DropDownMenu({ toggleOpen }: { toggleOpen: () => void }) {
 const NavigationWrapper = styled.nav`
   position: relative;
   z-index: 10000;
-
+  padding-left: 1rem;
   font-size: 1.25rem;
 `;
 
-export const UnderLineWaveIcon = memo(
-	({
-		width = 3,
-		scale = "1.25, 1",
-		length = 0.6,
-		delay = 0.5,
-	}: {
-		width?: number;
-		scale?: string;
-		length?: number;
-		delay?: number;
-	}) => {
-		return (
-			<UnderLineWaveSVG
-				xmlns="http://www.w3.org/2000/svg"
-				width="100"
-				height="11"
-				fill="none"
-			>
-				<UnderLineWavePath
-					d="M3 5.19c4-1.69 14-4.31 16.5 0s4.833 3.747 8.5 0c2.684-2.742 6.472-3.093 9.5 0 3.667 3.747 6.26 3.31 9.5 0 2.633-2.69 6 3.31 11 0 3.459-2.29 5.333 3.747 9 0 3.667-3.746 5.292 5.81 13 0 4.896-3.69 5.248 4.566 11.5 0"
-					strokeWidth={width}
-					transform={`scale(${scale})`}
-					pathLength={length}
-					$delay={delay}
-				/>
-			</UnderLineWaveSVG>
-		);
-	},
-);
+const TriggerWrapper = styled.div`
+  display: inline-flex;
+  align-items: flex-end;
+`;
 
-UnderLineWaveIcon.displayName = "UnderLineWaveIcon";
-
-const UnderLineWaveSVG = styled.svg`
+const UnderLineWaveIcon = styled(HeaderWaveUnderline)`
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
   stroke: var(--color-text);
-  stroke-width: 2.5;
   stroke-linecap: round;
-`;
 
-const UnderLineWavePath = styled.path<{ $delay: number }>`
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.4s cubic-bezier(0.7, 0, 0.3, 1);
-
-  stroke-dashoffset: 1;
-  transition-timing-function: cubic-bezier(0.8, 1, 0.7, 1);
-  transition-duration: 350ms;
-  stroke: color-mix(in oklch, var(--color-text), transparent);
-`;
-
-const Button = styled.button`
-  display: flex;
-  flex-direction: column;
-  color: var(--color-text);
-
-  :hover {
-    ${UnderLineWavePath} {
-      stroke-dashoffset: 0;
-      opacity: 1;
-    }
+  path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0.56;
+    vector-effect: non-scaling-stroke;
+    transition:
+      stroke-dashoffset 350ms cubic-bezier(0.8, 1, 0.7, 1),
+      opacity 220ms ease;
+    stroke: color-mix(in oklch, var(--color-highlight) 72%, transparent);
   }
 `;
 
-const PortalRef = styled.div<{ $isScroll: boolean }>`
+const Button = styled.button`
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  min-width: max-content;
+  padding: 0 0 0.55rem;
+  color: var(--color-text);
+  line-height: 1;
+  transition: color 200ms ease;
+
+  &:is(:hover, :focus-visible, [aria-expanded="true"]) {
+    color: var(--color-highlight);
+  }
+
+  &:is(:hover, :focus-visible, [aria-expanded="true"]) ${UnderLineWaveIcon} path {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid color-mix(in oklch, var(--color-highlight), white 24%);
+    outline-offset: 6px;
+  }
+`;
+
+const ButtonLabel = styled.span`
+  display: inline-flex;
+  align-items: center;
+`;
+
+const UnderLineWaveSlot = styled.span`
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 11px;
+  overflow: visible;
+`;
+
+const PortalRef = styled.div<{ $position: PortalPosition | null }>`
   position: fixed;
   z-index: 1000;
-  transition: transform 0.3s ease-in-out;
-  will-change: transform;
-  transform: translateY(${({ $isScroll }) => $isScroll && "-35px"});
+  top: ${({ $position }) => ($position ? `${$position.top}px` : "0px")};
+  left: ${({ $position }) => ($position ? `${$position.left}px` : "0px")};
+  --menu-caret-left: ${({ $position }) =>
+		$position ? `${$position.caretLeft}px` : "24px"};
 `;
 
 const DropDownMenuWrapper = styled.div`
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px 32px;
-  border-radius: 12px;
   will-change: transform;
   background-color: var(--color-frontWave);
   border-radius: 1rem;
   padding: 1rem 1.5rem;
-
   filter: drop-shadow(0 -5.9px 2.7px oklch(21.18% 0 12 / 0.025)) drop-shadow(0 -1.2px 6.9px oklch(21.18% 0 12 / 0.025))
     drop-shadow(0 8px 14.2px oklch(21.18% 0 12 / 0.05)) drop-shadow(0 21.9px 29.2px oklch(21.18% 0 12 / 0.05))
     drop-shadow(0 49px 80px oklch(21.18% 0 12 / 0.07));
 
-  ::before {
-    width: 32px;
-    height: 14px;
-    background-color: var(--color-frontWave);
-    content: '';
+  &::before {
     position: absolute;
     top: -14px;
-    left: 41px;
+    left: var(--menu-caret-left);
+    width: 32px;
+    height: 14px;
+    content: "";
+    background-color: var(--color-frontWave);
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   }
 `;
 
 const LinkTag = styled(Link)`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
   border-radius: 8px;
   transition: background 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
+
   &:hover {
     background: color-mix(in oklch, var(--color-highlight), transparent 80%);
   }

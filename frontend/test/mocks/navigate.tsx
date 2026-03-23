@@ -16,16 +16,25 @@ vi.mock("next/link", () => {
 			href,
 			children,
 			onClick,
+			prefetch: _prefetch,
+			scroll: _scroll,
+			replace: _replace,
+			shallow: _shallow,
+			locale: _locale,
+			passHref: _passHref,
+			...props
 		}: {
 			href: string | { pathname?: string };
 			children: React.ReactNode;
 			onClick?: (e: React.MouseEvent) => void;
+			[key: string]: unknown;
 		}) => {
 			const resolved: string =
 				typeof href === "string" ? href : href?.pathname || "";
 			return (
 				<a
 					href={resolved}
+					{...props}
 					onClick={(e) => {
 						e.preventDefault();
 						if (onClick) {

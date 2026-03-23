@@ -28,7 +28,7 @@ interface RefObjects {
 	pathMidRef: React.RefObject<SVGPathElement | null>;
 	pathEndRef: React.RefObject<SVGPathElement | null>;
 	gradientRef: React.RefObject<SVGLinearGradientElement | null>;
-	svgRef: React.RefObject<SVGSVGElement | null>;
+	floodWrapperRef: React.RefObject<HTMLDivElement | null>;
 }
 
 interface Props {

@@ -1,26 +1,33 @@
 "use client";
 
 import { memo } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
+import {
+	HeaderActionIconWrapper,
+	headerActionButtonStyles,
+	headerActionIconWiggle,
+} from "@/shared/style/HeaderActionButton";
 
 const SearchIcon = memo(() => {
 	return (
-		<SearchSvg
-			xmlns="http://www.w3.org/2000/svg"
-			width="24"
-			height="24"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="lucide lucide-search-icon lucide-search"
-		>
-			<circle cx="11" cy="11" r="8" />
-			<path d="m21 21-4.3-4.3" />
-		</SearchSvg>
+		<SearchIconWrapper aria-hidden="true">
+			<SearchSvg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="2"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				className="lucide lucide-search-icon lucide-search"
+			>
+				<circle cx="11" cy="11" r="8" />
+				<path d="m21 21-4.3-4.3" />
+			</SearchSvg>
+		</SearchIconWrapper>
 	);
 });
 SearchIcon.displayName = "SearchIcon";
@@ -43,61 +50,29 @@ const SearchButton = memo(
 
 SearchButton.displayName = "SearchButton";
 
-const rotate = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
+const SearchIconWrapper = styled(HeaderActionIconWrapper)``;
 
-  50% {
-    transform: rotate(40deg);
-  }
-
-  80% {
-    transform  : rotate(-10deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
-  }
+const SearchSvg = styled.svg`
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+  pointer-events: none;
 `;
-
-const scale = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.95);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-`;
-const SearchSvg = styled.svg``;
 
 const StyledSearchButton = styled.button`
-  position: relative;
+  ${headerActionButtonStyles}
   z-index: 10000;
 
-  width: fit-content;
-  height: fit-content;
-  outline: none;
-  outline-offset: 2px;
-  color: var(--color-text);
+  &:is(:hover, :focus-visible) ${SearchIconWrapper} {
+    animation: ${headerActionIconWiggle} 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
-  :hover {
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    ${SearchSvg} {
-      & > path {
-        transform-origin: center;
-        animation: ${rotate} 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-
-      & > circle {
-        transform-origin: center;
-        animation: ${scale} 300ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
-      }
-    }
+  &:disabled {
+    cursor: default;
+    color: var(--color-text);
+    background-color: transparent;
+    transform: translateY(0);
   }
 `;
 

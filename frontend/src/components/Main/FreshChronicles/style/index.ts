@@ -5,8 +5,11 @@ import type { FreshChroniclesCardVariant } from "../types";
 const wideCardMixin = css`
 	@media (min-width: 920px) {
 		grid-column: span 2;
-		grid-template-columns: minmax(18rem, 0.92fr) minmax(0, 1.08fr);
-		min-height: 28rem;
+		grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1fr);
+		align-items: center;
+		padding: 2.25rem 2.4rem;
+		column-gap: 2.25rem;
+		min-height: 26rem;
 	}
 `;
 
@@ -19,7 +22,6 @@ export const SectionRoot = styled.section`
 export const SectionHeader = styled.header`
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
 	padding-bottom: 1.5rem;
 	border-bottom: 1px solid color-mix(in oklch, var(--color-text) 12%, transparent);
 `;
@@ -27,8 +29,8 @@ export const SectionHeader = styled.header`
 export const SectionEyebrow = styled.span`
 	display: inline-flex;
 	align-items: center;
-	gap: 0.75rem;
-	font-size: 0.8rem;
+  gap: 0.7rem;
+	font-size: 0.7rem;
 	font-weight: 700;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
@@ -37,8 +39,8 @@ export const SectionEyebrow = styled.span`
 	&::before {
 		content: "";
 		display: inline-block;
-		width: 2.5rem;
-		height: 1px;
+		width: .5rem;
+		height: 2px;
 		background: color-mix(
 			in oklch,
 			var(--color-highlight) 40%,
@@ -48,7 +50,7 @@ export const SectionEyebrow = styled.span`
 `;
 
 export const SectionTitle = styled.h2`
-	font-size: clamp(2.4rem, 4vw, 3.6rem);
+	font-size: clamp(1.5rem, 2.5vw, 2.6rem);
 	font-family: var(--bariol-serif), var(--pretendard-font-regular), sans-serif;
 	font-weight: 700;
 	letter-spacing: -0.04em;
@@ -69,32 +71,87 @@ export const CardLink = styled(Link)<{ $variant: FreshChroniclesCardVariant }>`
 	position: relative;
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
 	min-height: 100%;
-	border-radius: 2rem;
+	padding: 1.45rem;
+	border-radius: ${({ $variant }) =>
+		$variant === "wide" ? "clamp(2rem, 5vw, 3.6rem)" : "2rem"};
 	overflow: hidden;
 	isolation: isolate;
 	background:
 		radial-gradient(
 			circle at top right,
-			color-mix(in oklch, var(--fresh-chronicles-accent) 18%, transparent),
+			color-mix(in oklch, var(--post-card-accent) 18%, transparent),
 			transparent 45%
 		),
-		var(--fresh-chronicles-surface);
-	border: 1px solid color-mix(in oklch, var(--color-text) 10%, transparent);
-	box-shadow: var(--shadow-elevation-low);
+		var(--post-card-surface-base);
+	border: 1px solid var(--post-card-border);
+	box-shadow:
+		0 0.45rem 1.05rem rgba(15, 23, 42, 0.07),
+		0 0.12rem 0.35rem rgba(15, 23, 42, 0.05);
+	backdrop-filter: blur(18px);
 	transition:
 		transform 260ms ease,
+		background 260ms ease,
 		border-color 260ms ease,
 		box-shadow 260ms ease;
 
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0 auto 0 0;
+		width: clamp(0.5rem, 1.2vw, 0.8rem);
+		background: var(--post-card-surface-base);
+		border-top-left-radius: inherit;
+		border-bottom-left-radius: inherit;
+		pointer-events: none;
+	}
+
 	&:hover {
-		transform: translateY(-0.35rem);
+		transform: translateY(-0.45rem);
 		border-color: color-mix(
 			in oklch,
-			var(--fresh-chronicles-accent) 28%,
+			var(--post-card-accent) 28%,
 			var(--color-text) 10%
 		);
-		box-shadow: var(--shadow-elevation-high);
+		box-shadow:
+			0 0.8rem 1.6rem rgba(15, 23, 42, 0.1),
+			0 0.18rem 0.45rem rgba(15, 23, 42, 0.06);
+	}
+
+	html[data-color-theme="dark"] & {
+		border-color: rgba(255, 255, 255, 0.05);
+			background:
+				radial-gradient(
+					circle at top right,
+					color-mix(in oklch, var(--post-card-accent) 24%, transparent),
+				transparent 46%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, white 2%, var(--post-card-surface-base) 98%),
+				var(--post-card-surface-base)
+			);
+		box-shadow:
+			0 0.7rem 1.35rem rgba(0, 0, 0, 0.3),
+			inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+		&:hover {
+			border-color: rgba(255, 255, 255, 0.06);
+			background:
+				radial-gradient(
+					circle at top right,
+					color-mix(in oklch, var(--post-card-accent) 28%, transparent),
+					transparent 46%
+				),
+				linear-gradient(
+					180deg,
+					color-mix(in oklch, white 4%, var(--post-card-surface-base) 96%),
+					var(--post-card-surface-base)
+				);
+			box-shadow:
+				0 0.95rem 1.75rem rgba(0, 0, 0, 0.38);
+		}
 	}
 
 	${({ $variant }) => ($variant === "wide" ? wideCardMixin : "")}
@@ -102,30 +159,74 @@ export const CardLink = styled(Link)<{ $variant: FreshChroniclesCardVariant }>`
 
 export const CardVisual = styled.div<{ $variant: FreshChroniclesCardVariant }>`
 	position: relative;
+	z-index: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 2rem;
+	width: 100%;
+	max-width: ${({ $variant }) => ($variant === "wide" ? "24rem" : "100%")};
+	min-width: 0;
+	margin-inline: auto;
 	overflow: hidden;
+	aspect-ratio: 4 / 3;
+	border-radius: 42% 58% 48% 52% / 38% 38% 62% 62%;
+	border: 0.3rem solid
+		color-mix(in oklch, white 28%, var(--post-card-surface-base) 72%);
 	background:
 		radial-gradient(
 			circle at 16% 16%,
-			color-mix(in oklch, var(--fresh-chronicles-accent) 22%, transparent),
+			color-mix(in oklch, var(--post-card-accent) 22%, transparent),
 			transparent 35%
 		),
 		linear-gradient(
 			145deg,
-			var(--fresh-chronicles-visual-surface),
+			var(--post-card-visual-surface),
 			color-mix(
 				in oklch,
-				var(--fresh-chronicles-accent) 7%,
-				var(--fresh-chronicles-surface)
+				var(--post-card-accent) 7%,
+				var(--post-card-surface-base)
 			)
 		);
-	min-height: ${({ $variant }) => ($variant === "wide" ? "18rem" : "15rem")};
+	box-shadow:
+		0 1.3rem 2.6rem color-mix(in oklch, var(--post-card-accent) 12%, transparent),
+		0 1rem 2rem rgba(15, 23, 42, 0.14);
+	transition:
+		transform 320ms ease,
+		box-shadow 320ms ease,
+		border-color 320ms ease;
+
+	${CardLink}:hover & {
+		transform: translateY(-0.15rem) scale(1.01);
+		box-shadow:
+			0 1.8rem 3rem color-mix(in oklch, var(--post-card-accent) 18%, transparent),
+			0 1.2rem 2.4rem rgba(15, 23, 42, 0.2);
+	}
+
+	html[data-color-theme="dark"] & {
+		border-color: rgba(255, 255, 255, 0.1);
+		background:
+			radial-gradient(
+				circle at 16% 16%,
+				color-mix(in oklch, var(--post-card-accent) 30%, transparent),
+				transparent 37%
+			),
+			linear-gradient(
+				145deg,
+				var(--post-card-visual-surface),
+				color-mix(
+					in oklch,
+					var(--post-card-accent) 18%,
+					var(--post-card-surface-base) 82%
+				)
+			);
+		box-shadow:
+			0 1.8rem 3rem rgba(0, 0, 0, 0.34),
+			0 0 0 1px color-mix(in oklch, white 8%, transparent);
+	}
 
 	@media (min-width: 920px) {
-		min-height: ${({ $variant }) => ($variant === "wide" ? "100%" : "15rem")};
+		justify-self: ${({ $variant }) => ($variant === "wide" ? "start" : "stretch")};
+		max-width: ${({ $variant }) => ($variant === "wide" ? "100%" : "100%")};
 	}
 `;
 
@@ -135,10 +236,14 @@ export const CardVisualOrb = styled.span<{ $secondary?: boolean }>`
 	height: ${({ $secondary }) => ($secondary ? "10rem" : "15rem")};
 	border-radius: 999px;
 	filter: blur(18px);
-	opacity: ${({ $secondary }) => ($secondary ? 0.22 : 0.18)};
-	background: color-mix(in oklch, var(--fresh-chronicles-accent) 65%, transparent);
+	opacity: ${({ $secondary }) => ($secondary ? 0.2 : 0.16)};
+	background: color-mix(in oklch, var(--post-card-accent) 65%, transparent);
 	transform: ${({ $secondary }) =>
 		$secondary ? "translate(-40%, 35%)" : "translate(40%, -35%)"};
+
+	html[data-color-theme="dark"] & {
+		opacity: ${({ $secondary }) => ($secondary ? 0.24 : 0.2)};
+	}
 `;
 
 export const CardVisualFrame = styled.div<{
@@ -149,37 +254,53 @@ export const CardVisualFrame = styled.div<{
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: ${({ $variant }) => ($variant === "wide" ? "16rem" : "10rem")};
-	height: ${({ $variant }) => ($variant === "wide" ? "16rem" : "10rem")};
-	border-radius: ${({ $variant }) => ($variant === "wide" ? "2rem" : "1.5rem")};
+	width: ${({ $variant }) => ($variant === "wide" ? "11rem" : "8.25rem")};
+	height: ${({ $variant }) => ($variant === "wide" ? "11rem" : "8.25rem")};
+	border-radius: ${({ $variant }) => ($variant === "wide" ? "2.25rem" : "1.75rem")};
 	background:
 		linear-gradient(
 			155deg,
-			color-mix(
-				in oklch,
-				white 84%,
-				var(--fresh-chronicles-accent) 16%
-			),
-			color-mix(
-				in oklch,
-				var(--fresh-chronicles-accent) 24%,
-				transparent
-			)
+			color-mix(in oklch, white 84%, var(--post-card-accent) 16%),
+			color-mix(in oklch, var(--post-card-accent) 24%, transparent)
 		);
 	box-shadow:
 		0 1.5rem 2.5rem
-			color-mix(in oklch, var(--fresh-chronicles-accent) 18%, transparent),
+			color-mix(in oklch, var(--post-card-accent) 18%, transparent),
 		inset 0 1px 0 color-mix(in oklch, white 70%, transparent);
 	color: color-mix(
 		in oklch,
-		var(--fresh-chronicles-accent) 62%,
+		var(--post-card-accent) 62%,
 		black 38%
 	);
-	transform: rotate(-6deg);
+	transform: rotate(-4deg);
 	transition: transform 300ms ease;
 
+	html[data-color-theme="dark"] & {
+		border: 1px solid
+			color-mix(in oklch, var(--post-card-accent) 30%, transparent);
+		background:
+			linear-gradient(
+				155deg,
+				color-mix(
+					in oklch,
+					var(--post-card-surface-base) 84%,
+					var(--post-card-accent) 16%
+				),
+				color-mix(
+					in oklch,
+					var(--post-card-accent) 28%,
+					var(--post-card-surface-base) 72%
+				)
+			);
+		box-shadow:
+			0 1.5rem 2.5rem
+				color-mix(in oklch, var(--post-card-accent) 24%, transparent),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+		color: color-mix(in oklch, white 72%, var(--post-card-accent) 28%);
+	}
+
 	${CardLink}:hover & {
-		transform: rotate(0deg) scale(1.02);
+		transform: rotate(0deg) scale(1.04);
 	}
 `;
 
@@ -191,6 +312,7 @@ export const CardVisualMedia = styled.div`
 	align-items: stretch;
 	justify-content: stretch;
 	overflow: hidden;
+	border-radius: inherit;
 
 	& > * {
 		width: 100%;
@@ -205,17 +327,18 @@ export const CardVisualMedia = styled.div`
 
 export const CardContent = styled.div<{ $variant: FreshChroniclesCardVariant }>`
 	position: relative;
+	z-index: 1;
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: ${({ $variant }) => ($variant === "wide" ? "1rem" : "0.9rem")};
 	padding: ${({ $variant }) =>
-		$variant === "wide" ? "2rem 2rem 1.8rem" : "1.75rem"};
+		$variant === "wide" ? "0.2rem 0.15rem 0.25rem" : "0 0.15rem 0.15rem"};
+	min-width: 0;
+	justify-content: center;
 `;
 
 export const CardBadge = styled.span`
-	position: absolute;
-	top: 1.5rem;
-	right: 1.5rem;
+	position: static;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.45rem;
@@ -225,18 +348,19 @@ export const CardBadge = styled.span`
 	font-weight: 800;
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
+	width: fit-content;
 	background: color-mix(
 		in oklch,
-		var(--fresh-chronicles-accent) 12%,
+		var(--post-card-accent) 12%,
 		white 88%
 	);
 	color: color-mix(
 		in oklch,
-		var(--fresh-chronicles-accent) 70%,
+		var(--post-card-accent) 70%,
 		black 30%
 	);
 	border: 1px solid
-		color-mix(in oklch, var(--fresh-chronicles-accent) 18%, transparent);
+		color-mix(in oklch, var(--post-card-accent) 18%, transparent);
 
 	&::before {
 		content: "";
@@ -244,46 +368,73 @@ export const CardBadge = styled.span`
 		width: 0.45rem;
 		height: 0.45rem;
 		border-radius: 999px;
-		background: var(--fresh-chronicles-accent);
+		background: var(--post-card-accent);
+	}
+
+	html[data-color-theme="dark"] & {
+		background: color-mix(
+			in oklch,
+			var(--post-card-accent) 18%,
+			var(--post-card-surface-base) 82%
+		);
+		color: color-mix(in oklch, white 78%, var(--post-card-accent) 22%);
+		border-color: color-mix(
+			in oklch,
+			var(--post-card-accent) 28%,
+			transparent
+		);
 	}
 `;
 
 export const CardMeta = styled.div`
 	display: flex;
 	flex-direction: column;
-	gap: 0.35rem;
-	padding-right: 5rem;
+	gap: 0.5rem;
+	padding-right: 0;
+`;
+
+export const CardMetaRow = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.65rem 0.9rem;
 `;
 
 export const CardEyebrow = styled.span`
 	font-size: 0.8rem;
 	font-weight: 700;
 	letter-spacing: 0.06em;
-	color: var(--fresh-chronicles-accent);
+	color: var(--post-card-accent);
 	text-transform: uppercase;
+	opacity: 0.92;
 `;
 
 export const CardDate = styled.time`
 	font-size: 0.9rem;
-	color: color-mix(in oklch, var(--color-text) 58%, transparent);
+	color: var(--post-card-subtle-text);
 `;
 
 export const CardTitle = styled.h3<{ $variant: FreshChroniclesCardVariant }>`
-	font-size: ${({ $variant }) => ($variant === "wide" ? "2rem" : "1.5rem")};
+	font-size: ${({ $variant }) => ($variant === "wide" ? "2.25rem" : "1.7rem")};
 	font-weight: 800;
-	line-height: 1.2;
+	line-height: 1.14;
 	letter-spacing: -0.04em;
 	color: var(--color-text);
+	text-wrap: balance;
+
+	${CardLink}:hover & {
+		color: color-mix(in oklch, var(--post-card-accent) 78%, var(--color-text) 22%);
+	}
 
 	@media (min-width: 920px) {
-		font-size: ${({ $variant }) => ($variant === "wide" ? "2.6rem" : "1.65rem")};
+		font-size: ${({ $variant }) => ($variant === "wide" ? "2.9rem" : "1.85rem")};
 	}
 `;
 
 export const CardSummary = styled.p<{ $variant: FreshChroniclesCardVariant }>`
-	color: color-mix(in oklch, var(--color-text) 72%, transparent);
+	color: var(--post-card-muted-text);
 	font-size: ${({ $variant }) => ($variant === "wide" ? "1.05rem" : "0.98rem")};
-	line-height: 1.75;
+	line-height: 1.72;
 	display: -webkit-box;
 	overflow: hidden;
 	-webkit-box-orient: vertical;
@@ -292,12 +443,12 @@ export const CardSummary = styled.p<{ $variant: FreshChroniclesCardVariant }>`
 
 export const CardFooter = styled.div`
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	gap: 1rem;
 	margin-top: auto;
-	padding-top: 1.15rem;
-	border-top: 1px solid color-mix(in oklch, var(--color-text) 10%, transparent);
+	padding-top: 0.45rem;
 `;
 
 export const TagList = styled.div`
@@ -313,15 +464,180 @@ export const TagItem = styled.span`
 	border-radius: 999px;
 	font-size: 0.8rem;
 	font-weight: 600;
-	background: color-mix(in oklch, var(--color-text) 4%, transparent);
-	color: color-mix(in oklch, var(--color-text) 72%, transparent);
+	background: var(--post-card-tag-bg);
+	color: var(--post-card-tag-text);
 `;
 
 export const CardAction = styled.span`
 	display: inline-flex;
 	align-items: center;
-	gap: 0.45rem;
+	gap: 0.7rem;
 	font-size: 0.9rem;
+	font-weight: 800;
+	color: var(--post-card-accent);
+	width: fit-content;
+	padding-bottom: 0.2rem;
+	border-bottom: 2px solid transparent;
+	transition:
+		gap 220ms ease,
+		border-color 220ms ease,
+		transform 220ms ease;
+
+	${CardLink}:hover & {
+		gap: 0.95rem;
+		border-color: currentColor;
+	}
+`;
+
+export const ArchiveCardLink = styled(Link)`
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 25rem;
+	padding: 2rem;
+	border-radius: 2rem;
+	overflow: hidden;
+	isolation: isolate;
+	background:
+		radial-gradient(
+			circle at top right,
+			color-mix(in oklch, var(--color-highlight) 16%, transparent),
+			transparent 44%
+		),
+		var(--post-card-surface-strong);
+	border: 1px solid var(--post-card-border);
+	box-shadow: var(--shadow-elevation-low);
+	transition:
+		transform 260ms ease,
+		border-color 260ms ease,
+		box-shadow 260ms ease;
+
+	&:hover {
+		transform: translateY(-0.35rem);
+		border-color: color-mix(
+			in oklch,
+			var(--color-highlight) 26%,
+			var(--color-text) 10%
+		);
+		box-shadow: var(--shadow-elevation-high);
+	}
+
+	html[data-color-theme="dark"] & {
+		background:
+			radial-gradient(
+				circle at top right,
+				color-mix(in oklch, var(--color-highlight) 22%, transparent),
+				transparent 44%
+			),
+			linear-gradient(
+				180deg,
+				color-mix(in oklch, white 2%, var(--post-card-surface-strong) 98%),
+				var(--post-card-surface-strong)
+			);
+		box-shadow:
+			0 1.25rem 2.25rem rgba(0, 0, 0, 0.42),
+			inset 0 1px 0 rgba(255, 255, 255, 0.04);
+	}
+`;
+
+export const ArchiveCardOverlay = styled.div`
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(
+			145deg,
+			color-mix(in oklch, white 76%, transparent),
+			color-mix(in oklch, var(--color-text) 4%, transparent)
+		),
+		radial-gradient(
+			circle at bottom left,
+			color-mix(in oklch, var(--color-highlight) 10%, transparent),
+			transparent 38%
+		);
+	opacity: 0.72;
+
+	html[data-color-theme="dark"] & {
+		background:
+			linear-gradient(
+				145deg,
+				rgba(255, 255, 255, 0.04),
+				rgba(255, 255, 255, 0)
+			),
+			radial-gradient(
+				circle at bottom left,
+				color-mix(in oklch, var(--color-highlight) 14%, transparent),
+				transparent 38%
+			);
+		opacity: 1;
+	}
+`;
+
+export const ArchiveCardInner = styled.div`
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1.4rem;
+	text-align: center;
+	max-width: 15rem;
+`;
+
+export const ArchiveCardIconFrame = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 6rem;
+	height: 6rem;
+	border-radius: 999px;
+	background: var(--post-card-icon-surface);
+	border: 1px solid var(--post-card-border);
+	box-shadow:
+		0 1.5rem 2.5rem color-mix(in oklch, var(--color-text) 8%, transparent),
+		inset 0 1px 0 color-mix(in oklch, white 70%, transparent);
+	color: var(--post-card-icon-text);
+	transition:
+		transform 300ms ease,
+		color 260ms ease;
+
+	html[data-color-theme="dark"] & {
+		box-shadow:
+			0 1.5rem 2.5rem rgba(0, 0, 0, 0.35),
+			inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	}
+
+	${ArchiveCardLink}:hover & {
+		transform: scale(1.08);
+		color: var(--color-highlight);
+	}
+`;
+
+export const ArchiveCardTitle = styled.h3`
+	font-size: clamp(1.8rem, 3vw, 2.2rem);
+	font-weight: 800;
+	line-height: 1.2;
+	letter-spacing: -0.04em;
+	color: var(--color-text);
+`;
+
+export const ArchiveCardDescription = styled.p`
+	font-size: 0.95rem;
+	line-height: 1.75;
+	color: var(--post-card-muted-text);
+`;
+
+export const ArchiveCardAction = styled.span`
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-size: 0.95rem;
 	font-weight: 700;
-	color: var(--fresh-chronicles-accent);
+	color: var(--color-highlight);
+	transition: gap 220ms ease;
+
+	${ArchiveCardLink}:hover & {
+		gap: 0.75rem;
+	}
 `;
