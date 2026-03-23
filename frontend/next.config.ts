@@ -2,29 +2,44 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
 import {
 	DEFAULT_REWRITE_TARGET_URL,
+	resolveBrowserBackendUrl,
 	resolveRewriteTargetUrl,
 } from "@sunub/contracts";
 import type { NextConfig } from "next";
+
+const toOrigin = (value: string): string | null => {
+	try {
+		return new URL(value).origin;
+	} catch {
+		return null;
+	}
+};
 
 const rewriteTarget = resolveRewriteTargetUrl({
 	env: process.env,
 	fallback: DEFAULT_REWRITE_TARGET_URL,
 });
-const rewriteOrigin = (() => {
-	try {
-		return new URL(rewriteTarget).origin;
-	} catch {
-		return "";
-	}
-})();
-const backendConnectSource = rewriteOrigin || "http://localhost:4008";
+const browserBackendOrigin = toOrigin(
+	resolveBrowserBackendUrl({
+		env: process.env,
+		fallback: "",
+	}),
+);
+const connectSrcDirective = [
+	"'self'",
+	browserBackendOrigin,
+	"https://vitals.vercel-insights.com",
+	"https://cloudflareinsights.com",
+]
+	.filter(Boolean)
+	.join(" ");
 
 const ContentSecurityPolicy = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline' cdn.vercel-insights.com vercel.live va.vercel-scripts.com https://static.cloudflareinsights.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https://d2u919r15udwpw.cloudfront.net; 
     media-src 'self';
-    connect-src 'self' ${backendConnectSource} https://vitals.vercel-insights.com https://cloudflareinsights.com; 
+    connect-src ${connectSrcDirective}; 
 `;
 
 const securityHeaders = [

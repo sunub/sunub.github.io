@@ -134,6 +134,7 @@ export function resolveRewriteTargetUrl({
 	fallback = DEFAULT_REWRITE_TARGET_URL,
 }: BackendUrlResolveInput): string {
 	return (
+		getEnvValue(env, BACKEND_URL_ENV_KEYS.BACKEND_API_URL) ??
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.EC2_PUBLIC_API_URL) ??
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.NEXT_PUBLIC_BACKEND_URL) ??
 		fallback
