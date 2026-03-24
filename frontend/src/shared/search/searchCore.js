@@ -1,6 +1,6 @@
 /**
  * @typedef {import("@sunub/types").PostCategory} PostCategory
- * @typedef {import("@sunub/types").PostFrontMatter} PostFrontMatter
+ * @typedef {import("@sunub/types").PublicPostFrontMatter} PublicPostFrontMatter
  * @typedef {import("@sunub/types").SearchResult} SearchResult
  * @typedef {import("@sunub/types").StaticSearchIndexEntry} StaticSearchIndexEntry
  */

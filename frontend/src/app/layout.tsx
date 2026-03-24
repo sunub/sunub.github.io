@@ -1,5 +1,6 @@
 import "./globals.css";
 import "katex/dist/katex.min.css";
+import { resolveSiteUrl } from "@sunub/contracts";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
 import type React from "react";
@@ -9,8 +10,10 @@ import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
 import { craftyGirls, pretendardRegular } from "./font";
 import { ShikiOverrieds } from "./GlobalStyle";
 
+const siteUrl = resolveSiteUrl({ env: process.env });
+
 export const metadata: Metadata = {
-	metadataBase: new URL("https://sunub.vercel.app"),
+	metadataBase: new URL(siteUrl),
 	title: {
 		default: "sun_ub",
 		template: "%s | sun_ub",
@@ -20,7 +23,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "sun_ub",
 		description: "디자인과 개발을 좋아합니다.",
-		url: "https://sunub.vercel.app",
+		url: siteUrl,
 		siteName: "sun_ub",
 		type: "website",
 		locale: "ko_KR",
@@ -89,7 +92,7 @@ export default function RootLayout({
 							"@context": "https://schema.org",
 							"@type": "WebSite",
 							name: "sun_ub",
-							url: "https://sunub.vercel.app",
+							url: siteUrl,
 							description: "디자인과 개발을 좋아합니다.",
 						})}
           `}

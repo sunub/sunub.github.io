@@ -33,7 +33,6 @@ const recentPosts: PublishedPost = {
 
 const indexedPosts = Array.from({ length: 10 }, (_, index) => ({
 	frontmatter: createFrontMatter("web", index + 1),
-	filePath: `/tmp/web-${index + 1}.mdx`,
 }));
 
 const staticPostIndex: StaticPostIndex = {

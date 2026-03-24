@@ -54,9 +54,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-	typescript: {
-		ignoreBuildErrors: true,
-	},
 	modularizeImports: {
 		"lodash.throttle": {
 			transform: "lodash.throttle",

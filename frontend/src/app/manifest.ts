@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-export default function mnifest(): MetadataRoute.Manifest {
+export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: "sunub blog",
 		short_name: "sunub",

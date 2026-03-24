@@ -136,9 +136,15 @@ async function main() {
 
 	const loadedPosts = await loadAllPosts(postsRootPath);
 	const generatedAt = new Date().toISOString();
+	const indexedPosts = loadedPosts.map(
+		({ content: _content, ...post }) => post,
+	);
+	const publicPosts = loadedPosts.map(({ content: _content, ...post }) => ({
+		frontmatter: post.frontmatter,
+	}));
 	const postIndex = StaticPostIndexSchema.parse({
 		generatedAt,
-		posts: loadedPosts.map(({ content: _content, ...post }) => post),
+		posts: publicPosts,
 		archiveSummary: createArchiveSummary(loadedPosts),
 	});
 	const searchIndex = StaticSearchIndexSchema.parse({
@@ -147,7 +153,9 @@ async function main() {
 			const searchableContent = extractSearchableContent(content);
 			return {
 				postKey: `${post.frontmatter.category}/${post.frontmatter.slug}`,
-				post,
+				post: {
+					frontmatter: post.frontmatter,
+				},
 				headings: searchableContent.headings,
 				bodyText: searchableContent.bodyText,
 			};
@@ -159,7 +167,7 @@ async function main() {
 
 	await writeFile(
 		join(postsRootPath, "posts.jsonl"),
-		`${postIndex.posts.map((post) => JSON.stringify(post)).join("\n")}\n`,
+		`${indexedPosts.map((post) => JSON.stringify(post)).join("\n")}\n`,
 		"utf8",
 	);
 	await writeFile(

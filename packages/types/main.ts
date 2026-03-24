@@ -39,6 +39,10 @@ export const PostFrontMatterSchema = z.object({
 	filePath: z.string(),
 });
 
+export const PublicPostFrontMatterSchema = z.object({
+	frontmatter: FrontMatterSchema,
+});
+
 export const SpecificPostInfoSchema = z.object({
 	frontmatter: FrontMatterSchema,
 	content: z.string(),
@@ -93,13 +97,13 @@ export const SearchResponseSchema = z.object({
 
 export const StaticPostIndexSchema = z.object({
 	generatedAt: z.string(),
-	posts: z.array(PostFrontMatterSchema),
+	posts: z.array(PublicPostFrontMatterSchema),
 	archiveSummary: ArchiveSummarySchema,
 });
 
 export const StaticSearchIndexEntrySchema = z.object({
 	postKey: z.string(),
-	post: PostFrontMatterSchema,
+	post: PublicPostFrontMatterSchema,
 	headings: z.array(z.string()),
 	bodyText: z.string(),
 });
@@ -119,6 +123,10 @@ export type ArchiveSummary = z.infer<typeof ArchiveSummarySchema>;
 export interface PostFrontMatter {
 	frontmatter: FrontMatter;
 	filePath: string;
+}
+
+export interface PublicPostFrontMatter {
+	frontmatter: FrontMatter;
 }
 
 export interface MatterTransformData {
@@ -168,13 +176,13 @@ export interface SearchResponse {
 
 export interface StaticPostIndex {
 	generatedAt: string;
-	posts: PostFrontMatter[];
+	posts: PublicPostFrontMatter[];
 	archiveSummary: ArchiveSummary;
 }
 
 export interface StaticSearchIndexEntry {
 	postKey: string;
-	post: PostFrontMatter;
+	post: PublicPostFrontMatter;
 	headings: string[];
 	bodyText: string;
 }
