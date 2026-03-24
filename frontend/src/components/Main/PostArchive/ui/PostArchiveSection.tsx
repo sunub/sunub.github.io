@@ -6,6 +6,7 @@ import {
 	useEffect,
 	useMemo,
 	useRef,
+	useState,
 	useSyncExternalStore,
 	useTransition,
 } from "react";
@@ -193,6 +194,30 @@ export function PostArchiveSection({
 	const archiveRemainingPx = rangeConfig.enabled
 		? remainingPx
 		: getPostArchiveRemainingDistancePx(listRef.current);
+	const [isInitialLayoutReady, setIsInitialLayoutReady] = useState(false);
+
+	useEffect(() => {
+		const layoutVersion = `${columnCount}:${selectedCategory}:${visiblePosts.length}`;
+		setIsInitialLayoutReady(false);
+
+		const frameId = window.requestAnimationFrame(() => {
+			if (layoutVersion.length > 0) {
+				setIsInitialLayoutReady(true);
+			}
+		});
+
+		return () => {
+			window.cancelAnimationFrame(frameId);
+		};
+	}, [columnCount, selectedCategory, visiblePosts.length]);
+
+	const canBootstrapLoad =
+		!pendingRestore &&
+		!hasUserScrolled &&
+		isInitialLayoutReady &&
+		(typeof window === "undefined" || window.scrollY <= 1) &&
+		(listRef.current?.getBoundingClientRect().height ?? 0) > 0 &&
+		archiveRemainingPx <= preloadReservePx;
 
 	useEffect(() => {
 		if (!pendingRestore || isFetchingMore) {
@@ -219,7 +244,10 @@ export function PostArchiveSection({
 
 	useWindowedRangeLoadMore({
 		canLoadMore:
-			hasUserScrolled && hasMore && !isFetchingMore && loadMoreError === null,
+			(hasUserScrolled || canBootstrapLoad) &&
+			hasMore &&
+			!isFetchingMore &&
+			loadMoreError === null,
 		postsLength: rows.length,
 		visibleRangeEnd: visibleRange.end,
 		remainingPx: archiveRemainingPx,

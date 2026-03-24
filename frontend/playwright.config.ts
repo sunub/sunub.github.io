@@ -1,7 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig, devices } from "@playwright/test";
-import { resolveBackendUrls, resolveFrontendUrls } from "@sunub/contracts";
+import { resolveFrontendUrls } from "@sunub/contracts";
 
 const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
 
@@ -17,12 +17,8 @@ const skipWebServer = process.env.PLAYWRIGHT_SKIP_WEB_SERVER === "1";
  * See https://playwright.dev/docs/test-configuration.
  */
 const testFrontendUrl = "http://localhost:4004";
-const backendUrl = "http://localhost:4008";
 const frontendUrls = resolveFrontendUrls(process.env, testFrontendUrl);
-const backendUrls = resolveBackendUrls(process.env, backendUrl);
 const resolvedFrontendUrl = frontendUrls.e2e;
-const resolvedBackendUrl = backendUrls.playwright;
-const resolvedBackendPort = new URL(resolvedBackendUrl).port || "4008";
 const repoRootPath = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
@@ -87,13 +83,9 @@ export default defineConfig({
 					env: {
 						NODE_ENV: "test",
 						NEXT_PUBLIC_BASE_URL: resolvedFrontendUrl,
-						NEXT_PUBLIC_BACKEND_URL: resolvedBackendUrl,
-						BACKEND_API_URL: resolvedBackendUrl,
-						TEST_BACKEND_URL: resolvedBackendUrl,
-						PLAYWRIGHT_BACKEND_URL: resolvedBackendUrl,
 						PLAYWRIGHT_FRONTEND_URL: resolvedFrontendUrl,
 						BLOG_POSTS_PATH: path.resolve(repoRootPath, "../posts"),
-						PORT: resolvedBackendPort,
+						PORT: "4004",
 					},
 				},
 			],

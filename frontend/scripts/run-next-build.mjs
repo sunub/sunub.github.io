@@ -13,7 +13,6 @@ const child = spawn(
 	{
 		env: {
 			...process.env,
-			BACKEND_API_URL: process.env.BACKEND_API_URL ?? "http://localhost:4008",
 			BASELINE_BROWSER_MAPPING_IGNORE_OLD_DATA: "true",
 			BROWSERSLIST_IGNORE_OLD_DATA: "true",
 		},

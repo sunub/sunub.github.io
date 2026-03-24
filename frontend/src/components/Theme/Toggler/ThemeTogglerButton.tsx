@@ -29,25 +29,15 @@ export default function ThemeTogglerButton({
 		>
 			<VisuallyHidden>테마 변경 버튼</VisuallyHidden>
 			<Styled.ToggleIconWrapper aria-hidden="true">
-				<ThemeIcon colorTheme={colorTheme} maskId={maskId} />
+				<ThemeIcon maskId={maskId} />
 			</Styled.ToggleIconWrapper>
 		</Styled.ToggleBtn>
 	);
 }
-function ThemeIcon({
-	colorTheme,
-	maskId,
-	...delegated
-}: {
-	colorTheme: string;
-	maskId: string;
-}) {
-	const isPrimary = colorTheme === "dark";
-
+function ThemeIcon({ maskId, ...delegated }: { maskId: string }) {
 	return (
 		<Styled.SunAndMoon
 			{...delegated}
-			$primary={isPrimary}
 			width="24"
 			height="24"
 			viewBox="0 0 24 24"
@@ -55,14 +45,13 @@ function ThemeIcon({
 			xmlns="http://www.w3.org/2000/svg"
 		>
 			<Styled.Sun
-				$primary={isPrimary}
 				cx="12"
 				cy="12"
 				r="5"
 				fill="#2D0D06"
 				mask={`url(#${maskId})`}
 			/>
-			<Styled.SunAndBeams $primary={isPrimary}>
+			<Styled.SunAndBeams>
 				<path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
 				<path
 					d="M5.63604 5.63604L6.01039 6.01039"
@@ -89,7 +78,6 @@ function ThemeIcon({
 				/>
 			</Styled.SunAndBeams>
 			<Styled.Moon
-				$primary={isPrimary}
 				id={maskId}
 				maskUnits={"userSpaceOnUse"}
 				maskContentUnits={"userSpaceOnUse"}

@@ -1,8 +1,15 @@
 "use client";
 
-import Cookies from "js-cookie";
 import React, { useCallback } from "react";
 import type { Theme } from "type";
+import {
+	applyDocumentTheme,
+	getDocumentTheme,
+	getPreferredTheme,
+	getSystemTheme,
+	persistTheme,
+	readStoredTheme,
+} from "@/utils/theme";
 
 interface ThemeContextProps {
 	colorTheme: Theme;
@@ -14,36 +21,67 @@ export const ThemeContext = React.createContext<ThemeContextProps>({
 	setColorTheme: () => {},
 });
 
-function ThemeProvider({
-	initialTheme,
-	children,
-}: {
-	initialTheme: "light" | "dark";
-	children: React.ReactNode;
-}) {
-	const [colorTheme, rawSetColorTheme] = React.useState<"light" | "dark">(
-		initialTheme,
-	);
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+	const [colorTheme, rawSetColorTheme] = React.useState<Theme>(() => {
+		if (typeof document === "undefined") {
+			return "light";
+		}
+
+		return getDocumentTheme();
+	});
 
 	const updateTheme = useCallback((nextTheme: Theme) => {
-		const root = document.documentElement;
-
-		root.setAttribute("data-color-theme", nextTheme);
-		Cookies.set("color-theme", nextTheme, { expires: 1000 });
+		applyDocumentTheme(nextTheme);
+		persistTheme(nextTheme);
 		rawSetColorTheme(nextTheme);
 	}, []);
 
 	React.useEffect(() => {
+		rawSetColorTheme(getDocumentTheme());
+	}, []);
+
+	React.useEffect(() => {
 		function matchMediaHandler({ matches: isDark }: { matches: boolean }) {
+			if (readStoredTheme()) {
+				return;
+			}
+
 			const nextColorTheme = isDark ? "dark" : "light";
-			updateTheme(nextColorTheme);
+			applyDocumentTheme(nextColorTheme);
+			rawSetColorTheme(nextColorTheme);
 		}
 
 		const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 		mediaQuery.addEventListener("change", matchMediaHandler);
 
 		return () => mediaQuery.removeEventListener("change", matchMediaHandler);
-	}, [updateTheme]);
+	}, []);
+
+	React.useEffect(() => {
+		if (readStoredTheme()) {
+			return;
+		}
+
+		const nextTheme = getSystemTheme();
+		applyDocumentTheme(nextTheme);
+		rawSetColorTheme(nextTheme);
+	}, []);
+
+	React.useEffect(() => {
+		function syncTheme() {
+			const nextTheme = getPreferredTheme();
+			applyDocumentTheme(nextTheme);
+			rawSetColorTheme(nextTheme);
+		}
+
+		window.addEventListener("pageshow", syncTheme);
+		window.addEventListener("storage", syncTheme);
+
+		return () => {
+			window.removeEventListener("pageshow", syncTheme);
+			window.removeEventListener("storage", syncTheme);
+		};
+	}, []);
 
 	const contextValue = React.useMemo(
 		() => ({

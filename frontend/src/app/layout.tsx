@@ -1,18 +1,19 @@
 import "./globals.css";
 import "katex/dist/katex.min.css";
+import { resolveSiteUrl } from "@sunub/contracts";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import type React from "react";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
-import { getRequestTheme } from "@/utils/theme";
 import { craftyGirls, pretendardRegular } from "./font";
 import { ShikiOverrieds } from "./GlobalStyle";
 
+const siteUrl = resolveSiteUrl({ env: process.env });
+
 export const metadata: Metadata = {
-	metadataBase: new URL("https://sunub.vercel.app"),
+	metadataBase: new URL(siteUrl),
 	title: {
 		default: "sun_ub",
 		template: "%s | sun_ub",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 	openGraph: {
 		title: "sun_ub",
 		description: "디자인과 개발을 좋아합니다.",
-		url: "https://sunub.vercel.app",
+		url: siteUrl,
 		siteName: "sun_ub",
 		type: "website",
 		locale: "ko_KR",
@@ -58,18 +59,16 @@ export const viewport: Viewport = {
 	width: "device-width",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const theme = await getRequestTheme();
-
 	return (
 		<html
 			lang="ko"
 			className={`${pretendardRegular.variable} ${craftyGirls.variable}`}
-			data-color-theme={theme}
+			data-color-theme="light"
 			suppressHydrationWarning={true}
 		>
 			<head>
@@ -84,9 +83,7 @@ export default async function RootLayout({
 					type="image/x-icon"
 					sizes="32x32"
 				/>
-				<Script id="theme-script" strategy="beforeInteractive">
-					{initSetColorsByThemeFn}
-				</Script>
+				<script id="theme-script">{initSetColorsByThemeFn}</script>
 			</head>
 			<body>
 				<script type="application/ld+json">
@@ -95,7 +92,7 @@ export default async function RootLayout({
 							"@context": "https://schema.org",
 							"@type": "WebSite",
 							name: "sun_ub",
-							url: "https://sunub.vercel.app",
+							url: siteUrl,
 							description: "디자인과 개발을 좋아합니다.",
 						})}
           `}

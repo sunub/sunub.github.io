@@ -1,5 +1,12 @@
 # sunub-blog
 
+## 운영 구조 문서
+
+이 프로젝트는 학습과 포트폴리오 목적에서 `GitHub Pages → Vercel + Nest/EC2 + AWS SSM` 구조까지 직접 운영해 본 뒤, 현재 블로그의 성격과 비용 구조를 다시 평가하여 `Vercel 기반 정적 prerender 중심 구조`로 이전을 검토하고 있습니다.
+
+- 비용 및 아키텍처 이전 배경: [docs/adr/0001-migrate-from-ec2-runtime-to-vercel-static.md](docs/adr/0001-migrate-from-ec2-runtime-to-vercel-static.md)
+- 실제 이전 단계 계획: [docs/migration/vercel-static-migration-plan.md](docs/migration/vercel-static-migration-plan.md)
+
 ## 초기 제작한 블로그
 
 ![sunub_blog 초안](https://github.com/user-attachments/assets/90e2f5ed-7838-4757-b5b6-285574e56a7f)

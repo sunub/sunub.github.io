@@ -1,7 +1,7 @@
 "use server";
 
 import type { PublishedPost } from "@sunub/types";
-import { getLatestPublishedPosts } from "@/server/posts";
+import { getStaticRecentPosts } from "@/server/static-index";
 
 const ErrorRecentPost: PublishedPost = {
 	totalCount: 0,
@@ -10,7 +10,7 @@ const ErrorRecentPost: PublishedPost = {
 
 export async function getRecentPost() {
 	try {
-		return await getLatestPublishedPosts(4);
+		return await getStaticRecentPosts(4);
 	} catch (error) {
 		console.error("Error loading recent posts from index:", error);
 		return ErrorRecentPost;

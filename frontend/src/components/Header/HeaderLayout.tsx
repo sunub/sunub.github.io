@@ -1,11 +1,7 @@
 import { ScrollHeader } from "@/components/ScrollHeader/ui/ScrollHeader";
 import { Header, HeaderWrapper, RootWrapper } from "./Header.style";
 
-export async function HeaderLayout({
-	children,
-}: {
-	children?: React.ReactNode;
-}) {
+export function HeaderLayout({ children }: { children?: React.ReactNode }) {
 	return (
 		<ScrollHeader>
 			<RootWrapper>

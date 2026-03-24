@@ -1,3 +1,4 @@
+import { resolveSitePathUrl, resolveSiteUrl } from "@sunub/contracts";
 import type { FrontMatter, PostCategory } from "@sunub/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -22,8 +23,12 @@ import {
 	Time,
 } from "./page.style";
 
-export const revalidate = 43200;
-export const dynamicParams = true;
+export const dynamicParams = false;
+
+const siteUrl = resolveSiteUrl({ env: process.env });
+const defaultOgImageUrl = resolveSitePathUrl("/assets/default-og-image.jpg", {
+	env: process.env,
+});
 
 type Params = Promise<{
 	category: PostCategory;
@@ -97,7 +102,9 @@ export async function generateMetadata({
 				...(publishedDate ? { publishedTime: publishedDate } : {}),
 				authors: ["sun_ub"],
 				tags,
-				url: `https://sunub.vercel.app/post/${category}/${slug}`,
+				url: resolveSitePathUrl(`/post/${category}/${slug}`, {
+					env: process.env,
+				}),
 			},
 			twitter: {
 				card: "summary_large_image",
@@ -105,7 +112,9 @@ export async function generateMetadata({
 				description: summary,
 			},
 			alternates: {
-				canonical: `https://sunub.vercel.app/post/${category}/${slug}`,
+				canonical: resolveSitePathUrl(`/post/${category}/${slug}`, {
+					env: process.env,
+				}),
 			},
 		};
 	} catch (error) {
@@ -209,12 +218,14 @@ async function Page({ params }: { params: Params }) {
 							author: {
 								"@type": "Person",
 								name: "sun_ub",
-								url: "https://sunub.vercel.app",
+								url: siteUrl,
 							},
-							image: "https://sunub.vercel.app/assets/default-og-image.jpg",
+							image: defaultOgImageUrl,
 							mainEntryOfPage: {
 								"@type": "WebPage",
-								"@id": `https://sunub.vercel.app/post/${category}/${slug}`,
+								"@id": resolveSitePathUrl(`/post/${category}/${slug}`, {
+									env: process.env,
+								}),
 							},
 						})}
 					</script>

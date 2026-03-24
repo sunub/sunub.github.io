@@ -176,9 +176,6 @@ importers:
       jotai:
         specifier: ^2.13.1
         version: 2.15.2(@babel/core@7.28.5)(@babel/template@7.28.6)(@types/react@19.0.0)(react@19.2.1)
-      js-cookie:
-        specifier: ^3.0.5
-        version: 3.0.5
       katex:
         specifier: ^0.16.38
         version: 0.16.38
@@ -246,9 +243,6 @@ importers:
       '@testing-library/react':
         specifier: ^14.3.1
         version: 14.3.1(@types/react@19.0.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-      '@types/js-cookie':
-        specifier: ^3.0.6
-        version: 3.0.6
       '@types/lodash.throttle':
         specifier: ^4.1.9
         version: 4.1.9
@@ -1616,9 +1610,6 @@ packages:
 
   '@types/jest@29.5.14':
     resolution: {integrity: sha512-ZN+4sdnLUbo8EVvVc2ao0GFW6oVrQRPn4K2lglySj7APvSrgzxHiNNK99us4WDMi57xxA2yggblIAMNhXOotLQ==}
-
-  '@types/js-cookie@3.0.6':
-    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -3433,10 +3424,6 @@ packages:
         optional: true
       react:
         optional: true
-
-  js-cookie@3.0.5:
-    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
-    engines: {node: '>=14'}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -6680,8 +6667,6 @@ snapshots:
       expect: 29.7.0
       pretty-format: 29.7.0
 
-  '@types/js-cookie@3.0.6': {}
-
   '@types/json-schema@7.0.15': {}
 
   '@types/katex@0.16.8': {}
@@ -8910,8 +8895,6 @@ snapshots:
       '@babel/template': 7.28.6
       '@types/react': 19.0.0
       react: 19.2.1
-
-  js-cookie@3.0.5: {}
 
   js-tokens@4.0.0: {}
 

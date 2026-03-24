@@ -2,6 +2,7 @@ export const DEFAULT_BACKEND_API_URL = "http://localhost:4008";
 export const DEFAULT_REWRITE_TARGET_URL = DEFAULT_BACKEND_API_URL;
 export const DEFAULT_FRONTEND_BASE_URL = "http://localhost:3000";
 export const DEFAULT_FRONTEND_TEST_URL = "http://localhost:4004";
+export const DEFAULT_SITE_URL = "https://sunub.site";
 
 export const BACKEND_URL_ENV_KEYS = {
 	PLAYWRIGHT_BACKEND_URL: "PLAYWRIGHT_BACKEND_URL",
@@ -17,14 +18,22 @@ export const FRONTEND_URL_ENV_KEYS = {
 	PLAYWRIGHT_FRONTEND_URL: "PLAYWRIGHT_FRONTEND_URL",
 } as const;
 
+export const SITE_URL_ENV_KEYS = {
+	SITE_URL: "SITE_URL",
+	NEXT_PUBLIC_SITE_URL: "NEXT_PUBLIC_SITE_URL",
+} as const;
+
 export type BackendEnv = typeof BACKEND_URL_ENV_KEYS;
 export type BackendUrlEnvName = BackendEnv[keyof BackendEnv];
 export type FrontendEnv = typeof FRONTEND_URL_ENV_KEYS;
 export type FrontendUrlEnvName = FrontendEnv[keyof FrontendEnv];
+export type SiteEnv = typeof SITE_URL_ENV_KEYS;
+export type SiteUrlEnvName = SiteEnv[keyof SiteEnv];
 export type BackendRuntime = "browser" | "server" | "test";
 
 export type BackendUrlEnv = Readonly<Record<string, string | undefined>>;
 export type FrontendUrlEnv = Readonly<Record<string, string | undefined>>;
+export type SiteUrlEnv = Readonly<Record<string, string | undefined>>;
 
 export type BackendUrlResolveInput = {
 	env: BackendUrlEnv;
@@ -33,6 +42,11 @@ export type BackendUrlResolveInput = {
 
 export type FrontendUrlResolveInput = {
 	env: FrontendUrlEnv;
+	fallback?: string;
+};
+
+export type SiteUrlResolveInput = {
+	env: SiteUrlEnv;
 	fallback?: string;
 };
 
@@ -52,8 +66,8 @@ export const API_PATHS = {
 };
 
 const getEnvValue = (
-	env: BackendUrlEnv | FrontendUrlEnv,
-	key: BackendUrlEnvName | FrontendUrlEnvName,
+	env: BackendUrlEnv | FrontendUrlEnv | SiteUrlEnv,
+	key: BackendUrlEnvName | FrontendUrlEnvName | SiteUrlEnvName,
 ): string | undefined => {
 	const value = env[key];
 	if (value === undefined) {
@@ -63,6 +77,26 @@ const getEnvValue = (
 	const trimmed = value.trim();
 	return trimmed.length > 0 ? trimmed : undefined;
 };
+
+function normalizeBaseUrl(url: string): string {
+	return url.replace(/\/+$/, "");
+}
+
+function joinBaseUrl(baseUrl: string, pathname: string): string {
+	const normalizedBaseUrl = normalizeBaseUrl(baseUrl);
+	if (!pathname) {
+		return normalizedBaseUrl;
+	}
+
+	if (/^https?:\/\//.test(pathname)) {
+		return pathname;
+	}
+
+	const normalizedPathname = pathname.startsWith("/")
+		? pathname
+		: `/${pathname}`;
+	return `${normalizedBaseUrl}${normalizedPathname}`;
+}
 
 export function resolveBrowserBackendUrl({
 	env,
@@ -145,8 +179,8 @@ export function resolveFrontendBaseUrl({
 	env,
 	fallback = DEFAULT_FRONTEND_BASE_URL,
 }: FrontendUrlResolveInput): string {
-	return (
-		getEnvValue(env, FRONTEND_URL_ENV_KEYS.NEXT_PUBLIC_BASE_URL) ?? fallback
+	return normalizeBaseUrl(
+		getEnvValue(env, FRONTEND_URL_ENV_KEYS.NEXT_PUBLIC_BASE_URL) ?? fallback,
 	);
 }
 
@@ -177,4 +211,23 @@ export function resolveFrontendUrls(env: FrontendUrlEnv, fallback?: string) {
 			fallback: defaultTestUrl,
 		}),
 	};
+}
+
+export function resolveSiteUrl({
+	env,
+	fallback = DEFAULT_SITE_URL,
+}: SiteUrlResolveInput): string {
+	return normalizeBaseUrl(
+		getEnvValue(env, SITE_URL_ENV_KEYS.SITE_URL) ??
+			getEnvValue(env, SITE_URL_ENV_KEYS.NEXT_PUBLIC_SITE_URL) ??
+			getEnvValue(env, FRONTEND_URL_ENV_KEYS.NEXT_PUBLIC_BASE_URL) ??
+			fallback,
+	);
+}
+
+export function resolveSitePathUrl(
+	pathname: string,
+	{ env, fallback = DEFAULT_SITE_URL }: SiteUrlResolveInput,
+): string {
+	return joinBaseUrl(resolveSiteUrl({ env, fallback }), pathname);
 }

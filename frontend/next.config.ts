@@ -1,33 +1,9 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import createMDX from "@next/mdx";
-import {
-	DEFAULT_REWRITE_TARGET_URL,
-	resolveBrowserBackendUrl,
-	resolveRewriteTargetUrl,
-} from "@sunub/contracts";
 import type { NextConfig } from "next";
 
-const toOrigin = (value: string): string | null => {
-	try {
-		return new URL(value).origin;
-	} catch {
-		return null;
-	}
-};
-
-const rewriteTarget = resolveRewriteTargetUrl({
-	env: process.env,
-	fallback: DEFAULT_REWRITE_TARGET_URL,
-});
-const browserBackendOrigin = toOrigin(
-	resolveBrowserBackendUrl({
-		env: process.env,
-		fallback: "",
-	}),
-);
 const connectSrcDirective = [
 	"'self'",
-	browserBackendOrigin,
 	"https://vitals.vercel-insights.com",
 	"https://cloudflareinsights.com",
 ]
@@ -75,28 +51,9 @@ const securityHeaders = [
 		key: "Access-Control-Allow-Headers",
 		value: "Cache-Control",
 	},
-	{
-		key: "Cache-Control",
-		value: "private, no-cache, must-revalidate",
-	},
-	{
-		key: "Accept-CH",
-		value: "Sec-CH-Prefers-Color-Scheme",
-	},
-	{
-		key: "Critical-CH",
-		value: "Sec-CH-Prefers-Color-Scheme",
-	},
-	{
-		key: "Vary",
-		value: "Sec-CH-Prefers-Color-Scheme",
-	},
 ];
 
 const nextConfig: NextConfig = {
-	typescript: {
-		ignoreBuildErrors: true,
-	},
 	modularizeImports: {
 		"lodash.throttle": {
 			transform: "lodash.throttle",
@@ -111,22 +68,6 @@ const nextConfig: NextConfig = {
 	},
 	basePath: "",
 	reactStrictMode: true,
-	async rewrites() {
-		return [
-			{
-				source: "/posts/:path*",
-				destination: `${rewriteTarget}/posts/:path*`,
-			},
-			{
-				source: "/api/proxy/:path*",
-				destination: `${rewriteTarget}/:path*`,
-			},
-			{
-				source: "/api/:path*",
-				destination: `${rewriteTarget}/api/:path*`,
-			},
-		];
-	},
 	skipTrailingSlashRedirect: true,
 	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
 

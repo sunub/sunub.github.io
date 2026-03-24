@@ -1,22 +1,22 @@
 import { preload } from "react-dom";
-import type { Theme } from "type";
-import {
-	getHeroSceneImageUrls,
-	pickImageType,
-} from "./utils/heroImageResources";
+import { HERO_THEME_IMAGE_URLS } from "@/resources/images";
+import { pickImageType } from "./utils/heroImageResources";
 
-interface Props {
-	theme: Theme;
-}
-
-export function HeroImagePreload({ theme }: Props) {
-	const { clouds } = getHeroSceneImageUrls(theme);
-
-	preload(clouds, {
-		as: "image",
-		type: pickImageType(clouds),
-		fetchPriority: "high",
-	});
+export function HeroImagePreload() {
+	for (const imageUrl of new Set([
+		HERO_THEME_IMAGE_URLS.light.clouds,
+		HERO_THEME_IMAGE_URLS.light.bridge,
+		HERO_THEME_IMAGE_URLS.light.cars,
+		HERO_THEME_IMAGE_URLS.dark.clouds,
+		HERO_THEME_IMAGE_URLS.dark.bridge,
+		HERO_THEME_IMAGE_URLS.dark.cars,
+	])) {
+		preload(imageUrl, {
+			as: "image",
+			type: pickImageType(imageUrl),
+			fetchPriority: "high",
+		});
+	}
 
 	return null;
 }

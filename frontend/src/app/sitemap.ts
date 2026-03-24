@@ -1,6 +1,9 @@
+import { resolveSitePathUrl, resolveSiteUrl } from "@sunub/contracts";
 import type { PostFrontMatter } from "@sunub/types";
 import type { MetadataRoute } from "next";
 import { getAllPostsFromIndex } from "@/server/posts";
+
+const siteUrl = resolveSiteUrl({ env: process.env });
 
 function updateCatetoryDate(allBlogPosts: PostFrontMatter[]) {
 	const result = {
@@ -43,7 +46,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 		return [
 			{
-				url: `https://sunub.vercel.app/post/${frontmatter.category}/${frontmatter.slug}`,
+				url: resolveSitePathUrl(
+					`/post/${frontmatter.category}/${frontmatter.slug}`,
+					{ env: process.env },
+				),
 				lastModified,
 				changeFrequency: "monthly" as const,
 				priority: i < 10 ? 0.8 : i < 30 ? 0.6 : 0.4,
@@ -57,7 +63,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		{ url: "/post/cs", lastModified: categoryLatestUpdates.cs },
 		{ url: "/post/algorithm", lastModified: categoryLatestUpdates.algorithm },
 	].map(({ url, lastModified }) => ({
-		url: `https://sunub.vercel.app${url}`,
+		url: resolveSitePathUrl(url, { env: process.env }),
 		lastModified: lastModified.toISOString(),
 		changeFrequency: "weekly" as const,
 		priority: 0.8,
@@ -65,7 +71,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
 	const routes = [
 		{
-			url: "https://sunub.vercel.app",
+			url: siteUrl,
 			lastModified: new Date().toISOString(),
 			changeFrequency: "daily" as const,
 			priority: 1.0,

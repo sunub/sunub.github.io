@@ -1,14 +1,11 @@
 import { Wave } from "@/components/Header/Wave";
 import { PostArchiveSection } from "@/components/Main/PostArchive";
-import {
-	getArchivePostsInRange,
-	getArchiveSummary,
-} from "@/components/Main/PostArchive/api/archive";
-import {
-	POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
-	parsePostArchiveCategoryFilter,
-} from "@/components/Main/PostArchive/utils";
+import { POST_ARCHIVE_INITIAL_VISIBLE_COUNT } from "@/components/Main/PostArchive/utils";
 import Spacer from "@/components/Spacer";
+import {
+	getStaticArchivePostsInRange,
+	getStaticArchiveSummary,
+} from "@/server/static-index";
 import { ARCHIVE_TOP_ID } from "@/shared/utils/archiveRoute";
 import {
 	ArchivePageRoot,
@@ -17,26 +14,10 @@ import {
 	ArchiveTitleAccent,
 } from "./page.style";
 
-type SearchParams = Promise<{
-	category?: string;
-}>;
-
-export default async function Page({
-	searchParams,
-}: {
-	searchParams: SearchParams;
-}) {
-	const resolvedSearchParams = await searchParams;
-	const initialCategory = parsePostArchiveCategoryFilter(
-		resolvedSearchParams.category,
-	);
+export default async function Page() {
 	const [summary, initialData] = await Promise.all([
-		getArchiveSummary(),
-		getArchivePostsInRange(
-			initialCategory,
-			0,
-			POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
-		),
+		getStaticArchiveSummary(),
+		getStaticArchivePostsInRange("all", 0, POST_ARCHIVE_INITIAL_VISIBLE_COUNT),
 	]);
 
 	return (
@@ -51,7 +32,7 @@ export default async function Page({
 				<ArchivePageRoot>
 					<Spacer axis="vertical" size={40} />
 					<PostArchiveSection
-						initialCategory={initialCategory}
+						initialCategory="all"
 						initialData={initialData}
 						summary={summary}
 					/>

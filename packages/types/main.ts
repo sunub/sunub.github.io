@@ -39,6 +39,10 @@ export const PostFrontMatterSchema = z.object({
 	filePath: z.string(),
 });
 
+export const PublicPostFrontMatterSchema = z.object({
+	frontmatter: FrontMatterSchema,
+});
+
 export const SpecificPostInfoSchema = z.object({
 	frontmatter: FrontMatterSchema,
 	content: z.string(),
@@ -91,6 +95,24 @@ export const SearchResponseSchema = z.object({
 	results: z.array(SearchResultSchema),
 });
 
+export const StaticPostIndexSchema = z.object({
+	generatedAt: z.string(),
+	posts: z.array(PublicPostFrontMatterSchema),
+	archiveSummary: ArchiveSummarySchema,
+});
+
+export const StaticSearchIndexEntrySchema = z.object({
+	postKey: z.string(),
+	post: PublicPostFrontMatterSchema,
+	headings: z.array(z.string()),
+	bodyText: z.string(),
+});
+
+export const StaticSearchIndexSchema = z.object({
+	generatedAt: z.string(),
+	entries: z.array(StaticSearchIndexEntrySchema),
+});
+
 export type PostCategory = z.infer<typeof PostCategorySchema>;
 export type ArchiveCategoryFilter = z.infer<typeof ArchiveCategoryFilterSchema>;
 export type FrontMatter = z.infer<typeof FrontMatterSchema>;
@@ -101,6 +123,10 @@ export type ArchiveSummary = z.infer<typeof ArchiveSummarySchema>;
 export interface PostFrontMatter {
 	frontmatter: FrontMatter;
 	filePath: string;
+}
+
+export interface PublicPostFrontMatter {
+	frontmatter: FrontMatter;
 }
 
 export interface MatterTransformData {
@@ -146,6 +172,24 @@ export interface SearchResult {
 
 export interface SearchResponse {
 	results: SearchResult[];
+}
+
+export interface StaticPostIndex {
+	generatedAt: string;
+	posts: PublicPostFrontMatter[];
+	archiveSummary: ArchiveSummary;
+}
+
+export interface StaticSearchIndexEntry {
+	postKey: string;
+	post: PublicPostFrontMatter;
+	headings: string[];
+	bodyText: string;
+}
+
+export interface StaticSearchIndex {
+	generatedAt: string;
+	entries: StaticSearchIndexEntry[];
 }
 
 export type Tag = string;
