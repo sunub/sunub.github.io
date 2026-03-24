@@ -5,12 +5,16 @@ import {
 	headerActionIconWiggle,
 } from "@/shared/style/HeaderActionButton";
 
-export const Moon = styled.mask<{ $primary: boolean }>`
+export const Moon = styled.mask`
   transform-origin: center center;
 
   & > circle {
     transition: transform 250ms ease-in-out;
-    transform: ${(props) => (props.$primary ? "translate(-7px, -16px)" : "translate(0px, 0px)")};
+    transform: translate(0px, 0px);
+  }
+
+  html[data-color-theme="dark"] & > circle {
+    transform: translate(-7px, -16px);
   }
 `;
 
@@ -24,27 +28,33 @@ export const ToggleBtn = styled.button`
   }
 `;
 
-export const Sun = styled.circle<{ $primary: boolean }>`
+export const Sun = styled.circle`
   transform-origin: center center;
   fill: var(--icon-fill);
   transition: transform 250ms ease-in-out;
+  transform: scale(1);
 
-  transform: ${(props) => (props.$primary ? "scale(1.75)" : "scale(1)")};
+  html[data-color-theme="dark"] & {
+    transform: scale(1.75);
+  }
 `;
 
-export const SunAndBeams = styled.g<{ $primary: boolean }>`
+export const SunAndBeams = styled.g`
   transform-origin: center center;
   stroke: var(--icon-fill);
   transition:
     transform 250ms ease-in-out,
     opacity 180ms ease-in-out;
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
 
-  opacity: ${(props) => (props.$primary ? "0" : "1")};
-  transform: ${(props) =>
-		props.$primary ? "scale(0.6) rotate(-70deg)" : "scale(1) rotate(0deg)"};
+  html[data-color-theme="dark"] & {
+    opacity: 0;
+    transform: scale(0.6) rotate(-70deg);
+  }
 `;
 
-export const SunAndMoon = styled.svg<{ $primary: boolean }>`
+export const SunAndMoon = styled.svg`
   display: block;
   inline-size: 100%;
   block-size: 100%;

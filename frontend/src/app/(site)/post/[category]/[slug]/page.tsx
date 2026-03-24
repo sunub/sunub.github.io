@@ -22,8 +22,7 @@ import {
 	Time,
 } from "./page.style";
 
-export const revalidate = 43200;
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 type Params = Promise<{
 	category: PostCategory;

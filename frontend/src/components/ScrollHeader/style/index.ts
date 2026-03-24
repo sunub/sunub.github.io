@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-export const HeaderWrapper = styled.div<{
-	$isDarkTheme: boolean;
-}>`
+export const HeaderWrapper = styled.div`
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -23,10 +21,7 @@ export const HeaderWrapper = styled.div<{
     content: '';
     position: absolute;
     inset: 0;
-    background: ${({ $isDarkTheme }) =>
-			$isDarkTheme
-				? "color-mix(in oklch, var(--color-background) 70%, transparent)"
-				: "color-mix(in oklch, var(--color-elevation) 72%, transparent)"};
+    background: color-mix(in oklch, var(--color-elevation) 72%, transparent);
     -webkit-backdrop-filter: blur(14px) saturate(145%);
     backdrop-filter: blur(14px) saturate(145%);
     opacity: 0;
@@ -42,13 +37,16 @@ export const HeaderWrapper = styled.div<{
   }
 
   &[data-is-scrolled='true'] {
-    border-bottom-color: ${({ $isDarkTheme }) =>
-			$isDarkTheme
-				? "color-mix(in oklch, white 12%, transparent)"
-				: "color-mix(in oklch, var(--color-text) 10%, transparent)"};
-    box-shadow: ${({ $isDarkTheme }) =>
-			$isDarkTheme
-				? "0 10px 30px color-mix(in oklch, black 32%, transparent)"
-				: "0 10px 24px color-mix(in oklch, var(--color-highlight) 12%, transparent)"};
+    border-bottom-color: color-mix(in oklch, var(--color-text) 10%, transparent);
+    box-shadow: 0 10px 24px color-mix(in oklch, var(--color-highlight) 12%, transparent);
+  }
+
+  html[data-color-theme='dark'] &::before {
+    background: color-mix(in oklch, var(--color-background) 70%, transparent);
+  }
+
+  html[data-color-theme='dark'] &[data-is-scrolled='true'] {
+    border-bottom-color: color-mix(in oklch, white 12%, transparent);
+    box-shadow: 0 10px 30px color-mix(in oklch, black 32%, transparent);
   }
 `;

@@ -9,6 +9,7 @@ import {
 import { createStore, Provider } from "jotai";
 import type { ComponentProps } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import * as archiveApi from "@/components/Main/PostArchive/api/archive";
 import { PostArchiveSection } from "@/components/Main/PostArchive/ui/PostArchiveSection";
 import { persistArchiveViewState } from "@/components/Main/PostArchive/utils/archiveViewState";
 import { mockPush } from "../mocks/navigate";
@@ -97,58 +98,36 @@ function getPostsForCategory(posts: FrontMatter[], category: string | null) {
 	return posts.filter((post) => post.category === category);
 }
 
-function parseArchiveRangeRequest(input: RequestInfo | URL) {
-	const requestUrl =
-		typeof input === "string"
-			? input
-			: input instanceof URL
-				? input.toString()
-				: input.url;
-	const parsedUrl = new URL(requestUrl, "http://localhost:4004");
-	const category = parsedUrl.searchParams.get("category");
-	const start = Number(parsedUrl.searchParams.get("start") ?? "0");
-	const end = Number(parsedUrl.searchParams.get("end") ?? "0");
-
-	return {
-		category,
-		start,
-		end,
-	};
-}
-
 function mockArchiveRangeFetch(posts: FrontMatter[], delayMs = 0) {
-	return vi.spyOn(globalThis, "fetch").mockImplementation((input) => {
-		const { category, start, end } = parseArchiveRangeRequest(input);
-		const filteredPosts = getPostsForCategory(posts, category);
-		const response = new Response(
-			JSON.stringify({
+	return vi
+		.spyOn(archiveApi, "getArchivePostsInRange")
+		.mockImplementation((category, start, end) => {
+			const filteredPosts = getPostsForCategory(posts, category);
+			const response = {
 				totalCount: filteredPosts.length,
 				frontmatters: filteredPosts.slice(start, end),
-			}),
-			{
-				status: 200,
-				headers: {
-					"Content-Type": "application/json",
-				},
-			},
-		);
+			};
 
-		if (delayMs <= 0) {
-			return Promise.resolve(response);
-		}
+			if (delayMs <= 0) {
+				return Promise.resolve(response);
+			}
 
-		return new Promise<Response>((resolve) => {
-			window.setTimeout(() => {
-				resolve(response);
-			}, delayMs);
+			return new Promise<PublishedPost>((resolve) => {
+				window.setTimeout(() => {
+					resolve(response);
+				}, delayMs);
+			});
 		});
-	});
 }
 
 function readRequestedRanges(
 	fetchSpy: ReturnType<typeof mockArchiveRangeFetch>,
 ) {
-	return fetchSpy.mock.calls.map(([input]) => parseArchiveRangeRequest(input));
+	return fetchSpy.mock.calls.map(([category, start, end]) => ({
+		category,
+		start,
+		end,
+	}));
 }
 
 function getUniqueRequestedRanges(
@@ -683,11 +662,6 @@ describe("scroll-action", () => {
 				start: 9,
 				end: 15,
 			},
-			{
-				category: "code",
-				start: 15,
-				end: 21,
-			},
 		]);
 	});
 
@@ -731,7 +705,7 @@ describe("scroll-action", () => {
 		const codeRequestsBeforeSwitch = getUniqueRequestedRanges(fetchSpy).filter(
 			(request) => request.category === "code",
 		);
-		expect(screen.getByTestId("post-archive-card-20")).toBeInTheDocument();
+		expect(screen.getByTestId("post-archive-card-14")).toBeInTheDocument();
 
 		fireEvent.click(screen.getByTestId("post-archive-filter-web"));
 		await flushAsyncArchiveUpdates(rowHeights, 64, 4);
@@ -739,7 +713,7 @@ describe("scroll-action", () => {
 		fireEvent.click(screen.getByTestId("post-archive-filter-code"));
 		await flushAsyncArchiveUpdates(rowHeights, 64, 4);
 
-		expect(screen.getByTestId("post-archive-card-20")).toBeInTheDocument();
+		expect(screen.getByTestId("post-archive-card-14")).toBeInTheDocument();
 		expect(
 			getUniqueRequestedRanges(fetchSpy).filter(
 				(request) => request.category === "code",

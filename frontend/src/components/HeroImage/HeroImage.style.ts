@@ -148,11 +148,33 @@ export const HeroPosterCloudsFrame = styled.div`
   }
 `;
 
+export const HeroPosterCloudsStrip = styled.span`
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: var(--clouds-bg-url);
+  background-repeat: repeat-x;
+  background-position: top left;
+  background-size: auto 162px;
+  opacity: var(--clouds-opacity);
+`;
+
 export const HeroPosterBridge = styled.div`
   position: relative;
   width: 100%;
   height: 120px;
   overflow: hidden;
+`;
+
+export const HeroPosterBridgeStrip = styled.span`
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: var(--bridge-bg-url);
+  background-repeat: repeat-x;
+  background-position: top left;
+  background-size: auto 114px;
+  opacity: var(--bridge-opacity);
 `;
 
 export const HeroPosterCars = styled.div`
@@ -170,6 +192,17 @@ export const HeroPosterCars = styled.div`
   }
 `;
 
+export const HeroPosterCarsStrip = styled.span`
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: var(--cars-bg-url);
+  background-repeat: repeat-x;
+  background-position: top left;
+  background-size: auto 14px;
+  opacity: var(--cars-opacity);
+`;
+
 export const HeroPosterShadow = styled.span`
   position: relative;
   top: -28px;
@@ -180,21 +213,4 @@ export const HeroPosterShadow = styled.span`
   mix-blend-mode: darken;
   filter: blur(10px);
   opacity: var(--hero-shadow-opacity);
-`;
-
-export const HeroPosterTrack = styled.div`
-  display: flex;
-  align-items: flex-start;
-  width: max-content;
-  min-width: 100%;
-  pointer-events: none;
-  user-select: none;
-`;
-
-export const HeroPosterTile = styled(Image)`
-  display: block;
-  flex: none;
-  max-width: none;
-  pointer-events: none;
-  user-select: none;
 `;

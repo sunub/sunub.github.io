@@ -70,9 +70,6 @@ jobs:
       - name: Build shared packages
         run: pnpm build:shared
 
-      - name: Run Backend Unit Tests
-        run: pnpm --filter backend run test
-
       - name: Run Frontend Unit Tests
         run: pnpm --filter frontend run test:unit
 
@@ -129,8 +126,6 @@ jobs:
       - name: Run Frontend E2E Tests
         run: pnpm --filter frontend run test:e2e
         env:
-          PORT: 4008
-          FRONTEND_PORT: 4004
           NODE_ENV: test
 
       - name: Upload Playwright Report
@@ -169,32 +164,4 @@ jobs:
         run: pnpm build:shared
 
       - name: Build Services
-        run: pnpm run build
-        env:
-          PORT: 4008
-          EC2_PUBLIC_API_URL: http://localhost:4008
-          NEXT_PUBLIC_BASE_URL: http://localhost:3000
-          NEXT_PUBLIC_BACKEND_URL: http://localhost:4008
-
-  deploy:
-    name: Deploy to EC2
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/sunub' && github.event_name == 'push'
-    timeout-minutes: 10
-
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Excute deployment script via AWS SSM
-        run: |
-          aws ssm send-command \
-            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
-            --document-name "AWS-RunShellScript" \
-            --parameters '{"commands": ["runuser -l ubuntu -c \"/home/ubuntu/deploy.sh\""]}' \
-            --output text
+        run: pnpm --filter frontend run build

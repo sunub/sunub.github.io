@@ -1,11 +1,16 @@
-import type { FrontMatter, PublishedPost } from "@sunub/types";
+import type { FrontMatter, PublishedPost, StaticPostIndex } from "@sunub/types";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getAdditionalPost } from "@/components/Main/BlogPost/utils/utils";
 import { getRecentPost } from "@/components/Main/FeaturedPost/api/getRecentPost";
-import { getLatestPublishedPosts } from "@/server/posts";
+import { getStaticRecentPosts } from "@/server/static-index";
+import { getStaticPostIndexClient } from "@/shared/content/staticDataClient";
 
-vi.mock("@/server/posts", () => ({
-	getLatestPublishedPosts: vi.fn(),
+vi.mock("@/server/static-index", () => ({
+	getStaticRecentPosts: vi.fn(),
+}));
+
+vi.mock("@/shared/content/staticDataClient", () => ({
+	getStaticPostIndexClient: vi.fn(),
 }));
 
 const createFrontMatter = (
@@ -21,22 +26,31 @@ const createFrontMatter = (
 	completed: true,
 });
 
-const rangePosts: PublishedPost = {
-	totalCount: 10,
-	frontmatters: [createFrontMatter("web", 1), createFrontMatter("web", 2)],
-};
-
 const recentPosts: PublishedPost = {
 	totalCount: 10,
 	frontmatters: [createFrontMatter("code", 1), createFrontMatter("code", 2)],
 };
 
-function mockJsonResponse(body: unknown): Response {
-	return new Response(JSON.stringify(body), {
-		status: 200,
-		headers: { "Content-Type": "application/json" },
-	});
-}
+const indexedPosts = Array.from({ length: 10 }, (_, index) => ({
+	frontmatter: createFrontMatter("web", index + 1),
+	filePath: `/tmp/web-${index + 1}.mdx`,
+}));
+
+const staticPostIndex: StaticPostIndex = {
+	generatedAt: new Date().toISOString(),
+	posts: indexedPosts,
+	archiveSummary: {
+		totalCount: indexedPosts.length,
+		coveredYears: 1,
+		counts: {
+			all: indexedPosts.length,
+			web: indexedPosts.length,
+			code: 0,
+			cs: 0,
+			algorithm: 0,
+		},
+	},
+};
 
 describe("블로그 포스트 API 테스트", () => {
 	beforeEach(() => {
@@ -44,19 +58,20 @@ describe("블로그 포스트 API 테스트", () => {
 	});
 
 	test("블로그 포스트 최신 목록 API가 파싱 가능한 형식을 반환한다", async () => {
-		vi.mocked(getLatestPublishedPosts).mockResolvedValue(recentPosts);
+		vi.mocked(getStaticRecentPosts).mockResolvedValue(recentPosts);
 
 		const parsed = await getRecentPost();
 		expect(parsed).toEqual(recentPosts);
-		expect(getLatestPublishedPosts).toHaveBeenCalledWith(4);
+		expect(getStaticRecentPosts).toHaveBeenCalledWith(4);
 	});
 
 	test("range 조회 API가 파싱 가능한 형식을 반환한다", async () => {
-		vi.spyOn(globalThis, "fetch").mockResolvedValue(
-			mockJsonResponse(rangePosts),
-		);
+		vi.mocked(getStaticPostIndexClient).mockResolvedValue(staticPostIndex);
 
 		const parsed = await getAdditionalPost(0, 10);
-		expect(parsed).toEqual(rangePosts);
+		expect(parsed).toEqual({
+			totalCount: 10,
+			frontmatters: indexedPosts.map((post) => post.frontmatter),
+		});
 	});
 });

@@ -1,8 +1,7 @@
 import { SearchResponseSchema, type SearchResult } from "@sunub/types";
 import { atom } from "jotai";
 import type { RefObject } from "react";
-import { buildApiUrl } from "@/shared/api/config";
-import { API_PATHS } from "@/shared/api/endpoints";
+import { searchStaticBlogPosts } from "@/shared/search/searchClient";
 
 export type SearchViewState = "idle" | "loading" | "results" | "empty";
 
@@ -70,18 +69,9 @@ export const searchActionAtom = atom(
 		abortController.current = new AbortController();
 		const currentController = abortController.current;
 		try {
-			const res = await fetch(buildApiUrl(API_PATHS.search(query)), {
-				signal: currentController.signal,
+			const data = SearchResponseSchema.safeParse({
+				results: await searchStaticBlogPosts(query),
 			});
-			if (currentController.signal.aborted) {
-				return;
-			}
-
-			if (!res.ok) {
-				throw new Error(`검색 요청 실패: ${res.status} ${res.statusText}`);
-			}
-
-			const data = SearchResponseSchema.safeParse(await res.json());
 			if (!data.success) {
 				console.error("Invalid search response:", data.error);
 				throw new Error("검색 응답 스키마가 유효하지 않습니다");

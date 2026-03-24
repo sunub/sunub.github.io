@@ -2,12 +2,10 @@ import "./globals.css";
 import "katex/dist/katex.min.css";
 import { Provider } from "jotai";
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import type React from "react";
 import StyledComponentsRegistry from "@/components/Resgistry/";
 import { initSetColorsByThemeFn } from "@/components/Theme/InitTheme/InitThemeValue";
 import { DARK_COLORS, LIGHT_COLORS } from "@/constants/constants";
-import { getRequestTheme } from "@/utils/theme";
 import { craftyGirls, pretendardRegular } from "./font";
 import { ShikiOverrieds } from "./GlobalStyle";
 
@@ -58,18 +56,16 @@ export const viewport: Viewport = {
 	width: "device-width",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode;
 }) {
-	const theme = await getRequestTheme();
-
 	return (
 		<html
 			lang="ko"
 			className={`${pretendardRegular.variable} ${craftyGirls.variable}`}
-			data-color-theme={theme}
+			data-color-theme="light"
 			suppressHydrationWarning={true}
 		>
 			<head>
@@ -84,9 +80,7 @@ export default async function RootLayout({
 					type="image/x-icon"
 					sizes="32x32"
 				/>
-				<Script id="theme-script" strategy="beforeInteractive">
-					{initSetColorsByThemeFn}
-				</Script>
+				<script id="theme-script">{initSetColorsByThemeFn}</script>
 			</head>
 			<body>
 				<script type="application/ld+json">

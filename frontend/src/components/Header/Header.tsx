@@ -1,7 +1,7 @@
 import { ThemeWrapper } from "./Header.style";
 import { HeaderComposer } from "./HeaderComposer";
 
-async function Header() {
+function Header() {
 	return (
 		<HeaderComposer.layout>
 			<HeaderComposer.leftSide>

@@ -91,6 +91,24 @@ export const SearchResponseSchema = z.object({
 	results: z.array(SearchResultSchema),
 });
 
+export const StaticPostIndexSchema = z.object({
+	generatedAt: z.string(),
+	posts: z.array(PostFrontMatterSchema),
+	archiveSummary: ArchiveSummarySchema,
+});
+
+export const StaticSearchIndexEntrySchema = z.object({
+	postKey: z.string(),
+	post: PostFrontMatterSchema,
+	headings: z.array(z.string()),
+	bodyText: z.string(),
+});
+
+export const StaticSearchIndexSchema = z.object({
+	generatedAt: z.string(),
+	entries: z.array(StaticSearchIndexEntrySchema),
+});
+
 export type PostCategory = z.infer<typeof PostCategorySchema>;
 export type ArchiveCategoryFilter = z.infer<typeof ArchiveCategoryFilterSchema>;
 export type FrontMatter = z.infer<typeof FrontMatterSchema>;
@@ -146,6 +164,24 @@ export interface SearchResult {
 
 export interface SearchResponse {
 	results: SearchResult[];
+}
+
+export interface StaticPostIndex {
+	generatedAt: string;
+	posts: PostFrontMatter[];
+	archiveSummary: ArchiveSummary;
+}
+
+export interface StaticSearchIndexEntry {
+	postKey: string;
+	post: PostFrontMatter;
+	headings: string[];
+	bodyText: string;
+}
+
+export interface StaticSearchIndex {
+	generatedAt: string;
+	entries: StaticSearchIndexEntry[];
 }
 
 export type Tag = string;

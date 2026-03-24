@@ -32,7 +32,7 @@ export function ThemeToggler({
 		>
 			<VisuallyHidden>테마 변경 버튼</VisuallyHidden>
 			<ToggleIconWrapper aria-hidden="true">
-				<ThemeIcon colorTheme={colorTheme} maskId={maskId} />
+				<ThemeIcon maskId={maskId} />
 			</ToggleIconWrapper>
 		</ToggleBtn>
 	);

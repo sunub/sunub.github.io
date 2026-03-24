@@ -1,19 +1,9 @@
-import { getRequestTheme } from "@/utils/theme";
 import { HeaderWrapper } from "../style";
 import { ScrollTrigger } from "./ScrollTrigger";
 
-export async function ScrollHeader({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	const isDarkTheme = (await getRequestTheme()) === "dark";
-
+export function ScrollHeader({ children }: { children: React.ReactNode }) {
 	return (
-		<HeaderWrapper
-			className="blog-main__scroll-header"
-			$isDarkTheme={isDarkTheme}
-		>
+		<HeaderWrapper className="blog-main__scroll-header">
 			<ScrollTrigger>{children}</ScrollTrigger>
 		</HeaderWrapper>
 	);

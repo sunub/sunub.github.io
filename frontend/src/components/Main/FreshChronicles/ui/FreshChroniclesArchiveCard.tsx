@@ -1,8 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import {
-	createArchiveDescription,
-	getArchiveSummary,
-} from "@/components/Main/PostArchive/api/archive";
+import { getStaticArchiveDescription } from "@/server/static-index";
 import { ARCHIVE_TOP_HREF } from "@/shared/utils/archiveRoute";
 import {
 	ArchiveCardAction,
@@ -30,9 +27,7 @@ export async function FreshChroniclesArchiveCard({
 }) {
 	const resolvedDescription =
 		description ??
-		(await getArchiveSummary()
-			.then((summary) => createArchiveDescription(summary))
-			.catch(() => FALLBACK_DESCRIPTION));
+		(await getStaticArchiveDescription().catch(() => FALLBACK_DESCRIPTION));
 
 	return (
 		<ArchiveCardLink

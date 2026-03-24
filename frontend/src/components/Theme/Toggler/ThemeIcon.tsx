@@ -2,35 +2,18 @@ import { memo } from "react";
 import { Moon, Sun, SunAndBeams, SunAndMoon } from "./ThemeToggler.style";
 
 export const ThemeIcon = memo(
-	({
-		colorTheme,
-		maskId,
-		...delegated
-	}: {
-		colorTheme: string;
-		maskId: string;
-	}) => {
-		const isDarkMode = colorTheme === "dark";
-
+	({ maskId, ...delegated }: { maskId: string }) => {
 		return (
 			<SunAndMoon
 				{...delegated}
-				$primary={isDarkMode}
 				width="24"
 				height="24"
 				viewBox="0 0 24 24"
 				fill="none"
 				xmlns="http://www.w3.org/2000/svg"
 			>
-				<Sun
-					$primary={isDarkMode}
-					cx="12"
-					cy="12"
-					r="5"
-					fill="#2D0D06"
-					mask={`url(#${maskId})`}
-				/>
-				<SunAndBeams $primary={isDarkMode}>
+				<Sun cx="12" cy="12" r="5" fill="#2D0D06" mask={`url(#${maskId})`} />
+				<SunAndBeams>
 					<path d="M12 3V3.52941" strokeWidth="3" strokeLinecap="round" />
 					<path
 						d="M5.63604 5.63604L6.01039 6.01039"
@@ -58,7 +41,6 @@ export const ThemeIcon = memo(
 				</SunAndBeams>
 				<Moon
 					id={maskId}
-					$primary={isDarkMode}
 					maskUnits={"userSpaceOnUse"}
 					maskContentUnits={"userSpaceOnUse"}
 				>
