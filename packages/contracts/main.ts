@@ -2,7 +2,7 @@ export const DEFAULT_BACKEND_API_URL = "http://localhost:4008";
 export const DEFAULT_REWRITE_TARGET_URL = DEFAULT_BACKEND_API_URL;
 export const DEFAULT_FRONTEND_BASE_URL = "http://localhost:3000";
 export const DEFAULT_FRONTEND_TEST_URL = "http://localhost:4004";
-export const DEFAULT_SITE_URL = "https://sunub.vercel.app";
+export const DEFAULT_SITE_URL = "https://sunub.site";
 
 export const BACKEND_URL_ENV_KEYS = {
 	PLAYWRIGHT_BACKEND_URL: "PLAYWRIGHT_BACKEND_URL",
