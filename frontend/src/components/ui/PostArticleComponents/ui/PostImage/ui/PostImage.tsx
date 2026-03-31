@@ -6,6 +6,7 @@ import { useInView } from "react-intersection-observer";
 import styled, { keyframes } from "styled-components";
 import useToggle from "@/hooks/use-toggle";
 import { isImageLoaded, markImageAsLoaded } from "../model/cache";
+import { normalizePublicImageSource } from "../model/imageSource";
 import { Caption, Skeleton, StyledImage } from "../style";
 
 type ImageLayout = "default" | "wide" | "full" | "float-left" | "float-right";
@@ -100,7 +101,10 @@ CustomImage.displayName = "CustomImage";
 
 const PostImage = memo(
 	({ src, alt, priority = false, caption }: PostImageProps) => {
-		const [isLoading, setIsLoading] = useState(!isImageLoaded(src));
+		const normalizedSource = normalizePublicImageSource(src);
+		const [isLoading, setIsLoading] = useState(
+			!isImageLoaded(normalizedSource),
+		);
 		const { ref, inView } = useInView({
 			threshold: 0,
 			triggerOnce: true,
@@ -142,7 +146,7 @@ const PostImage = memo(
 								{isLoading && <Skeleton />}
 								{/* priority를 inView와 결합하여 전달 */}
 								<CustomImage
-									src={src}
+									src={normalizedSource}
 									alt={alt}
 									isLoading={isLoading}
 									setIsLoading={setIsLoading}
@@ -158,7 +162,7 @@ const PostImage = memo(
 						<ZoomImageContainer onClick={toggleZoomStatus}>
 							<ZoomedImage>
 								<CustomImage
-									src={src}
+									src={normalizedSource}
 									alt={alt}
 									isLoading={isLoading}
 									setIsLoading={setIsLoading}
