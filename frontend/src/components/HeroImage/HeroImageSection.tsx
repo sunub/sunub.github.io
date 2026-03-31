@@ -17,8 +17,8 @@ export function HeroImageSection() {
 			<HeroImageDesktopOnly>
 				<HeroPoster hidden={isOverlayVisible} />
 				<HeroImageIdleWarmup onOverlayVisibleChange={setIsOverlayVisible} />
-				<Wave />
 			</HeroImageDesktopOnly>
+			<Wave />
 		</HeroImageSectionWrapper>
 	);
 }
