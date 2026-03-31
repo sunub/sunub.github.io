@@ -233,7 +233,10 @@ async function Page({ params }: { params: Params }) {
 						<HeaderSection frontmatter={frontmatter} />
 						<ArticleWrapper id="blog-post__article">
 							<ClientArticle>
-								<CustomMDXRemoteComponents content={content} />
+								<CustomMDXRemoteComponents
+									content={content}
+									postImageContext={{ category }}
+								/>
 							</ClientArticle>
 						</ArticleWrapper>
 					</ArticleRootWrapper>

@@ -98,6 +98,8 @@ export function PostArchiveSection({
 }) {
 	const [isFilterPending, startFilterTransition] = useTransition();
 	const listRef = useRef<HTMLUListElement>(null);
+
+	// archive page 에서 사용되는 grid의 column count 를 관리하는 hook. window resize 이벤트에 반응하여 column count 를 업데이트한다.
 	const columnCount = useSyncExternalStore(
 		subscribeToViewportWidth,
 		getArchiveColumnSnapshot,
@@ -116,6 +118,7 @@ export function PostArchiveSection({
 		selectedCategory,
 		hasPendingRestore: pendingRestore !== null,
 	});
+
 	const {
 		posts,
 		totalCount,

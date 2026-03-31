@@ -85,6 +85,7 @@ export function useArchiveFeed({
 
 		return cachedData;
 	}, [cacheByCategory, initialCategory, initialData, selectedCategory]);
+
 	const loadedPosts =
 		currentSelectedCategoryData?.frontmatters ?? EMPTY_FRONTMATTERS;
 	const loadedCount = loadedPosts.length;
