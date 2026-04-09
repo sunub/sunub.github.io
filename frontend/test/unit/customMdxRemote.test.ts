@@ -1,5 +1,14 @@
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import matter from "gray-matter";
+import { compileMDX } from "next-mdx-remote/rsc";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 import { describe, expect, test } from "vitest";
-import { convertTableBlockToHTML } from "@/components/ui/customMdxRemote";
+import {
+	convertTableBlockToHTML,
+	transformMarkdownContent,
+} from "@/components/ui/customMdxRemote";
 
 describe("convertTableBlockToHTML", () => {
 	test("normalizes void html tags inside markdown table cells for MDX", () => {
@@ -11,5 +20,62 @@ describe("convertTableBlockToHTML", () => {
 
 		expect(html).toContain("<br />");
 		expect(html).not.toContain("<br>");
+	});
+
+	test("escapes email-like angle brackets inside markdown table cells", () => {
+		const html = convertTableBlockToHTML([
+			"| 이름 | 이메일 |",
+			"| ---- | ------ |",
+			"| 김철수 | <kim@email.com> |",
+		]);
+
+		expect(html).toContain("&lt;kim@email.com&gt;");
+		expect(html).not.toContain("<kim@email.com>");
+	});
+});
+
+describe("transformMarkdownContent", () => {
+	test("escapes comparison-style angle brackets in plain text", () => {
+		const transformed = transformMarkdownContent(
+			"3. 범위 조건(>, <, BETWEEN)에 사용되는 열은 마지막에 배치",
+			"code",
+		);
+
+		expect(transformed).toContain("범위 조건(>, &lt;, BETWEEN)");
+	});
+
+	test("keeps markdown autolinks in plain text untouched", () => {
+		const transformed = transformMarkdownContent(
+			"Author: sunub <bsc5672@gmail.com>",
+			"cs",
+		);
+
+		expect(transformed).toContain("<bsc5672@gmail.com>");
+	});
+});
+
+describe("MDX regression", () => {
+	test.each([
+		"relational-database-indexing-and-join.mdx",
+		"denormalization-vs-normalization-database.mdx",
+	])("compiles %s after markdown transformation", async (fileName) => {
+		const raw = await readFile(
+			resolve(process.cwd(), "../posts/code", fileName),
+			"utf8",
+		);
+		const { content } = matter(raw);
+		const transformed = transformMarkdownContent(content, "code");
+
+		await expect(
+			compileMDX({
+				source: transformed,
+				options: {
+					mdxOptions: {
+						remarkPlugins: [remarkMath],
+						rehypePlugins: [rehypeKatex],
+					},
+				},
+			}),
+		).resolves.toBeDefined();
 	});
 });
