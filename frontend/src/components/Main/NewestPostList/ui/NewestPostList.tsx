@@ -6,10 +6,10 @@ import { useBlogPostContext } from "../../BlogPost/provider/BlogPostProvider";
 import { BlogPostList } from "../../BlogPost/style";
 import { BlogPostItem } from "../../BlogPost/ui/BlogPostItem";
 import { useListTerminalMode } from "../hooks/useListTerminalMode";
+import { useRangeLoadMoreEffect } from "../hooks/useRangeLoadMoreEffect";
 import { useResetScrollOnReload } from "../hooks/useResetScrollOnReload";
 import { useRevealPhase } from "../hooks/useRevealPhase";
 import { useWindowedRange } from "../hooks/useWindowedRange";
-import { useWindowedRangeLoadMore } from "../hooks/useWindowedRangeLoadMore";
 import type { NewestPostListRootProps } from "../types/type";
 import {
 	BLOG_POST_LIST_IDS,
@@ -88,7 +88,7 @@ export const NewestPostList = memo(function NewestPostList({
 		[posts, shouldRenderAllPosts, visibleRange],
 	);
 
-	useWindowedRangeLoadMore({
+	useRangeLoadMoreEffect({
 		canLoadMore: canLoadMore && !loadMoreError,
 		postsLength: itemCount,
 		visibleRangeEnd: visibleRange.end,

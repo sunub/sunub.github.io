@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { shouldLoadMoreFromRemainingItems } from "../utils/virtualListUtils";
 
-type WindowedRangeLoadMoreOptions = {
+type RangeLoadMoreEffectOptions = {
 	canLoadMore: boolean;
 	postsLength: number;
 	visibleRangeEnd: number;
@@ -13,7 +13,7 @@ type WindowedRangeLoadMoreOptions = {
 
 const TRIGGER_COOLDOWN_MS = 250;
 
-export const useWindowedRangeLoadMore = ({
+export const useRangeLoadMoreEffect = ({
 	canLoadMore,
 	postsLength,
 	visibleRangeEnd,
@@ -21,7 +21,7 @@ export const useWindowedRangeLoadMore = ({
 	preloadReservePx,
 	loadMore,
 	enableRemainingItemsCheck = true,
-}: WindowedRangeLoadMoreOptions): void => {
+}: RangeLoadMoreEffectOptions): void => {
 	const lastRequestedAtRef = useRef<number | null>(null);
 
 	const shouldPreloadNow = useCallback(

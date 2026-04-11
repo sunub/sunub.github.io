@@ -1,16 +1,16 @@
 "use client";
 
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
 	type SetStateAction,
 	useCallback,
 	useEffect,
 	useLayoutEffect,
+	useMemo,
 	useState,
 } from "react";
 import {
-	archiveCategoryViewStateAtom,
-	getArchiveCategoryViewState,
+	createArchiveCategoryViewStateAtom,
 	normalizeArchiveVisibleCount,
 } from "../store/archive.atom";
 import type { PostArchiveCategoryFilter } from "../types";
@@ -21,22 +21,26 @@ import {
 	readArchiveCategoryFromLocation,
 	readPersistedArchiveViewState,
 } from "../utils/archiveViewState";
+import type {
+	PostArchiveViewportNavigationPort,
+	PostArchiveViewportRestorePort,
+} from "./postArchiveViewportPorts";
 
 export function useArchiveViewState(
 	initialCategory: PostArchiveCategoryFilter,
 ) {
-	const [categoryViewState, setCategoryViewState] = useAtom(
-		archiveCategoryViewStateAtom,
-	);
 	const [selectedCategory, setSelectedCategory] =
 		useState<PostArchiveCategoryFilter>(initialCategory);
+	const currentCategoryViewStateAtom = useMemo(
+		() => createArchiveCategoryViewStateAtom(selectedCategory),
+		[selectedCategory],
+	);
+	const categoryViewState = useAtomValue(currentCategoryViewStateAtom);
+	const setCategoryViewState = useSetAtom(currentCategoryViewStateAtom);
 	const [pendingRestore, setPendingRestore] =
 		useState<PersistedPostArchiveViewState | null>(null);
 	const [isReady, setIsReady] = useState(false);
-	const visibleCount = getArchiveCategoryViewState(
-		categoryViewState,
-		selectedCategory,
-	).visibleCount;
+	const visibleCount = categoryViewState.visibleCount;
 
 	useLayoutEffect(() => {
 		const categoryFromUrl = readArchiveCategoryFromLocation();
@@ -66,11 +70,7 @@ export function useArchiveViewState(
 
 	const setVisibleCount = useCallback(
 		(nextVisibleCount: SetStateAction<number>) => {
-			setCategoryViewState((currentState) => {
-				const currentCategoryState = getArchiveCategoryViewState(
-					currentState,
-					selectedCategory,
-				);
+			setCategoryViewState((currentCategoryState) => {
 				const resolvedVisibleCount =
 					typeof nextVisibleCount === "function"
 						? nextVisibleCount(currentCategoryState.visibleCount)
@@ -79,36 +79,32 @@ export function useArchiveViewState(
 					normalizeArchiveVisibleCount(resolvedVisibleCount);
 
 				if (currentCategoryState.visibleCount === normalizedVisibleCount) {
-					return currentState;
+					return currentCategoryState;
 				}
 
 				return {
-					...currentState,
-					[selectedCategory]: {
-						...currentCategoryState,
-						visibleCount: normalizedVisibleCount,
-					},
+					...currentCategoryState,
+					visibleCount: normalizedVisibleCount,
 				};
 			});
 		},
-		[selectedCategory, setCategoryViewState],
+		[setCategoryViewState],
 	);
 
 	const captureAnchor = useCallback(
 		(postKey: string, anchorIndex: number) => {
-			setCategoryViewState((currentState) => {
-				const currentCategoryState = getArchiveCategoryViewState(
-					currentState,
-					selectedCategory,
-				);
+			setCategoryViewState((currentCategoryState) => {
+				if (
+					currentCategoryState.anchorPostKey === postKey &&
+					currentCategoryState.anchorIndex === anchorIndex
+				) {
+					return currentCategoryState;
+				}
 
 				return {
-					...currentState,
-					[selectedCategory]: {
-						...currentCategoryState,
-						anchorPostKey: postKey,
-						anchorIndex,
-					},
+					...currentCategoryState,
+					anchorPostKey: postKey,
+					anchorIndex,
 				};
 			});
 			persistArchiveViewState({
@@ -123,19 +119,18 @@ export function useArchiveViewState(
 
 	const completeRestore = useCallback(() => {
 		setPendingRestore(null);
-		setCategoryViewState((currentState) => {
-			const currentCategoryState = getArchiveCategoryViewState(
-				currentState,
-				selectedCategory,
-			);
+		setCategoryViewState((currentCategoryState) => {
+			if (
+				currentCategoryState.anchorPostKey === null &&
+				currentCategoryState.anchorIndex === null
+			) {
+				return currentCategoryState;
+			}
 
 			return {
-				...currentState,
-				[selectedCategory]: {
-					...currentCategoryState,
-					anchorPostKey: null,
-					anchorIndex: null,
-				},
+				...currentCategoryState,
+				anchorPostKey: null,
+				anchorIndex: null,
 			};
 		});
 		persistArchiveViewState({
@@ -146,6 +141,23 @@ export function useArchiveViewState(
 		});
 	}, [selectedCategory, setCategoryViewState, visibleCount]);
 
+	const viewportRestore = useMemo<PostArchiveViewportRestorePort>(
+		() => ({
+			visibleCount,
+			setVisibleCount,
+			pendingRestore,
+			completeRestore,
+		}),
+		[completeRestore, pendingRestore, setVisibleCount, visibleCount],
+	);
+
+	const viewportNavigation = useMemo<PostArchiveViewportNavigationPort>(
+		() => ({
+			captureAnchor,
+		}),
+		[captureAnchor],
+	);
+
 	return {
 		selectedCategory,
 		setSelectedCategory,
@@ -154,5 +166,7 @@ export function useArchiveViewState(
 		pendingRestore,
 		completeRestore,
 		captureAnchor,
+		viewportRestore,
+		viewportNavigation,
 	};
 }

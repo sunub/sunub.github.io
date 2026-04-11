@@ -1,11 +1,12 @@
 "use client";
 
-import { useAtom } from "jotai";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { atom, useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { getArchivePostsInRange } from "../api/archive";
 import {
 	archiveFeedCacheAtom,
-	mergeArchivePageData,
+	preferLongerArchivePageData,
+	syncArchiveSeedData,
 } from "../store/archive.atom";
 import type {
 	ArchiveCategoryCounts,
@@ -16,6 +17,39 @@ import type {
 const LOAD_MORE_ERROR_MESSAGE =
 	"추가 아카이브 포스트를 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.";
 const EMPTY_FRONTMATTERS = [] as PostArchivePageData["frontmatters"];
+const inFlightArchiveRequests = new Map<string, Promise<PostArchivePageData>>();
+
+function createArchiveCategoryCacheAtom(category: PostArchiveCategoryFilter) {
+	return atom((get) => get(archiveFeedCacheAtom)[category]);
+}
+
+function createArchiveRequestKey(
+	category: PostArchiveCategoryFilter,
+	start: number,
+	end: number,
+) {
+	return `${category}:${start}:${end}`;
+}
+
+function getDedupedArchivePostsInRange(
+	category: PostArchiveCategoryFilter,
+	start: number,
+	end: number,
+) {
+	const requestKey = createArchiveRequestKey(category, start, end);
+	const inFlightRequest = inFlightArchiveRequests.get(requestKey);
+
+	if (inFlightRequest) {
+		return inFlightRequest;
+	}
+
+	const request = getArchivePostsInRange(category, start, end).finally(() => {
+		inFlightArchiveRequests.delete(requestKey);
+	});
+
+	inFlightArchiveRequests.set(requestKey, request);
+	return request;
+}
 
 export function useArchiveFeed({
 	initialCategory,
@@ -30,31 +64,30 @@ export function useArchiveFeed({
 	selectedCategory: PostArchiveCategoryFilter;
 	visibleCount: number;
 }) {
-	const [cacheByCategory, setCacheByCategory] = useAtom(archiveFeedCacheAtom);
+	const setCacheByCategory = useSetAtom(archiveFeedCacheAtom);
+	const initialCategoryCacheAtom = useMemo(
+		() => createArchiveCategoryCacheAtom(initialCategory),
+		[initialCategory],
+	);
+	const selectedCategoryCacheAtom = useMemo(
+		() => createArchiveCategoryCacheAtom(selectedCategory),
+		[selectedCategory],
+	);
+	const initialCategoryData = useAtomValue(initialCategoryCacheAtom);
+	const selectedCategoryData = useAtomValue(selectedCategoryCacheAtom);
 	const [fetchingByCategory, setFetchingByCategory] = useState<
 		Partial<Record<PostArchiveCategoryFilter, boolean>>
 	>({});
 	const [loadMoreErrorByCategory, setLoadMoreErrorByCategory] = useState<
 		Partial<Record<PostArchiveCategoryFilter, string | null>>
 	>({});
-	const inFlightRequestKeysRef = useRef(
-		new Map<PostArchiveCategoryFilter, string>(),
-	);
-	const fulfilledRequestKeysRef = useRef(
-		new Map<PostArchiveCategoryFilter, Set<string>>(),
-	);
-	const isMountedRef = useRef(true);
 
 	useEffect(() => {
 		setCacheByCategory((currentCache) => {
 			const currentData = currentCache[initialCategory];
-			const nextData = mergeArchivePageData(currentData, initialData);
+			const nextData = syncArchiveSeedData(currentData, initialData);
 
-			if (
-				currentData &&
-				currentData.frontmatters.length === nextData.frontmatters.length &&
-				currentData.totalCount === nextData.totalCount
-			) {
+			if (nextData === currentData) {
 				return currentCache;
 			}
 
@@ -67,24 +100,18 @@ export function useArchiveFeed({
 
 	const totalCount = counts[selectedCategory] ?? 0;
 	const currentSelectedCategoryData = useMemo(() => {
-		const cachedData = cacheByCategory[selectedCategory];
-		if (selectedCategory !== initialCategory) {
-			return cachedData;
+		if (selectedCategory === initialCategory) {
+			return initialCategoryData ?? initialData;
 		}
 
-		if (!cachedData) {
-			return initialData;
-		}
-
-		if (
-			initialData.frontmatters.length > cachedData.frontmatters.length ||
-			initialData.totalCount !== cachedData.totalCount
-		) {
-			return mergeArchivePageData(cachedData, initialData);
-		}
-
-		return cachedData;
-	}, [cacheByCategory, initialCategory, initialData, selectedCategory]);
+		return selectedCategoryData;
+	}, [
+		initialCategory,
+		initialCategoryData,
+		initialData,
+		selectedCategory,
+		selectedCategoryData,
+	]);
 
 	const loadedPosts =
 		currentSelectedCategoryData?.frontmatters ?? EMPTY_FRONTMATTERS;
@@ -99,12 +126,6 @@ export function useArchiveFeed({
 		loadMoreError === null &&
 		loadedCount < safeVisibleCount &&
 		loadedCount < totalCount;
-
-	useEffect(() => {
-		return () => {
-			isMountedRef.current = false;
-		};
-	}, []);
 
 	const setFetchingForCategory = useCallback(
 		(category: PostArchiveCategoryFilter, nextValue: boolean) => {
@@ -144,53 +165,47 @@ export function useArchiveFeed({
 		}
 
 		const requestCategory = selectedCategory;
-		const requestKey = `${loadedCount}:${safeVisibleCount}`;
-		const fulfilledRequestKeys =
-			fulfilledRequestKeysRef.current.get(requestCategory) ?? new Set<string>();
+		const requestStart = 0;
+		const requestEnd = safeVisibleCount;
+		let didCancel = false;
 
-		if (!fulfilledRequestKeysRef.current.has(requestCategory)) {
-			fulfilledRequestKeysRef.current.set(
-				requestCategory,
-				fulfilledRequestKeys,
-			);
-		}
-
-		if (
-			inFlightRequestKeysRef.current.get(requestCategory) === requestKey ||
-			fulfilledRequestKeys.has(requestKey)
-		) {
-			return;
-		}
-
-		inFlightRequestKeysRef.current.set(requestCategory, requestKey);
 		setFetchingForCategory(requestCategory, true);
+		setLoadMoreErrorForCategory(requestCategory, null);
 
-		void getArchivePostsInRange(requestCategory, loadedCount, safeVisibleCount)
+		void getDedupedArchivePostsInRange(
+			requestCategory,
+			requestStart,
+			requestEnd,
+		)
 			.then((nextData) => {
-				if (!isMountedRef.current) {
+				if (didCancel) {
 					return;
 				}
 
-				if (
-					nextData.frontmatters.length === 0 &&
-					loadedCount < nextData.totalCount
-				) {
+				if (nextData.frontmatters.length < requestEnd) {
 					setLoadMoreErrorForCategory(requestCategory, LOAD_MORE_ERROR_MESSAGE);
 					return;
 				}
 
-				fulfilledRequestKeys.add(requestKey);
-				setLoadMoreErrorForCategory(requestCategory, null);
-				setCacheByCategory((currentCache) => ({
-					...currentCache,
-					[requestCategory]: mergeArchivePageData(
-						currentCache[requestCategory],
+				setCacheByCategory((currentCache) => {
+					const currentData = currentCache[requestCategory];
+					const nextCacheData = preferLongerArchivePageData(
+						currentData,
 						nextData,
-					),
-				}));
+					);
+
+					if (nextCacheData === currentData) {
+						return currentCache;
+					}
+
+					return {
+						...currentCache,
+						[requestCategory]: nextCacheData,
+					};
+				});
 			})
 			.catch((error) => {
-				if (!isMountedRef.current) {
+				if (didCancel) {
 					return;
 				}
 
@@ -198,19 +213,14 @@ export function useArchiveFeed({
 				setLoadMoreErrorForCategory(requestCategory, LOAD_MORE_ERROR_MESSAGE);
 			})
 			.finally(() => {
-				if (!isMountedRef.current) {
-					return;
-				}
-
-				if (
-					inFlightRequestKeysRef.current.get(requestCategory) === requestKey
-				) {
-					inFlightRequestKeysRef.current.delete(requestCategory);
-				}
 				setFetchingForCategory(requestCategory, false);
 			});
+
+		return () => {
+			didCancel = true;
+			setFetchingForCategory(requestCategory, false);
+		};
 	}, [
-		loadedCount,
 		safeVisibleCount,
 		selectedCategory,
 		setCacheByCategory,

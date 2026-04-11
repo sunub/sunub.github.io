@@ -1,5 +1,6 @@
 import type { FrontMatter } from "@sunub/types";
 import { atom } from "jotai";
+import type { SetStateAction } from "react";
 import type { PostArchiveCategoryFilter, PostArchivePageData } from "../types";
 import {
 	getPostArchiveCardKey,
@@ -58,38 +59,135 @@ export function getArchiveCategoryViewState(
 	return state[category] ?? createInitialArchiveCategoryViewState();
 }
 
-export function mergeArchivePageData(
+function hasSameArchiveCategoryViewState(
+	left: ArchiveCategoryViewState,
+	right: ArchiveCategoryViewState,
+) {
+	return (
+		left.visibleCount === right.visibleCount &&
+		left.anchorPostKey === right.anchorPostKey &&
+		left.anchorIndex === right.anchorIndex
+	);
+}
+
+function hasSameArchivePostContent(left: FrontMatter, right: FrontMatter) {
+	if (getPostArchiveCardKey(left) !== getPostArchiveCardKey(right)) {
+		return false;
+	}
+
+	if (
+		left.title !== right.title ||
+		left.date !== right.date ||
+		left.summary !== right.summary ||
+		left.completed !== right.completed
+	) {
+		return false;
+	}
+
+	if (left.tags.length !== right.tags.length) {
+		return false;
+	}
+
+	return left.tags.every((tag, index) => tag === right.tags[index]);
+}
+
+export function syncArchiveSeedData(
+	currentData: PostArchivePageData | undefined,
+	seedData: PostArchivePageData,
+): PostArchivePageData {
+	if (!currentData) {
+		return seedData;
+	}
+
+	if (currentData.totalCount !== seedData.totalCount) {
+		return seedData;
+	}
+
+	if (currentData.frontmatters.length < seedData.frontmatters.length) {
+		return seedData;
+	}
+
+	const currentPrefix = currentData.frontmatters.slice(
+		0,
+		seedData.frontmatters.length,
+	);
+	const hasMatchingPrefix =
+		currentPrefix.length === seedData.frontmatters.length &&
+		currentPrefix.every((post, index) => {
+			const seedPost = seedData.frontmatters[index];
+			return seedPost && hasSameArchivePostContent(post, seedPost);
+		});
+
+	if (hasMatchingPrefix) {
+		return currentData;
+	}
+
+	const seededKeys = new Set(
+		seedData.frontmatters.map((post) => getPostArchiveCardKey(post)),
+	);
+
+	return {
+		totalCount: seedData.totalCount,
+		frontmatters: [
+			...seedData.frontmatters,
+			...currentData.frontmatters.filter(
+				(post) => !seededKeys.has(getPostArchiveCardKey(post)),
+			),
+		],
+	};
+}
+
+export function preferLongerArchivePageData(
 	currentData: PostArchivePageData | undefined,
 	nextData: PostArchivePageData,
 ): PostArchivePageData {
-	if (!currentData || currentData.frontmatters.length === 0) {
+	if (!currentData) {
 		return nextData;
 	}
 
-	const mergedFrontmatters = [...currentData.frontmatters];
-	const existingKeys = new Set(
-		currentData.frontmatters.map((post: FrontMatter) =>
-			getPostArchiveCardKey(post),
-		),
-	);
-
-	for (const post of nextData.frontmatters) {
-		const postKey = getPostArchiveCardKey(post);
-		if (existingKeys.has(postKey)) {
-			continue;
-		}
-
-		existingKeys.add(postKey);
-		mergedFrontmatters.push(post);
+	if (currentData.totalCount !== nextData.totalCount) {
+		return nextData;
 	}
 
-	return {
-		totalCount: nextData.totalCount,
-		frontmatters: mergedFrontmatters,
-	};
+	if (nextData.frontmatters.length >= currentData.frontmatters.length) {
+		return nextData;
+	}
+
+	return currentData;
 }
 
 export const archiveFeedCacheAtom = atom<ArchiveFeedCache>({});
 export const archiveCategoryViewStateAtom = atom<ArchiveCategoryViewStateMap>(
 	createInitialArchiveCategoryViewStateMap(),
 );
+
+export function createArchiveCategoryViewStateAtom(
+	category: PostArchiveCategoryFilter,
+) {
+	return atom(
+		(get) =>
+			getArchiveCategoryViewState(get(archiveCategoryViewStateAtom), category),
+		(get, set, nextState: SetStateAction<ArchiveCategoryViewState>) => {
+			const currentState = get(archiveCategoryViewStateAtom);
+			const currentCategoryState = getArchiveCategoryViewState(
+				currentState,
+				category,
+			);
+			const resolvedState =
+				typeof nextState === "function"
+					? nextState(currentCategoryState)
+					: nextState;
+
+			if (
+				hasSameArchiveCategoryViewState(currentCategoryState, resolvedState)
+			) {
+				return;
+			}
+
+			set(archiveCategoryViewStateAtom, {
+				...currentState,
+				[category]: resolvedState,
+			});
+		},
+	);
+}
