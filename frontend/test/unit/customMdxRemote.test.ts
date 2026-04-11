@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
@@ -9,6 +9,29 @@ import {
 	convertTableBlockToHTML,
 	transformMarkdownContent,
 } from "@/components/ui/customMdxRemote";
+
+const POSTS_ROOT = resolve(process.cwd(), "../posts");
+
+async function collectPostFiles(dirPath: string): Promise<string[]> {
+	const entries = await readdir(dirPath, { withFileTypes: true });
+	const nestedPaths = await Promise.all(
+		entries.map(async (entry) => {
+			const entryPath = resolve(dirPath, entry.name);
+
+			if (entry.isDirectory()) {
+				return collectPostFiles(entryPath);
+			}
+
+			if (entry.isFile() && entry.name.endsWith(".mdx")) {
+				return [entryPath];
+			}
+
+			return [];
+		}),
+	);
+
+	return nestedPaths.flat().sort();
+}
 
 describe("convertTableBlockToHTML", () => {
 	test("normalizes void html tags inside markdown table cells for MDX", () => {
@@ -77,5 +100,36 @@ describe("MDX regression", () => {
 				},
 			}),
 		).resolves.toBeDefined();
+	});
+
+	test("compiles every post after markdown transformation", async () => {
+		const postPaths = await collectPostFiles(POSTS_ROOT);
+		const failures: string[] = [];
+
+		for (const postPath of postPaths) {
+			const raw = await readFile(postPath, "utf8");
+			const { content, data } = matter(raw);
+			const category =
+				typeof data.category === "string" ? data.category : "code";
+			const transformed = transformMarkdownContent(content, category);
+
+			try {
+				await compileMDX({
+					source: transformed,
+					options: {
+						mdxOptions: {
+							remarkPlugins: [remarkMath],
+							rehypePlugins: [rehypeKatex],
+						},
+					},
+				});
+			} catch (error) {
+				const reason =
+					error instanceof Error ? error.message : JSON.stringify(error);
+				failures.push(`${postPath}: ${reason}`);
+			}
+		}
+
+		expect(failures).toEqual([]);
 	});
 });

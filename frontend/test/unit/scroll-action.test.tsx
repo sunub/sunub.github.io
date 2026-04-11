@@ -486,22 +486,22 @@ describe("scroll-action", () => {
 		).toEqual([
 			{
 				category: "all",
-				start: 9,
+				start: 0,
 				end: 15,
 			},
 			{
 				category: "all",
-				start: 15,
+				start: 0,
 				end: 21,
 			},
 			{
 				category: "all",
-				start: 21,
+				start: 0,
 				end: 27,
 			},
 			{
 				category: "all",
-				start: 27,
+				start: 0,
 				end: 30,
 			},
 		]);
@@ -659,7 +659,7 @@ describe("scroll-action", () => {
 			},
 			{
 				category: "code",
-				start: 9,
+				start: 0,
 				end: 15,
 			},
 		]);
