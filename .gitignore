@@ -122,3 +122,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .vscode
 posts/posts.jsonl
 ecosystem.config.cjs
+.omx/
