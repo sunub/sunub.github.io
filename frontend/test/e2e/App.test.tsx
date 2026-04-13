@@ -329,29 +329,21 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 		);
 	});
 
-	test("카테고리 필터 전환 시 선택한 패널의 첫 카드가 바로 보이는지 확인", async ({
+	test("카테고리 필터 전환 시 스크롤 점프 없이 선택한 패널 데이터로 전환되는지 확인", async ({
 		page,
 	}) => {
 		await openArchiveFromHeader(page);
-		const scrollBeforeSelect = await page.evaluate(() => window.scrollY);
+		const aiFilterButton = page.getByTestId("post-archive-filter-ai");
+		await aiFilterButton.scrollIntoViewIfNeeded();
 
-		await page.getByTestId("post-archive-filter-ai").click();
+		await aiFilterButton.click();
 
 		const firstAiCard = page.getByTestId("post-archive-card-0");
-		await expect(firstAiCard).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(aiFilterButton).toHaveAttribute("aria-pressed", "true");
 		await expect(firstAiCard).toHaveAttribute("data-card-category", "ai");
-
-		await expect
-			.poll(
-				async () => {
-					return page.evaluate(() => window.scrollY);
-				},
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [100, 250, 500],
-				},
-			)
-			.toBeLessThanOrEqual(scrollBeforeSelect + 24);
+		await expect(firstAiCard).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(aiFilterButton).toBeInViewport();
+		await expect(firstAiCard).toBeInViewport();
 	});
 
 	test("AI에서 다른 카테고리로 전환해도 짧은 리스트는 자동으로 추가 로드된다", async ({
