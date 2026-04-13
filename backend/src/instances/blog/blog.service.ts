@@ -12,7 +12,12 @@ import type {
 	PostFrontMatter,
 	PublishedPost,
 } from "@sunub/types";
-import { FrontMatterSchema, MatterTransformData } from "@sunub/types";
+import {
+	countArchiveCategories,
+	createArchiveCategoryCounts,
+	FrontMatterSchema,
+	MatterTransformData,
+} from "@sunub/types";
 import { concurrent, filter, map, pipe, take, toArray } from "@sunub/utils";
 import * as matter from "gray-matter";
 import { FileProcessor } from "./FileProcessor";
@@ -32,13 +37,8 @@ const resolvePostsRootPath = (): string => {
 	return resolvedPath ?? candidates[0];
 };
 
-const EMPTY_ARCHIVE_COUNTS: ArchiveCategoryCounts = {
-	all: 0,
-	web: 0,
-	algorithm: 0,
-	cs: 0,
-	code: 0,
-};
+const EMPTY_ARCHIVE_COUNTS: ArchiveCategoryCounts =
+	createArchiveCategoryCounts();
 
 const EMPTY_ARCHIVE_SUMMARY: ArchiveSummary = {
 	totalCount: 0,
@@ -258,17 +258,12 @@ export class BlogService implements OnModuleInit {
 	}
 
 	private buildArchiveSummary(posts: PostFrontMatter[]): ArchiveSummary {
-		const counts: ArchiveCategoryCounts = {
-			all: posts.length,
-			web: 0,
-			algorithm: 0,
-			cs: 0,
-			code: 0,
-		};
+		const counts = countArchiveCategories(
+			posts.map((post) => post.frontmatter),
+		);
 		const coveredYears = new Set<number>();
 
 		for (const post of posts) {
-			counts[post.frontmatter.category] += 1;
 			coveredYears.add(new Date(post.frontmatter.date).getFullYear());
 		}
 
