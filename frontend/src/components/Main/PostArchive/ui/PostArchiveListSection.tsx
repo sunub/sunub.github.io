@@ -5,7 +5,7 @@ import type {
 	ArchiveCategoryFilter as PostArchiveCategoryFilter,
 	PublishedPost as PostArchivePageData,
 } from "@sunub/types";
-import { useMemo } from "react";
+import { forwardRef, useImperativeHandle, useMemo } from "react";
 import type {
 	PostArchiveViewportNavigationPort,
 	PostArchiveViewportRestorePort,
@@ -26,16 +26,26 @@ type PostArchiveListSectionProps = {
 	mediaOverrides?: PostArchiveCardMediaResolver;
 };
 
-export function PostArchiveListSection({
-	initialCategory,
-	initialData,
-	summary,
-	selectedCategory,
-	restore,
-	navigation,
-	hasPendingRestore,
-	mediaOverrides,
-}: PostArchiveListSectionProps) {
+export interface PostArchiveListSectionHandle {
+	markManagedScroll: () => void;
+}
+
+export const PostArchiveListSection = forwardRef<
+	PostArchiveListSectionHandle,
+	PostArchiveListSectionProps
+>(function PostArchiveListSection(
+	{
+		initialCategory,
+		initialData,
+		summary,
+		selectedCategory,
+		restore,
+		navigation,
+		hasPendingRestore,
+		mediaOverrides,
+	},
+	ref,
+) {
 	const resolvedCounts = useMemo(
 		() => ({
 			...summary.counts,
@@ -61,6 +71,14 @@ export function PostArchiveListSection({
 		navigation,
 	});
 
+	useImperativeHandle(
+		ref,
+		() => ({
+			markManagedScroll: viewportController.scroll.markManagedScroll,
+		}),
+		[viewportController.scroll.markManagedScroll],
+	);
+
 	return (
 		<PostArchiveListView
 			viewport={viewportController}
@@ -68,4 +86,4 @@ export function PostArchiveListSection({
 			mediaOverrides={mediaOverrides}
 		/>
 	);
-}
+});

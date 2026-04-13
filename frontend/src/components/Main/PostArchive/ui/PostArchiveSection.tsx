@@ -5,12 +5,16 @@ import type {
 	ArchiveCategoryFilter as PostArchiveCategoryFilter,
 	PublishedPost as PostArchivePageData,
 } from "@sunub/types";
+import { useCallback, useRef } from "react";
 import { useArchiveViewState } from "../hooks/useArchiveViewState";
 import { ArchiveSectionRoot } from "../style";
 import type { PostArchiveCardMediaResolver } from "../types";
 import { PostArchiveFilterPanel } from "./PostArchiveFilterPanel";
 import { PostArchiveHeader } from "./PostArchiveHeader";
-import { PostArchiveListSection } from "./PostArchiveListSection";
+import {
+	PostArchiveListSection,
+	type PostArchiveListSectionHandle,
+} from "./PostArchiveListSection";
 
 export function PostArchiveSection({
 	initialCategory = "all",
@@ -30,6 +34,10 @@ export function PostArchiveSection({
 	mediaOverrides?: PostArchiveCardMediaResolver;
 }) {
 	const archiveViewState = useArchiveViewState(initialCategory);
+	const archiveListRef = useRef<PostArchiveListSectionHandle | null>(null);
+	const handleMarkManagedScroll = useCallback(() => {
+		archiveListRef.current?.markManagedScroll();
+	}, []);
 
 	return (
 		<ArchiveSectionRoot data-testid="post-archive-section">
@@ -43,9 +51,11 @@ export function PostArchiveSection({
 				selectedCategory={archiveViewState.selectedCategory}
 				setSelectedCategory={archiveViewState.setSelectedCategory}
 				summary={summary}
+				markManagedScroll={handleMarkManagedScroll}
 			/>
 
 			<PostArchiveListSection
+				ref={archiveListRef}
 				initialCategory={initialCategory}
 				initialData={initialData}
 				summary={summary}

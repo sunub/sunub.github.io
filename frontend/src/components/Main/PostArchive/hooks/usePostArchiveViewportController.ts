@@ -42,6 +42,9 @@ export interface PostArchiveViewportControllerState {
 	navigation: {
 		handleCardNavigate: (post: FrontMatter, index: number) => void;
 	};
+	scroll: {
+		markManagedScroll: () => void;
+	};
 }
 
 export function usePostArchiveViewportController({
@@ -133,6 +136,9 @@ export function usePostArchiveViewportController({
 		},
 		navigation: {
 			handleCardNavigate,
+		},
+		scroll: {
+			markManagedScroll: scrollGate.markManagedScroll,
 		},
 	};
 }
