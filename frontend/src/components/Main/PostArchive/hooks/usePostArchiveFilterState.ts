@@ -1,5 +1,9 @@
 "use client";
 
+import type {
+	ArchiveSummary,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+} from "@sunub/types";
 import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
 import {
 	type Dispatch,
@@ -7,7 +11,34 @@ import {
 	useCallback,
 	useTransition,
 } from "react";
-import type { ArchiveSummary, PostArchiveCategoryFilter } from "../types";
+
+const ARCHIVE_LIST_SELECTOR = '[data-testid="post-archive-list"]';
+const ARCHIVE_LIST_SCROLL_OFFSET_PX = 24;
+
+function scrollArchiveListIntoView() {
+	const archiveList = document.querySelector<HTMLElement>(
+		ARCHIVE_LIST_SELECTOR,
+	);
+	if (!archiveList) {
+		window.scrollTo({
+			top: 0,
+			behavior: "auto",
+		});
+		return;
+	}
+
+	const nextTop = Math.max(
+		0,
+		window.scrollY +
+			archiveList.getBoundingClientRect().top -
+			ARCHIVE_LIST_SCROLL_OFFSET_PX,
+	);
+
+	window.scrollTo({
+		top: nextTop,
+		behavior: "auto",
+	});
+}
 
 export function usePostArchiveFilterState({
 	selectedCategory,
@@ -36,10 +67,7 @@ export function usePostArchiveFilterState({
 			}
 
 			markManagedScroll();
-			window.scrollTo({
-				top: 0,
-				behavior: "auto",
-			});
+			scrollArchiveListIntoView();
 
 			startFilterTransition(() => {
 				setSelectedCategory(nextCategory);

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ArchiveCategoryFilter as PostArchiveCategoryFilter } from "@sunub/types";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
 	type SetStateAction,
@@ -13,7 +14,6 @@ import {
 	createArchiveCategoryViewStateAtom,
 	normalizeArchiveVisibleCount,
 } from "../store/archive.atom";
-import type { PostArchiveCategoryFilter } from "../types";
 import {
 	hasArchiveRestoreAnchor,
 	type PersistedPostArchiveViewState,

@@ -1,6 +1,13 @@
 "use client";
 
-import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
+import {
+	ARCHIVE_CATEGORY_OPTIONS,
+	type ArchiveSummary,
+	type ArchiveCategoryFilter as PostArchiveCategoryFilter,
+} from "@sunub/types";
+import type { Dispatch, SetStateAction } from "react";
+import { memo } from "react";
+import { usePostArchiveFilterState } from "../hooks/usePostArchiveFilterState";
 import {
 	ArchiveContentRail,
 	ArchiveFilterBar,
@@ -9,35 +16,39 @@ import {
 	ArchiveFilterLabel,
 	ArchiveMeta,
 } from "../style";
-import type { ArchiveSummary, PostArchiveCategoryFilter } from "../types";
 
-export function PostArchiveFilterPanel({
+export const PostArchiveFilterPanel = memo(function PostArchiveFilterPanel({
 	selectedCategory,
-	isFilterPending,
-	archiveMeta,
-	counts,
-	onSelectCategory,
+	setSelectedCategory,
+	summary,
+	markManagedScroll,
 }: {
 	selectedCategory: PostArchiveCategoryFilter;
-	isFilterPending: boolean;
-	archiveMeta: string;
-	counts: ArchiveSummary["counts"];
-	onSelectCategory: (nextCategory: PostArchiveCategoryFilter) => void;
+	setSelectedCategory: Dispatch<SetStateAction<PostArchiveCategoryFilter>>;
+	summary: ArchiveSummary;
+	markManagedScroll: () => void;
 }) {
+	const filterState = usePostArchiveFilterState({
+		selectedCategory,
+		setSelectedCategory,
+		summary,
+		markManagedScroll,
+	});
+
 	return (
 		<>
 			<ArchiveContentRail>
-				<ArchiveFilterBar aria-busy={isFilterPending}>
+				<ArchiveFilterBar aria-busy={filterState.isFilterPending}>
 					{ARCHIVE_CATEGORY_OPTIONS.map((option) => {
-						const isActive = selectedCategory === option.value;
+						const isActive = filterState.selectedCategory === option.value;
 
 						return (
 							<ArchiveFilterButton
 								key={option.value}
 								type="button"
 								$active={isActive}
-								$pending={isFilterPending && !isActive}
-								onClick={() => onSelectCategory(option.value)}
+								$pending={filterState.isFilterPending && !isActive}
+								onClick={() => filterState.handleSelectCategory(option.value)}
 								aria-pressed={isActive}
 								data-testid={`post-archive-filter-${option.value}`}
 							>
@@ -45,7 +56,7 @@ export function PostArchiveFilterPanel({
 								<ArchiveFilterCount
 									data-testid={`post-archive-filter-count-${option.value}`}
 								>
-									{counts[option.value]}
+									{summary.counts[option.value]}
 								</ArchiveFilterCount>
 							</ArchiveFilterButton>
 						);
@@ -54,8 +65,8 @@ export function PostArchiveFilterPanel({
 			</ArchiveContentRail>
 
 			<ArchiveContentRail>
-				<ArchiveMeta>{archiveMeta}</ArchiveMeta>
+				<ArchiveMeta>{filterState.archiveMeta}</ArchiveMeta>
 			</ArchiveContentRail>
 		</>
 	);
-}
+});

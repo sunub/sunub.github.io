@@ -1,5 +1,6 @@
 "use client";
 
+import type { ArchiveCategoryFilter as PostArchiveCategoryFilter } from "@sunub/types";
 import {
 	useCallback,
 	useEffect,
@@ -7,7 +8,6 @@ import {
 	useRef,
 	useState,
 } from "react";
-import type { PostArchiveCategoryFilter } from "../types";
 import type { PostArchiveScrollGateState } from "./postArchiveViewportPorts";
 
 const MANAGED_SCROLL_LOCK_MS = 160;

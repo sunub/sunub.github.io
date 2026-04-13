@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
 	ArchiveSectionDescription,
 	ArchiveSectionEyebrow,
@@ -5,7 +6,7 @@ import {
 	ArchiveSectionTitle,
 } from "../style";
 
-export function PostArchiveHeader({
+export const PostArchiveHeader = memo(function PostArchiveHeader({
 	eyebrow,
 	title,
 	description,
@@ -21,4 +22,4 @@ export function PostArchiveHeader({
 			<ArchiveSectionDescription>{description}</ArchiveSectionDescription>
 		</ArchiveSectionHeader>
 	);
-}
+});

@@ -1,10 +1,12 @@
 "use client";
 
-import type { FrontMatter } from "@sunub/types";
+import type {
+	FrontMatter,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+} from "@sunub/types";
 import type { RefObject } from "react";
 import { useCallback } from "react";
 import { useRangeLoadMoreEffect } from "../../NewestPostList/hooks/useRangeLoadMoreEffect";
-import type { PostArchiveCategoryFilter } from "../types";
 import {
 	getPostArchiveCardKey,
 	POST_ARCHIVE_ESTIMATED_ROW_HEIGHT,

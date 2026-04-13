@@ -1,12 +1,12 @@
 "use client";
 
-import type { SetStateAction } from "react";
-import { useCallback, useMemo } from "react";
 import type {
 	ArchiveCategoryCounts,
-	PostArchiveCategoryFilter,
-	PostArchivePageData,
-} from "../types";
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+	PublishedPost as PostArchivePageData,
+} from "@sunub/types";
+import type { SetStateAction } from "react";
+import { useCallback, useMemo } from "react";
 import { POST_ARCHIVE_LOAD_MORE_COUNT } from "../utils";
 import type { PostArchiveViewportFeedPort } from "./postArchiveViewportPorts";
 import { useArchiveFeed } from "./useArchiveFeed";
@@ -53,6 +53,7 @@ export function usePostArchiveDataController({
 		selectedCategory,
 		visibleCount,
 	});
+
 	const safeVisibleCount = Math.min(visibleCount, totalCount);
 	const visiblePosts = useMemo(
 		() => posts.slice(0, Math.min(safeVisibleCount, posts.length)),

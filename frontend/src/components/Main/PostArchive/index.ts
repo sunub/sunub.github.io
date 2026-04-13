@@ -1,12 +1,14 @@
 export type {
 	ArchiveCategoryCounts,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+	ArchiveCategoryOption as PostArchiveCategoryOption,
 	ArchiveSummary,
+	PublishedPost as PostArchivePageData,
+} from "@sunub/types";
+export type {
 	PostArchiveCardMedia,
 	PostArchiveCardMediaOverrideMap,
 	PostArchiveCardMediaResolver,
-	PostArchiveCategoryFilter,
-	PostArchiveCategoryOption,
-	PostArchivePageData,
 	PostArchiveRowData,
 } from "./types";
 export { PostArchiveCard } from "./ui/PostArchiveCard";

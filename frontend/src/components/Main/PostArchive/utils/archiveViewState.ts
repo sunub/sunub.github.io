@@ -1,6 +1,8 @@
 import { ROUTE_QUERY_PARAMS } from "@sunub/contracts";
-import type { FrontMatter } from "@sunub/types";
-import type { PostArchiveCategoryFilter } from "../types";
+import type {
+	FrontMatter,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+} from "@sunub/types";
 import {
 	POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
 	POST_ARCHIVE_LOAD_MORE_COUNT,

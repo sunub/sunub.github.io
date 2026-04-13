@@ -1,5 +1,10 @@
 "use client";
 
+import type {
+	ArchiveCategoryCounts,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+	PublishedPost as PostArchivePageData,
+} from "@sunub/types";
 import { atom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getArchivePostsInRange } from "../api/archive";
@@ -8,11 +13,6 @@ import {
 	preferLongerArchivePageData,
 	syncArchiveSeedData,
 } from "../store/archive.atom";
-import type {
-	ArchiveCategoryCounts,
-	PostArchiveCategoryFilter,
-	PostArchivePageData,
-} from "../types";
 
 const LOAD_MORE_ERROR_MESSAGE =
 	"추가 아카이브 포스트를 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.";

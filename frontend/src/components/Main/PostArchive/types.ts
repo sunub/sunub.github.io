@@ -1,21 +1,4 @@
-import type {
-	ArchiveCategoryCounts,
-	ArchiveCategoryFilter,
-	ArchiveCategoryOption,
-	ArchiveSummary,
-	FrontMatter,
-	PublishedPost,
-} from "@sunub/types";
-
-export type {
-	ArchiveCategoryCounts,
-	ArchiveCategoryFilter,
-	ArchiveCategoryOption,
-	ArchiveSummary,
-};
-export type PostArchiveCategoryFilter = ArchiveCategoryFilter;
-export type PostArchiveCategoryOption = ArchiveCategoryOption;
-export type PostArchivePageData = PublishedPost;
+import type { FrontMatter } from "@sunub/types";
 
 export interface PostArchiveCardMedia {
 	src: string;

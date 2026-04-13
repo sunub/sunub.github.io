@@ -1,8 +1,11 @@
-import type { FrontMatter } from "@sunub/types";
+import type {
+	FrontMatter,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+	PublishedPost as PostArchivePageData,
+} from "@sunub/types";
 import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
 import { atom } from "jotai";
 import type { SetStateAction } from "react";
-import type { PostArchiveCategoryFilter, PostArchivePageData } from "../types";
 import {
 	getPostArchiveCardKey,
 	POST_ARCHIVE_INITIAL_VISIBLE_COUNT,

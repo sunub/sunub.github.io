@@ -1,6 +1,9 @@
 "use client";
 
-import type { FrontMatter } from "@sunub/types";
+import type {
+	FrontMatter,
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+} from "@sunub/types";
 import {
 	type RefObject,
 	useEffect,
@@ -12,7 +15,6 @@ import {
 import { useWindowedRange } from "../../NewestPostList/hooks/useWindowedRange";
 import type { VirtualScrollConfig } from "../../NewestPostList/types/windowedRange";
 import { createVirtualScrollConfig } from "../../NewestPostList/utils/virtualListUtils";
-import type { PostArchiveCategoryFilter } from "../types";
 import {
 	chunkPostsIntoRows,
 	getPostArchiveColumnCount,

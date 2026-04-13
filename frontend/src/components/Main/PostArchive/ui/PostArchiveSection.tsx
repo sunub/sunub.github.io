@@ -1,20 +1,20 @@
 "use client";
 
-import { useMemo } from "react";
-import { useArchiveViewState } from "../hooks/useArchiveViewState";
-import { usePostArchiveDataController } from "../hooks/usePostArchiveDataController";
-import { usePostArchiveFilterState } from "../hooks/usePostArchiveFilterState";
-import { usePostArchiveViewportController } from "../hooks/usePostArchiveViewportController";
-import { ArchiveSectionRoot } from "../style";
 import type {
 	ArchiveSummary,
-	PostArchiveCardMediaResolver,
-	PostArchiveCategoryFilter,
-	PostArchivePageData,
-} from "../types";
+	ArchiveCategoryFilter as PostArchiveCategoryFilter,
+	PublishedPost as PostArchivePageData,
+} from "@sunub/types";
+import { useCallback, useRef } from "react";
+import { useArchiveViewState } from "../hooks/useArchiveViewState";
+import { ArchiveSectionRoot } from "../style";
+import type { PostArchiveCardMediaResolver } from "../types";
 import { PostArchiveFilterPanel } from "./PostArchiveFilterPanel";
 import { PostArchiveHeader } from "./PostArchiveHeader";
-import { PostArchiveListView } from "./PostArchiveList";
+import {
+	PostArchiveListSection,
+	type PostArchiveListSectionHandle,
+} from "./PostArchiveListSection";
 
 export function PostArchiveSection({
 	initialCategory = "all",
@@ -34,37 +34,10 @@ export function PostArchiveSection({
 	mediaOverrides?: PostArchiveCardMediaResolver;
 }) {
 	const archiveViewState = useArchiveViewState(initialCategory);
-	const resolvedCounts = useMemo(
-		() => ({
-			...summary.counts,
-			all: summary.totalCount, // summary.totalCount를 항상 all로 사용
-		}),
-		[summary.counts, summary.totalCount],
-	);
-
-	const dataController = usePostArchiveDataController({
-		initialCategory,
-		initialData,
-		counts: resolvedCounts,
-		selectedCategory: archiveViewState.selectedCategory,
-		visibleCount: archiveViewState.visibleCount,
-		setVisibleCount: archiveViewState.setVisibleCount,
-	});
-
-	const viewportController = usePostArchiveViewportController({
-		category: archiveViewState.selectedCategory,
-		feed: dataController.viewportFeed,
-		hasPendingRestore: archiveViewState.pendingRestore !== null,
-		restore: archiveViewState.viewportRestore,
-		navigation: archiveViewState.viewportNavigation,
-	});
-
-	const filterState = usePostArchiveFilterState({
-		selectedCategory: archiveViewState.selectedCategory,
-		setSelectedCategory: archiveViewState.setSelectedCategory,
-		summary,
-		markManagedScroll: viewportController.scroll.markManagedScroll,
-	});
+	const archiveListRef = useRef<PostArchiveListSectionHandle | null>(null);
+	const handleMarkManagedScroll = useCallback(() => {
+		archiveListRef.current?.markManagedScroll();
+	}, []);
 
 	return (
 		<ArchiveSectionRoot data-testid="post-archive-section">
@@ -75,16 +48,21 @@ export function PostArchiveSection({
 			/>
 
 			<PostArchiveFilterPanel
-				selectedCategory={filterState.selectedCategory}
-				isFilterPending={filterState.isFilterPending}
-				archiveMeta={filterState.archiveMeta}
-				counts={summary.counts}
-				onSelectCategory={filterState.handleSelectCategory}
+				selectedCategory={archiveViewState.selectedCategory}
+				setSelectedCategory={archiveViewState.setSelectedCategory}
+				summary={summary}
+				markManagedScroll={handleMarkManagedScroll}
 			/>
 
-			<PostArchiveListView
-				viewport={viewportController}
-				feed={dataController}
+			<PostArchiveListSection
+				ref={archiveListRef}
+				initialCategory={initialCategory}
+				initialData={initialData}
+				summary={summary}
+				selectedCategory={archiveViewState.selectedCategory}
+				restore={archiveViewState.viewportRestore}
+				navigation={archiveViewState.viewportNavigation}
+				hasPendingRestore={archiveViewState.pendingRestore !== null}
 				mediaOverrides={mediaOverrides}
 			/>
 		</ArchiveSectionRoot>
