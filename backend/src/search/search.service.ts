@@ -19,6 +19,7 @@ const CATEGORY_SEARCH_TERMS: Record<PostCategory, string[]> = {
 	web: ["web", "웹"],
 	algorithm: ["algorithm", "알고리즘"],
 	code: ["code", "코드"],
+	ai: ["ai", "artificial intelligence", "인공지능"],
 	cs: [
 		"cs",
 		"computer science",

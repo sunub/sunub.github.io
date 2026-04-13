@@ -1,6 +1,10 @@
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
-import type { PostFrontMatter } from "@sunub/types";
+import {
+	type ArchiveCategoryFilter,
+	createArchiveCategoryCounts,
+	type PostFrontMatter,
+} from "@sunub/types";
 import * as request from "supertest";
 import { AppModule } from "./app.module";
 import { BlogService } from "./instances/blog/blog.service";
@@ -67,21 +71,16 @@ describe("Backend API", () => {
 					totalCount: posts.length,
 					coveredYears: 1,
 					counts: {
-						all: posts.length,
+						...createArchiveCategoryCounts(posts.length),
 						web: 1,
 						algorithm: 1,
 						code: 1,
-						cs: 0,
 					},
 				}),
 				getArchivePostsInRange: jest
 					.fn()
 					.mockImplementation(
-						(
-							category: "all" | "web" | "algorithm" | "code" | "cs",
-							start: number,
-							end: number,
-						) => {
+						(category: ArchiveCategoryFilter, start: number, end: number) => {
 							const filteredPosts =
 								category === "all"
 									? posts
@@ -185,11 +184,10 @@ describe("Backend API", () => {
 			totalCount: posts.length,
 			coveredYears: 1,
 			counts: {
-				all: posts.length,
+				...createArchiveCategoryCounts(posts.length),
 				web: 1,
 				algorithm: 1,
 				code: 1,
-				cs: 0,
 			},
 		});
 	});
