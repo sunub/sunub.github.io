@@ -5,6 +5,7 @@ import type {
 	PublishedPost,
 	StaticPostIndex,
 } from "@sunub/types";
+import { createArchiveCategoryCounts } from "@sunub/types";
 
 const EMPTY_PUBLISHED_POST: PublishedPost = {
 	totalCount: 0,
@@ -14,13 +15,7 @@ const EMPTY_PUBLISHED_POST: PublishedPost = {
 const EMPTY_ARCHIVE_SUMMARY: ArchiveSummary = {
 	totalCount: 0,
 	coveredYears: 0,
-	counts: {
-		all: 0,
-		algorithm: 0,
-		code: 0,
-		cs: 0,
-		web: 0,
-	},
+	counts: createArchiveCategoryCounts(),
 };
 
 function normalizeRange(start: number, end: number) {

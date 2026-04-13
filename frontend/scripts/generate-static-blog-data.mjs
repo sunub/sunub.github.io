@@ -4,6 +4,7 @@ import { dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
 	ArchiveSummarySchema,
+	countArchiveCategories,
 	FrontMatterSchema,
 	PostFrontMatterSchema,
 	StaticPostIndexSchema,
@@ -15,14 +16,6 @@ import { extractSearchableContent } from "../src/shared/search/searchCore.js";
 const FRONTEND_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REPO_ROOT = resolve(FRONTEND_ROOT, "..");
 const PUBLIC_DATA_ROOT = resolve(FRONTEND_ROOT, "public/data");
-
-const EMPTY_COUNTS = {
-	all: 0,
-	algorithm: 0,
-	code: 0,
-	cs: 0,
-	web: 0,
-};
 
 function resolvePostsRootPath() {
 	const configuredPath = process.env.BLOG_POSTS_PATH?.trim();
@@ -81,11 +74,10 @@ function comparePostsByDateDesc(left, right) {
 }
 
 function createArchiveSummary(posts) {
-	const counts = { ...EMPTY_COUNTS, all: posts.length };
+	const counts = countArchiveCategories(posts.map((post) => post.frontmatter));
 	const coveredYears = new Set();
 
 	for (const post of posts) {
-		counts[post.frontmatter.category] += 1;
 		coveredYears.add(new Date(post.frontmatter.date).getFullYear());
 	}
 

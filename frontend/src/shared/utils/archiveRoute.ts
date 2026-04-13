@@ -1,4 +1,4 @@
-const ARCHIVE_PATH = "/archive";
+import { SITE_PATHS } from "@sunub/contracts";
 
 export const ARCHIVE_TOP_ID = "archive-top";
-export const ARCHIVE_TOP_HREF = `${ARCHIVE_PATH}`;
+export const ARCHIVE_TOP_HREF = SITE_PATHS.archive;
