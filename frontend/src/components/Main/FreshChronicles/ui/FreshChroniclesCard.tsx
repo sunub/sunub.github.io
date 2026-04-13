@@ -1,6 +1,7 @@
 import type { FrontMatter } from "@sunub/types";
-import { ArrowRight, Binary, Boxes, Cpu, Globe2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { createPostCardCssVariables } from "@/components/Main/shared/postCardTheme";
+import { getCategoryIcon } from "@/shared/utils/icons";
 import { getPostDetailHref } from "@/shared/utils/postRoute";
 import {
 	CardAction,
@@ -32,19 +33,6 @@ function formatDate(date: FrontMatter["date"]) {
 		month: "long",
 		day: "numeric",
 	}).format(new Date(date));
-}
-
-function getCategoryIcon(category: FrontMatter["category"]) {
-	switch (category) {
-		case "algorithm":
-			return Binary;
-		case "cs":
-			return Cpu;
-		case "web":
-			return Globe2;
-		default:
-			return Boxes;
-	}
 }
 
 function DefaultFreshChroniclesCardMedia({

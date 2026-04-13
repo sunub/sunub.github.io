@@ -26,6 +26,10 @@ const POST_CARD_CATEGORY_THEME: Record<
 		accent: "oklch(76% 0.17 82)",
 		visualSurface: "var(--post-card-algorithm-visual-surface)",
 	},
+	ai: {
+		accent: "oklch(0.7222 0.1 324)",
+		visualSurface: "var(--post-card-ai-visual-surface)",
+	},
 };
 
 export function createPostCardCssVariables(post: FrontMatter): CSSProperties {
