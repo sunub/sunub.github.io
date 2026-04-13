@@ -12,44 +12,14 @@ import {
 	useTransition,
 } from "react";
 
-const ARCHIVE_LIST_SELECTOR = '[data-testid="post-archive-list"]';
-const ARCHIVE_LIST_SCROLL_OFFSET_PX = 24;
-
-function scrollArchiveListIntoView() {
-	const archiveList = document.querySelector<HTMLElement>(
-		ARCHIVE_LIST_SELECTOR,
-	);
-	if (!archiveList) {
-		window.scrollTo({
-			top: 0,
-			behavior: "auto",
-		});
-		return;
-	}
-
-	const nextTop = Math.max(
-		0,
-		window.scrollY +
-			archiveList.getBoundingClientRect().top -
-			ARCHIVE_LIST_SCROLL_OFFSET_PX,
-	);
-
-	window.scrollTo({
-		top: nextTop,
-		behavior: "auto",
-	});
-}
-
 export function usePostArchiveFilterState({
 	selectedCategory,
 	setSelectedCategory,
 	summary,
-	markManagedScroll,
 }: {
 	selectedCategory: PostArchiveCategoryFilter;
 	setSelectedCategory: Dispatch<SetStateAction<PostArchiveCategoryFilter>>;
 	summary: ArchiveSummary;
-	markManagedScroll: () => void;
 }) {
 	const [isFilterPending, startFilterTransition] = useTransition();
 	const selectedCategoryOption = ARCHIVE_CATEGORY_OPTIONS.find(
@@ -66,14 +36,11 @@ export function usePostArchiveFilterState({
 				return;
 			}
 
-			markManagedScroll();
-			scrollArchiveListIntoView();
-
 			startFilterTransition(() => {
 				setSelectedCategory(nextCategory);
 			});
 		},
-		[markManagedScroll, selectedCategory, setSelectedCategory],
+		[selectedCategory, setSelectedCategory],
 	);
 
 	return {

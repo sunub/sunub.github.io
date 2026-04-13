@@ -85,6 +85,7 @@ export function usePostArchiveViewportLayout({
 		() => chunkPostsIntoRows(visiblePosts, columnCount),
 		[columnCount, visiblePosts],
 	);
+	const layoutVersion = `${columnCount}:${selectedCategory}:${visiblePosts.length}`;
 	const preloadThresholdPx = getPostArchiveLoadMoreViewportThresholdPx();
 	const preloadReservePx =
 		getPostArchiveLoadMoreTriggerDistancePx(preloadThresholdPx);
@@ -106,15 +107,21 @@ export function usePostArchiveViewportLayout({
 		registerItemElement,
 		remainingPx,
 	} = useWindowedRange(listRef, rows.length, rangeConfig);
+	const [isInitialLayoutReady, setIsInitialLayoutReady] = useState(false);
 
 	const archiveRemainingPx = useMemo(() => {
 		if (rangeConfig.enabled) {
 			return remainingPx;
 		}
+
+		if (!isInitialLayoutReady) {
+			return Number.POSITIVE_INFINITY;
+		}
+
 		// scrollSignal is used to force re-calculation when scrolling
 		void scrollSignal;
 		return getPostArchiveRemainingDistancePx(listRef.current);
-	}, [rangeConfig.enabled, remainingPx, scrollSignal]);
+	}, [isInitialLayoutReady, rangeConfig.enabled, remainingPx, scrollSignal]);
 
 	const renderedRows = useMemo(() => {
 		if (!rangeConfig.enabled) {
@@ -150,10 +157,7 @@ export function usePostArchiveViewportLayout({
 		],
 	);
 
-	const [isInitialLayoutReady, setIsInitialLayoutReady] = useState(false);
-
 	useEffect(() => {
-		const layoutVersion = `${columnCount}:${selectedCategory}:${visiblePosts.length}`;
 		setIsInitialLayoutReady(false);
 
 		const frameId = window.requestAnimationFrame(() => {
@@ -165,7 +169,7 @@ export function usePostArchiveViewportLayout({
 		return () => {
 			window.cancelAnimationFrame(frameId);
 		};
-	}, [columnCount, selectedCategory, visiblePosts.length]);
+	}, [layoutVersion]);
 
 	return {
 		listRef,

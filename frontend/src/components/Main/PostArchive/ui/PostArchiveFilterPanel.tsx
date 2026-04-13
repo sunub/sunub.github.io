@@ -21,18 +21,15 @@ export const PostArchiveFilterPanel = memo(function PostArchiveFilterPanel({
 	selectedCategory,
 	setSelectedCategory,
 	summary,
-	markManagedScroll,
 }: {
 	selectedCategory: PostArchiveCategoryFilter;
 	setSelectedCategory: Dispatch<SetStateAction<PostArchiveCategoryFilter>>;
 	summary: ArchiveSummary;
-	markManagedScroll: () => void;
 }) {
 	const filterState = usePostArchiveFilterState({
 		selectedCategory,
 		setSelectedCategory,
 		summary,
-		markManagedScroll,
 	});
 
 	return (

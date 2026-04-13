@@ -5,7 +5,7 @@ import type {
 	ArchiveCategoryFilter as PostArchiveCategoryFilter,
 	PublishedPost as PostArchivePageData,
 } from "@sunub/types";
-import { forwardRef, useImperativeHandle, useMemo } from "react";
+import { useMemo } from "react";
 import type {
 	PostArchiveViewportNavigationPort,
 	PostArchiveViewportRestorePort,
@@ -15,35 +15,27 @@ import { usePostArchiveViewportController } from "../hooks/usePostArchiveViewpor
 import type { PostArchiveCardMediaResolver } from "../types";
 import { PostArchiveListView } from "./PostArchiveList";
 
-export interface PostArchiveListSectionHandle {
-	markManagedScroll: () => void;
-}
+type PostArchiveListSectionProps = {
+	initialCategory: PostArchiveCategoryFilter;
+	initialData: PostArchivePageData;
+	summary: ArchiveSummary;
+	selectedCategory: PostArchiveCategoryFilter;
+	restore: PostArchiveViewportRestorePort;
+	navigation: PostArchiveViewportNavigationPort;
+	hasPendingRestore: boolean;
+	mediaOverrides?: PostArchiveCardMediaResolver;
+};
 
-export const PostArchiveListSection = forwardRef<
-	PostArchiveListSectionHandle,
-	{
-		initialCategory: PostArchiveCategoryFilter;
-		initialData: PostArchivePageData;
-		summary: ArchiveSummary;
-		selectedCategory: PostArchiveCategoryFilter;
-		restore: PostArchiveViewportRestorePort;
-		navigation: PostArchiveViewportNavigationPort;
-		hasPendingRestore: boolean;
-		mediaOverrides?: PostArchiveCardMediaResolver;
-	}
->(function PostArchiveListSection(
-	{
-		initialCategory,
-		initialData,
-		summary,
-		selectedCategory,
-		restore,
-		navigation,
-		hasPendingRestore,
-		mediaOverrides,
-	},
-	ref,
-) {
+export function PostArchiveListSection({
+	initialCategory,
+	initialData,
+	summary,
+	selectedCategory,
+	restore,
+	navigation,
+	hasPendingRestore,
+	mediaOverrides,
+}: PostArchiveListSectionProps) {
 	const resolvedCounts = useMemo(
 		() => ({
 			...summary.counts,
@@ -69,14 +61,6 @@ export const PostArchiveListSection = forwardRef<
 		navigation,
 	});
 
-	useImperativeHandle(
-		ref,
-		() => ({
-			markManagedScroll: viewportController.scroll.markManagedScroll,
-		}),
-		[viewportController.scroll.markManagedScroll],
-	);
-
 	return (
 		<PostArchiveListView
 			viewport={viewportController}
@@ -84,4 +68,4 @@ export const PostArchiveListSection = forwardRef<
 			mediaOverrides={mediaOverrides}
 		/>
 	);
-});
+}

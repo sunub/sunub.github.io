@@ -2,7 +2,8 @@ export function shouldBootstrapPostArchiveLoad({
 	hasPendingRestore,
 	hasUserScrolled,
 	isInitialLayoutReady,
-	scrollOffsetY,
+	listTopOffsetPx,
+	viewportHeightPx,
 	listHeightPx,
 	remainingPx,
 	preloadReservePx,
@@ -10,7 +11,8 @@ export function shouldBootstrapPostArchiveLoad({
 	hasPendingRestore: boolean;
 	hasUserScrolled: boolean;
 	isInitialLayoutReady: boolean;
-	scrollOffsetY: number;
+	listTopOffsetPx: number;
+	viewportHeightPx: number;
 	listHeightPx: number;
 	remainingPx: number;
 	preloadReservePx: number;
@@ -19,7 +21,7 @@ export function shouldBootstrapPostArchiveLoad({
 		!hasPendingRestore &&
 		!hasUserScrolled &&
 		isInitialLayoutReady &&
-		scrollOffsetY <= 1 &&
+		listTopOffsetPx < viewportHeightPx &&
 		listHeightPx > 0 &&
 		remainingPx <= preloadReservePx
 	);

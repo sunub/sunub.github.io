@@ -42,9 +42,6 @@ export interface PostArchiveViewportControllerState {
 	navigation: {
 		handleCardNavigate: (post: FrontMatter, index: number) => void;
 	};
-	scroll: {
-		markManagedScroll: () => void;
-	};
 }
 
 export function usePostArchiveViewportController({
@@ -82,7 +79,10 @@ export function usePostArchiveViewportController({
 		hasPendingRestore,
 		hasUserScrolled: scrollGate.hasUserScrolled,
 		isInitialLayoutReady: layout.isInitialLayoutReady,
-		scrollOffsetY: typeof window === "undefined" ? 0 : window.scrollY,
+		listTopOffsetPx:
+			layout.listRef.current?.getBoundingClientRect().top ??
+			Number.POSITIVE_INFINITY,
+		viewportHeightPx: typeof window === "undefined" ? 0 : window.innerHeight,
 		listHeightPx: layout.listRef.current?.getBoundingClientRect().height ?? 0,
 		remainingPx: layout.remainingPx,
 		preloadReservePx: layout.preloadReservePx,
@@ -133,9 +133,6 @@ export function usePostArchiveViewportController({
 		},
 		navigation: {
 			handleCardNavigate,
-		},
-		scroll: {
-			markManagedScroll: scrollGate.markManagedScroll,
 		},
 	};
 }
