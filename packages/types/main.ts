@@ -1,16 +1,22 @@
 import { z } from "zod";
 
-export const PostCategorySchema = z.union([
-	z.literal("web"),
-	z.literal("algorithm"),
-	z.literal("cs"),
-	z.literal("code"),
-]);
+export const POST_CATEGORY_VALUES = [
+	"web",
+	"algorithm",
+	"cs",
+	"code",
+	"ai",
+] as const;
 
-export const ArchiveCategoryFilterSchema = z.union([
-	z.literal("all"),
-	PostCategorySchema,
-]);
+export const ARCHIVE_CATEGORY_FILTER_VALUES = [
+	"all",
+	...POST_CATEGORY_VALUES,
+] as const;
+
+export const PostCategorySchema = z.enum(POST_CATEGORY_VALUES);
+export const ArchiveCategoryFilterSchema = z.enum(
+	ARCHIVE_CATEGORY_FILTER_VALUES,
+);
 
 export const DateStringSchema = z.union([z.string(), z.date()]);
 
@@ -54,6 +60,7 @@ export const JsonPostFrontMatterSchema = z.object({
 	algorithm: z.array(PostFrontMatterSchema),
 	code: z.array(PostFrontMatterSchema),
 	cs: z.array(PostFrontMatterSchema),
+	ai: z.array(PostFrontMatterSchema),
 });
 
 export const PublishedPostSchema = z.object({
@@ -67,7 +74,47 @@ export const ArchiveCategoryCountsSchema = z.object({
 	algorithm: z.number(),
 	code: z.number(),
 	cs: z.number(),
+	ai: z.number(),
 });
+
+export interface ArchiveCategoryOption {
+	value: ArchiveCategoryFilter;
+	label: string;
+	description: string;
+}
+
+export const ARCHIVE_CATEGORY_OPTIONS = [
+	{
+		value: "all",
+		label: "All Posts",
+		description: "모든 카테고리",
+	},
+	{
+		value: "web",
+		label: "Web",
+		description: "브라우저와 렌더링",
+	},
+	{
+		value: "code",
+		label: "Code",
+		description: "개발 경험과 구현",
+	},
+	{
+		value: "cs",
+		label: "CS",
+		description: "컴퓨터 과학 기초",
+	},
+	{
+		value: "algorithm",
+		label: "Algorithm",
+		description: "문제 해결과 사고법",
+	},
+	{
+		value: "ai",
+		label: "AI",
+		description: "인공지능과 머신러닝",
+	},
+] as const satisfies readonly ArchiveCategoryOption[];
 
 export const ArchiveSummarySchema = z.object({
 	totalCount: z.number(),
@@ -147,6 +194,7 @@ export interface JsonPostFrontMatter {
 	algorithm: PostFrontMatter[];
 	code: PostFrontMatter[];
 	cs: PostFrontMatter[];
+	ai: PostFrontMatter[];
 }
 
 export interface PublishedPost {
@@ -190,6 +238,71 @@ export interface StaticSearchIndexEntry {
 export interface StaticSearchIndex {
 	generatedAt: string;
 	entries: StaticSearchIndexEntry[];
+}
+
+const ARCHIVE_CATEGORY_FILTER_SET = new Set<ArchiveCategoryFilter>(
+	ARCHIVE_CATEGORY_FILTER_VALUES,
+);
+const ARCHIVE_CATEGORY_OPTION_MAP = new Map<
+	ArchiveCategoryFilter,
+	ArchiveCategoryOption
+>(ARCHIVE_CATEGORY_OPTIONS.map((option) => [option.value, option]));
+
+export function isArchiveCategoryFilter(
+	value: string | null | undefined,
+): value is ArchiveCategoryFilter {
+	return (
+		typeof value === "string" &&
+		ARCHIVE_CATEGORY_FILTER_SET.has(value as ArchiveCategoryFilter)
+	);
+}
+
+export function parseArchiveCategoryFilter(
+	value: string | null | undefined,
+	fallback: ArchiveCategoryFilter = "all",
+): ArchiveCategoryFilter {
+	return isArchiveCategoryFilter(value) ? value : fallback;
+}
+
+export function createArchiveCategoryCounts(
+	totalCount = 0,
+): ArchiveCategoryCounts {
+	return {
+		all: totalCount,
+		web: 0,
+		algorithm: 0,
+		code: 0,
+		cs: 0,
+		ai: 0,
+	};
+}
+
+export function countArchiveCategories(
+	posts: ReadonlyArray<Pick<FrontMatter, "category">>,
+): ArchiveCategoryCounts {
+	const counts = createArchiveCategoryCounts(posts.length);
+
+	for (const post of posts) {
+		counts[post.category] += 1;
+	}
+
+	return counts;
+}
+
+export function getArchiveCategoryOption(
+	category: ArchiveCategoryFilter,
+): ArchiveCategoryOption | undefined {
+	return ARCHIVE_CATEGORY_OPTION_MAP.get(category);
+}
+
+export function getArchiveCategoryLabel(category: PostCategory): string {
+	return getArchiveCategoryOption(category)?.label ?? category;
+}
+
+export function getArchiveCategoryDescription(
+	category: ArchiveCategoryFilter,
+): string {
+	return getArchiveCategoryOption(category)?.description ?? category;
 }
 
 export type Tag = string;

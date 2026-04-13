@@ -4,6 +4,14 @@ export const DEFAULT_FRONTEND_BASE_URL = "http://localhost:3000";
 export const DEFAULT_FRONTEND_TEST_URL = "http://localhost:4004";
 export const DEFAULT_SITE_URL = "https://sunub.site";
 
+export const SITE_PATHS = {
+	archive: "/archive",
+} as const;
+
+export const ROUTE_QUERY_PARAMS = {
+	archiveCategory: "category",
+} as const;
+
 export const BACKEND_URL_ENV_KEYS = {
 	PLAYWRIGHT_BACKEND_URL: "PLAYWRIGHT_BACKEND_URL",
 	NEXT_PUBLIC_BACKEND_URL: "NEXT_PUBLIC_BACKEND_URL",
