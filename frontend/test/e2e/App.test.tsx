@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
+import { POST_ARCHIVE_INITIAL_VISIBLE_COUNT } from "@/components/Main/PostArchive/utils";
 import { ARCHIVE_TOP_HREF } from "@/shared/utils/archiveRoute";
 import { E2E_TEST_URL } from "./constants";
 import { HomePage } from "./HomePage";
@@ -332,6 +333,7 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 		page,
 	}) => {
 		await openArchiveFromHeader(page);
+		const scrollBeforeSelect = await page.evaluate(() => window.scrollY);
 
 		await page.getByTestId("post-archive-filter-ai").click();
 
@@ -342,15 +344,41 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 		await expect
 			.poll(
 				async () => {
-					const box = await firstAiCard.boundingBox();
-					return box?.y ?? Number.POSITIVE_INFINITY;
+					return page.evaluate(() => window.scrollY);
 				},
 				{
 					timeout: DEFAULT_TIMEOUT_TIME,
 					intervals: [100, 250, 500],
 				},
 			)
-			.toBeLessThan(480);
+			.toBeLessThanOrEqual(scrollBeforeSelect + 24);
+	});
+
+	test("AI에서 다른 카테고리로 전환해도 짧은 리스트는 자동으로 추가 로드된다", async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 2000 });
+		await openArchiveFromHeader(page);
+
+		await page.getByTestId("post-archive-filter-ai").click();
+		await expect(page.getByTestId("post-archive-card-0")).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
+
+		const webCount = await readArchiveFilterCount(page, "web");
+		expect(webCount).toBeGreaterThan(POST_ARCHIVE_INITIAL_VISIBLE_COUNT);
+
+		await page.getByTestId("post-archive-filter-web").click();
+
+		await expect
+			.poll(
+				async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [100, 250, 500, 1000],
+				},
+			)
+			.toBeGreaterThan(POST_ARCHIVE_INITIAL_VISIBLE_COUNT);
 	});
 
 	test("아카이브에서 스크롤로 로드된 상태가 상세 진입 후 뒤로가기에도 유지되는지 확인", async ({
