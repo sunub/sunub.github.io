@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
+import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
 import { ARCHIVE_TOP_HREF } from "@/shared/utils/archiveRoute";
 import { E2E_TEST_URL } from "./constants";
 import { HomePage } from "./HomePage";
@@ -9,6 +10,7 @@ const ARCHIVE_VIEW_STATE_STORAGE_KEY = "post-archive:view:v1";
 const POST_DETAIL_TITLE_TEST_ID = "post-article__main-title";
 const FRESH_CHRONICLES_CARD_SELECTOR =
 	"[data-testid^='fresh-chronicles-card-']";
+const POST_ARCHIVE_CARD_SELECTOR = "[data-testid^='post-archive-card-']";
 
 async function enableDeterministicMode(page: Page) {
 	await page.evaluate(() => {
@@ -42,6 +44,157 @@ async function readArchiveViewSnapshot(page: Page) {
 		const raw = window.sessionStorage.getItem(storageKey);
 		return raw ? JSON.parse(raw) : null;
 	}, ARCHIVE_VIEW_STATE_STORAGE_KEY);
+}
+
+async function readArchiveFilterCount(page: Page, category: string) {
+	const counts = await page
+		.getByTestId(`post-archive-filter-count-${category}`)
+		.evaluateAll((elements) =>
+			elements
+				.map((element) =>
+					Number.parseInt(element.textContent?.trim() ?? "", 10),
+				)
+				.filter((value) => Number.isInteger(value)),
+		);
+	const count = counts.at(-1) ?? Number.NaN;
+
+	expect(Number.isInteger(count)).toBeTruthy();
+	return count;
+}
+
+async function getRenderedArchiveCardKeys(page: Page) {
+	return page
+		.locator(POST_ARCHIVE_CARD_SELECTOR)
+		.evaluateAll((elements) =>
+			elements
+				.map((element) => element.getAttribute("data-card-key"))
+				.filter((value): value is string => Boolean(value)),
+		);
+}
+
+async function getArchiveScrollState(page: Page) {
+	return page.evaluate(() => {
+		const scrollHeight = Math.max(
+			document.body.scrollHeight,
+			document.documentElement.scrollHeight,
+		);
+
+		return {
+			scrollY: Math.ceil(window.scrollY),
+			atBottom: window.innerHeight + window.scrollY >= scrollHeight - 4,
+		};
+	});
+}
+
+async function wheelArchive(page: Page, deltaY = 900) {
+	await page.evaluate((nextDeltaY) => {
+		window.scrollBy({
+			top: nextDeltaY,
+			behavior: "auto",
+		});
+	}, deltaY);
+	await page.waitForTimeout(80);
+}
+
+async function scrollArchiveToTop(page: Page) {
+	await page.evaluate(() => {
+		window.scrollTo({
+			top: 0,
+			behavior: "auto",
+		});
+	});
+	await page.waitForFunction(() => window.scrollY === 0);
+}
+
+async function expandArchiveUntilLoaded(page: Page, expectedCount: number) {
+	let currentVisibleCount =
+		(await readArchiveViewSnapshot(page))?.visibleCount ?? 0;
+	let stableBottomRounds = 0;
+
+	if (currentVisibleCount < expectedCount) {
+		await wheelArchive(page, 720);
+		currentVisibleCount =
+			(await readArchiveViewSnapshot(page))?.visibleCount ??
+			currentVisibleCount;
+	}
+
+	for (
+		let iteration = 0;
+		iteration < 24 && currentVisibleCount < expectedCount;
+		iteration += 1
+	) {
+		await page.evaluate(() => {
+			window.scrollTo({
+				top: document.body.scrollHeight,
+				behavior: "auto",
+			});
+		});
+
+		try {
+			await expect
+				.poll(
+					async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
+					{
+						timeout: 2500,
+						intervals: [100, 250, 500, 1000],
+					},
+				)
+				.toBeGreaterThan(currentVisibleCount);
+
+			currentVisibleCount =
+				(await readArchiveViewSnapshot(page))?.visibleCount ??
+				currentVisibleCount;
+			stableBottomRounds = 0;
+		} catch {
+			const { atBottom } = await getArchiveScrollState(page);
+
+			if (!atBottom) {
+				await wheelArchive(page, 1400);
+				continue;
+			}
+
+			stableBottomRounds += 1;
+			if (stableBottomRounds >= 2) {
+				break;
+			}
+		}
+	}
+
+	return currentVisibleCount;
+}
+
+async function collectObservedArchiveCardKeys(
+	page: Page,
+	expectedCount: number,
+) {
+	const observedKeys = new Set<string>();
+	const loadedVisibleCount = await expandArchiveUntilLoaded(
+		page,
+		expectedCount,
+	);
+
+	expect(loadedVisibleCount).toBeGreaterThanOrEqual(expectedCount);
+
+	await scrollArchiveToTop(page);
+
+	for (let iteration = 0; iteration < 160; iteration += 1) {
+		for (const key of await getRenderedArchiveCardKeys(page)) {
+			observedKeys.add(key);
+		}
+
+		const { atBottom } = await getArchiveScrollState(page);
+		if (observedKeys.size >= expectedCount || atBottom) {
+			break;
+		}
+
+		await wheelArchive(page, 720);
+	}
+
+	for (const key of await getRenderedArchiveCardKeys(page)) {
+		observedKeys.add(key);
+	}
+
+	return observedKeys;
 }
 
 test.describe("홈 페이지 컴포넌트 테스트", () => {
@@ -170,9 +323,12 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 			)
 			.toBeGreaterThan(initialVisibleCount);
 
-		const targetCardIndex = Math.min(expandedVisibleCount - 1, 18);
-		const targetCard = page.getByTestId(`post-archive-card-${targetCardIndex}`);
-		await targetCard.scrollIntoViewIfNeeded();
+		const renderedCardCount = await page
+			.locator(POST_ARCHIVE_CARD_SELECTOR)
+			.count();
+		const targetCard = page
+			.locator(POST_ARCHIVE_CARD_SELECTOR)
+			.nth(Math.max(0, Math.floor(renderedCardCount / 2)));
 		await expect(targetCard).toBeVisible(DEFAULT_TEST_OPTION);
 
 		const scrollBeforeOpen = await page.evaluate(() => window.scrollY);
@@ -204,7 +360,9 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 			)
 			.toBeGreaterThanOrEqual(expandedVisibleCount);
 
-		await expect(targetCard).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR).first()).toBeVisible(
+			DEFAULT_TEST_OPTION,
+		);
 		await expect
 			.poll(async () => page.evaluate(() => window.scrollY), {
 				timeout: DEFAULT_TIMEOUT_TIME,
@@ -212,6 +370,58 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 			})
 			.toBeGreaterThan(Math.max(160, Math.floor(scrollBeforeOpen * 0.4)));
 	});
+});
+
+test.describe("아카이브 패널 summary 와 DOM 카드 수 검증", () => {
+	test.beforeEach(async ({ page }) => {
+		await HomePage.goToHome(page);
+		await enableDeterministicMode(page);
+		await page.setViewportSize({ width: 600, height: 900 });
+		await openArchiveFromHeader(page);
+	});
+
+	for (const option of ARCHIVE_CATEGORY_OPTIONS) {
+		test(`${option.value} 패널 summary 개수와 스크롤 중 관측된 전체 카드 수가 일치하는지 확인`, async ({
+			page,
+		}) => {
+			test.slow();
+
+			await scrollArchiveToTop(page);
+
+			const filterButton = page.getByTestId(
+				`post-archive-filter-${option.value}`,
+			);
+			await expect(filterButton).toBeVisible(DEFAULT_TEST_OPTION);
+			await filterButton.click();
+			await expect(filterButton).toHaveAttribute(
+				"aria-pressed",
+				"true",
+				DEFAULT_TEST_OPTION,
+			);
+			await page.waitForTimeout(220);
+
+			const expectedCount = await readArchiveFilterCount(page, option.value);
+
+			if (expectedCount === 0) {
+				await expect(
+					page.getByText("선택한 카테고리에 표시할 포스트가 아직 없습니다."),
+				).toBeVisible(DEFAULT_TEST_OPTION);
+				await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR)).toHaveCount(0);
+				return;
+			}
+
+			await expect(
+				page.locator(POST_ARCHIVE_CARD_SELECTOR).first(),
+			).toBeVisible(DEFAULT_TEST_OPTION);
+
+			const observedKeys = await collectObservedArchiveCardKeys(
+				page,
+				expectedCount,
+			);
+
+			expect(observedKeys.size).toBe(expectedCount);
+		});
+	}
 });
 
 test.describe("404 및 블로그 포스트 링크 테스트", () => {

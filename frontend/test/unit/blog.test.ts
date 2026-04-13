@@ -1,4 +1,9 @@
-import type { FrontMatter, PublishedPost, StaticPostIndex } from "@sunub/types";
+import {
+	createArchiveCategoryCounts,
+	type FrontMatter,
+	type PublishedPost,
+	type StaticPostIndex,
+} from "@sunub/types";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getAdditionalPost } from "@/components/Main/BlogPost/utils/utils";
 import { getRecentPost } from "@/components/Main/FeaturedPost/api/getRecentPost";
@@ -42,11 +47,8 @@ const staticPostIndex: StaticPostIndex = {
 		totalCount: indexedPosts.length,
 		coveredYears: 1,
 		counts: {
-			all: indexedPosts.length,
+			...createArchiveCategoryCounts(indexedPosts.length),
 			web: indexedPosts.length,
-			code: 0,
-			cs: 0,
-			algorithm: 0,
 		},
 	},
 };
