@@ -287,6 +287,31 @@ test.describe("아카이브 페이지 탐색 테스트", () => {
 		);
 	});
 
+	test("카테고리 필터 전환 시 선택한 패널의 첫 카드가 바로 보이는지 확인", async ({
+		page,
+	}) => {
+		await openArchiveFromHeader(page);
+
+		await page.getByTestId("post-archive-filter-ai").click();
+
+		const firstAiCard = page.getByTestId("post-archive-card-0");
+		await expect(firstAiCard).toBeVisible(DEFAULT_TEST_OPTION);
+		await expect(firstAiCard).toHaveAttribute("data-card-category", "ai");
+
+		await expect
+			.poll(
+				async () => {
+					const box = await firstAiCard.boundingBox();
+					return box?.y ?? Number.POSITIVE_INFINITY;
+				},
+				{
+					timeout: DEFAULT_TIMEOUT_TIME,
+					intervals: [100, 250, 500],
+				},
+			)
+			.toBeLessThan(480);
+	});
+
 	test("아카이브에서 스크롤로 로드된 상태가 상세 진입 후 뒤로가기에도 유지되는지 확인", async ({
 		page,
 	}) => {
