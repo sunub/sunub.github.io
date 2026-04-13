@@ -1,5 +1,6 @@
+import { getPostCategorySearchTerms } from "@sunub/types";
+
 /**
- * @typedef {import("@sunub/types").PostCategory} PostCategory
  * @typedef {import("@sunub/types").PublicPostFrontMatter} PublicPostFrontMatter
  * @typedef {import("@sunub/types").SearchResult} SearchResult
  * @typedef {import("@sunub/types").StaticSearchIndexEntry} StaticSearchIndexEntry
@@ -12,20 +13,6 @@ const TAG_OR_CATEGORY_MATCH_PRIORITY = 2;
 const SUMMARY_MATCH_PRIORITY = 3;
 const HEADING_MATCH_PRIORITY = 4;
 const BODY_MATCH_PRIORITY = 5;
-
-export const CATEGORY_SEARCH_TERMS =
-	/** @type {Record<PostCategory, string[]>} */ ({
-		web: ["web", "웹"],
-		algorithm: ["algorithm", "알고리즘"],
-		code: ["code", "코드"],
-		cs: [
-			"cs",
-			"computer science",
-			"computer-science",
-			"컴퓨터 과학",
-			"컴퓨터사이언스",
-		],
-	});
 
 const MARKDOWN_HEADING_PATTERN = /^\s{0,3}#{1,6}\s+(.*)$/;
 const CODE_FENCE_PATTERN = /^(```|~~~)/;
@@ -395,7 +382,7 @@ export function searchEntries(query, entries) {
 		const tagMatches = findMatchesInTexts(normalizedQuery, tags);
 		const categoryMatches = findMatchesInTexts(
 			normalizedQuery,
-			CATEGORY_SEARCH_TERMS[category],
+			getPostCategorySearchTerms(category),
 		);
 
 		const hasFrontmatterMatch =

@@ -116,6 +116,30 @@ export const ARCHIVE_CATEGORY_OPTIONS = [
 	},
 ] as const satisfies readonly ArchiveCategoryOption[];
 
+export const POST_CATEGORY_SEARCH_TERMS = {
+	web: ["web", "웹"],
+	algorithm: ["algorithm", "알고리즘"],
+	code: ["code", "코드"],
+	cs: [
+		"cs",
+		"computer science",
+		"computer-science",
+		"컴퓨터 과학",
+		"컴퓨터사이언스",
+	],
+	ai: [
+		"ai",
+		"artificial intelligence",
+		"artificial-intelligence",
+		"llm",
+		"인공지능",
+		"머신러닝",
+	],
+} as const satisfies Record<
+	(typeof POST_CATEGORY_VALUES)[number],
+	readonly string[]
+>;
+
 export const ArchiveSummarySchema = z.object({
 	totalCount: z.number(),
 	coveredYears: z.number(),
@@ -303,6 +327,12 @@ export function getArchiveCategoryDescription(
 	category: ArchiveCategoryFilter,
 ): string {
 	return getArchiveCategoryOption(category)?.description ?? category;
+}
+
+export function getPostCategorySearchTerms(
+	category: PostCategory,
+): readonly string[] {
+	return POST_CATEGORY_SEARCH_TERMS[category];
 }
 
 export type Tag = string;
