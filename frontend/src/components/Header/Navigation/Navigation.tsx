@@ -1,6 +1,6 @@
 "use client";
 
-import { Code, Cpu, Globe, type LucideIcon, Pi } from "lucide-react";
+import { Bot, Code, Cpu, Globe, type LucideIcon, Pi } from "lucide-react";
 import Link from "next/link";
 import {
 	useCallback,
@@ -41,6 +41,12 @@ const CATEGORY_LINKS = [
 		label: "algorithm",
 		screenReaderLabel: "Algorithm 카데고리로 이동하는 링크",
 		icon: Pi,
+	},
+	{
+		href: "/post/ai",
+		label: "ai",
+		screenReaderLabel: "AI 카데고리로 이동하는 링크",
+		icon: Bot,
 	},
 ] as const satisfies ReadonlyArray<{
 	href: string;
