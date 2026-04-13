@@ -4,7 +4,7 @@ import { dirname, extname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
 	ArchiveSummarySchema,
-	countArchiveCategories,
+	createArchiveSummaryFromPosts,
 	FrontMatterSchema,
 	PostFrontMatterSchema,
 	StaticPostIndexSchema,
@@ -73,21 +73,6 @@ function comparePostsByDateDesc(left, right) {
 	return left.frontmatter.title.localeCompare(right.frontmatter.title, "ko");
 }
 
-function createArchiveSummary(posts) {
-	const counts = countArchiveCategories(posts.map((post) => post.frontmatter));
-	const coveredYears = new Set();
-
-	for (const post of posts) {
-		coveredYears.add(new Date(post.frontmatter.date).getFullYear());
-	}
-
-	return ArchiveSummarySchema.parse({
-		totalCount: posts.length,
-		coveredYears: coveredYears.size,
-		counts,
-	});
-}
-
 async function loadAllPosts(postsRootPath) {
 	const posts = [];
 
@@ -137,7 +122,9 @@ async function main() {
 	const postIndex = StaticPostIndexSchema.parse({
 		generatedAt,
 		posts: publicPosts,
-		archiveSummary: createArchiveSummary(loadedPosts),
+		archiveSummary: ArchiveSummarySchema.parse(
+			createArchiveSummaryFromPosts(loadedPosts),
+		),
 	});
 	const searchIndex = StaticSearchIndexSchema.parse({
 		generatedAt,

@@ -12,6 +12,7 @@ export const ARCHIVE_CATEGORY_FILTER_VALUES = [
 	"all",
 	...POST_CATEGORY_VALUES,
 ] as const;
+const ARCHIVE_CATEGORY_COUNT_KEYS = ARCHIVE_CATEGORY_FILTER_VALUES;
 
 export const PostCategorySchema = z.enum(POST_CATEGORY_VALUES);
 export const ArchiveCategoryFilterSchema = z.enum(
@@ -69,12 +70,12 @@ export const PublishedPostSchema = z.object({
 });
 
 export const ArchiveCategoryCountsSchema = z.object({
-	all: z.number(),
-	web: z.number(),
-	algorithm: z.number(),
-	code: z.number(),
-	cs: z.number(),
-	ai: z.number(),
+	all: z.number().default(0),
+	web: z.number().default(0),
+	algorithm: z.number().default(0),
+	code: z.number().default(0),
+	cs: z.number().default(0),
+	ai: z.number().default(0),
 });
 
 export interface ArchiveCategoryOption {
@@ -166,11 +167,17 @@ export const SearchResponseSchema = z.object({
 	results: z.array(SearchResultSchema),
 });
 
-export const StaticPostIndexSchema = z.object({
-	generatedAt: z.string(),
-	posts: z.array(PublicPostFrontMatterSchema),
-	archiveSummary: ArchiveSummarySchema,
-});
+export const StaticPostIndexSchema = z
+	.object({
+		generatedAt: z.string(),
+		posts: z.array(PublicPostFrontMatterSchema),
+		archiveSummary: z.unknown().optional(),
+	})
+	.transform(({ generatedAt, posts, archiveSummary }) => ({
+		generatedAt,
+		posts,
+		archiveSummary: normalizeArchiveSummary(archiveSummary, posts),
+	}));
 
 export const StaticSearchIndexEntrySchema = z.object({
 	postKey: z.string(),
@@ -311,6 +318,70 @@ export function countArchiveCategories(
 	}
 
 	return counts;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null;
+}
+
+function hasCompleteArchiveCategoryCounts(
+	value: unknown,
+): value is ArchiveCategoryCounts {
+	if (!isRecord(value)) {
+		return false;
+	}
+
+	return ARCHIVE_CATEGORY_COUNT_KEYS.every(
+		(key) => typeof value[key] === "number",
+	);
+}
+
+export function createArchiveSummaryFromPosts(
+	posts: ReadonlyArray<{
+		frontmatter: Pick<FrontMatter, "category" | "date">;
+	}>,
+): ArchiveSummary {
+	const counts = countArchiveCategories(posts.map((post) => post.frontmatter));
+	const coveredYears = new Set(
+		posts.map((post) => new Date(post.frontmatter.date).getFullYear()),
+	).size;
+
+	return {
+		totalCount: posts.length,
+		coveredYears,
+		counts,
+	};
+}
+
+export function normalizeArchiveSummary(
+	summary: unknown,
+	posts: ReadonlyArray<{
+		frontmatter: Pick<FrontMatter, "category" | "date">;
+	}>,
+): ArchiveSummary {
+	const fallback = createArchiveSummaryFromPosts(posts);
+
+	if (!isRecord(summary)) {
+		return fallback;
+	}
+
+	const totalCount =
+		typeof summary.totalCount === "number"
+			? summary.totalCount
+			: fallback.totalCount;
+	const coveredYears =
+		typeof summary.coveredYears === "number"
+			? summary.coveredYears
+			: fallback.coveredYears;
+	const counts = hasCompleteArchiveCategoryCounts(summary.counts)
+		? ArchiveCategoryCountsSchema.parse(summary.counts)
+		: fallback.counts;
+
+	return {
+		totalCount,
+		coveredYears,
+		counts,
+	};
 }
 
 export function getArchiveCategoryOption(
