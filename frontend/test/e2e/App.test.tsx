@@ -72,6 +72,23 @@ async function getRenderedArchiveCardKeys(page: Page) {
 		);
 }
 
+async function getRenderedArchiveRowIndices(page: Page) {
+	return page
+		.locator('[data-testid^="post-archive-row-"]')
+		.evaluateAll((elements) =>
+			elements
+				.map((element) => {
+					const testId = element.getAttribute("data-testid") ?? "";
+					const index = Number.parseInt(
+						testId.replace("post-archive-row-", ""),
+						10,
+					);
+					return Number.isInteger(index) ? index : null;
+				})
+				.filter((value): value is number => value !== null),
+		);
+}
+
 async function getArchiveScrollState(page: Page) {
 	return page.evaluate(() => {
 		const scrollHeight = Math.max(
@@ -168,6 +185,7 @@ async function collectObservedArchiveCardKeys(
 	expectedCount: number,
 ) {
 	const observedKeys = new Set<string>();
+	const observedRowIndices = new Set<number>();
 	const loadedVisibleCount = await expandArchiveUntilLoaded(
 		page,
 		expectedCount,
@@ -177,17 +195,40 @@ async function collectObservedArchiveCardKeys(
 
 	await scrollArchiveToTop(page);
 
-	for (let iteration = 0; iteration < 160; iteration += 1) {
+	for (let iteration = 0; iteration < 260; iteration += 1) {
+		for (const rowIndex of await getRenderedArchiveRowIndices(page)) {
+			observedRowIndices.add(rowIndex);
+		}
+
 		for (const key of await getRenderedArchiveCardKeys(page)) {
 			observedKeys.add(key);
 		}
 
 		const { atBottom } = await getArchiveScrollState(page);
-		if (observedKeys.size >= expectedCount || atBottom) {
+
+		if (observedKeys.size >= expectedCount) {
 			break;
 		}
 
-		await wheelArchive(page, 720);
+		if (atBottom) {
+			for (let settleRound = 0; settleRound < 3; settleRound += 1) {
+				await page.waitForTimeout(120);
+				for (const rowIndex of await getRenderedArchiveRowIndices(page)) {
+					observedRowIndices.add(rowIndex);
+				}
+				for (const key of await getRenderedArchiveCardKeys(page)) {
+					observedKeys.add(key);
+				}
+
+				if (observedKeys.size >= expectedCount) {
+					break;
+				}
+			}
+
+			break;
+		}
+
+		await wheelArchive(page, 360);
 	}
 
 	for (const key of await getRenderedArchiveCardKeys(page)) {
