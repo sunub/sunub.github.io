@@ -1,3 +1,4 @@
+import type { Categories } from "@sunub/types";
 import { Suspense } from "react";
 import { PostCards } from "@/components/Card/PostCard";
 import { Wave } from "@/components/Header/Wave";
@@ -5,9 +6,8 @@ import { CardsSkeleton } from "@/components/Skeletons";
 import Spacer from "@/components/Spacer";
 import { RootContainer, Title, TitleContainer } from "./page.style";
 
-type Cateogry = "code" | "web" | "cs" | "algorithm";
 type Params = Promise<{
-	category: Cateogry;
+	category: Categories;
 }>;
 
 export async function generateStaticParams() {
@@ -16,6 +16,7 @@ export async function generateStaticParams() {
 		{ category: "web" },
 		{ category: "cs" },
 		{ category: "algorithm" },
+		{ cateogry: "ai" },
 	];
 }
 
@@ -28,6 +29,7 @@ export default async function Page({ params }: { params: Params }) {
 		web: "Web knowldge",
 		cs: "Computre Science",
 		algorithm: "Algorithm",
+		ai: "AI",
 	};
 
 	return (

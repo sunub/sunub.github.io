@@ -1,17 +1,18 @@
 import { resolveSitePathUrl, resolveSiteUrl } from "@sunub/contracts";
-import type { PostFrontMatter } from "@sunub/types";
+import {
+	createArchiveCategoryCounts,
+	POST_CATEGORY_VALUES,
+	type PostFrontMatter,
+} from "@sunub/types";
 import type { MetadataRoute } from "next";
 import { getAllPostsFromIndex } from "@/server/posts";
 
 const siteUrl = resolveSiteUrl({ env: process.env });
 
 function updateCatetoryDate(allBlogPosts: PostFrontMatter[]) {
-	const result = {
-		web: new Date(),
-		code: new Date(),
-		cs: new Date(),
-		algorithm: new Date(),
-	};
+	const result = Object.fromEntries(
+		POST_CATEGORY_VALUES.map((category) => [category, new Date(0)]),
+	) as Record<(typeof POST_CATEGORY_VALUES)[number], Date>;
 	allBlogPosts.forEach(({ frontmatter }) => {
 		const postDateText = frontmatter.date;
 		if (!postDateText) {
@@ -57,14 +58,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		];
 	});
 
-	const categoryPages = [
-		{ url: "/post/web", lastModified: categoryLatestUpdates.web },
-		{ url: "/post/code", lastModified: categoryLatestUpdates.code },
-		{ url: "/post/cs", lastModified: categoryLatestUpdates.cs },
-		{ url: "/post/algorithm", lastModified: categoryLatestUpdates.algorithm },
-	].map(({ url, lastModified }) => ({
-		url: resolveSitePathUrl(url, { env: process.env }),
-		lastModified: lastModified.toISOString(),
+	const categoryCounts = createArchiveCategoryCounts();
+	for (const { frontmatter } of allBlogPosts) {
+		categoryCounts[frontmatter.category] += 1;
+	}
+
+	const categoryPages = POST_CATEGORY_VALUES.filter(
+		(category) => categoryCounts[category] > 0,
+	).map((category) => ({
+		url: resolveSitePathUrl(`/post/${category}`, { env: process.env }),
+		lastModified: categoryLatestUpdates[category].toISOString(),
 		changeFrequency: "weekly" as const,
 		priority: 0.8,
 	}));

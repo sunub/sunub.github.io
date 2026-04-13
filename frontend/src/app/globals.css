@@ -668,6 +668,7 @@ html[data-color-theme="light"] {
 	--post-card-web-visual-surface: oklch(95% 0.03 242);
 	--post-card-cs-visual-surface: oklch(96% 0.03 168);
 	--post-card-algorithm-visual-surface: oklch(96% 0.04 86);
+	--post-card-ai-visual-surface: oklch(0.7222 0.1 324);
 	--bridge-bg-url: url("/assets/light_bridge.webp");
 	--cars-bg-url: url("/assets/light_cars.webp");
 	--clouds-bg-url: url("/assets/light_clouds.webp");
