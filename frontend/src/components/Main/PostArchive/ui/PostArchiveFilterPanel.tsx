@@ -1,5 +1,6 @@
 "use client";
 
+import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
 import {
 	ArchiveContentRail,
 	ArchiveFilterBar,
@@ -9,7 +10,6 @@ import {
 	ArchiveMeta,
 } from "../style";
 import type { ArchiveSummary, PostArchiveCategoryFilter } from "../types";
-import { POST_ARCHIVE_CATEGORY_OPTIONS } from "../utils";
 
 export function PostArchiveFilterPanel({
 	selectedCategory,
@@ -28,7 +28,7 @@ export function PostArchiveFilterPanel({
 		<>
 			<ArchiveContentRail>
 				<ArchiveFilterBar aria-busy={isFilterPending}>
-					{POST_ARCHIVE_CATEGORY_OPTIONS.map((option) => {
+					{ARCHIVE_CATEGORY_OPTIONS.map((option) => {
 						const isActive = selectedCategory === option.value;
 
 						return (
@@ -42,7 +42,11 @@ export function PostArchiveFilterPanel({
 								data-testid={`post-archive-filter-${option.value}`}
 							>
 								<ArchiveFilterLabel>{option.label}</ArchiveFilterLabel>
-								<ArchiveFilterCount>{counts[option.value]}</ArchiveFilterCount>
+								<ArchiveFilterCount
+									data-testid={`post-archive-filter-count-${option.value}`}
+								>
+									{counts[option.value]}
+								</ArchiveFilterCount>
 							</ArchiveFilterButton>
 						);
 					})}

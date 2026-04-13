@@ -98,7 +98,11 @@ export function useArchiveFeed({
 		});
 	}, [initialCategory, initialData, setCacheByCategory]);
 
-	const totalCount = counts[selectedCategory] ?? 0;
+	const totalCount = useMemo(() => {
+		const countFromSummary = counts[selectedCategory] ?? 0;
+		return countFromSummary;
+	}, [counts, selectedCategory]);
+
 	const currentSelectedCategoryData = useMemo(() => {
 		if (selectedCategory === initialCategory) {
 			return initialCategoryData ?? initialData;
@@ -182,7 +186,10 @@ export function useArchiveFeed({
 					return;
 				}
 
-				if (nextData.frontmatters.length < requestEnd) {
+				if (
+					nextData.frontmatters.length < requestEnd &&
+					nextData.frontmatters.length < totalCount
+				) {
 					setLoadMoreErrorForCategory(requestCategory, LOAD_MORE_ERROR_MESSAGE);
 					return;
 				}
@@ -227,6 +234,7 @@ export function useArchiveFeed({
 		setFetchingForCategory,
 		setLoadMoreErrorForCategory,
 		shouldFetchMore,
+		totalCount,
 	]);
 
 	const retryLoadMore = useCallback(() => {

@@ -1,13 +1,19 @@
 import type {
 	ArchiveCategoryCounts,
+	ArchiveCategoryFilter,
 	FrontMatter,
 	PostCategory,
+} from "@sunub/types";
+import {
+	ARCHIVE_CATEGORY_OPTIONS,
+	countArchiveCategories,
+	createArchiveCategoryCounts,
+	getArchiveCategoryLabel as getSharedArchiveCategoryLabel,
+	parseArchiveCategoryFilter as parseSharedArchiveCategoryFilter,
 } from "@sunub/types";
 import type {
 	PostArchiveCardMedia,
 	PostArchiveCardMediaResolver,
-	PostArchiveCategoryFilter,
-	PostArchiveCategoryOption,
 	PostArchiveRowData,
 } from "../types";
 
@@ -26,37 +32,7 @@ const POST_ARCHIVE_MIN_PRELOAD_THRESHOLD_PX = 220;
 const POST_ARCHIVE_MIN_PRELOAD_RESERVE_PX = 280;
 const POST_ARCHIVE_MAX_PRELOAD_RESERVE_PX = 640;
 
-export const POST_ARCHIVE_CATEGORY_OPTIONS: PostArchiveCategoryOption[] = [
-	{
-		value: "all",
-		label: "All Posts",
-		description: "모든 카테고리",
-	},
-	{
-		value: "web",
-		label: "Web",
-		description: "브라우저와 렌더링",
-	},
-	{
-		value: "code",
-		label: "Code",
-		description: "개발 경험과 구현",
-	},
-	{
-		value: "cs",
-		label: "CS",
-		description: "컴퓨터 과학 기초",
-	},
-	{
-		value: "algorithm",
-		label: "Algorithm",
-		description: "문제 해결과 사고법",
-	},
-];
-
-const VALID_ARCHIVE_CATEGORY_FILTERS = new Set<PostArchiveCategoryFilter>(
-	POST_ARCHIVE_CATEGORY_OPTIONS.map(({ value }) => value),
-);
+export const POST_ARCHIVE_CATEGORY_OPTIONS = ARCHIVE_CATEGORY_OPTIONS;
 
 export function getPostArchiveCardKey(post: FrontMatter) {
 	return `${post.category}/${post.slug}`;
@@ -64,15 +40,8 @@ export function getPostArchiveCardKey(post: FrontMatter) {
 
 export function parsePostArchiveCategoryFilter(
 	value: string | null | undefined,
-): PostArchiveCategoryFilter {
-	if (
-		value &&
-		VALID_ARCHIVE_CATEGORY_FILTERS.has(value as PostArchiveCategoryFilter)
-	) {
-		return value as PostArchiveCategoryFilter;
-	}
-
-	return "all";
+): ArchiveCategoryFilter {
+	return parseSharedArchiveCategoryFilter(value);
 }
 
 export function resolvePostArchiveMedia(
@@ -159,7 +128,7 @@ export function chunkPostsIntoRows(
 
 export function filterPostsByCategory(
 	posts: FrontMatter[],
-	category: PostArchiveCategoryFilter,
+	category: ArchiveCategoryFilter,
 ) {
 	if (category === "all") {
 		return posts;
@@ -171,29 +140,11 @@ export function filterPostsByCategory(
 export function getEmptyPostArchiveCounts(
 	totalCount = 0,
 ): ArchiveCategoryCounts {
-	return {
-		all: totalCount,
-		algorithm: 0,
-		code: 0,
-		cs: 0,
-		web: 0,
-	};
+	return createArchiveCategoryCounts(totalCount);
 }
 
 export function getPostArchiveCounts(posts: FrontMatter[]) {
-	const counts: ArchiveCategoryCounts = {
-		all: posts.length,
-		algorithm: 0,
-		code: 0,
-		cs: 0,
-		web: 0,
-	};
-
-	for (const post of posts) {
-		counts[post.category] += 1;
-	}
-
-	return counts;
+	return countArchiveCategories(posts);
 }
 
 export function formatPostArchiveDate(date: FrontMatter["date"]) {
@@ -205,11 +156,7 @@ export function formatPostArchiveDate(date: FrontMatter["date"]) {
 }
 
 export function getPostArchiveCategoryLabel(category: PostCategory) {
-	const matchedOption = POST_ARCHIVE_CATEGORY_OPTIONS.find(
-		(option) => option.value === category,
-	);
-
-	return matchedOption?.label ?? category;
+	return getSharedArchiveCategoryLabel(category);
 }
 
 export function getPostArchiveMediaAlt(

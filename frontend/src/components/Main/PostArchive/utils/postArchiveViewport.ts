@@ -28,18 +28,20 @@ export function shouldBootstrapPostArchiveLoad({
 export function shouldEnablePostArchiveLoadMore({
 	hasUserScrolled,
 	canBootstrapLoad,
+	hasPendingRestore,
 	hasMore,
 	isFetchingMore,
 	loadMoreError,
 }: {
 	hasUserScrolled: boolean;
 	canBootstrapLoad: boolean;
+	hasPendingRestore: boolean;
 	hasMore: boolean;
 	isFetchingMore: boolean;
 	loadMoreError: string | null;
 }) {
 	return (
-		(hasUserScrolled || canBootstrapLoad) &&
+		(hasUserScrolled || canBootstrapLoad || hasPendingRestore) &&
 		hasMore &&
 		!isFetchingMore &&
 		loadMoreError === null

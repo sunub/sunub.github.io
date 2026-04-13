@@ -48,22 +48,24 @@ export interface PostArchiveViewportControllerState {
 export function usePostArchiveViewportController({
 	category,
 	feed,
+	hasPendingRestore,
 	restore,
 	navigation,
 }: {
 	category: PostArchiveCategoryFilter;
 	feed: PostArchiveViewportFeedPort;
+	hasPendingRestore: boolean;
 	restore: PostArchiveViewportRestorePort;
 	navigation: PostArchiveViewportNavigationPort;
 }): PostArchiveViewportControllerState {
-	const layout = usePostArchiveViewportLayout({
-		selectedCategory: category,
-		visiblePosts: feed.visiblePosts,
-	});
-	const hasPendingRestore = restore.pendingRestore !== null;
 	const scrollGate = usePostArchiveScrollGate({
 		category,
 		hasPendingRestore,
+	});
+	const layout = usePostArchiveViewportLayout({
+		selectedCategory: category,
+		visiblePosts: feed.visiblePosts,
+		scrollSignal: scrollGate.scrollSignal,
 	});
 
 	usePostArchiveRestoreVisibleCount({
@@ -88,6 +90,7 @@ export function usePostArchiveViewportController({
 		canLoadMore: shouldEnablePostArchiveLoadMore({
 			hasUserScrolled: scrollGate.hasUserScrolled,
 			canBootstrapLoad,
+			hasPendingRestore,
 			hasMore: feed.hasMore,
 			isFetchingMore: feed.isFetchingMore,
 			loadMoreError: feed.loadMoreError,

@@ -1,5 +1,6 @@
 "use client";
 
+import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
 import {
 	type Dispatch,
 	type SetStateAction,
@@ -7,7 +8,6 @@ import {
 	useTransition,
 } from "react";
 import type { ArchiveSummary, PostArchiveCategoryFilter } from "../types";
-import { POST_ARCHIVE_CATEGORY_OPTIONS } from "../utils";
 
 export function usePostArchiveFilterState({
 	selectedCategory,
@@ -21,7 +21,7 @@ export function usePostArchiveFilterState({
 	markManagedScroll: () => void;
 }) {
 	const [isFilterPending, startFilterTransition] = useTransition();
-	const selectedCategoryOption = POST_ARCHIVE_CATEGORY_OPTIONS.find(
+	const selectedCategoryOption = ARCHIVE_CATEGORY_OPTIONS.find(
 		(option) => option.value === selectedCategory,
 	);
 	const archiveMeta =

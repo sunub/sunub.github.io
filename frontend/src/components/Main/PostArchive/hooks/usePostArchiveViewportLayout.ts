@@ -67,9 +67,11 @@ export interface PostArchiveViewportLayoutState {
 export function usePostArchiveViewportLayout({
 	selectedCategory,
 	visiblePosts,
+	scrollSignal,
 }: {
 	selectedCategory: PostArchiveCategoryFilter;
 	visiblePosts: FrontMatter[];
+	scrollSignal: number;
 }): PostArchiveViewportLayoutState {
 	const listRef = useRef<HTMLUListElement>(null);
 	const columnCount = useSyncExternalStore(
@@ -102,6 +104,16 @@ export function usePostArchiveViewportLayout({
 		registerItemElement,
 		remainingPx,
 	} = useWindowedRange(listRef, rows.length, rangeConfig);
+
+	const archiveRemainingPx = useMemo(() => {
+		if (rangeConfig.enabled) {
+			return remainingPx;
+		}
+		// scrollSignal is used to force re-calculation when scrolling
+		void scrollSignal;
+		return getPostArchiveRemainingDistancePx(listRef.current);
+	}, [rangeConfig.enabled, remainingPx, scrollSignal]);
+
 	const renderedRows = useMemo(() => {
 		if (!rangeConfig.enabled) {
 			return rows;
@@ -109,6 +121,7 @@ export function usePostArchiveViewportLayout({
 
 		return rows.slice(visibleRange.start, visibleRange.end);
 	}, [rangeConfig.enabled, rows, visibleRange.end, visibleRange.start]);
+
 	const rowModels = useMemo(
 		() =>
 			renderedRows.map((row, rowIndex) => {
@@ -134,9 +147,7 @@ export function usePostArchiveViewportLayout({
 			visibleRange.start,
 		],
 	);
-	const archiveRemainingPx = rangeConfig.enabled
-		? remainingPx
-		: getPostArchiveRemainingDistancePx(listRef.current);
+
 	const [isInitialLayoutReady, setIsInitialLayoutReady] = useState(false);
 
 	useEffect(() => {

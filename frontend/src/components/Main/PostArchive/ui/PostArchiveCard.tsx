@@ -1,8 +1,9 @@
 "use client";
 
 import type { FrontMatter } from "@sunub/types";
-import { ArrowRight, Binary, Boxes, Cpu, Globe2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { createPostCardCssVariables } from "@/components/Main/shared/postCardTheme";
+import { getCategoryIcon } from "@/shared/utils/icons";
 import { getPostDetailHref } from "@/shared/utils/postRoute";
 import {
 	ArchiveCardAction,
@@ -28,19 +29,6 @@ import {
 	getPostArchiveCategoryLabel,
 	getPostArchiveMediaAlt,
 } from "../utils";
-
-function getCategoryIcon(category: FrontMatter["category"]) {
-	switch (category) {
-		case "algorithm":
-			return Binary;
-		case "cs":
-			return Cpu;
-		case "web":
-			return Globe2;
-		default:
-			return Boxes;
-	}
-}
 
 function DefaultArchiveCardVisual({ post }: { post: FrontMatter }) {
 	const Icon = getCategoryIcon(post.category);

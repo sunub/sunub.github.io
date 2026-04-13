@@ -1,3 +1,4 @@
+import { ROUTE_QUERY_PARAMS } from "@sunub/contracts";
 import type { FrontMatter } from "@sunub/types";
 import type { PostArchiveCategoryFilter } from "../types";
 import {
@@ -9,7 +10,6 @@ import {
 const ARCHIVE_VIEW_STATE_VERSION = 1;
 const ARCHIVE_VIEW_STATE_STORAGE_KEY = `post-archive:view:v${ARCHIVE_VIEW_STATE_VERSION}`;
 const ARCHIVE_VIEW_STATE_HISTORY_KEY = "__postArchiveViewState";
-const ARCHIVE_CATEGORY_QUERY_PARAM = "category";
 const ARCHIVE_VIEW_STATE_MAX_AGE_MS = 1000 * 60 * 30;
 const ARCHIVE_SCROLL_ALIGNMENT_OFFSET_PX = 32;
 
@@ -136,9 +136,9 @@ function normalizePersistedArchiveViewState(
 function updateArchiveUrl(category: PostArchiveCategoryFilter) {
 	const nextUrl = new URL(window.location.href);
 	if (category === "all") {
-		nextUrl.searchParams.delete(ARCHIVE_CATEGORY_QUERY_PARAM);
+		nextUrl.searchParams.delete(ROUTE_QUERY_PARAMS.archiveCategory);
 	} else {
-		nextUrl.searchParams.set(ARCHIVE_CATEGORY_QUERY_PARAM, category);
+		nextUrl.searchParams.set(ROUTE_QUERY_PARAMS.archiveCategory, category);
 	}
 
 	return `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`;
@@ -151,7 +151,7 @@ export function readArchiveCategoryFromLocation() {
 
 	return parsePostArchiveCategoryFilter(
 		new URLSearchParams(window.location.search).get(
-			ARCHIVE_CATEGORY_QUERY_PARAM,
+			ROUTE_QUERY_PARAMS.archiveCategory,
 		),
 	);
 }

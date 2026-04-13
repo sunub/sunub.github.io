@@ -1,10 +1,10 @@
 import type { FrontMatter } from "@sunub/types";
+import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
 import { atom } from "jotai";
 import type { SetStateAction } from "react";
 import type { PostArchiveCategoryFilter, PostArchivePageData } from "../types";
 import {
 	getPostArchiveCardKey,
-	POST_ARCHIVE_CATEGORY_OPTIONS,
 	POST_ARCHIVE_INITIAL_VISIBLE_COUNT,
 } from "../utils";
 
@@ -34,7 +34,7 @@ function createInitialArchiveCategoryViewState(): ArchiveCategoryViewState {
 function createInitialArchiveCategoryViewStateMap(): ArchiveCategoryViewStateMap {
 	const initialState = {} as ArchiveCategoryViewStateMap;
 
-	for (const option of POST_ARCHIVE_CATEGORY_OPTIONS) {
+	for (const option of ARCHIVE_CATEGORY_OPTIONS) {
 		initialState[option.value] = createInitialArchiveCategoryViewState();
 	}
 
@@ -99,12 +99,18 @@ export function syncArchiveSeedData(
 		return seedData;
 	}
 
-	if (currentData.totalCount !== seedData.totalCount) {
-		return seedData;
-	}
+	// Always prefer the larger totalCount if they differ,
+	// as it represents the most up-to-date state of the archive
+	const resolvedTotalCount = Math.max(
+		currentData.totalCount,
+		seedData.totalCount,
+	);
 
 	if (currentData.frontmatters.length < seedData.frontmatters.length) {
-		return seedData;
+		return {
+			...seedData,
+			totalCount: resolvedTotalCount,
+		};
 	}
 
 	const currentPrefix = currentData.frontmatters.slice(
@@ -119,7 +125,10 @@ export function syncArchiveSeedData(
 		});
 
 	if (hasMatchingPrefix) {
-		return currentData;
+		return {
+			...currentData,
+			totalCount: resolvedTotalCount,
+		};
 	}
 
 	const seededKeys = new Set(
@@ -127,7 +136,7 @@ export function syncArchiveSeedData(
 	);
 
 	return {
-		totalCount: seedData.totalCount,
+		totalCount: resolvedTotalCount,
 		frontmatters: [
 			...seedData.frontmatters,
 			...currentData.frontmatters.filter(

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useArchiveViewState } from "../hooks/useArchiveViewState";
 import { usePostArchiveDataController } from "../hooks/usePostArchiveDataController";
 import { usePostArchiveFilterState } from "../hooks/usePostArchiveFilterState";
@@ -33,10 +34,18 @@ export function PostArchiveSection({
 	mediaOverrides?: PostArchiveCardMediaResolver;
 }) {
 	const archiveViewState = useArchiveViewState(initialCategory);
+	const resolvedCounts = useMemo(
+		() => ({
+			...summary.counts,
+			all: summary.totalCount, // summary.totalCount를 항상 all로 사용
+		}),
+		[summary.counts, summary.totalCount],
+	);
+
 	const dataController = usePostArchiveDataController({
 		initialCategory,
 		initialData,
-		counts: summary.counts,
+		counts: resolvedCounts,
 		selectedCategory: archiveViewState.selectedCategory,
 		visibleCount: archiveViewState.visibleCount,
 		setVisibleCount: archiveViewState.setVisibleCount,
@@ -45,6 +54,7 @@ export function PostArchiveSection({
 	const viewportController = usePostArchiveViewportController({
 		category: archiveViewState.selectedCategory,
 		feed: dataController.viewportFeed,
+		hasPendingRestore: archiveViewState.pendingRestore !== null,
 		restore: archiveViewState.viewportRestore,
 		navigation: archiveViewState.viewportNavigation,
 	});
