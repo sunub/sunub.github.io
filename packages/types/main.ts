@@ -197,6 +197,12 @@ export type FrontMatter = z.infer<typeof FrontMatterSchema>;
 export type CacheData = z.infer<typeof CacheDataSchema>;
 export type ArchiveCategoryCounts = z.infer<typeof ArchiveCategoryCountsSchema>;
 export type ArchiveSummary = z.infer<typeof ArchiveSummarySchema>;
+type ArchiveSummarySourcePost = {
+	frontmatter?: {
+		category?: PostCategory;
+		date?: FrontMatter["date"];
+	} | null;
+};
 
 export interface PostFrontMatter {
 	frontmatter: FrontMatter;
@@ -336,18 +342,35 @@ function hasCompleteArchiveCategoryCounts(
 	);
 }
 
+function hasArchiveSummaryFrontmatter(post: ArchiveSummarySourcePost): post is {
+	frontmatter: {
+		category: PostCategory;
+		date: FrontMatter["date"];
+	};
+} {
+	return (
+		post.frontmatter !== null &&
+		post.frontmatter !== undefined &&
+		POST_CATEGORY_VALUES.includes(post.frontmatter.category as PostCategory) &&
+		post.frontmatter.date !== undefined
+	);
+}
+
 export function createArchiveSummaryFromPosts(
-	posts: ReadonlyArray<{
-		frontmatter: Pick<FrontMatter, "category" | "date">;
-	}>,
+	posts: ReadonlyArray<ArchiveSummarySourcePost>,
 ): ArchiveSummary {
-	const counts = countArchiveCategories(posts.map((post) => post.frontmatter));
+	const normalizedPosts = posts.filter(hasArchiveSummaryFrontmatter);
+	const counts = countArchiveCategories(
+		normalizedPosts.map((post) => post.frontmatter),
+	);
 	const coveredYears = new Set(
-		posts.map((post) => new Date(post.frontmatter.date).getFullYear()),
+		normalizedPosts.map((post) =>
+			new Date(post.frontmatter.date).getFullYear(),
+		),
 	).size;
 
 	return {
-		totalCount: posts.length,
+		totalCount: normalizedPosts.length,
 		coveredYears,
 		counts,
 	};
@@ -355,9 +378,7 @@ export function createArchiveSummaryFromPosts(
 
 export function normalizeArchiveSummary(
 	summary: unknown,
-	posts: ReadonlyArray<{
-		frontmatter: Pick<FrontMatter, "category" | "date">;
-	}>,
+	posts: ReadonlyArray<ArchiveSummarySourcePost>,
 ): ArchiveSummary {
 	const fallback = createArchiveSummaryFromPosts(posts);
 
