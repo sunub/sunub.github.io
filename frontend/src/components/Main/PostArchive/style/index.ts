@@ -125,6 +125,9 @@ export const ArchiveFilterButton = styled.button<{
 `;
 
 export const ArchiveFilterLabel = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 	font-size: 0.92rem;
 	font-weight: 700;
 	line-height: 1;

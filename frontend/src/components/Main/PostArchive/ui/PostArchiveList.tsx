@@ -1,9 +1,8 @@
 "use client";
 
+import { memo, type RefObject } from "react";
 import { InfiniteScrollStatus } from "@/components/ui/InfiniteScrollStatus";
 import { createVirtualSpacerStyle } from "../../NewestPostList/utils/virtualListUtils";
-import type { PostArchiveDataControllerState } from "../hooks/usePostArchiveDataController";
-import type { PostArchiveViewportControllerState } from "../hooks/usePostArchiveViewportController";
 import {
 	ArchiveContentRail,
 	ArchiveEmptyState,
@@ -11,25 +10,84 @@ import {
 	ArchiveRow,
 	ArchiveRowGrid,
 } from "../style";
-import type { PostArchiveCardMediaResolver } from "../types";
+import type {
+	PostArchiveCardMediaResolver,
+	PostArchiveRowData,
+} from "../types";
 import { resolvePostArchiveMedia } from "../utils";
 import { PostArchiveCard } from "./PostArchiveCard";
 
 const ARCHIVE_LIST_TEST_ID = "post-archive-list";
 
-export function PostArchiveListView({
-	viewport,
-	feed,
+interface RenderedRow extends PostArchiveRowData {
+	key: string;
+	absoluteRowIndex: number;
+}
+
+const VirtualArchiveRow = memo(function VirtualArchiveRow({
+	row,
+	columnCount,
+	registerItemElement,
 	mediaOverrides,
 }: {
-	viewport: PostArchiveViewportControllerState;
-	feed: Pick<
-		PostArchiveDataControllerState,
-		"showEmptyState" | "isFetchingMore" | "loadMoreError" | "retryLoadMore"
-	>;
+	row: RenderedRow;
+	columnCount: number;
+	registerItemElement: (index: number, element: HTMLElement | null) => void;
 	mediaOverrides?: PostArchiveCardMediaResolver;
 }) {
-	if (feed.showEmptyState) {
+	return (
+		<ArchiveRow
+			ref={(el) => registerItemElement(row.absoluteRowIndex, el)}
+			data-testid={`post-archive-row-${row.absoluteRowIndex}`}
+		>
+			<ArchiveRowGrid $columns={columnCount}>
+				{row.posts.map((post, columnIndex) => {
+					const absoluteCardIndex = row.startIndex + columnIndex;
+
+					return (
+						<PostArchiveCard
+							key={`${post.category}-${post.slug}`}
+							post={post}
+							index={absoluteCardIndex}
+							media={resolvePostArchiveMedia(
+								post,
+								absoluteCardIndex,
+								mediaOverrides,
+							)}
+						/>
+					);
+				})}
+			</ArchiveRowGrid>
+		</ArchiveRow>
+	);
+});
+
+export const PostArchiveListView = memo(function PostArchiveListView({
+	listRef,
+	renderedRows,
+	topSpacerPx,
+	bottomSpacerPx,
+	columnCount,
+	registerItemElement,
+	windowingEnabled,
+	isFetchingMore,
+	loadMoreError,
+	retryLoadMore,
+	mediaOverrides,
+}: {
+	listRef: RefObject<HTMLUListElement | null>;
+	renderedRows: RenderedRow[];
+	topSpacerPx: number;
+	bottomSpacerPx: number;
+	columnCount: number;
+	registerItemElement: (index: number, element: HTMLElement | null) => void;
+	windowingEnabled: boolean;
+	isFetchingMore: boolean;
+	loadMoreError: string | null;
+	retryLoadMore: () => void;
+	mediaOverrides?: PostArchiveCardMediaResolver;
+}) {
+	if (renderedRows.length === 0 && !isFetchingMore && loadMoreError === null) {
 		return (
 			<ArchiveContentRail>
 				<ArchiveEmptyState>
@@ -41,61 +99,39 @@ export function PostArchiveListView({
 
 	return (
 		<ArchiveList
-			ref={viewport.list.ref}
+			ref={listRef}
 			data-testid={ARCHIVE_LIST_TEST_ID}
 			aria-label="통합 포스트 아카이브 목록"
 		>
-			{viewport.list.windowing.enabled &&
-			viewport.list.windowing.topSpacerPx > 0 ? (
+			{windowingEnabled && topSpacerPx > 0 ? (
 				<li
-					style={createVirtualSpacerStyle(viewport.list.windowing.topSpacerPx)}
+					style={createVirtualSpacerStyle(topSpacerPx)}
 					aria-hidden="true"
 					role="presentation"
 				/>
 			) : null}
 
-			{viewport.list.rows.map((row) => {
+			{renderedRows.map((row) => {
 				return (
-					<ArchiveRow
+					<VirtualArchiveRow
 						key={row.key}
-						ref={row.registerElement}
-						data-testid={`post-archive-row-${row.absoluteRowIndex}`}
-					>
-						<ArchiveRowGrid $columns={viewport.list.columnCount}>
-							{row.posts.map((post, columnIndex) => {
-								const absoluteCardIndex = row.startIndex + columnIndex;
-
-								return (
-									<PostArchiveCard
-										key={`${post.category}-${post.slug}`}
-										post={post}
-										index={absoluteCardIndex}
-										media={resolvePostArchiveMedia(
-											post,
-											absoluteCardIndex,
-											mediaOverrides,
-										)}
-										onNavigate={viewport.navigation.handleCardNavigate}
-									/>
-								);
-							})}
-						</ArchiveRowGrid>
-					</ArchiveRow>
+						row={row}
+						columnCount={columnCount}
+						registerItemElement={registerItemElement}
+						mediaOverrides={mediaOverrides}
+					/>
 				);
 			})}
 
-			{viewport.list.windowing.enabled &&
-			viewport.list.windowing.bottomSpacerPx > 0 ? (
+			{windowingEnabled && bottomSpacerPx > 0 ? (
 				<li
-					style={createVirtualSpacerStyle(
-						viewport.list.windowing.bottomSpacerPx,
-					)}
+					style={createVirtualSpacerStyle(bottomSpacerPx)}
 					aria-hidden="true"
 					role="presentation"
 				/>
 			) : null}
 
-			{feed.isFetchingMore ? (
+			{isFetchingMore ? (
 				<InfiniteScrollStatus
 					mode="loading"
 					caption="Loading Older Posts"
@@ -103,14 +139,14 @@ export function PostArchiveListView({
 				/>
 			) : null}
 
-			{!feed.isFetchingMore && feed.loadMoreError ? (
+			{!isFetchingMore && loadMoreError ? (
 				<InfiniteScrollStatus
 					mode="error"
 					caption="Archive Loading Paused"
-					detail={feed.loadMoreError}
-					onRetry={feed.retryLoadMore}
+					detail={loadMoreError}
+					onRetry={retryLoadMore}
 				/>
 			) : null}
 		</ArchiveList>
 	);
-}
+});

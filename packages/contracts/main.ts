@@ -5,7 +5,8 @@ export const DEFAULT_FRONTEND_TEST_URL = "http://localhost:4004";
 export const DEFAULT_SITE_URL = "https://sunub.site";
 
 export const SITE_PATHS = {
-	archive: "/archive",
+	archive: "/archive/all",
+	archiveCategory: (category: string) => `/archive/${category}`,
 } as const;
 
 export const ROUTE_QUERY_PARAMS = {

@@ -5,84 +5,98 @@ import type {
 	ArchiveCategoryFilter as PostArchiveCategoryFilter,
 	PublishedPost as PostArchivePageData,
 } from "@sunub/types";
-import { forwardRef, useImperativeHandle, useMemo } from "react";
-import type {
-	PostArchiveViewportNavigationPort,
-	PostArchiveViewportRestorePort,
-} from "../hooks/postArchiveViewportPorts";
-import { usePostArchiveDataController } from "../hooks/usePostArchiveDataController";
-import { usePostArchiveViewportController } from "../hooks/usePostArchiveViewportController";
+import { useAtom } from "jotai";
+import { memo, useLayoutEffect, useRef } from "react";
+import { usePostArchiveInfiniteScroll } from "../hooks/usePostArchiveInfiniteScroll";
+import { usePostArchiveVirtualList } from "../hooks/usePostArchiveVirtualList";
+import { archiveScrollAtomFamily } from "../store/archiveCache";
 import type { PostArchiveCardMediaResolver } from "../types";
 import { PostArchiveListView } from "./PostArchiveList";
 
 type PostArchiveListSectionProps = {
-	initialCategory: PostArchiveCategoryFilter;
 	initialData: PostArchivePageData;
 	summary: ArchiveSummary;
 	selectedCategory: PostArchiveCategoryFilter;
-	restore: PostArchiveViewportRestorePort;
-	navigation: PostArchiveViewportNavigationPort;
-	hasPendingRestore: boolean;
 	mediaOverrides?: PostArchiveCardMediaResolver;
 };
 
-export interface PostArchiveListSectionHandle {
-	markManagedScroll: () => void;
-}
-
-export const PostArchiveListSection = forwardRef<
-	PostArchiveListSectionHandle,
-	PostArchiveListSectionProps
->(function PostArchiveListSection(
-	{
-		initialCategory,
+export const PostArchiveListSection = memo(function PostArchiveListSection({
+	initialData,
+	summary,
+	selectedCategory,
+	mediaOverrides,
+}: PostArchiveListSectionProps) {
+	const {
+		posts,
+		isFetchingMore,
+		loadMoreError,
+		loadMore,
+		retryLoadMore,
+		hasMore,
+	} = usePostArchiveInfiniteScroll({
 		initialData,
+		selectedCategory,
 		summary,
-		selectedCategory,
-		restore,
-		navigation,
-		hasPendingRestore,
-		mediaOverrides,
-	},
-	ref,
-) {
-	const resolvedCounts = useMemo(
-		() => ({
-			...summary.counts,
-			all: summary.totalCount,
-		}),
-		[summary.counts, summary.totalCount],
-	);
-
-	const dataController = usePostArchiveDataController({
-		initialCategory,
-		initialData,
-		counts: resolvedCounts,
-		selectedCategory,
-		visibleCount: restore.visibleCount,
-		setVisibleCount: restore.setVisibleCount,
 	});
 
-	const viewportController = usePostArchiveViewportController({
-		category: selectedCategory,
-		feed: dataController.viewportFeed,
-		hasPendingRestore,
-		restore,
-		navigation,
+	const {
+		listRef,
+		renderedRows,
+		topSpacerPx,
+		bottomSpacerPx,
+		columnCount,
+		registerItemElement,
+		windowingEnabled,
+	} = usePostArchiveVirtualList({
+		posts,
+		isFetchingMore,
+		loadMoreError,
+		loadMore,
+		hasMore,
 	});
 
-	useImperativeHandle(
-		ref,
-		() => ({
-			markManagedScroll: viewportController.scroll.markManagedScroll,
-		}),
-		[viewportController.scroll.markManagedScroll],
+	const [cachedScrollPos, setCachedScrollPos] = useAtom(
+		archiveScrollAtomFamily(selectedCategory),
 	);
+	const isRestored = useRef(false);
+
+	// Restore scroll position
+	useLayoutEffect(() => {
+		if (cachedScrollPos > 0 && !isRestored.current) {
+			window.scrollTo(0, cachedScrollPos);
+			isRestored.current = true;
+		}
+	}, [cachedScrollPos]);
+
+	// Save scroll position
+	useLayoutEffect(() => {
+		let rafId: number;
+		const handleScroll = () => {
+			cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(() => {
+				setCachedScrollPos(window.scrollY);
+			});
+		};
+
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+			cancelAnimationFrame(rafId);
+		};
+	}, [setCachedScrollPos]);
 
 	return (
 		<PostArchiveListView
-			viewport={viewportController}
-			feed={dataController}
+			listRef={listRef}
+			renderedRows={renderedRows}
+			topSpacerPx={topSpacerPx}
+			bottomSpacerPx={bottomSpacerPx}
+			columnCount={columnCount}
+			registerItemElement={registerItemElement}
+			windowingEnabled={windowingEnabled}
+			isFetchingMore={isFetchingMore}
+			loadMoreError={loadMoreError}
+			retryLoadMore={retryLoadMore}
 			mediaOverrides={mediaOverrides}
 		/>
 	);

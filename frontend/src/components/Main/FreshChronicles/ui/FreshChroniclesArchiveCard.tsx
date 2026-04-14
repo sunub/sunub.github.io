@@ -1,6 +1,6 @@
+import { SITE_PATHS } from "@sunub/contracts";
 import { ArrowRight } from "lucide-react";
 import { getStaticArchiveDescription } from "@/server/static-index";
-import { ARCHIVE_TOP_HREF } from "@/shared/utils/archiveRoute";
 import {
 	ArchiveCardAction,
 	ArchiveCardDescription,
@@ -15,7 +15,7 @@ const FALLBACK_DESCRIPTION =
 	"아카이브의 모든 글을 한곳에서 이어서 탐험해보세요.";
 
 export async function FreshChroniclesArchiveCard({
-	href = ARCHIVE_TOP_HREF,
+	href = SITE_PATHS.archive,
 	title = "더 많은 글 보기",
 	description,
 	actionLabel = "아카이브 바로가기",

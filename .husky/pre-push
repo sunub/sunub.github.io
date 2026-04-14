@@ -6,23 +6,23 @@ should_run_checks=0
 zero_oid="0000000000000000000000000000000000000000"
 
 while read -r local_ref local_oid remote_ref remote_oid; do
-	if [ "$remote_ref" = "$target_branch" ] && [ "$local_oid" != "$zero_oid" ]; then
-		should_run_checks=1
-		break
-	fi
+  if [ "$remote_ref" = "$target_branch" ] && [ "$local_oid" != "$zero_oid" ]; then
+    should_run_checks=1
+    break
+  fi
 done
 
 if [ "$should_run_checks" -ne 1 ]; then
-	printf '%s\n' "pre-push: skipping sunub branch checks"
-	exit 0
+  printf '%s\n' "pre-push: skipping sunub branch checks"
+  exit 0
 fi
 
 run_step() {
-	step_name="$1"
-	shift
+  step_name="$1"
+  shift
 
-	printf '\n%s\n' "==> $step_name"
-	"$@"
+  printf '\n%s\n' "==> $step_name"
+  "$@"
 }
 
 printf '%s\n' "pre-push: push to sunub detected, running CI-equivalent checks"

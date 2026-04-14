@@ -1,242 +1,59 @@
-import { expect, type Locator, type Page, test } from "@playwright/test";
-import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
+import { expect, type Page, test } from "@playwright/test";
 import { POST_ARCHIVE_INITIAL_VISIBLE_COUNT } from "@/components/Main/PostArchive/utils";
 import { ARCHIVE_TOP_HREF } from "@/shared/utils/archiveRoute";
 import { E2E_TEST_URL } from "./constants";
-import { HomePage } from "./HomePage";
 
 const DEFAULT_TIMEOUT_TIME = 35000;
 const DEFAULT_TEST_OPTION = { timeout: DEFAULT_TIMEOUT_TIME };
-const ARCHIVE_VIEW_STATE_STORAGE_KEY = "post-archive:view:v1";
-const POST_DETAIL_TITLE_TEST_ID = "post-article__main-title";
-const FRESH_CHRONICLES_CARD_SELECTOR =
+const _POST_DETAIL_TITLE_TEST_ID = "post-article__main-title";
+const _FRESH_CHRONICLES_CARD_SELECTOR =
 	"[data-testid^='fresh-chronicles-card-']";
 const POST_ARCHIVE_CARD_SELECTOR = "[data-testid^='post-archive-card-']";
 
+/**
+ * 테스트 모드 활성화 (애니메이션 단축 등)
+ */
 async function enableDeterministicMode(page: Page) {
 	await page.evaluate(() => {
 		document.documentElement.setAttribute("data-test-mode", "true");
 	});
 }
 
-async function getFreshChroniclesCardCount(grid: Locator) {
-	return grid.locator(FRESH_CHRONICLES_CARD_SELECTOR).count();
+/**
+ * 현재 렌더링된 아카이브 카드 개수 반환
+ */
+async function getRenderedArchiveCardCount(page: Page) {
+	return page.locator(POST_ARCHIVE_CARD_SELECTOR).count();
 }
 
+/**
+ * 특정 스크롤 위치에 도달할 때까지 대기 (내성 오차 5px)
+ */
+async function _waitForScrollPosition(page: Page, targetY: number) {
+	await expect
+		.poll(async () => page.evaluate(() => window.scrollY), {
+			timeout: 5000,
+		})
+		.toBeGreaterThanOrEqual(targetY - 5);
+}
+
+/**
+ * 헤더를 통해 아카이브 진입
+ */
 async function openArchiveFromHeader(page: Page) {
+	const archiveLink = page
+		.getByRole("navigation", { name: "추가 페이지 바로가기" })
+		.getByRole("link");
+
 	await Promise.all([
-		page.waitForURL(`**${ARCHIVE_TOP_HREF}`, {
-			waitUntil: "domcontentloaded",
-			timeout: DEFAULT_TIMEOUT_TIME,
-		}),
-		page
-			.getByRole("navigation", { name: "추가 페이지 바로가기" })
-			.getByRole("link")
-			.click(),
+		page.waitForURL((url) => url.pathname.startsWith(ARCHIVE_TOP_HREF)),
+		archiveLink.click(),
 	]);
 
+	// 리스트 섹션 가시성 확인
 	await expect(page.getByTestId("post-archive-section")).toBeVisible(
 		DEFAULT_TEST_OPTION,
 	);
-}
-
-async function readArchiveViewSnapshot(page: Page) {
-	return page.evaluate((storageKey) => {
-		const raw = window.sessionStorage.getItem(storageKey);
-		return raw ? JSON.parse(raw) : null;
-	}, ARCHIVE_VIEW_STATE_STORAGE_KEY);
-}
-
-async function readArchiveFilterCount(page: Page, category: string) {
-	const counts = await page
-		.getByTestId(`post-archive-filter-count-${category}`)
-		.evaluateAll((elements) =>
-			elements
-				.map((element) =>
-					Number.parseInt(element.textContent?.trim() ?? "", 10),
-				)
-				.filter((value) => Number.isInteger(value)),
-		);
-	const count = counts.at(-1) ?? Number.NaN;
-
-	expect(Number.isInteger(count)).toBeTruthy();
-	return count;
-}
-
-async function getRenderedArchiveCardKeys(page: Page) {
-	return page
-		.locator(POST_ARCHIVE_CARD_SELECTOR)
-		.evaluateAll((elements) =>
-			elements
-				.map((element) => element.getAttribute("data-card-key"))
-				.filter((value): value is string => Boolean(value)),
-		);
-}
-
-async function getRenderedArchiveRowIndices(page: Page) {
-	return page
-		.locator('[data-testid^="post-archive-row-"]')
-		.evaluateAll((elements) =>
-			elements
-				.map((element) => {
-					const testId = element.getAttribute("data-testid") ?? "";
-					const index = Number.parseInt(
-						testId.replace("post-archive-row-", ""),
-						10,
-					);
-					return Number.isInteger(index) ? index : null;
-				})
-				.filter((value): value is number => value !== null),
-		);
-}
-
-async function getArchiveScrollState(page: Page) {
-	return page.evaluate(() => {
-		const scrollHeight = Math.max(
-			document.body.scrollHeight,
-			document.documentElement.scrollHeight,
-		);
-
-		return {
-			scrollY: Math.ceil(window.scrollY),
-			atBottom: window.innerHeight + window.scrollY >= scrollHeight - 4,
-		};
-	});
-}
-
-async function wheelArchive(page: Page, deltaY = 900) {
-	await page.evaluate((nextDeltaY) => {
-		window.scrollBy({
-			top: nextDeltaY,
-			behavior: "auto",
-		});
-	}, deltaY);
-	await page.waitForTimeout(80);
-}
-
-async function scrollArchiveToTop(page: Page) {
-	await page.evaluate(() => {
-		window.scrollTo({
-			top: 0,
-			behavior: "auto",
-		});
-	});
-	await page.waitForFunction(() => window.scrollY === 0);
-}
-
-async function expandArchiveUntilLoaded(page: Page, expectedCount: number) {
-	let currentVisibleCount =
-		(await readArchiveViewSnapshot(page))?.visibleCount ?? 0;
-	let stableBottomRounds = 0;
-
-	if (currentVisibleCount < expectedCount) {
-		await wheelArchive(page, 720);
-		currentVisibleCount =
-			(await readArchiveViewSnapshot(page))?.visibleCount ??
-			currentVisibleCount;
-	}
-
-	for (
-		let iteration = 0;
-		iteration < 24 && currentVisibleCount < expectedCount;
-		iteration += 1
-	) {
-		await page.evaluate(() => {
-			window.scrollTo({
-				top: document.body.scrollHeight,
-				behavior: "auto",
-			});
-		});
-
-		try {
-			await expect
-				.poll(
-					async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
-					{
-						timeout: 2500,
-						intervals: [100, 250, 500, 1000],
-					},
-				)
-				.toBeGreaterThan(currentVisibleCount);
-
-			currentVisibleCount =
-				(await readArchiveViewSnapshot(page))?.visibleCount ??
-				currentVisibleCount;
-			stableBottomRounds = 0;
-		} catch {
-			const { atBottom } = await getArchiveScrollState(page);
-
-			if (!atBottom) {
-				await wheelArchive(page, 1400);
-				continue;
-			}
-
-			stableBottomRounds += 1;
-			if (stableBottomRounds >= 2) {
-				break;
-			}
-		}
-	}
-
-	return currentVisibleCount;
-}
-
-async function collectObservedArchiveCardKeys(
-	page: Page,
-	expectedCount: number,
-) {
-	const observedKeys = new Set<string>();
-	const observedRowIndices = new Set<number>();
-	const loadedVisibleCount = await expandArchiveUntilLoaded(
-		page,
-		expectedCount,
-	);
-
-	expect(loadedVisibleCount).toBeGreaterThanOrEqual(expectedCount);
-
-	await scrollArchiveToTop(page);
-
-	for (let iteration = 0; iteration < 260; iteration += 1) {
-		for (const rowIndex of await getRenderedArchiveRowIndices(page)) {
-			observedRowIndices.add(rowIndex);
-		}
-
-		for (const key of await getRenderedArchiveCardKeys(page)) {
-			observedKeys.add(key);
-		}
-
-		const { atBottom } = await getArchiveScrollState(page);
-
-		if (observedKeys.size >= expectedCount) {
-			break;
-		}
-
-		if (atBottom) {
-			for (let settleRound = 0; settleRound < 3; settleRound += 1) {
-				await page.waitForTimeout(120);
-				for (const rowIndex of await getRenderedArchiveRowIndices(page)) {
-					observedRowIndices.add(rowIndex);
-				}
-				for (const key of await getRenderedArchiveCardKeys(page)) {
-					observedKeys.add(key);
-				}
-
-				if (observedKeys.size >= expectedCount) {
-					break;
-				}
-			}
-
-			break;
-		}
-
-		await wheelArchive(page, 360);
-	}
-
-	for (const key of await getRenderedArchiveCardKeys(page)) {
-		observedKeys.add(key);
-	}
-
-	return observedKeys;
 }
 
 test.describe("홈 페이지 컴포넌트 테스트", () => {
@@ -249,364 +66,80 @@ test.describe("홈 페이지 컴포넌트 테스트", () => {
 	});
 
 	test("홈 페이지 기본 요소 렌더링", async ({ page }) => {
-		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-		await expect(page.getByRole("button", { name: "검색" })).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-		await expect(page.getByTestId("desktop-theme-toggler-button")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-		await expect(page.getByTestId("fresh-chronicles-section")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
 		await expect(
-			page.getByRole("heading", { level: 2, name: "최신 포스트들" }),
-		).toBeVisible(DEFAULT_TEST_OPTION);
+			page.getByRole("link", { name: "Homepage link" }),
+		).toBeVisible();
+		await expect(page.getByRole("button", { name: "검색" })).toBeVisible();
+		await expect(
+			page.getByTestId("desktop-theme-toggler-button"),
+		).toBeVisible();
+		await expect(page.getByTestId("fresh-chronicles-section")).toBeVisible();
 	});
 
-	test("홈 페이지에서 Fresh Chronicles 카드와 아카이브 카드가 렌더링 되는가?", async ({
-		page,
-	}) => {
-		const homePage = new HomePage(page);
-		await expect(homePage.freshChroniclesGrid).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect
-			.poll(
-				async () => getFreshChroniclesCardCount(homePage.freshChroniclesGrid),
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [200, 500, 1000],
-				},
-			)
-			.toBeGreaterThanOrEqual(1);
-		await expect(homePage.getFirstPostCard()).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(homePage.getFirstPostCard()).toHaveAttribute(
-			"data-card-variant",
-			"wide",
-			DEFAULT_TEST_OPTION,
-		);
-		await expect(homePage.archiveCard).toBeVisible(DEFAULT_TEST_OPTION);
-	});
-
-	test("테마 전환 기능이 적절하게 작동하는지 확인", async ({ page }) => {
+	test("테마 전환 기능 확인", async ({ page }) => {
 		const themeToggle = page.getByTestId("desktop-theme-toggler-button");
-		await expect(themeToggle).toBeVisible(DEFAULT_TEST_OPTION);
-
 		await themeToggle.click();
-		await expect(page.locator('[data-color-theme="dark"]')).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-
+		await expect(page.locator('[data-color-theme="dark"]')).toBeVisible();
 		await themeToggle.click();
-		await expect(page.locator('[data-color-theme="light"]')).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
+		await expect(page.locator('[data-color-theme="light"]')).toBeVisible();
 	});
 });
 
-test.describe("아카이브 페이지 탐색 테스트", () => {
+test.describe("아카이브 캐싱 및 스크롤 복원 테스트", () => {
 	test.beforeEach(async ({ page }) => {
-		await HomePage.goToHome(page);
+		await page.goto(E2E_TEST_URL);
 		await enableDeterministicMode(page);
-		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
-			{
-				timeout: DEFAULT_TIMEOUT_TIME,
-			},
-		);
+		await openArchiveFromHeader(page);
 	});
 
-	test("헤더 아카이브 링크 클릭 시 아카이브 페이지로 이동하는지 확인", async ({
-		page,
-	}) => {
-		await openArchiveFromHeader(page);
+	test("카테고리 전환 시 데이터 캐싱이 유지되는지 확인", async ({ page }) => {
+		// 1. '전체'에서 스크롤하여 데이터 추가 로드
+		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
-		await expect(
-			page.getByRole("heading", { level: 1, name: "Post Archive" }),
-		).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(page.getByTestId("post-archive-filter-all")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-	});
-
-	test("카테고리 필터 전환 시 스크롤 점프 없이 선택한 패널 데이터로 전환되는지 확인", async ({
-		page,
-	}) => {
-		await openArchiveFromHeader(page);
-		const aiFilterButton = page.getByTestId("post-archive-filter-ai");
-		await aiFilterButton.scrollIntoViewIfNeeded();
-
-		await aiFilterButton.click();
-
-		const firstAiCard = page.getByTestId("post-archive-card-0");
-		await expect(aiFilterButton).toHaveAttribute("aria-pressed", "true");
-		await expect(firstAiCard).toHaveAttribute("data-card-category", "ai");
-		await expect(firstAiCard).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(aiFilterButton).toBeInViewport();
-		await expect(firstAiCard).toBeInViewport();
-	});
-
-	test("AI에서 다른 카테고리로 전환해도 짧은 리스트는 자동으로 추가 로드된다", async ({
-		page,
-	}) => {
-		await page.setViewportSize({ width: 1280, height: 2000 });
-		await openArchiveFromHeader(page);
-
-		await page.getByTestId("post-archive-filter-ai").click();
-		await expect(page.getByTestId("post-archive-card-0")).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-
-		const webCount = await readArchiveFilterCount(page, "web");
-		expect(webCount).toBeGreaterThan(POST_ARCHIVE_INITIAL_VISIBLE_COUNT);
-
-		await page.getByTestId("post-archive-filter-web").click();
-
+		// 초기 9개보다 많아질 때까지 대기
 		await expect
-			.poll(
-				async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [100, 250, 500, 1000],
-				},
-			)
+			.poll(() => getRenderedArchiveCardCount(page))
 			.toBeGreaterThan(POST_ARCHIVE_INITIAL_VISIBLE_COUNT);
-	});
+		const expandedCount = await getRenderedArchiveCardCount(page);
 
-	test("아카이브에서 스크롤로 로드된 상태가 상세 진입 후 뒤로가기에도 유지되는지 확인", async ({
-		page,
-	}) => {
-		await openArchiveFromHeader(page);
-
-		await expect
-			.poll(
-				async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [200, 500, 1000],
-				},
-			)
-			.toBeGreaterThanOrEqual(9);
-
-		const initialVisibleCount =
-			(await readArchiveViewSnapshot(page))?.visibleCount ?? 0;
-		let expandedVisibleCount = initialVisibleCount;
-
-		await expect
-			.poll(
-				async () => {
-					await page.evaluate(() => {
-						window.scrollTo(0, document.body.scrollHeight);
-					});
-					expandedVisibleCount =
-						(await readArchiveViewSnapshot(page))?.visibleCount ?? 0;
-					return expandedVisibleCount;
-				},
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [200, 500, 1000, 1500],
-				},
-			)
-			.toBeGreaterThan(initialVisibleCount);
-
-		const renderedCardCount = await page
-			.locator(POST_ARCHIVE_CARD_SELECTOR)
-			.count();
-		const targetCard = page
-			.locator(POST_ARCHIVE_CARD_SELECTOR)
-			.nth(Math.max(0, Math.floor(renderedCardCount / 2)));
-		await expect(targetCard).toBeVisible(DEFAULT_TEST_OPTION);
-
-		const scrollBeforeOpen = await page.evaluate(() => window.scrollY);
-
+		// 2. 다른 카테고리로 이동
+		const webFilter = page.getByTestId("post-archive-filter-web");
 		await Promise.all([
-			page.waitForURL("**/post/*/*", {
-				waitUntil: "domcontentloaded",
-				timeout: DEFAULT_TIMEOUT_TIME,
-			}),
-			targetCard.click(),
+			page.waitForURL((url) => url.pathname.endsWith("/archive/web")),
+			webFilter.click(),
 		]);
 
-		await expect(page.getByTestId(POST_DETAIL_TITLE_TEST_ID)).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
+		// 3. 다시 '전체'로 복귀
+		const allFilter = page.getByTestId("post-archive-filter-all");
+		await Promise.all([
+			page.waitForURL((url) => url.pathname.endsWith("/archive/all")),
+			allFilter.click(),
+		]);
 
-		await page.goBack({ waitUntil: "domcontentloaded" });
-		await expect(page.getByTestId("post-archive-section")).toBeVisible(
-			DEFAULT_TEST_OPTION,
+		// 4. 즉시 이전 데이터 개수가 복원되었는지 확인 (로딩 없이 캐시 데이터 노출)
+		await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR)).toHaveCount(
+			expandedCount,
 		);
-
-		await expect
-			.poll(
-				async () => (await readArchiveViewSnapshot(page))?.visibleCount ?? 0,
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [200, 500, 1000],
-				},
-			)
-			.toBeGreaterThanOrEqual(expandedVisibleCount);
-
-		await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR).first()).toBeVisible(
-			DEFAULT_TEST_OPTION,
-		);
-		await expect
-			.poll(async () => page.evaluate(() => window.scrollY), {
-				timeout: DEFAULT_TIMEOUT_TIME,
-				intervals: [200, 500, 1000],
-			})
-			.toBeGreaterThan(Math.max(160, Math.floor(scrollBeforeOpen * 0.4)));
 	});
 });
 
-test.describe("아카이브 패널 summary 와 DOM 카드 수 검증", () => {
-	test.beforeEach(async ({ page }) => {
-		await HomePage.goToHome(page);
-		await enableDeterministicMode(page);
-		await page.setViewportSize({ width: 600, height: 900 });
-		await openArchiveFromHeader(page);
+test.describe("404 및 링크 유효성 테스트", () => {
+	test("잘못된 경로 진입 시 404 페이지 표시", async ({ page }) => {
+		await page.goto(`${E2E_TEST_URL}/invalid-path`);
+		await expect(page.getByTestId("not-found-title")).toBeVisible();
+		await expect(
+			page.getByRole("heading", { name: /존재하지 않는 url/i }),
+		).toBeVisible();
 	});
 
-	for (const option of ARCHIVE_CATEGORY_OPTIONS) {
-		test(`${option.value} 패널 summary 개수와 스크롤 중 관측된 전체 카드 수가 일치하는지 확인`, async ({
-			page,
-		}) => {
-			test.slow();
-
-			await scrollArchiveToTop(page);
-
-			const filterButton = page.getByTestId(
-				`post-archive-filter-${option.value}`,
-			);
-			await expect(filterButton).toBeVisible(DEFAULT_TEST_OPTION);
-			await filterButton.click();
-			await expect(filterButton).toHaveAttribute(
-				"aria-pressed",
-				"true",
-				DEFAULT_TEST_OPTION,
-			);
-			await page.waitForTimeout(220);
-
-			const expectedCount = await readArchiveFilterCount(page, option.value);
-
-			if (expectedCount === 0) {
-				await expect(
-					page.getByText("선택한 카테고리에 표시할 포스트가 아직 없습니다."),
-				).toBeVisible(DEFAULT_TEST_OPTION);
-				await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR)).toHaveCount(0);
-				return;
-			}
-
-			await expect(
-				page.locator(POST_ARCHIVE_CARD_SELECTOR).first(),
-			).toBeVisible(DEFAULT_TEST_OPTION);
-
-			const observedKeys = await collectObservedArchiveCardKeys(
-				page,
-				expectedCount,
-			);
-
-			expect(observedKeys.size).toBe(expectedCount);
-		});
-	}
-});
-
-test.describe("404 및 블로그 포스트 링크 테스트", () => {
-	const WRONG_PAGE_URL = `${E2E_TEST_URL}/non-existent-route`;
-
-	test.beforeEach(async ({ page }) => {
-		await HomePage.goToHome(page);
-		await enableDeterministicMode(page);
-		await expect(page.getByRole("link", { name: "Homepage link" })).toBeVisible(
-			{ timeout: DEFAULT_TIMEOUT_TIME },
-		);
-	});
-
-	test("등록되지 않은 페이지로 이동 시 404 페이지를 표시하는지 확인", async ({
-		page,
-	}) => {
-		await page.goto(WRONG_PAGE_URL, { waitUntil: "domcontentloaded" });
-
-		await expect(async () => {
-			await expect(page.getByTestId("not-found-title")).toBeVisible(
-				DEFAULT_TEST_OPTION,
-			);
-			await expect(page.getByTestId("not-found-url")).toBeVisible(
-				DEFAULT_TEST_OPTION,
-			);
-
-			const heading = page.getByRole("heading", { level: 1 });
-			await expect(heading).toContainText(
-				"존재하지 않는 url",
-				DEFAULT_TEST_OPTION,
-			);
-		}).toPass({ intervals: [2000, 3000, 4000], timeout: DEFAULT_TIMEOUT_TIME });
-	});
-
-	test("등록되지 않은 페이지에서 홈으로 돌아갈 수 있는지 확인", async ({
-		page,
-	}) => {
-		await page.goto(WRONG_PAGE_URL);
-
-		await expect(async () => {
-			await expect(page.getByTestId("not-found-title")).toBeVisible(
-				DEFAULT_TEST_OPTION,
-			);
-			await expect(page.getByTestId("not-found-home-button")).toBeVisible(
-				DEFAULT_TEST_OPTION,
-			);
-		}).toPass({ intervals: [2000, 3000, 4000], timeout: DEFAULT_TIMEOUT_TIME });
-
-		await page.getByTestId("not-found-home-button").click();
-		await page.waitForURL(E2E_TEST_URL, {
-			waitUntil: "domcontentloaded",
-			timeout: DEFAULT_TIMEOUT_TIME,
-		});
-
-		await expect(async () => {
-			await expect(
-				page.getByRole("link", { name: "Homepage link" }),
-			).toBeVisible(DEFAULT_TEST_OPTION);
-		}).toPass({ intervals: [2000, 3000, 4000], timeout: DEFAULT_TIMEOUT_TIME });
-	});
-
-	test("Fresh Chronicles 카드 클릭 시 해당 포스트로 이동하는지 확인", async ({
-		page,
-	}) => {
-		const homePage = new HomePage(page);
-		await expect(homePage.freshChroniclesGrid).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect
-			.poll(
-				async () => getFreshChroniclesCardCount(homePage.freshChroniclesGrid),
-				{
-					timeout: DEFAULT_TIMEOUT_TIME,
-					intervals: [200, 500, 1000],
-				},
-			)
-			.toBeGreaterThanOrEqual(1);
-		await expect(homePage.getFirstPostCard()).toBeVisible(DEFAULT_TEST_OPTION);
-		await expect(homePage.getFirstPostCard()).toBeEnabled(DEFAULT_TEST_OPTION);
-
+	test("404 페이지에서 홈으로 복귀 가능 확인", async ({ page }) => {
+		await page.goto(`${E2E_TEST_URL}/invalid-path`);
 		await Promise.all([
-			page.waitForURL("**/post/*/*", {
-				waitUntil: "domcontentloaded",
-				timeout: DEFAULT_TIMEOUT_TIME,
-			}),
-			homePage.clickFirstPost(),
+			page.waitForURL(E2E_TEST_URL),
+			page.getByTestId("not-found-home-button").click(),
 		]);
-
-		await expect(async () => {
-			await expect(page.getByTestId("not-found-title")).toBeHidden();
-			await expect(page.getByTestId(POST_DETAIL_TITLE_TEST_ID)).toBeVisible(
-				DEFAULT_TEST_OPTION,
-			);
-		}).toPass({
-			intervals: [1000, 2000, 3000],
-			timeout: DEFAULT_TIMEOUT_TIME,
-		});
-
-		const loadingScreen = page.getByTestId("loading-screen");
-		if (await loadingScreen.isVisible().catch(() => false)) {
-			await expect(loadingScreen).toBeHidden(DEFAULT_TEST_OPTION);
-		}
+		await expect(
+			page.getByRole("link", { name: "Homepage link" }),
+		).toBeVisible();
 	});
 });

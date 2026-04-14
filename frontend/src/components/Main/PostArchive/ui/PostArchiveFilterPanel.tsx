@@ -1,13 +1,11 @@
 "use client";
 
-import {
-	ARCHIVE_CATEGORY_OPTIONS,
-	type ArchiveSummary,
-	type ArchiveCategoryFilter as PostArchiveCategoryFilter,
-} from "@sunub/types";
-import type { Dispatch, SetStateAction } from "react";
+import { SITE_PATHS } from "@sunub/contracts";
+import type { ArchiveSummary, Categories } from "@sunub/types";
+import { ARCHIVE_CATEGORY_OPTIONS } from "@sunub/types";
+import Link from "next/link";
 import { memo } from "react";
-import { usePostArchiveFilterState } from "../hooks/usePostArchiveFilterState";
+import { getCategoryIcon } from "@/shared/utils/icons";
 import {
 	ArchiveContentRail,
 	ArchiveFilterBar,
@@ -19,40 +17,44 @@ import {
 
 export const PostArchiveFilterPanel = memo(function PostArchiveFilterPanel({
 	selectedCategory,
-	setSelectedCategory,
 	summary,
-	markManagedScroll,
 }: {
-	selectedCategory: PostArchiveCategoryFilter;
-	setSelectedCategory: Dispatch<SetStateAction<PostArchiveCategoryFilter>>;
+	selectedCategory: Categories | "all";
 	summary: ArchiveSummary;
-	markManagedScroll: () => void;
 }) {
-	const filterState = usePostArchiveFilterState({
-		selectedCategory,
-		setSelectedCategory,
-		summary,
-		markManagedScroll,
-	});
+	const selectedCategoryOption = ARCHIVE_CATEGORY_OPTIONS.find(
+		(option) => option.value === selectedCategory,
+	);
+	const archiveMeta =
+		selectedCategory === "all"
+			? `총 ${summary.totalCount}개의 포스트를 한 페이지에서 탐색하고 있습니다.`
+			: `${selectedCategoryOption?.description ?? selectedCategory} 카테고리의 포스트 ${summary.counts[selectedCategory]}개를 보고 있습니다.`;
 
 	return (
 		<>
 			<ArchiveContentRail>
-				<ArchiveFilterBar aria-busy={filterState.isFilterPending}>
+				<ArchiveFilterBar>
 					{ARCHIVE_CATEGORY_OPTIONS.map((option) => {
-						const isActive = filterState.selectedCategory === option.value;
+						const isActive = selectedCategory === option.value;
+						const href =
+							option.value === "all"
+								? SITE_PATHS.archive
+								: SITE_PATHS.archiveCategory(option.value);
+						const Icon = getCategoryIcon(option.value);
 
 						return (
 							<ArchiveFilterButton
 								key={option.value}
-								type="button"
+								as={Link}
+								href={href}
 								$active={isActive}
-								$pending={filterState.isFilterPending && !isActive}
-								onClick={() => filterState.handleSelectCategory(option.value)}
 								aria-pressed={isActive}
 								data-testid={`post-archive-filter-${option.value}`}
 							>
-								<ArchiveFilterLabel>{option.label}</ArchiveFilterLabel>
+								<ArchiveFilterLabel>
+									{Icon && <Icon size={16} style={{ marginRight: 4 }} />}
+									{option.label}
+								</ArchiveFilterLabel>
 								<ArchiveFilterCount
 									data-testid={`post-archive-filter-count-${option.value}`}
 								>
@@ -65,7 +67,7 @@ export const PostArchiveFilterPanel = memo(function PostArchiveFilterPanel({
 			</ArchiveContentRail>
 
 			<ArchiveContentRail>
-				<ArchiveMeta>{filterState.archiveMeta}</ArchiveMeta>
+				<ArchiveMeta>{archiveMeta}</ArchiveMeta>
 			</ArchiveContentRail>
 		</>
 	);
