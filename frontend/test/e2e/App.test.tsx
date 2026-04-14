@@ -27,6 +27,26 @@ async function getRenderedArchiveCardCount(page: Page) {
 }
 
 /**
+ * 무한 스크롤 후 카드 수가 안정될 때까지 대기
+ */
+async function waitForStableArchiveCardCount(page: Page) {
+	let previousCount = await getRenderedArchiveCardCount(page);
+
+	for (let attempt = 0; attempt < 6; attempt += 1) {
+		await page.waitForTimeout(300);
+		const nextCount = await getRenderedArchiveCardCount(page);
+
+		if (nextCount === previousCount) {
+			return nextCount;
+		}
+
+		previousCount = nextCount;
+	}
+
+	return previousCount;
+}
+
+/**
  * 특정 스크롤 위치에 도달할 때까지 대기 (내성 오차 5px)
  */
 async function _waitForScrollPosition(page: Page, targetY: number) {
@@ -100,7 +120,7 @@ test.describe("아카이브 캐싱 및 스크롤 복원 테스트", () => {
 		await expect
 			.poll(() => getRenderedArchiveCardCount(page))
 			.toBeGreaterThan(POST_ARCHIVE_INITIAL_VISIBLE_COUNT);
-		const expandedCount = await getRenderedArchiveCardCount(page);
+		const expandedCount = await waitForStableArchiveCardCount(page);
 
 		// 2. 다른 카테고리로 이동
 		const webFilter = page.getByTestId("post-archive-filter-web");
@@ -117,6 +137,10 @@ test.describe("아카이브 캐싱 및 스크롤 복원 테스트", () => {
 		]);
 
 		// 4. 즉시 이전 데이터 개수가 복원되었는지 확인 (로딩 없이 캐시 데이터 노출)
+		await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR)).toHaveCount(
+			expandedCount,
+		);
+		await page.waitForTimeout(400);
 		await expect(page.locator(POST_ARCHIVE_CARD_SELECTOR)).toHaveCount(
 			expandedCount,
 		);

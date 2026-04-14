@@ -1,13 +1,20 @@
 "use client";
 
 import type { FrontMatter } from "@sunub/types";
-import { useMemo, useRef, useSyncExternalStore } from "react";
+import {
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	useSyncExternalStore,
+} from "react";
 import { useRangeLoadMoreEffect } from "../../NewestPostList/hooks/useRangeLoadMoreEffect";
 import { useWindowedRange } from "../../NewestPostList/hooks/useWindowedRange";
 import { createVirtualScrollConfig } from "../../NewestPostList/utils/virtualListUtils";
 import {
 	chunkPostsIntoRows,
 	getPostArchiveColumnCount,
+	getPostArchiveRemainingDistancePx,
 	POST_ARCHIVE_ESTIMATED_ROW_HEIGHT,
 	POST_ARCHIVE_MAX_PRELOAD_RESERVE_PX,
 	POST_ARCHIVE_MIN_PRELOAD_RESERVE_PX,
@@ -121,8 +128,50 @@ export function usePostArchiveVirtualList({
 		topSpacerPx,
 		bottomSpacerPx,
 		registerItemElement,
-		remainingPx,
+		remainingPx: windowedRemainingPx,
 	} = useWindowedRange(listRef, rows.length, rangeConfig);
+	const [remainingPx, setRemainingPx] = useState(Number.POSITIVE_INFINITY);
+
+	useEffect(() => {
+		if (posts.length === 0) {
+			setRemainingPx(Number.POSITIVE_INFINITY);
+			return;
+		}
+
+		if (rangeConfig.enabled) {
+			setRemainingPx(windowedRemainingPx);
+			return;
+		}
+
+		let rafId: number | null = null;
+		const updateRemainingDistance = () => {
+			setRemainingPx(getPostArchiveRemainingDistancePx(listRef.current));
+		};
+		const scheduleRemainingDistanceUpdate = () => {
+			if (rafId !== null) {
+				cancelAnimationFrame(rafId);
+			}
+
+			rafId = requestAnimationFrame(() => {
+				rafId = null;
+				updateRemainingDistance();
+			});
+		};
+
+		updateRemainingDistance();
+		window.addEventListener("scroll", scheduleRemainingDistanceUpdate, {
+			passive: true,
+		});
+		window.addEventListener("resize", scheduleRemainingDistanceUpdate);
+
+		return () => {
+			window.removeEventListener("scroll", scheduleRemainingDistanceUpdate);
+			window.removeEventListener("resize", scheduleRemainingDistanceUpdate);
+			if (rafId !== null) {
+				cancelAnimationFrame(rafId);
+			}
+		};
+	}, [posts.length, rangeConfig.enabled, windowedRemainingPx]);
 
 	// Apply Infinite Scroll Effect
 	useRangeLoadMoreEffect({
