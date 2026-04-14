@@ -34,7 +34,7 @@ describe("archive shared contracts", () => {
 	});
 
 	test("archive route metadata stays centralized", () => {
-		expect(SITE_PATHS.archive).toBe("/archive");
+		expect(SITE_PATHS.archive).toBe("/archive/all");
 		expect(ROUTE_QUERY_PARAMS.archiveCategory).toBe("category");
 	});
 
