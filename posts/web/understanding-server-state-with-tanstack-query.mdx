@@ -241,17 +241,22 @@ queryClient.invalidateQueries({ queryKey: ['todos'] })
 TanStack Query는 서버 상태가 외부 요인에 의해 언제든 변경될 수 있다는 점을 전제로 설계되었습니다. 이에 따라 시스템은 데이터를 최신 상태로 유지하기 위해 다음과 같은 기본 설정과 생명주기를 따릅니다.
 
 1. **즉각적인 Stale 상태 전환 및 자동 재검증**
-    `useQuery` 등을 통해 데이터를 가져오면, 명시적인 `staleTime` 설정이 없는 한 캐시된 데이터는 즉시 '구식(Stale)'으로 간주됩니다(`staleTime: 0`). 데이터가 Stale 상태로 분류되어 있을 때, 해당 `Query` 객체를 구독하는 `QueryObserver`는 아래의 이벤트가 발생하면 백그라운드에서 데이터를 자동으로 다시 가져옵니다(Refetch).
+
+`useQuery` 등을 통해 데이터를 가져오면, 명시적인 `staleTime` 설정이 없는 한 캐시된 데이터는 즉시 '구식(Stale)'으로 간주됩니다(`staleTime: 0`). 데이터가 Stale 상태로 분류되어 있을 때, 해당 `Query` 객체를 구독하는 `QueryObserver`는 아래의 이벤트가 발생하면 백그라운드에서 데이터를 자동으로 다시 가져옵니다(Refetch).
+
     - 쿼리를 사용하는 컴포넌트가 새롭게 마운트될 때 (`refetchOnMount`)
     - 브라우저 창에 다시 포커스가 맞춰졌을 때 (`refetchOnWindowFocus`)
     - 네트워크가 끊어졌다가 다시 연결되었을 때 (`refetchOnReconnect`)
-        빈번한 네트워크 요청을 줄이려면 `staleTime` 옵션을 길게 설정하여 쿼리가 데이터를 다시 가져오는 빈도를 제어할 수 있습니다.
 
-2. **비활성 쿼리와 가비지 컬렉션 (`gcTime`)**
-    해당 쿼리 데이터를 참조하는 컴포넌트가 모두 언마운트되어 `QueryObserver`가 0개가 되면, 쿼리는 '비활성(Inactive)' 상태로 전환됩니다. 기본적으로 비활성 상태의 쿼리 데이터는 5분(`1000 * 60 * 5` 밀리초) 동안 캐시에 유지된 후 가비지 컬렉터에 의해 `QueryCache`에서 완전히 삭제됩니다.
+빈번한 네트워크 요청을 줄이려면 `staleTime` 옵션을 길게 설정하여 쿼리가 데이터를 다시 가져오는 빈도를 제어할 수 있습니다.
 
-3. **오류 발생 시 재시도 (Retry)**
-    데이터 페칭 과정에서 실패가 발생할 경우, 일시적인 네트워크 오류일 가능성을 고려하여 즉각적으로 UI에 에러를 던지지 않습니다. 대신 지수적 백오프(Exponential Backoff) 지연 시간을 적용하여 기본적으로 최대 3회까지 내부적으로 재시도(Retry)를 수행한 후, 모든 시도가 실패했을 때 최종적으로 에러 상태를 반환합니다.
+1. **비활성 쿼리와 가비지 컬렉션 (`gcTime`)**
+
+해당 쿼리 데이터를 참조하는 컴포넌트가 모두 언마운트되어 `QueryObserver`가 0개가 되면, 쿼리는 '비활성(Inactive)' 상태로 전환됩니다. 기본적으로 비활성 상태의 쿼리 데이터는 5분(`1000 * 60 * 5` 밀리초) 동안 캐시에 유지된 후 가비지 컬렉터에 의해 `QueryCache`에서 완전히 삭제됩니다.
+
+1. **오류 발생 시 재시도 (Retry)**
+
+데이터 페칭 과정에서 실패가 발생할 경우, 일시적인 네트워크 오류일 가능성을 고려하여 즉각적으로 UI에 에러를 던지지 않습니다. 대신 지수적 백오프(Exponential Backoff) 지연 시간을 적용하여 기본적으로 최대 3회까지 내부적으로 재시도(Retry)를 수행한 후, 모든 시도가 실패했을 때 최종적으로 에러 상태를 반환합니다.
 
 ## 마무리
 
@@ -267,4 +272,3 @@ TanStack Query는 단순한 데이터 페칭 라이브러리(Data Fetching Libra
 
 - [https://tanstack.com/](https://tanstack.com/)
 - [https://tanstack.com/query/latest/docs/framework/react/reference/useMutation](https://tanstack.com/query/latest/docs/framework/react/reference/useMutation)
--
