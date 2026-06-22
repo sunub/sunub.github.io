@@ -5,6 +5,7 @@ export const MainWrapper = styled.main`
   flex-direction: column;
   position: relative;
 
+  width: 100%;
   max-width: 1050px;
   margin-left: auto;
   margin-right: auto;

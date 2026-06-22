@@ -587,7 +587,108 @@ li.active > a {
 }
 
 html[data-color-theme="light"] {
+	--color-navlink: oklch(42.14% 0.08 29.36);
+	--color-text: oklch(21.08% 0.055 34.69);
+	--color-background: oklch(97.14% 0.011 31.07);
+	--color-primary: oklch(100% 0 0 / 0.8);
+	--color-highlight: oklch(70.8% 0.165 32.85);
+	--color-header: oklch(87.44% 0.067 30.96);
+	--color-icon: oklch(61.8% 0.027 30.58);
+	--color-elevation: oklch(100% 0 0);
+	--color-bird: oklch(73.44% 0.152 21.47);
+	--color-thumb: oklch(53.74% 0.029 30.1);
+	--color-thumb-background: oklch(92.54% 0.01 32.52);
+	--color-frontWave: oklch(97.14% 0.011 31.07);
+	--color-midStart: oklch(93.91% 0.026 32.24);
+	--color-midStop: oklch(87.16% 0.067 29.88);
+	--color-endStart: oklch(91.76% 0.034 31.16);
+	--color-endStop: oklch(89.29% 0.054 18.22);
+	--color-landscape: linear-gradient(
+		1deg,
+		oklch(97.14% 0.011 31.07) 21.41%,
+		oklch(82.9% 0.09573202406959574 31.111262465234525 / 68%) 55.11%
+	);
+	--color-light-heroimage: 1;
+	--color-dark-heroimage: 0;
+	--color-codeBlock: rgba(244, 218, 218, 0.85);
+	--color-title: oklch(20.8% 0.165 32.85);
+	--sh-class: #2d5e9d;
+	--sh-identifier: #354150;
+	--sh-sign: #8996a3;
+	--sh-property: #0550ae;
+	--sh-entity: #249a97;
+	--sh-jsxliterals: #6266d1;
+	--sh-string: #00a99a;
+	--sh-keyword: #f47067;
+	--sh-comment: #a19595;
+	--color-headerBackground: linear-gradient(
+		16deg,
+		oklch(97.14% 0.011 31.07) 0.41%,
+		oklch(87.44% 0.067 30.96) -0.89%
+	);
+	--post-card-surface-base: var(--color-frontWave);
+	--post-card-surface-strong: rgba(248, 249, 250, 1);
+	--post-card-border: rgba(34, 34, 34, 0.1);
+	--post-card-muted-text: rgba(34, 34, 34, 0.72);
+	--post-card-subtle-text: rgba(34, 34, 34, 0.58);
+	--post-card-tag-bg: rgba(34, 34, 34, 0.04);
+	--post-card-tag-text: rgba(34, 34, 34, 0.72);
+	--post-card-icon-surface: rgba(248, 249, 250, 1);
+	--post-card-icon-text: rgba(34, 34, 34, 0.44);
+	--post-card-code-visual-surface: oklch(95% 0.03 300);
+	--post-card-web-visual-surface: oklch(95% 0.03 242);
+	--post-card-cs-visual-surface: oklch(96% 0.03 168);
+	--post-card-algorithm-visual-surface: oklch(96% 0.04 86);
+	--post-card-ai-visual-surface: oklch(0.7222 0.1 324);
+	--bridge-bg-url: url("/assets/light_bridge.webp");
+	--cars-bg-url: url("/assets/light_cars.webp");
+	--clouds-bg-url: url("/assets/light_clouds.webp");
+	--clouds-fallback-bg: oklch(0.8734 0.0662 31.17);
+	--bridge-opacity: 1;
+	--cars-opacity: 1;
+	--clouds-opacity: 1;
+	--hero-shadow-color: oklch(50.81% 0.191 29.05);
+	--hero-shadow-opacity: 1;
+
 	color-scheme: light;
+}
+
+@supports (color: color-mix(in oklch, red, blue)) {
+	html[data-color-theme="light"] {
+		--color-codeBlock: color-mix(
+			in oklch,
+			oklch(87.48% 0.113 75.97 / 73.11%),
+			var(--color-primary) 52.5%
+		);
+		--post-card-surface-strong: color-mix(
+			in oklch,
+			var(--color-background) 96%,
+			white 4%
+		);
+		--post-card-border: color-mix(in oklch, var(--color-text) 10%, transparent);
+		--post-card-muted-text: color-mix(
+			in oklch,
+			var(--color-text) 72%,
+			transparent
+		);
+		--post-card-subtle-text: color-mix(
+			in oklch,
+			var(--color-text) 58%,
+			transparent
+		);
+		--post-card-tag-bg: color-mix(in oklch, var(--color-text) 4%, transparent);
+		--post-card-tag-text: color-mix(in oklch, var(--color-text) 72%, transparent);
+		--post-card-icon-surface: color-mix(
+			in oklch,
+			white 92%,
+			var(--color-background) 8%
+		);
+		--post-card-icon-text: color-mix(
+			in oklch,
+			var(--color-text) 44%,
+			transparent
+		);
+	}
 }
 
 html[data-color-theme="dark"] {

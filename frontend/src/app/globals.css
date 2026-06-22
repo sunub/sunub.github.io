@@ -3,7 +3,6 @@
 * {
 	margin: 0px;
 	line-height: calc(1em + 0.9rem);
-	-webkit-font-smoothing: antialiased;
 }
 
 *,
@@ -12,16 +11,7 @@
 	box-sizing: border-box;
 }
 
-body {
-	color: var(--color-text);
-	min-height: 100%;
-	background: var(--color-background);
-	font-size: 1rem;
-	font-weight: 500;
-	font-family: var(--pretendard-font-regular);
-}
-
-html {
+:root {
 	--color-light-heroimage: 1;
 	--color-dark-heroimage: 0;
 	--scrollbar-width: 12px;
@@ -105,6 +95,18 @@ html {
 			var(--color-highlight) 9.5%,
 			transparent
 		);
+}
+
+body {
+	color: var(--color-text);
+	min-height: 100%;
+	background: var(--color-background);
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: var(--pretendard-font-regular);
+}
+
+html {
 	display: block;
 }
 
@@ -426,9 +428,7 @@ li.active > a {
 		margin-left: auto;
 		margin-right: auto;
 	}
-}
 
-@container root (width > 768px) {
 	#moblie-nav-portal {
 		display: none;
 	}
@@ -438,7 +438,11 @@ li.active > a {
 	}
 }
 
-@container root (width <= 786px) {
+@container root (width <= 768px) {
+	:root {
+		--fresh-chronicles-card-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
 	#blog-main__categories {
 		display: none;
 	}
@@ -615,11 +619,7 @@ html[data-color-theme="light"] {
 	);
 	--color-light-heroimage: 1;
 	--color-dark-heroimage: 0;
-	--color-codeBlock: color-mix(
-		in oklch,
-		oklch(87.48% 0.113 75.97 / 73.11%),
-		var(--color-primary) 52.5%
-	);
+	--color-codeBlock: rgba(244, 218, 218, 0.85);
 	--color-title: oklch(20.8% 0.165 32.85);
 	--sh-class: #2d5e9d;
 	--sh-identifier: #354150;
@@ -636,34 +636,14 @@ html[data-color-theme="light"] {
 		oklch(87.44% 0.067 30.96) -0.89%
 	);
 	--post-card-surface-base: var(--color-frontWave);
-	--post-card-surface-strong: color-mix(
-		in oklch,
-		var(--color-background) 96%,
-		white 4%
-	);
-	--post-card-border: color-mix(in oklch, var(--color-text) 10%, transparent);
-	--post-card-muted-text: color-mix(
-		in oklch,
-		var(--color-text) 72%,
-		transparent
-	);
-	--post-card-subtle-text: color-mix(
-		in oklch,
-		var(--color-text) 58%,
-		transparent
-	);
-	--post-card-tag-bg: color-mix(in oklch, var(--color-text) 4%, transparent);
-	--post-card-tag-text: color-mix(in oklch, var(--color-text) 72%, transparent);
-	--post-card-icon-surface: color-mix(
-		in oklch,
-		white 92%,
-		var(--color-background) 8%
-	);
-	--post-card-icon-text: color-mix(
-		in oklch,
-		var(--color-text) 44%,
-		transparent
-	);
+	--post-card-surface-strong: rgba(248, 249, 250, 1);
+	--post-card-border: rgba(34, 34, 34, 0.1);
+	--post-card-muted-text: rgba(34, 34, 34, 0.72);
+	--post-card-subtle-text: rgba(34, 34, 34, 0.58);
+	--post-card-tag-bg: rgba(34, 34, 34, 0.04);
+	--post-card-tag-text: rgba(34, 34, 34, 0.72);
+	--post-card-icon-surface: rgba(248, 249, 250, 1);
+	--post-card-icon-text: rgba(34, 34, 34, 0.44);
 	--post-card-code-visual-surface: oklch(95% 0.03 300);
 	--post-card-web-visual-surface: oklch(95% 0.03 242);
 	--post-card-cs-visual-surface: oklch(96% 0.03 168);
@@ -680,6 +660,48 @@ html[data-color-theme="light"] {
 	--hero-shadow-opacity: 1;
 
 	color-scheme: light;
+}
+
+@supports (color: color-mix(in oklch, red, blue)) {
+	html[data-color-theme="light"] {
+		--color-codeBlock: color-mix(
+			in oklch,
+			oklch(87.48% 0.113 75.97 / 73.11%),
+			var(--color-primary) 52.5%
+		);
+		--post-card-surface-strong: color-mix(
+			in oklch,
+			var(--color-background) 96%,
+			white 4%
+		);
+		--post-card-border: color-mix(in oklch, var(--color-text) 10%, transparent);
+		--post-card-muted-text: color-mix(
+			in oklch,
+			var(--color-text) 72%,
+			transparent
+		);
+		--post-card-subtle-text: color-mix(
+			in oklch,
+			var(--color-text) 58%,
+			transparent
+		);
+		--post-card-tag-bg: color-mix(in oklch, var(--color-text) 4%, transparent);
+		--post-card-tag-text: color-mix(
+			in oklch,
+			var(--color-text) 72%,
+			transparent
+		);
+		--post-card-icon-surface: color-mix(
+			in oklch,
+			white 92%,
+			var(--color-background) 8%
+		);
+		--post-card-icon-text: color-mix(
+			in oklch,
+			var(--color-text) 44%,
+			transparent
+		);
+	}
 }
 
 html[data-color-theme="dark"] {
@@ -735,6 +757,7 @@ html[data-color-theme="dark"] {
 	--post-card-web-visual-surface: #172033;
 	--post-card-cs-visual-surface: #122a22;
 	--post-card-algorithm-visual-surface: #2c2118;
+
 	--bridge-bg-url: url("/assets/dark_bridge.webp");
 	--cars-bg-url: url("/assets/dark_cars.webp");
 	--clouds-bg-url: url("/assets/dark_clouds.webp");
@@ -746,6 +769,24 @@ html[data-color-theme="dark"] {
 	--hero-shadow-opacity: 1;
 
 	color-scheme: dark;
+}
+
+html[data-color-theme="dark"] & {
+	background:
+		radial-gradient(
+			circle at 14% 18%,
+			color-mix(in oklch, var(--post-card-accent) 30%, transparent),
+			transparent 36%
+		),
+		linear-gradient(
+			145deg,
+			var(--post-card-visual-surface),
+			color-mix(
+				in oklch,
+				var(--post-card-accent) 18%,
+				var(--post-card-surface-base) 82%
+			)
+		);
 }
 
 .shiki {
