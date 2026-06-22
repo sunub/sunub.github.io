@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 		{ category: "web" },
 		{ category: "cs" },
 		{ category: "algorithm" },
-		{ cateogry: "ai" },
+		{ category: "ai" },
 	];
 }
 
