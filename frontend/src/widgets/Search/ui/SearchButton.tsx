@@ -58,6 +58,9 @@ const SearchSvg = styled.svg`
   block-size: 100%;
   overflow: visible;
   pointer-events: none;
+
+  width: 6dvw
+  max-width: 24px; 
 `;
 
 const StyledSearchButton = styled.button`
