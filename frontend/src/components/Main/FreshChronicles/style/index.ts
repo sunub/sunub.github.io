@@ -81,7 +81,7 @@ export const CardLink = styled(Link)<{
 	border-radius: clamp(2rem, 5vw, 3.6rem);
 	overflow: hidden;
 	isolation: isolate;
-	background: var(--post-card-bg-gradient), var(--post-card-surface-base);
+	background: var(--post-card-bg-gradient);
 	border: 1px solid var(--post-card-border);
 	box-shadow:
 		0 0.45rem 1.05rem rgba(15, 23, 42, 0.07),

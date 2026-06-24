@@ -659,6 +659,34 @@ html[data-color-theme="light"] {
 	--hero-shadow-color: oklch(50.81% 0.191 29.05);
 	--hero-shadow-opacity: 1;
 
+	--archive-card-bg-gradient: radial-gradient(
+		circle at top right,
+		color-mix(in oklch, var(--color-highlight) 16%, transparent),
+		transparent 44%
+	);
+	--archive-card-hover-border: color-mix(
+		in oklch,
+		var(--color-highlight) 26%,
+		var(--color-text) 10%
+	);
+	--archive-card-gradient-base:
+		linear-gradient(
+			145deg,
+			color-mix(in oklch, white 76%, transparent),
+			color-mix(in oklch, var(--color-text) 4%, transparent)
+		),
+		radial-gradient(
+			circle at bottom left,
+			color-mix(in oklch, var(--color-highlight) 10%, transparent),
+			transparent 38%
+		);
+	--archive-card-icon-shadow: color-mix(
+		in oklch,
+		var(--color-text) 8%,
+		transparent
+	);
+	--archive-card-icon-inset-shadow: color-mix(in oklch, white 70%, transparent);
+
 	color-scheme: light;
 }
 
@@ -768,15 +796,176 @@ html[data-color-theme="dark"] {
 	--hero-shadow-color: oklch(15.29% 0.034 262.59 / 85%);
 	--hero-shadow-opacity: 1;
 
+	--archive-card-bg-gradient:
+		radial-gradient(
+			circle at top right,
+			color-mix(in oklch, var(--color-highlight) 22%, transparent),
+			transparent 44%
+		),
+		linear-gradient(
+			180deg,
+			color-mix(in oklch, white 2%, var(--post-card-surface-strong) 98%),
+			transparent
+		);
+	--archive-card-hover-border: color-mix(
+		in oklch,
+		var(--color-highlight) 26%,
+		var(--color-text) 10%
+	);
+	--archive-card-gradient-base:
+		linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+		radial-gradient(
+			circle at bottom left,
+			color-mix(in oklch, var(--color-highlight) 14%, transparent),
+			transparent 38%
+		);
+	--archive-card-icon-shadow: rgba(0, 0, 0, 0.35);
+	--archive-card-icon-inset-shadow: rgba(255, 255, 255, 0.08);
+
 	color-scheme: dark;
 }
 
-html[data-color-theme="dark"] & {
-	background:
+.shiki {
+	overflow-x: auto;
+	border-radius: 0.75rem;
+}
+
+html[data-color-theme="light"] * {
+	--section-header-border: color-mix(
+		in oklch,
+		var(--color-text) 12%,
+		transparent
+	);
+	--section-eyebrow-accent: color-mix(
+		in oklch,
+		var(--color-highlight) 40%,
+		transparent
+	);
+
+	--post-card-bg-gradient: radial-gradient(
+		circle at top right,
+		color-mix(in oklch, var(--post-card-accent) 18%, transparent),
+		transparent 45%
+	);
+	--post-card-bg-gradient-hover: var(--post-card-bg-gradient);
+	--post-card-hover-border: color-mix(
+		in oklch,
+		var(--post-card-accent) 28%,
+		var(--color-text) 10%
+	);
+
+	--post-card-visual-border: color-mix(
+		in oklch,
+		white 28%,
+		var(--post-card-surface-base) 72%
+	);
+	--post-card-visual-gradient:
 		radial-gradient(
-			circle at 14% 18%,
+			circle at 16% 16%,
+			color-mix(in oklch, var(--post-card-accent) 22%, transparent),
+			transparent 35%
+		),
+		linear-gradient(
+			145deg,
+			var(--post-card-visual-surface),
+			color-mix(
+				in oklch,
+				var(--post-card-accent) 7%,
+				var(--post-card-surface-base)
+			)
+		);
+	--post-card-visual-shadow-color: color-mix(
+		in oklch,
+		var(--post-card-accent) 12%,
+		transparent
+	);
+
+	--post-card-orb-bg: color-mix(
+		in oklch,
+		var(--post-card-accent) 65%,
+		transparent
+	);
+	--post-card-frame-bg: linear-gradient(
+		155deg,
+		color-mix(in oklch, white 84%, var(--post-card-accent) 16%),
+		color-mix(in oklch, var(--post-card-accent) 24%, transparent)
+	);
+	--post-card-frame-shadow: color-mix(
+		in oklch,
+		var(--post-card-accent) 18%,
+		transparent
+	);
+	--post-card-frame-inset-shadow: color-mix(in oklch, white 70%, transparent);
+	--post-card-frame-color: color-mix(
+		in oklch,
+		var(--post-card-accent) 62%,
+		black 38%
+	);
+
+	--post-card-badge-bg: color-mix(
+		in oklch,
+		var(--post-card-accent) 12%,
+		white 88%
+	);
+	--post-card-badge-color: color-mix(
+		in oklch,
+		var(--post-card-accent) 70%,
+		black 30%
+	);
+	--post-card-badge-border: color-mix(
+		in oklch,
+		var(--post-card-accent) 18%,
+		transparent
+	);
+	--post-card-title-hover-color: color-mix(
+		in oklch,
+		var(--post-card-accent) 78%,
+		var(--color-text) 22%
+	);
+}
+
+html[data-color-theme="dark"] * {
+	--section-header-border: color-mix(
+		in oklch,
+		var(--color-text) 12%,
+		transparent
+	);
+	--section-eyebrow-accent: color-mix(
+		in oklch,
+		var(--color-highlight) 40%,
+		transparent
+	);
+
+	--post-card-bg-gradient:
+		radial-gradient(
+			circle at top right,
+			color-mix(in oklch, var(--post-card-accent) 24%, transparent),
+			transparent 46%
+		),
+		linear-gradient(
+			180deg,
+			color-mix(in oklch, white 2%, var(--post-card-surface-base) 98%),
+			transparent
+		);
+	--post-card-bg-gradient-hover:
+		radial-gradient(
+			circle at top right,
+			color-mix(in oklch, var(--post-card-accent) 28%, transparent),
+			transparent 46%
+		),
+		linear-gradient(
+			180deg,
+			color-mix(in oklch, white 4%, var(--post-card-surface-base) 96%),
+			transparent
+		);
+	--post-card-hover-border: rgba(255, 255, 255, 0.06);
+
+	--post-card-visual-border: rgba(255, 255, 255, 0.1);
+	--post-card-visual-gradient:
+		radial-gradient(
+			circle at 16% 16%,
 			color-mix(in oklch, var(--post-card-accent) 30%, transparent),
-			transparent 36%
+			transparent 37%
 		),
 		linear-gradient(
 			145deg,
@@ -787,9 +976,56 @@ html[data-color-theme="dark"] & {
 				var(--post-card-surface-base) 82%
 			)
 		);
-}
+	--post-card-visual-shadow-color: rgba(0, 0, 0, 0.34);
 
-.shiki {
-	overflow-x: auto;
-	border-radius: 0.75rem;
+	--post-card-orb-bg: color-mix(
+		in oklch,
+		var(--post-card-accent) 65%,
+		transparent
+	);
+	--post-card-frame-bg: linear-gradient(
+		155deg,
+		color-mix(
+			in oklch,
+			var(--post-card-surface-base) 84%,
+			var(--post-card-accent) 16%
+		),
+		color-mix(
+			in oklch,
+			var(--post-card-accent) 28%,
+			var(--post-card-surface-base) 72%
+		)
+	);
+	--post-card-frame-shadow: color-mix(
+		in oklch,
+		var(--post-card-accent) 24%,
+		transparent
+	);
+	--post-card-frame-inset-shadow: rgba(255, 255, 255, 0.1);
+	--post-card-frame-color: color-mix(
+		in oklch,
+		white 72%,
+		var(--post-card-accent) 28%
+	);
+
+	--post-card-badge-bg: color-mix(
+		in oklch,
+		var(--post-card-accent) 18%,
+		var(--post-card-surface-base) 82%
+	);
+	--post-card-badge-color: color-mix(
+		in oklch,
+		white 78%,
+		var(--post-card-accent) 22%
+	);
+	--post-card-badge-border: color-mix(
+		in oklch,
+		var(--post-card-accent) 28%,
+		transparent
+	);
+	--post-card-title-hover-color: color-mix(
+		in oklch,
+		var(--post-card-accent) 78%,
+		var(--color-text) 22%
+	);
 }
