@@ -23,6 +23,7 @@
 		"bench": "vitest bench",
 		"test:fe:unit": "pnpm --filter frontend run test:unit",
 		"test:fe:e2e": "pnpm --filter frontend run test:e2e",
+		"test:fe:e2e:mobile": "pnpm --filter frontend run test:e2e:mobile",
 		"test:be:unit": "pnpm --filter backend run test",
 		"test:fe:e2e:ui": "pnpm --filter frontend run test:e2e:ui",
 		"test:fe:e2e:stress": "pnpm --filter frontend run test:e2e:stress",
