@@ -11,8 +11,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
+import { WaveUnderline } from "@/components/ui/WaveUnderline/WaveUnderline";
 import { VisuallyHidden } from "@/components/VisuallyHidden";
-import { HeaderWaveUnderline } from "../HeaderWaveUnderline";
 
 const MENU_OFFSET_Y = 12;
 const MENU_CARET_HALF_WIDTH = 16;
@@ -208,14 +208,18 @@ const NavigationWrapper = styled.nav`
   z-index: 10000;
   padding-left: 1rem;
   font-size: 1.25rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 const TriggerWrapper = styled.div`
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
 `;
 
-const UnderLineWaveIcon = styled(HeaderWaveUnderline)`
+const UnderLineWaveIcon = styled(WaveUnderline)`
   display: block;
   width: 100%;
   height: 100%;
@@ -236,11 +240,17 @@ const UnderLineWaveIcon = styled(HeaderWaveUnderline)`
 `;
 
 const Button = styled.button`
+  appearance: none;
+  background: transparent;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+
   position: relative;
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
   min-width: max-content;
-  padding: 0 0 0.55rem;
   color: var(--color-text);
   line-height: 1;
   transition: color 200ms ease;

@@ -81,13 +81,13 @@ export function PostArchiveCard({
 		<ArchiveCardLink
 			href={href}
 			onClick={() => onNavigate?.(post, index)}
-			style={createPostCardCssVariables(post)}
 			aria-label={`${post.title} 글 보기`}
 			data-testid={`post-archive-card-${index}`}
 			data-card-key={`${post.category}/${post.slug}`}
 			data-card-category={post.category}
+			style={createPostCardCssVariables(post)}
 		>
-			<ArchiveCardVisual>
+			<ArchiveCardVisual id="main-page__archive-card-visual">
 				{media ? (
 					<ArchiveCardInjectedMedia post={post} media={media} />
 				) : (

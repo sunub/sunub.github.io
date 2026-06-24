@@ -5,8 +5,8 @@ export const HeaderWrapper = styled.div`
   top: 0;
   z-index: 1000;
   overflow: hidden;
-  margin-top: calc(60px - 1rem);
   isolation: isolate;
+  margin-top: 1rem;
   transition:
     background-color 220ms ease-in-out,
     box-shadow 220ms ease-in-out,
@@ -49,4 +49,5 @@ export const HeaderWrapper = styled.div`
     border-bottom-color: color-mix(in oklch, white 12%, transparent);
     box-shadow: 0 10px 30px color-mix(in oklch, black 32%, transparent);
   }
+
 `;

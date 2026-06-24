@@ -30,19 +30,19 @@ export const Backdrop = styled.button<{ $isOpen: boolean }>`
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   visibility: ${({ $isOpen }) => ($isOpen ? "visible" : "hidden")};
   user-select: ${({ $isOpen }) => ($isOpen ? "auto" : "none")};
-  z-index: ${({ $isOpen }) => ($isOpen ? 999 : -1)};
+  z-index: ${({ $isOpen }) => ($isOpen ? 99990 : -1)};
 `;
 
-export const Wrapper = styled.div<{ $isOpen: boolean }>`
-  z-index: 1000;
+export const Wrapper = styled.div`
+  z-index: 99992;
   position: relative;
   height: 100%;
+  width: 60dvw;
+  max-width: 300px;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transform: ${({ $isOpen }) => ($isOpen ? "translateX(0)" : "translateX(-100%)")};
-  transition: transform ${({ $isOpen }) => ($isOpen ? "600ms" : "100ms")} ease-in-out;
 `;
 
 export const ListWrapper = styled.ul`
@@ -55,15 +55,19 @@ export const ListWrapper = styled.ul`
 `;
 
 export const List = styled.li`
-  width: fit-content;
+  width: 100%;
   color: color-mix(in oklch, var(--color-text), var(--color-bird) 30%);
 `;
 
-export const Item = styled(Link)``;
+export const Item = styled(Link)`
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0;
+`;
 
 export const ThemeWrapper = styled.div`
   position: fixed;
   bottom: 56px;
   left: 56px;
-  z-index: 1000;
+  z-index: 99992;
 `;

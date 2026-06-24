@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
-export const RootContainer = styled.div`
-  z-index: 10000;
+export const RootContainer = styled.div<{ $isOpen?: boolean }>`
+  z-index: ${({ $isOpen }) => ($isOpen ? 99999 : 10000)};
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Open = styled.g`
@@ -90,22 +93,44 @@ const Circle = styled.rect`
     }
 
     100% {
-      stroke: var(--color-text);
+      stroke: var(--color-background);
       transform: scale(1);
     }
   }
 `;
 
-export const Btn = styled.button<{ $isOpen: boolean }>`
-  z-index: 10001;
-  position: ${({ $isOpen }) => ($isOpen ? "absolute" : "static")};
-  right: ${({ $isOpen }) => ($isOpen ? "13px" : "0")};
-  top: ${({ $isOpen }) => ($isOpen ? "16px" : "0")};
+export const Btn = styled.button<{ $isOpen: boolean; $isAnimating: boolean }>`
+  z-index: 99999;
+  position: ${({ $isOpen }) => ($isOpen ? "absolute" : "relative")};
+  right: ${({ $isOpen }) => ($isOpen ? "3dvw" : "0")};
+  top: ${({ $isOpen }) => ($isOpen ? "3dvh" : "0")};
   width: 40px;
   height: 40px;
 
   padding: 0;
-  cursor: pointer;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ${({ $isAnimating }) => ($isAnimating ? "default" : "pointer")};
+  pointer-events: ${({ $isAnimating }) => ($isAnimating ? "none" : "auto")};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: var(--color-text);
+    opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+    transition: opacity 0.6s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
 
   &[aria-label='Open menu'] ${Open} {
     #hambuer-btn-svg-center {
@@ -146,6 +171,11 @@ export const Btn = styled.button<{ $isOpen: boolean }>`
     }
   }
   &[aria-label='Close menu'] ${Close} {
+    & > path, & > rect {
+      stroke: var(--color-background);
+      transition: stroke 0.3s ease;
+    }
+
     & > ${Circle} {
       animation: circle-pop 600ms;
       animation-iteration-count: 1;
@@ -176,12 +206,10 @@ export const Btn = styled.button<{ $isOpen: boolean }>`
 `;
 
 export const Svg = styled.svg`
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
+  width: 8dvw;
+  height: 100%;
+  max-width: 40px;
+  display: block;
 
   & > g {
     & > path,
@@ -189,17 +217,10 @@ export const Svg = styled.svg`
       stroke: var(--color-text);
     }
   }
-
-  @media (max-width: 320px) {
-    & {
-      width: 32px;
-      height: 32px;
-    }
-  }
 `;
 
 export const FloodWrapper = styled.div`
-  z-index: 1000;
+  z-index: 99991;
   position: fixed;
   height: 100%;
   top: 0px;
@@ -211,8 +232,4 @@ export const FloodWrapper = styled.div`
 export const FloodSVG = styled.svg`
   display: block;
   height: 100%;
-
-  & > path {
-    transition: all 300ms ease;
-  }
 `;

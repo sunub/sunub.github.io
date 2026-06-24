@@ -5,10 +5,9 @@ import { motion } from "motion/react";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 import ThemeToggler from "@/components/Theme/Toggler/ThemeTogglerButton";
-import { getMoblieCloseAnimationTimeline } from "./MoblieNav.helper";
+import { WaveAnchor } from "../ui/WaveAnchor";
 import {
 	Backdrop,
-	Item as ItemStyle,
 	List,
 	ListWrapper,
 	NavigationWrapper,
@@ -42,7 +41,7 @@ const containerVariants: Variants = {
 	visible: {
 		opacity: 1,
 		transition: {
-			staggerChildren: 0.1,
+			staggerChildren: 0.05,
 			delayChildren: 0.2,
 		},
 	},
@@ -51,15 +50,13 @@ const containerVariants: Variants = {
 const itemVariants: Variants = {
 	hidden: {
 		opacity: 0,
-		filter: "blur(5px)",
-		textShadow: "20px 0px 0px rgba(0, 0, 0, 0.5)",
+		y: 20,
 	},
 	visible: {
 		opacity: 1,
-		filter: "blur(0px)",
-		textShadow: "0px 0px 0px rgba(0, 0, 0, 0)",
+		y: 0,
 		transition: {
-			duration: 0.95,
+			duration: 0.5,
 			ease: "easeOut",
 		},
 	},
@@ -70,26 +67,23 @@ const MotionListWrapper = motion.create(ListWrapper);
 const MotionList = motion.create(List);
 
 function MobileNav(props: Props) {
-	const { isOpen, toggleOpen, refObjects } = props;
+	const { isOpen, toggleOpen } = props;
 
 	function handleClick() {
-		if (!refObjects.pathStartRef.current) return;
-
-		const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
 		toggleOpen();
-		closeTimeline.play();
 	}
 
 	return (
 		<FocusLock>
 			<RemoveScroll>
 				<NavigationWrapper>
-					<Wrapper $isOpen={isOpen}>
+					<Wrapper>
 						<MotionThemeWrapper
 							className="mobile-nav__link-items"
 							variants={itemVariants}
 							initial="hidden"
 							animate="visible"
+							exit="hidden"
 						>
 							<ThemeToggler
 								maskId="mobile-nav__theme-toggler"
@@ -102,9 +96,10 @@ function MobileNav(props: Props) {
 							variants={containerVariants}
 							initial="hidden"
 							animate="visible"
+							exit="hidden"
 						>
 							<Item name="latest" href={"/"} onClick={handleClick} />
-							<Item name="posts" href="" onClick={handleClick} />
+							<StaticItem name="posts" />
 							{CATEGORIES.map(({ name, href }) => (
 								<Item
 									name={name}
@@ -116,7 +111,12 @@ function MobileNav(props: Props) {
 						</MotionListWrapper>
 					</Wrapper>
 				</NavigationWrapper>
-				<Backdrop $isOpen={isOpen} onClick={handleClick} />
+				<Backdrop
+					className="mobile-nav__backdrop"
+					aria-label="Close navigation menu"
+					$isOpen={isOpen}
+					onClick={handleClick}
+				/>
 			</RemoveScroll>
 		</FocusLock>
 	);
@@ -133,9 +133,17 @@ function Item({
 }) {
 	return (
 		<MotionList className="mobile-nav__link-items" variants={itemVariants}>
-			<ItemStyle href={href} onClick={onClick}>
+			<WaveAnchor href={href} onClick={onClick}>
 				{name}
-			</ItemStyle>
+			</WaveAnchor>
+		</MotionList>
+	);
+}
+
+function StaticItem({ name }: { name: string }) {
+	return (
+		<MotionList className="mobile-nav__link-items" variants={itemVariants}>
+			{name}
 		</MotionList>
 	);
 }

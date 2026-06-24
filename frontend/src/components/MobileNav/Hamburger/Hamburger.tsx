@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import dynamic from "next/dynamic";
 import React from "react";
 import { createPortal } from "react-dom";
@@ -34,6 +35,7 @@ interface RefObjects {
 
 function Hamburger() {
 	const [isOpen, toggleOpen] = useToggle(false);
+	const [isAnimating, setIsAnimating] = React.useState(false);
 
 	const pathStartRef = React.useRef<SVGPathElement>(null);
 	const pathMidRef = React.useRef<SVGPathElement>(null);
@@ -49,39 +51,54 @@ function Hamburger() {
 		floodWrapperRef,
 	};
 
+	const handleToggle = async () => {
+		const isTestMode =
+			typeof document !== "undefined" &&
+			document.documentElement.getAttribute("data-test-mode") === "true";
+		if (!pathStartRef.current || (isAnimating && !isTestMode)) {
+			return;
+		}
+
+		setIsAnimating(true);
+		preloadMobileNav();
+		toggleOpen();
+		const openTimeline = getMoblieOpenAnimationTimeline(refObjects);
+		const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
+		if (isOpen) {
+			await closeTimeline.play();
+		} else {
+			await openTimeline.play();
+		}
+		setIsAnimating(false);
+	};
+
 	return (
-		<Styled.RootContainer id="moblie-nav-trigger">
+		<Styled.RootContainer id="moblie-nav-trigger" $isOpen={isOpen}>
 			<Styled.Btn
 				className="hamburger-btn"
 				id="hamburger-btn"
 				$isOpen={isOpen}
+				$isAnimating={isAnimating}
 				aria-label={isOpen ? "Close menu" : "Open menu"}
 				onFocus={preloadMobileNav}
 				onPointerDown={preloadMobileNav}
 				onPointerEnter={preloadMobileNav}
-				onClick={() => {
-					if (!pathStartRef.current) return;
-
-					preloadMobileNav();
-					toggleOpen();
-					const openTimeline = getMoblieOpenAnimationTimeline(refObjects);
-					const closeTimeline = getMoblieCloseAnimationTimeline(refObjects);
-					if (isOpen) {
-						closeTimeline.play();
-					} else {
-						openTimeline.play();
-					}
-				}}
+				onClick={handleToggle}
 			>
 				<Icon />
 			</Styled.Btn>
-			{isOpen &&
+			{typeof document !== "undefined" &&
 				createPortal(
-					<MobileNav
-						isOpen={isOpen}
-						toggleOpen={toggleOpen}
-						refObjects={refObjects}
-					/>,
+					<AnimatePresence>
+						{isOpen && (
+							<MobileNav
+								key="mobile-nav"
+								isOpen={isOpen}
+								toggleOpen={handleToggle}
+								refObjects={refObjects}
+							/>
+						)}
+					</AnimatePresence>,
 					document.getElementById("mobile-nav-portal") as HTMLDivElement,
 				)}
 			<UnfilledSVG refObjects={refObjects} />

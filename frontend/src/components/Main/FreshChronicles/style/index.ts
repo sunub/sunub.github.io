@@ -2,15 +2,21 @@ import Link from "next/link";
 import styled, { css } from "styled-components";
 import type { FreshChroniclesCardVariant } from "../types";
 
+const disappearCss = css`
+  @media (max-width: 320px) {
+    display: none;
+  }
+`;
+
 const wideCardMixin = css`
-	@media (min-width: 920px) {
-		grid-column: span 2;
+  @media (min-width: 920px) {
+    grid-column: span 2;
 		grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1fr);
 		align-items: center;
 		padding: 2.25rem 2.4rem;
 		column-gap: 2.25rem;
 		min-height: 26rem;
-	}
+  }
 `;
 
 export const SectionRoot = styled.section`
@@ -23,7 +29,7 @@ export const SectionHeader = styled.header`
 	display: flex;
 	flex-direction: column;
 	padding-bottom: 1.5rem;
-	border-bottom: 1px solid color-mix(in oklch, var(--color-text) 12%, transparent);
+	border-bottom: 1px solid var(--section-header-border);
 `;
 
 export const SectionEyebrow = styled.span`
@@ -41,11 +47,7 @@ export const SectionEyebrow = styled.span`
 		display: inline-block;
 		width: .5rem;
 		height: 2px;
-		background: color-mix(
-			in oklch,
-			var(--color-highlight) 40%,
-			transparent
-		);
+		background: var(--section-eyebrow-accent);
 	}
 `;
 
@@ -59,7 +61,7 @@ export const SectionTitle = styled.h2`
 
 export const CardGrid = styled.div`
 	display: grid;
-	grid-template-columns: repeat(1, minmax(0, 1fr));
+	grid-template-columns: var(--fresh-chronicles-card-template-columns);
 	gap: 1.5rem;
 
 	@media (min-width: 760px) {
@@ -67,24 +69,19 @@ export const CardGrid = styled.div`
 	}
 `;
 
-export const CardLink = styled(Link)<{ $variant: FreshChroniclesCardVariant }>`
+export const CardLink = styled(Link)<{
+	$variant: FreshChroniclesCardVariant;
+}>`
 	position: relative;
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
 	gap: 1.5rem;
 	min-height: 100%;
 	padding: 1.45rem;
-	border-radius: ${({ $variant }) =>
-		$variant === "wide" ? "clamp(2rem, 5vw, 3.6rem)" : "2rem"};
+	border-radius: clamp(2rem, 5vw, 3.6rem);
 	overflow: hidden;
 	isolation: isolate;
-	background:
-		radial-gradient(
-			circle at top right,
-			color-mix(in oklch, var(--post-card-accent) 18%, transparent),
-			transparent 45%
-		),
-		var(--post-card-surface-base);
+	background: var(--post-card-bg-gradient), var(--post-card-surface-base);
 	border: 1px solid var(--post-card-border);
 	box-shadow:
 		0 0.45rem 1.05rem rgba(15, 23, 42, 0.07),
@@ -109,49 +106,11 @@ export const CardLink = styled(Link)<{ $variant: FreshChroniclesCardVariant }>`
 
 	&:hover {
 		transform: translateY(-0.45rem);
-		border-color: color-mix(
-			in oklch,
-			var(--post-card-accent) 28%,
-			var(--color-text) 10%
-		);
+		border-color: var(--post-card-hover-border);
+		background: var(--post-card-bg-gradient-hover), var(--post-card-surface-base);
 		box-shadow:
 			0 0.8rem 1.6rem rgba(15, 23, 42, 0.1),
 			0 0.18rem 0.45rem rgba(15, 23, 42, 0.06);
-	}
-
-	html[data-color-theme="dark"] & {
-		border-color: rgba(255, 255, 255, 0.05);
-			background:
-				radial-gradient(
-					circle at top right,
-					color-mix(in oklch, var(--post-card-accent) 24%, transparent),
-				transparent 46%
-			),
-			linear-gradient(
-				180deg,
-				color-mix(in oklch, white 2%, var(--post-card-surface-base) 98%),
-				var(--post-card-surface-base)
-			);
-		box-shadow:
-			0 0.7rem 1.35rem rgba(0, 0, 0, 0.3),
-			inset 0 1px 0 rgba(255, 255, 255, 0.04);
-
-		&:hover {
-			border-color: rgba(255, 255, 255, 0.06);
-			background:
-				radial-gradient(
-					circle at top right,
-					color-mix(in oklch, var(--post-card-accent) 28%, transparent),
-					transparent 46%
-				),
-				linear-gradient(
-					180deg,
-					color-mix(in oklch, white 4%, var(--post-card-surface-base) 96%),
-					var(--post-card-surface-base)
-				);
-			box-shadow:
-				0 0.95rem 1.75rem rgba(0, 0, 0, 0.38);
-		}
 	}
 
 	${({ $variant }) => ($variant === "wide" ? wideCardMixin : "")}
@@ -170,25 +129,10 @@ export const CardVisual = styled.div<{ $variant: FreshChroniclesCardVariant }>`
 	overflow: hidden;
 	aspect-ratio: 4 / 3;
 	border-radius: 42% 58% 48% 52% / 38% 38% 62% 62%;
-	border: 0.3rem solid
-		color-mix(in oklch, white 28%, var(--post-card-surface-base) 72%);
-	background:
-		radial-gradient(
-			circle at 16% 16%,
-			color-mix(in oklch, var(--post-card-accent) 22%, transparent),
-			transparent 35%
-		),
-		linear-gradient(
-			145deg,
-			var(--post-card-visual-surface),
-			color-mix(
-				in oklch,
-				var(--post-card-accent) 7%,
-				var(--post-card-surface-base)
-			)
-		);
+	border: 0.3rem solid var(--post-card-visual-border);
+	background: var(--post-card-visual-gradient);
 	box-shadow:
-		0 1.3rem 2.6rem color-mix(in oklch, var(--post-card-accent) 12%, transparent),
+		0 1.3rem 2.6rem var(--post-card-visual-shadow-color),
 		0 1rem 2rem rgba(15, 23, 42, 0.14);
 	transition:
 		transform 320ms ease,
@@ -198,30 +142,8 @@ export const CardVisual = styled.div<{ $variant: FreshChroniclesCardVariant }>`
 	${CardLink}:hover & {
 		transform: translateY(-0.15rem) scale(1.01);
 		box-shadow:
-			0 1.8rem 3rem color-mix(in oklch, var(--post-card-accent) 18%, transparent),
+			0 1.8rem 3rem var(--post-card-frame-shadow),
 			0 1.2rem 2.4rem rgba(15, 23, 42, 0.2);
-	}
-
-	html[data-color-theme="dark"] & {
-		border-color: rgba(255, 255, 255, 0.1);
-		background:
-			radial-gradient(
-				circle at 16% 16%,
-				color-mix(in oklch, var(--post-card-accent) 30%, transparent),
-				transparent 37%
-			),
-			linear-gradient(
-				145deg,
-				var(--post-card-visual-surface),
-				color-mix(
-					in oklch,
-					var(--post-card-accent) 18%,
-					var(--post-card-surface-base) 82%
-				)
-			);
-		box-shadow:
-			0 1.8rem 3rem rgba(0, 0, 0, 0.34),
-			0 0 0 1px color-mix(in oklch, white 8%, transparent);
 	}
 
 	@media (min-width: 920px) {
@@ -237,7 +159,7 @@ export const CardVisualOrb = styled.span<{ $secondary?: boolean }>`
 	border-radius: 999px;
 	filter: blur(18px);
 	opacity: ${({ $secondary }) => ($secondary ? 0.2 : 0.16)};
-	background: color-mix(in oklch, var(--post-card-accent) 65%, transparent);
+	background: var(--post-card-orb-bg);
 	transform: ${({ $secondary }) =>
 		$secondary ? "translate(-40%, 35%)" : "translate(40%, -35%)"};
 
@@ -257,47 +179,14 @@ export const CardVisualFrame = styled.div<{
 	width: ${({ $variant }) => ($variant === "wide" ? "11rem" : "8.25rem")};
 	height: ${({ $variant }) => ($variant === "wide" ? "11rem" : "8.25rem")};
 	border-radius: ${({ $variant }) => ($variant === "wide" ? "2.25rem" : "1.75rem")};
-	background:
-		linear-gradient(
-			155deg,
-			color-mix(in oklch, white 84%, var(--post-card-accent) 16%),
-			color-mix(in oklch, var(--post-card-accent) 24%, transparent)
-		);
+	background: var(--post-card-frame-bg);
+	border: 1px solid var(--post-card-border);
 	box-shadow:
-		0 1.5rem 2.5rem
-			color-mix(in oklch, var(--post-card-accent) 18%, transparent),
-		inset 0 1px 0 color-mix(in oklch, white 70%, transparent);
-	color: color-mix(
-		in oklch,
-		var(--post-card-accent) 62%,
-		black 38%
-	);
+		0 1.5rem 2.5rem var(--post-card-frame-shadow),
+		inset 0 1px 0 var(--post-card-frame-inset-shadow);
+	color: var(--post-card-frame-color);
 	transform: rotate(-4deg);
 	transition: transform 300ms ease;
-
-	html[data-color-theme="dark"] & {
-		border: 1px solid
-			color-mix(in oklch, var(--post-card-accent) 30%, transparent);
-		background:
-			linear-gradient(
-				155deg,
-				color-mix(
-					in oklch,
-					var(--post-card-surface-base) 84%,
-					var(--post-card-accent) 16%
-				),
-				color-mix(
-					in oklch,
-					var(--post-card-accent) 28%,
-					var(--post-card-surface-base) 72%
-				)
-			);
-		box-shadow:
-			0 1.5rem 2.5rem
-				color-mix(in oklch, var(--post-card-accent) 24%, transparent),
-			inset 0 1px 0 rgba(255, 255, 255, 0.1);
-		color: color-mix(in oklch, white 72%, var(--post-card-accent) 28%);
-	}
 
 	${CardLink}:hover & {
 		transform: rotate(0deg) scale(1.04);
@@ -349,18 +238,9 @@ export const CardBadge = styled.span`
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	width: fit-content;
-	background: color-mix(
-		in oklch,
-		var(--post-card-accent) 12%,
-		white 88%
-	);
-	color: color-mix(
-		in oklch,
-		var(--post-card-accent) 70%,
-		black 30%
-	);
-	border: 1px solid
-		color-mix(in oklch, var(--post-card-accent) 18%, transparent);
+	background: var(--post-card-badge-bg);
+	color: var(--post-card-badge-color);
+	border: 1px solid var(--post-card-badge-border);
 
 	&::before {
 		content: "";
@@ -369,20 +249,6 @@ export const CardBadge = styled.span`
 		height: 0.45rem;
 		border-radius: 999px;
 		background: var(--post-card-accent);
-	}
-
-	html[data-color-theme="dark"] & {
-		background: color-mix(
-			in oklch,
-			var(--post-card-accent) 18%,
-			var(--post-card-surface-base) 82%
-		);
-		color: color-mix(in oklch, white 78%, var(--post-card-accent) 22%);
-		border-color: color-mix(
-			in oklch,
-			var(--post-card-accent) 28%,
-			transparent
-		);
 	}
 `;
 
@@ -407,23 +273,24 @@ export const CardEyebrow = styled.span`
 	color: var(--post-card-accent);
 	text-transform: uppercase;
 	opacity: 0.92;
+  ${disappearCss}
 `;
 
 export const CardDate = styled.time`
-	font-size: 0.9rem;
+	font-size: clamp(0.25rem, 4dvw, 0.9rem);
 	color: var(--post-card-subtle-text);
 `;
 
 export const CardTitle = styled.h3<{ $variant: FreshChroniclesCardVariant }>`
-	font-size: ${({ $variant }) => ($variant === "wide" ? "2.25rem" : "1.7rem")};
+	font-size: clamp(1.25rem, 5dvw ,2.25rem);
 	font-weight: 800;
 	line-height: 1.14;
 	letter-spacing: -0.04em;
 	color: var(--color-text);
-	text-wrap: balance;
+	text-wrap: pretty;
 
 	${CardLink}:hover & {
-		color: color-mix(in oklch, var(--post-card-accent) 78%, var(--color-text) 22%);
+		color: var(--post-card-title-hover-color);
 	}
 
 	@media (min-width: 920px) {
@@ -439,6 +306,7 @@ export const CardSummary = styled.p<{ $variant: FreshChroniclesCardVariant }>`
 	overflow: hidden;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: ${({ $variant }) => ($variant === "wide" ? 4 : 3)};
+  ${disappearCss}
 `;
 
 export const CardFooter = styled.div`
@@ -449,6 +317,7 @@ export const CardFooter = styled.div`
 	gap: 1rem;
 	margin-top: auto;
 	padding-top: 0.45rem;
+  ${disappearCss}
 `;
 
 export const TagList = styled.div`
@@ -499,13 +368,7 @@ export const ArchiveCardLink = styled(Link)`
 	border-radius: 2rem;
 	overflow: hidden;
 	isolation: isolate;
-	background:
-		radial-gradient(
-			circle at top right,
-			color-mix(in oklch, var(--color-highlight) 16%, transparent),
-			transparent 44%
-		),
-		var(--post-card-surface-strong);
+	background: var(--archive-card-bg-gradient), var(--post-card-surface-strong);
 	border: 1px solid var(--post-card-border);
 	box-shadow: var(--shadow-elevation-low);
 	transition:
@@ -515,60 +378,18 @@ export const ArchiveCardLink = styled(Link)`
 
 	&:hover {
 		transform: translateY(-0.35rem);
-		border-color: color-mix(
-			in oklch,
-			var(--color-highlight) 26%,
-			var(--color-text) 10%
-		);
+		border-color: var(--archive-card-hover-border);
 		box-shadow: var(--shadow-elevation-high);
-	}
-
-	html[data-color-theme="dark"] & {
-		background:
-			radial-gradient(
-				circle at top right,
-				color-mix(in oklch, var(--color-highlight) 22%, transparent),
-				transparent 44%
-			),
-			linear-gradient(
-				180deg,
-				color-mix(in oklch, white 2%, var(--post-card-surface-strong) 98%),
-				var(--post-card-surface-strong)
-			);
-		box-shadow:
-			0 1.25rem 2.25rem rgba(0, 0, 0, 0.42),
-			inset 0 1px 0 rgba(255, 255, 255, 0.04);
 	}
 `;
 
 export const ArchiveCardOverlay = styled.div`
 	position: absolute;
 	inset: 0;
-	background:
-		linear-gradient(
-			145deg,
-			color-mix(in oklch, white 76%, transparent),
-			color-mix(in oklch, var(--color-text) 4%, transparent)
-		),
-		radial-gradient(
-			circle at bottom left,
-			color-mix(in oklch, var(--color-highlight) 10%, transparent),
-			transparent 38%
-		);
+	background: var(--archive-card-gradient-base);
 	opacity: 0.72;
 
 	html[data-color-theme="dark"] & {
-		background:
-			linear-gradient(
-				145deg,
-				rgba(255, 255, 255, 0.04),
-				rgba(255, 255, 255, 0)
-			),
-			radial-gradient(
-				circle at bottom left,
-				color-mix(in oklch, var(--color-highlight) 14%, transparent),
-				transparent 38%
-			);
 		opacity: 1;
 	}
 `;
@@ -595,18 +416,12 @@ export const ArchiveCardIconFrame = styled.div`
 	background: var(--post-card-icon-surface);
 	border: 1px solid var(--post-card-border);
 	box-shadow:
-		0 1.5rem 2.5rem color-mix(in oklch, var(--color-text) 8%, transparent),
-		inset 0 1px 0 color-mix(in oklch, white 70%, transparent);
+		0 1.5rem 2.5rem var(--archive-card-icon-shadow),
+		inset 0 1px 0 var(--archive-card-icon-inset-shadow);
 	color: var(--post-card-icon-text);
 	transition:
 		transform 300ms ease,
 		color 260ms ease;
-
-	html[data-color-theme="dark"] & {
-		box-shadow:
-			0 1.5rem 2.5rem rgba(0, 0, 0, 0.35),
-			inset 0 1px 0 rgba(255, 255, 255, 0.08);
-	}
 
 	${ArchiveCardLink}:hover & {
 		transform: scale(1.08);
