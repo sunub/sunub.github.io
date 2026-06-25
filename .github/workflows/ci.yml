@@ -80,7 +80,12 @@ jobs:
     needs: unit-tests
     timeout-minutes: 45
     env:
+      HOME: /root
       NODE_ENV: test
+    container:
+      # Keep this image version aligned with frontend/package.json @playwright/test.
+      image: mcr.microsoft.com/playwright:v1.60.0-noble
+      options: --ipc=host
 
     steps:
       - name: Checkout repository
