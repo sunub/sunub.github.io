@@ -104,7 +104,7 @@ jobs:
         run: pnpm build:shared
 
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm --filter frontend exec playwright install --with-deps
 
       - name: Run Frontend E2E Tests
         run: pnpm --filter frontend run test:e2e
