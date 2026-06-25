@@ -25,8 +25,10 @@
 		"start:fe": "pnpm --filter frontend run start:test",
 		"start:all": "pnpm run build && pnpm run start:fe",
 		"test:pw": "playwright test",
+		"test:pw:update": "playwright test --update-snapshots",
 		"test:pw:mobile": "playwright test --project=\"Mobile Chrome\" --project=\"Mobile Safari\"",
 		"test:e2e": "start-server-and-test start:all http-get://localhost:4004 \"cross-env PLAYWRIGHT_SKIP_WEB_SERVER=1 pnpm run test:pw\"",
+		"test:e2e:update": "start-server-and-test start:all http-get://localhost:4004 \"cross-env PLAYWRIGHT_SKIP_WEB_SERVER=1 pnpm run test:pw:update\"",
 		"test:e2e:mobile": "start-server-and-test start:all http-get://localhost:4004 \"cross-env PLAYWRIGHT_SKIP_WEB_SERVER=1 pnpm run test:pw:mobile\"",
 		"test:e2e:ui": "start-server-and-test start:all http-get://localhost:4004 \"cross-env PLAYWRIGHT_SKIP_WEB_SERVER=1 playwright test --ui\""
 	},

@@ -1,5 +1,6 @@
 export const ROUTES = {
 	HOME: "/",
+	ARCHIVE: "",
 	POST: "/post",
 	WEB_CATEGORY: "/post/web",
 	CODE_CATEGORY: "/post/code",

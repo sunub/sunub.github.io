@@ -23,6 +23,7 @@
 		"bench": "vitest bench",
 		"test:fe:unit": "pnpm --filter frontend run test:unit",
 		"test:fe:e2e": "pnpm --filter frontend run test:e2e",
+		"test:fe:e2e:update": "docker run --rm --network host -v \"$PWD\":/work/ -w /work/ -it mcr.microsoft.com/playwright:v1.60.0-noble /bin/bash -c \"pnpm install && pnpm --filter frontend run test:e2e:update\"",
 		"test:fe:e2e:mobile": "pnpm --filter frontend run test:e2e:mobile",
 		"test:be:unit": "pnpm --filter backend run test",
 		"test:fe:e2e:ui": "pnpm --filter frontend run test:e2e:ui",

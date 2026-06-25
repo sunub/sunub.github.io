@@ -1,0 +1,6 @@
+:root {
+	--color-a: oklch(50% 0.1 200);
+	--color-b: white;
+	--mix-static: color-mix(in oklch, red, blue);
+	--mix-dynamic: color-mix(in oklch, var(--color-a), var(--color-b));
+}
