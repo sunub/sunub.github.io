@@ -98,6 +98,10 @@ test.describe("아카이브 캐싱 및 스크롤 복원 테스트", () => {
 	});
 
 	test("카테고리 전환 시 데이터 캐싱이 유지되는지 확인", async ({ page }) => {
+		await expect
+			.poll(() => getRenderedArchiveCardCount(page))
+			.toBeGreaterThanOrEqual(POST_ARCHIVE_INITIAL_VISIBLE_COUNT);
+
 		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 
 		await expect

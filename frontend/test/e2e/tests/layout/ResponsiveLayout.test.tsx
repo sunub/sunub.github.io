@@ -15,6 +15,13 @@ async function enableDeterministicMode(page: Page) {
       .hero-image-section {
         display: none !important;
       }
+      ::-webkit-scrollbar {
+        display: none !important;
+      }
+      * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
     `,
 	});
 }
