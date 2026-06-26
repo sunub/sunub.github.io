@@ -118,6 +118,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .github/instructions
 .github/prompts
 .github/agents
+.pnpm-store
 
 .vscode
 posts/posts.jsonl
