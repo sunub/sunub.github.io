@@ -23,6 +23,8 @@
 		"bench": "vitest bench",
 		"test:fe:unit": "pnpm --filter frontend run test:unit",
 		"test:fe:e2e": "pnpm --filter frontend run test:e2e",
+		"test:fe:e2e:docker": "docker run --rm --network host -v \"$PWD\":/work/ -w /work/ -it mcr.microsoft.com/playwright:v1.60.0-noble /bin/bash -c \"npm install -g pnpm && pnpm install && pnpm --filter frontend run test:e2e\"",
+		"test:e2e:update-snapshot": "docker run --rm -v $(pwd):/work/ -w /work/ -e PLAYWRIGHT_SKIP_WEB_SERVER=1 -e PLAYWRIGHT_FRONTEND_URL=http://host.docker.internal:4004 mcr.microsoft.com/playwright:v1.60.0-noble /bin/bash -c \"npm install -g pnpm && pnpm --filter frontend exec playwright test\"",
 		"test:fe:e2e:update": "docker run --rm --network host -v \"$PWD\":/work/ -w /work/ -it mcr.microsoft.com/playwright:v1.60.0-noble /bin/bash -c \"pnpm install && pnpm --filter frontend run test:e2e:update\"",
 		"test:fe:e2e:mobile": "pnpm --filter frontend run test:e2e:mobile",
 		"test:be:unit": "pnpm --filter backend run test",
