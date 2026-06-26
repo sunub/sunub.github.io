@@ -6,7 +6,7 @@ export function HeaderLayout({ children }: { children?: React.ReactNode }) {
 		<ScrollHeader>
 			<RootWrapper>
 				<HeaderWrapper id="blog-main__header-contents">
-					<Header>{children}</Header>
+					<Header aria-label="banner">{children}</Header>
 				</HeaderWrapper>
 			</RootWrapper>
 		</ScrollHeader>
