@@ -56,28 +56,20 @@ test.describe("반응형 레이아웃 시각적 회귀 테스트", () => {
 
 				await test.step("헤더 내비게이션 레이아웃 스크린샷 검증", async () => {
 					const headerNav = page.getByRole("banner").first();
-					const projectName = test.info().project.name.replace(/\s+/g, "-");
-					await expect(headerNav).toHaveScreenshot(
-						`home-header-layout-${vp.width}px-${projectName}.png`,
-						{
-							animations: "disabled",
-							maxDiffPixelRatio: 0.05,
-							threshold: 0.2,
-						},
-					);
+					await expect(headerNav).toHaveScreenshot({
+						animations: "disabled",
+						maxDiffPixelRatio: 0.05,
+						threshold: 0.2,
+					});
 				});
 
 				await test.step("메인 콘텐츠 레이아웃 스크린샷 검증", async () => {
 					const mainContent = page.getByRole("main").first();
-					const projectName = test.info().project.name.replace(/\s+/g, "-");
-					await expect(mainContent).toHaveScreenshot(
-						`home-main-layout-${vp.width}px-${projectName}.png`,
-						{
-							animations: "disabled",
-							maxDiffPixelRatio: 0.05,
-							threshold: 0.2,
-						},
-					);
+					await expect(mainContent).toHaveScreenshot({
+						animations: "disabled",
+						maxDiffPixelRatio: 0.05,
+						threshold: 0.2,
+					});
 				});
 			});
 
@@ -93,15 +85,11 @@ test.describe("반응형 레이아웃 시각적 회귀 테스트", () => {
 
 				await test.step("아카이브 콘텐츠 시각적 레이아웃 스크린샷 검증", async () => {
 					const mainContent = page.getByRole("main").first();
-					const projectName = test.info().project.name.replace(/\s+/g, "-");
-					await expect(mainContent).toHaveScreenshot(
-						`archive-all-main-layout-${vp.width}px-${projectName}.png`,
-						{
-							animations: "disabled",
-							maxDiffPixelRatio: 0.05,
-							threshold: 0.2,
-						},
-					);
+					await expect(mainContent).toHaveScreenshot({
+						animations: "disabled",
+						maxDiffPixelRatio: 0.05,
+						threshold: 0.2,
+					});
 				});
 			});
 		});

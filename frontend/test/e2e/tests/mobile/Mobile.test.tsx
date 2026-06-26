@@ -151,13 +151,9 @@ test.describe("모바일 내비게이션 웹 접근성 및 UI 테스트", () => 
 			const mobileNav = page
 				.locator("#mobile-nav-portal")
 				.getByRole("navigation");
-			const projectName = test.info().project.name.replace(/\s+/g, "-");
-			await expect(mobileNav).toHaveScreenshot(
-				`mobile-nav-open-${projectName}.png`,
-				{
-					animations: "disabled",
-				},
-			);
+			await expect(mobileNav).toHaveScreenshot({
+				animations: "disabled",
+			});
 		});
 	});
 });

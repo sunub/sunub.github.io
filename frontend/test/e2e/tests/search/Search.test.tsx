@@ -49,11 +49,9 @@ test.describe("검색 접근성 테스트", () => {
 			rootDialogContainer.getByRole("dialog", { name: "검색 다이알로그 창" }),
 		).toBeAttached();
 
-		await expect(page.getByTestId("search-modal__overlay")).toBeVisible();
-
-		const outsidePosition = page.getByTestId("search-modal__outside_position");
-		await expect(outsidePosition).toBeVisible();
-		await outsidePosition.click({ force: true });
+		const overlay = page.getByTestId("search-modal__overlay");
+		await expect(overlay).toBeVisible();
+		await overlay.click({ position: { x: 10, y: 10 } });
 
 		await expect(
 			rootDialogContainer.getByRole("dialog", { name: "검색 다이알로그 창" }),
