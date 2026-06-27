@@ -155,7 +155,7 @@ describe("Backend API", () => {
 
 	it("should return latest posts from posts module", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/posts/latest?count=2")
+			.get("/api/posts?sort=latest&limit=2")
 			.expect(200);
 
 		expect(response.body.totalCount).toBe(posts.length);
@@ -166,7 +166,7 @@ describe("Backend API", () => {
 
 	it("should return posts in range", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/posts/latest/range?start=1&end=3")
+			.get("/api/posts?sort=latest&offset=1&limit=2")
 			.expect(200);
 
 		expect(response.body.totalCount).toBe(posts.length);
@@ -177,7 +177,7 @@ describe("Backend API", () => {
 
 	it("should return archive summary", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/posts/archive/summary")
+			.get("/api/archives/summary")
 			.expect(200);
 
 		expect(response.body).toEqual({
@@ -194,7 +194,7 @@ describe("Backend API", () => {
 
 	it("should return archive posts in range by category", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/posts/archive/range?category=algorithm&start=0&end=2")
+			.get("/api/archives/posts?category=algorithm&offset=0&limit=2")
 			.expect(200);
 
 		expect(response.body).toEqual({
@@ -205,7 +205,7 @@ describe("Backend API", () => {
 
 	it("should return post by category", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/posts/web")
+			.get("/api/categories/web/posts")
 			.expect(200);
 
 		expect(response.body).toEqual([posts[0]]);
@@ -213,7 +213,7 @@ describe("Backend API", () => {
 
 	it("should return specific post content", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/posts/web/hello-backend")
+			.get("/api/categories/web/posts/hello-backend")
 			.expect(200);
 
 		expect(response.body).toEqual({
@@ -223,11 +223,15 @@ describe("Backend API", () => {
 	});
 
 	it("should return 404 for missing slug", async () => {
-		await request(app.getHttpServer()).get("/posts/web/not-found").expect(404);
+		await request(app.getHttpServer())
+			.get("/api/categories/web/posts/not-found")
+			.expect(404);
 	});
 
 	it("should return bad request for invalid category", async () => {
-		await request(app.getHttpServer()).get("/posts/invalid").expect(400);
+		await request(app.getHttpServer())
+			.get("/api/categories/invalid/posts")
+			.expect(400);
 	});
 
 	it("should return search results", async () => {

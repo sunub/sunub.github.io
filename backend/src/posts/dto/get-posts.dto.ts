@@ -9,39 +9,39 @@ const ARCHIVE_CATEGORY_FILTERS = [
 	"code",
 ] as const;
 
-export class GetLatestPostsQueryDto {
+export class GetPostsQueryDto {
+	@IsOptional()
+	@IsIn(["latest"])
+	sort?: "latest";
+
+	@IsOptional()
+	@Type(() => Number)
+	@IsInt()
+	@Min(0)
+	offset?: number;
+
 	@IsOptional()
 	@Type(() => Number)
 	@IsInt()
 	@Min(1)
 	@Max(50)
-	count: number = 10;
+	limit?: number;
 }
 
-export class GetLatestPostsInRangeQueryDto {
-	@Type(() => Number)
-	@IsInt()
-	@Min(0)
-	start: number;
-
-	@Type(() => Number)
-	@IsInt()
-	@Min(1)
-	end: number;
-}
-
-export class GetArchivePostsInRangeQueryDto {
+export class GetArchivePostsQueryDto {
 	@IsOptional()
 	@IsIn(ARCHIVE_CATEGORY_FILTERS)
 	category: (typeof ARCHIVE_CATEGORY_FILTERS)[number] = "all";
 
+	@IsOptional()
 	@Type(() => Number)
 	@IsInt()
 	@Min(0)
-	start: number = 0;
+	offset: number = 0;
 
+	@IsOptional()
 	@Type(() => Number)
 	@IsInt()
 	@Min(1)
-	end: number = 1;
+	limit: number = 10;
 }
