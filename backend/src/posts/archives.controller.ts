@@ -1,6 +1,9 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { ZodValidationPipe } from "src/common/validation.pipe";
-import { GetArchivePostsQuerySchema, type GetArchivePostsQueryDto } from "./dto/get-posts.dto";
+import {
+	type GetArchivePostsQueryDto,
+	GetArchivePostsQuerySchema,
+} from "./dto/get-posts.dto";
 import { PostsService } from "./posts.service";
 
 @Controller("api/archives")

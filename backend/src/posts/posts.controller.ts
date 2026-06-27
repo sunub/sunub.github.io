@@ -1,7 +1,10 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { ZodValidationPipe } from "src/common/validation.pipe";
 import { SearchService } from "src/search/search.service";
-import { GetPostsQuerySchema, type GetPostsQueryDto } from "./dto/get-posts.dto";
+import {
+	type GetPostsQueryDto,
+	GetPostsQuerySchema,
+} from "./dto/get-posts.dto";
 import { PostsService } from "./posts.service";
 
 @Controller("api/posts")
@@ -30,7 +33,6 @@ export class PostsController {
 				return this.postsService.findLatest(query.limit ?? 10);
 			}
 		}
-		// Default to all posts if no sort, q, or offset specified.
 		return this.postsService.findAll();
 	}
 }
