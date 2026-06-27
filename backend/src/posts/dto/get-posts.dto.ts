@@ -1,50 +1,19 @@
-import { Type } from "class-transformer";
-import { IsIn, IsInt, IsOptional, Max, Min } from "class-validator";
+import { ArchiveCategoryFilterSchema } from "@sunub/types";
+import { z } from "zod";
 
-const ARCHIVE_CATEGORY_FILTERS = [
-	"all",
-	"web",
-	"algorithm",
-	"cs",
-	"code",
-] as const;
+export const GetPostsQuerySchema = z.object({
+	sort: z.literal("latest").optional(),
+	offset: z.coerce.number().int().min(0).optional(),
+	limit: z.coerce.number().int().min(1).max(50).optional(),
+	q: z.string().optional(),
+});
 
-export class GetPostsQueryDto {
-	@IsOptional()
-	@IsIn(["latest"])
-	sort?: "latest";
+export type GetPostsQueryDto = z.infer<typeof GetPostsQuerySchema>;
 
-	@IsOptional()
-	@Type(() => Number)
-	@IsInt()
-	@Min(0)
-	offset?: number;
+export const GetArchivePostsQuerySchema = z.object({
+	category: ArchiveCategoryFilterSchema.default("all"),
+	offset: z.coerce.number().int().min(0).default(0),
+	limit: z.coerce.number().int().min(1).default(10),
+});
 
-	@IsOptional()
-	@Type(() => Number)
-	@IsInt()
-	@Min(1)
-	@Max(50)
-	limit?: number;
-
-	@IsOptional()
-	q?: string;
-}
-
-export class GetArchivePostsQueryDto {
-	@IsOptional()
-	@IsIn(ARCHIVE_CATEGORY_FILTERS)
-	category: (typeof ARCHIVE_CATEGORY_FILTERS)[number] = "all";
-
-	@IsOptional()
-	@Type(() => Number)
-	@IsInt()
-	@Min(0)
-	offset: number = 0;
-
-	@IsOptional()
-	@Type(() => Number)
-	@IsInt()
-	@Min(1)
-	limit: number = 10;
-}
+export type GetArchivePostsQueryDto = z.infer<typeof GetArchivePostsQuerySchema>;
