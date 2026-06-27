@@ -88,10 +88,7 @@ export function resolveSiteUrl({
 	return normalizeBaseUrl(
 		getEnvValue(env, SITE_URL_ENV_KEYS.SITE_URL) ??
 			getEnvValue(env, SITE_URL_ENV_KEYS.NEXT_PUBLIC_SITE_URL) ??
-			getEnvValue(
-				env as any,
-				FRONTEND_URL_ENV_KEYS.NEXT_PUBLIC_BASE_URL as any,
-			) ??
+			getEnvValue(env, FRONTEND_URL_ENV_KEYS.NEXT_PUBLIC_BASE_URL) ??
 			fallback,
 	);
 }

@@ -16,4 +16,6 @@ export const GetArchivePostsQuerySchema = z.object({
 	limit: z.coerce.number().int().min(1).default(10),
 });
 
-export type GetArchivePostsQueryDto = z.infer<typeof GetArchivePostsQuerySchema>;
+export type GetArchivePostsQueryDto = z.infer<
+	typeof GetArchivePostsQuerySchema
+>;

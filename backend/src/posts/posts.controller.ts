@@ -1,6 +1,7 @@
-import { Controller, Get, Query, ValidationPipe } from "@nestjs/common";
+import { Controller, Get, Query } from "@nestjs/common";
+import { ZodValidationPipe } from "src/common/validation.pipe";
 import { SearchService } from "src/search/search.service";
-import { GetPostsQueryDto } from "./dto/get-posts.dto";
+import { GetPostsQuerySchema, type GetPostsQueryDto } from "./dto/get-posts.dto";
 import { PostsService } from "./posts.service";
 
 @Controller("api/posts")
@@ -12,7 +13,7 @@ export class PostsController {
 
 	@Get()
 	async getPosts(
-		@Query(new ValidationPipe({ transform: true }))
+		@Query(new ZodValidationPipe(GetPostsQuerySchema))
 		query: GetPostsQueryDto,
 	) {
 		if (query.q !== undefined) {
