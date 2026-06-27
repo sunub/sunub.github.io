@@ -12,6 +12,6 @@
 		"resolveJsonModule": true,
 		"lib": ["ES2022", "DOM"]
 	},
-	"include": ["main.ts"],
+	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules", "dist"]
 }
