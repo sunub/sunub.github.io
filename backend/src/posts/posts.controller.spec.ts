@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { BlogService } from "../instances/blog/blog.service";
+import { SearchService } from "../search/search.service";
 import { PostsController } from "./posts.controller";
 import { PostsService } from "./posts.service";
 
@@ -23,6 +24,10 @@ describe("PostsController", () => {
 				{
 					provide: BlogService,
 					useValue: mockBlogService,
+				},
+				{
+					provide: SearchService,
+					useValue: { search: jest.fn().mockResolvedValue([]) },
 				},
 				PostsService,
 			],

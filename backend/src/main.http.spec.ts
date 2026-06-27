@@ -236,7 +236,7 @@ describe("Backend API", () => {
 
 	it("should return search results", async () => {
 		const response = await request(app.getHttpServer())
-			.get("/api/search?query=Backend")
+			.get("/api/posts?q=Backend")
 			.expect(200);
 
 		expect(response.body).toMatchObject({

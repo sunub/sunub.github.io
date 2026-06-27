@@ -26,6 +26,9 @@ export class GetPostsQueryDto {
 	@Min(1)
 	@Max(50)
 	limit?: number;
+
+	@IsOptional()
+	q?: string;
 }
 
 export class GetArchivePostsQueryDto {
