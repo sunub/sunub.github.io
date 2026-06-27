@@ -16,9 +16,10 @@ export const API_PATHS = {
 		archiveSummary: () => "/api/archives/summary",
 		archiveRange: (category: string, offset: number, limit: number) =>
 			`/api/archives/posts?category=${encodeURIComponent(category)}&offset=${offset}&limit=${limit}`,
-		byCategory: (category: string) => `/api/categories/${category}/posts`,
+		byCategory: (category: string) =>
+			`/api/categories/${encodeURIComponent(category)}/posts`,
 		bySlug: (category: string, slug: string) =>
-			`/api/categories/${category}/posts/${slug}`,
+			`/api/categories/${encodeURIComponent(category)}/posts/${encodeURIComponent(slug)}`,
 		latest: () => "/api/posts?sort=latest",
 		latestRange: (offset: number, limit: number) =>
 			`/api/posts?sort=latest&offset=${offset}&limit=${limit}`,
