@@ -1,5 +1,5 @@
 import { extname, relative } from "node:path";
-import { ValidationPipe } from "@nestjs/common";
+
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
@@ -139,13 +139,7 @@ async function bootstrap() {
 		origin: corsOrigins,
 		credentials: true,
 	});
-	app.useGlobalPipes(
-		new ValidationPipe({
-			whitelist: true,
-			forbidNonWhitelisted: true,
-			transform: true,
-		}),
-	);
+
 	await app.listen(parsePort(process.env.PORT));
 	setupPostsWatcher(blogService);
 }
