@@ -37,14 +37,18 @@ const getEnvValue = (
 	return trimmed.length > 0 ? trimmed : undefined;
 };
 
+function normalizeBaseUrl(url: string): string {
+	return url.replace(/\/+$/, "");
+}
+
 export function resolveBrowserBackendUrl({
 	env,
 	fallback = DEFAULT_BACKEND_API_URL,
 }: BackendUrlResolveInput): string {
-	return (
+	return normalizeBaseUrl(
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.NEXT_PUBLIC_BACKEND_URL) ??
-		getEnvValue(env, BACKEND_URL_ENV_KEYS.EC2_PUBLIC_API_URL) ??
-		fallback
+			getEnvValue(env, BACKEND_URL_ENV_KEYS.EC2_PUBLIC_API_URL) ??
+			fallback,
 	);
 }
 
@@ -52,9 +56,9 @@ export function resolveServerBackendUrl({
 	env,
 	fallback = DEFAULT_BACKEND_API_URL,
 }: BackendUrlResolveInput): string {
-	return (
+	return normalizeBaseUrl(
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.BACKEND_API_URL) ??
-		resolveBrowserBackendUrl({ env, fallback })
+			resolveBrowserBackendUrl({ env, fallback }),
 	);
 }
 
@@ -62,9 +66,9 @@ export function resolveTestBackendUrl({
 	env,
 	fallback = DEFAULT_BACKEND_API_URL,
 }: BackendUrlResolveInput): string {
-	return (
+	return normalizeBaseUrl(
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.TEST_BACKEND_URL) ??
-		resolveBrowserBackendUrl({ env, fallback })
+			resolveBrowserBackendUrl({ env, fallback }),
 	);
 }
 
@@ -72,9 +76,9 @@ export function resolvePlaywrightBackendUrl({
 	env,
 	fallback = DEFAULT_BACKEND_API_URL,
 }: BackendUrlResolveInput): string {
-	return (
+	return normalizeBaseUrl(
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.PLAYWRIGHT_BACKEND_URL) ??
-		resolveServerBackendUrl({ env, fallback })
+			resolveServerBackendUrl({ env, fallback }),
 	);
 }
 
@@ -100,10 +104,10 @@ export function resolveRewriteTargetUrl({
 	env,
 	fallback = DEFAULT_REWRITE_TARGET_URL,
 }: BackendUrlResolveInput): string {
-	return (
+	return normalizeBaseUrl(
 		getEnvValue(env, BACKEND_URL_ENV_KEYS.BACKEND_API_URL) ??
-		getEnvValue(env, BACKEND_URL_ENV_KEYS.EC2_PUBLIC_API_URL) ??
-		getEnvValue(env, BACKEND_URL_ENV_KEYS.NEXT_PUBLIC_BACKEND_URL) ??
-		fallback
+			getEnvValue(env, BACKEND_URL_ENV_KEYS.EC2_PUBLIC_API_URL) ??
+			getEnvValue(env, BACKEND_URL_ENV_KEYS.NEXT_PUBLIC_BACKEND_URL) ??
+			fallback,
 	);
 }
