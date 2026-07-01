@@ -1,4 +1,4 @@
-import type { Category } from "./categories";
+import type { Category } from "./categories.ts";
 import {
 	FRONTEND_URL_ENV_KEYS,
 	type FrontendUrlEnv,
@@ -8,7 +8,7 @@ import {
 	type SiteUrlEnv,
 	type SiteUrlEnvName,
 	type SiteUrlResolveInput,
-} from "./env";
+} from "./env.ts";
 
 export const DEFAULT_FRONTEND_BASE_URL = "http://localhost:3000";
 export const DEFAULT_FRONTEND_TEST_URL = "http://localhost:4004";

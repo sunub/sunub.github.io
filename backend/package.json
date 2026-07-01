@@ -74,7 +74,7 @@
 		"moduleNameMapper": {
 			"^src/(.*)$": "<rootDir>/$1",
 			"^@sunub/types$": "<rootDir>/../../packages/types/main.ts",
-			"^@sunub/contracts$": "<rootDir>/../../packages/contracts/main.ts"
+			"^@sunub/contracts$": "<rootDir>/../../packages/contracts/src/index.ts"
 		},
 		"rootDir": "src",
 		"testRegex": ".*\\.spec\\.ts$",

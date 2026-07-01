@@ -1,11 +1,10 @@
-// packages/contracts/src/api.ts
 import {
 	BACKEND_URL_ENV_KEYS,
 	type BackendRuntime,
 	type BackendUrlEnv,
 	type BackendUrlEnvName,
 	type BackendUrlResolveInput,
-} from "./env";
+} from "./env.ts";
 
 export const DEFAULT_BACKEND_API_URL = "http://localhost:4008";
 export const DEFAULT_REWRITE_TARGET_URL = DEFAULT_BACKEND_API_URL;
