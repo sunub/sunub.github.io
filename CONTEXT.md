@@ -2,6 +2,12 @@
 
 ## Glossary
 
-*   **FrontMatter Indexing**: The process in `BlogService` that lazily reads markdown files (`.md`, `.mdx`) from the filesystem, extracts their YAML frontmatter, and builds a serialized NDJSON index file (`posts.jsonl`).
+*   **FrontMatter Indexing**: The process in `BlogService` that reads only the metadata needed to index a post, excluding the post body, and builds a serialized NDJSON index file (`posts.jsonl`).
+*   **Memory-Safe Lazy Indexing Path**: The blog post indexing and query path that reduces large-scale source file reads to metadata-only work, evaluates work lazily, and caps concurrent file work to stay within memory limits while handling large post sets.
+*   **Post Index**: The normalized metadata set persisted from source posts so that query paths can read index data instead of rescanning original markdown files on every request.
+*   **Full Content Read**: The detailed post read path that loads the entire post body because rendering a single post requires complete content, not just index metadata.
 *   **Lazy Evaluation (지연 평가)**: Using Iterable and AsyncGenerator protocols (e.g., `getFileNames()`) to process data items one-by-one as requested, avoiding pre-allocation of the entire dataset into memory.
-*   **Async Side Effect Control (비동기 사이드 이펙트 제어)**: `Promise.all`과 같은 Eager Evaluation 방식으로 인해 대량의 비동기 작업(File I/O 등)이 한 번에 콜백 큐에 쏟아져 들어와 **이벤트 루프(Event Loop)가 블로킹되고 TTI(Time To Interactive)가 지연되는 현상**을 막기 위해, Iterable과 `concurrent(maxConcurrency)`를 활용하여 동시에 실행되는 비동기 작업의 수를 엄격하게 제한하는 기법.
+*   **Async Side Effect Control (비동기 사이드 이펙트 제어)**: The primary stability mechanism for large post workloads. It caps concurrent file I/O and parsing work so the system avoids runaway async pressure from eager fan-out patterns such as `Promise.all`.
+*   **Layered Concurrency Control**: Separate concurrency guards for batch indexing work and full-content read work, because the two paths protect different workloads and failure modes even though both limit parallel file processing.
+*   **Execution Model**: The reusable iterable-based model provided by `packages/utils` that makes lazy evaluation and bounded concurrency composable in blog indexing and query paths.
+*   **Content Experience Stability (콘텐츠 경험 안정성)**: Confidence that frequent post, navigation, search, and presentation changes preserve the blog's core reading and discovery experience. _Avoid_: using "deployment stability" when the discussion is about change-time regressions rather than production traffic incidents.
