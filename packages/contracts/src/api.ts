@@ -4,7 +4,7 @@ import {
 	type BackendUrlEnv,
 	type BackendUrlEnvName,
 	type BackendUrlResolveInput,
-} from "./env.ts";
+} from "./env.js";
 
 export const DEFAULT_BACKEND_API_URL = "http://localhost:4008";
 export const DEFAULT_REWRITE_TARGET_URL = DEFAULT_BACKEND_API_URL;
